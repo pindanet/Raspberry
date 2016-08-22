@@ -1,2 +1,2 @@
 # Raspberry
-All in one
+My own All In One Raspberry Pi project.
