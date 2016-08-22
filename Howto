@@ -35,9 +35,14 @@ sudo nano /etc/ssh/sshd_config
 
 User Access on non system partition
 ===================================
-sudo chown pi:pi /media/pi/ID/
+sudo nano /etc/fstab
+  /dev/mmcblk0p3  /media/data     ext4    auto,users,rw,uid=pi,gid=pi   0       0
+sudo mkdir /media/data
+sudo chown pi:pi /media/data/
+sudo mount -a
 
 Autostart browser
 =================
 nano .config/lxsession/LXDE-pi/autostart
-  @~/bin/autostart.sh
+  @sh /media/data/autostart.sh
+
