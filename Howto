@@ -1,0 +1,30 @@
+sudo apt-get update
+sudo apt-get upgrade
+
+Rotate LCD Screen
+=================
+sudo nano /boot/config.txt
+lcd_rotate=2
+
+Brightness LCD Screen (0-255)
+=============================
+sudo su
+echo 128 > /sys/class/backlight/rpi_backlight/brightness
+
+Install VNC server
+==================
+sudo apt-get install tightvncserver
+Start with: vncserver -geometry 800x480 :1
+
+Raspberry Pi Configuration
+==========================
+sudo raspi-config
+  nl_BE.UTF-8 UTF-8 (Locale: nl (Dutch), BE (Belgium))
+  Timezone: Europe, Brussels
+
+  WiFi Country Code: BE Belgium
+
+Schermtoetsenbord
+=================
+sudo apt-get install matchbox-keyboard
+sudo reboot
