@@ -26,7 +26,10 @@ sudo raspi-config
   
   Enable Camera
 
-Schermtoetsenbord
-=================
-sudo apt-get install matchbox-keyboard
-sudo reboot
+Security
+========
+passwd
+ssh-copy-id -i ~/.ssh/id_rsa.pub pi@raspberrypi.local
+sudo nano /etc/ssh/sshd_config
+  PasswordAuthentication no
+
