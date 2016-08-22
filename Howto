@@ -33,3 +33,11 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub pi@raspberrypi.local
 sudo nano /etc/ssh/sshd_config
   PasswordAuthentication no
 
+User Access on non system partition
+===================================
+sudo chown pi:pi /media/pi/ID/
+
+Autostart browser
+=================
+nano .config/lxsession/LXDE-pi/autostart
+  @~/bin/autostart.sh
