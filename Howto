@@ -38,13 +38,15 @@ User Access on non system partition
 sudo nano /etc/fstab
   /dev/mmcblk0p3  /media/data     ext4    defaults          0       0
 sudo mkdir /media/data
-sudo chown pi:pi /media/data/
 sudo mount -a
+sudo mkdir -p /media/data/home/pi
+chown pi:pi /media/data/home/pi/
 
 Autostart browser
 =================
+mkdir -p /media/data/home/pi/.config/lxsession/LXDE-pi/
 nano .config/lxsession/LXDE-pi/autostart
-  @sh /media/data/autostart.sh
+  @sh /media/data/home/pi/.config/lxsession/LXDE-pi/autostart.sh
 
 Webserver
 =========
