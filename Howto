@@ -46,3 +46,6 @@ Autostart browser
 nano .config/lxsession/LXDE-pi/autostart
   @sh /media/data/autostart.sh
 
+Webserver
+=========
+sudo apt-get install apache2
