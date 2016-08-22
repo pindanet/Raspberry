@@ -52,3 +52,6 @@ nano .config/lxsession/LXDE-pi/autostart
 Webserver
 =========
 sudo apt-get install apache2
+sudo mkdir -p /media/data/var/www/html
+sudo rm -r /var/www/html/
+sudo ln -s /media/data/var/www/html/ /var/www/html
