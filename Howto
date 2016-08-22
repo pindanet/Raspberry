@@ -23,6 +23,8 @@ sudo raspi-config
   Timezone: Europe, Brussels
 
   WiFi Country Code: BE Belgium
+  
+  Enable Camera
 
 Schermtoetsenbord
 =================
