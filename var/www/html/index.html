@@ -4,42 +4,45 @@
     <meta charset="UTF-8">
     <title>Apache2 Debian Default Page: It works</title>
     <style type="text/css">
-  html {
-    height: 100%;
-  }
-  body {
-    background-size: cover;
-    cursor: none;
-    min-height: 100%;
-    margin: 0;
-  }
+      html {
+        height: 100%;
+      }
+      body {
+        background-size: cover;
+        cursor: url(index/cursor.png), auto;
+        min-height: 100%;
+        margin: 0;
+      }
     </style>
-  </head>
-  <body>
     <script type="text/javascript">
-    var images=['Blauwdraak.jpg',
-                'Bloemen.jpg',
-                'Bloemenweide.jpg',
-                'Brug.jpg',
-                'Eifeltoren.jpg',
-                'Grasondergang.jpg',
-                'Kunst.jpg',
-                'Naturaleza.jpg',
-                'Natuur.jpg',
-                'nevel.jpg',
-                'Pisaboom.jpg',
-                'Planeet.jpg',
-                'Strand.jpg',
-                'tarweveld.jpg',
-                'tijger.jpg',
-                'Vuurwater.jpg',
-                'Water.jpg',
-                'Waterachtig.jpg',
-                'Waterval.jpg',
-                'Wolken.jpg',
-                'Zeeberg.jpg',];
-    var randomNumber = Math.floor(Math.random() * images.length);
-    document.body.style.backgroundImage = 'url(background/' + images[randomNumber] + ')';
+      function background() {
+        var images=['Blauwdraak.jpg',
+                    'Bloemen.jpg',
+                    'Bloemenweide.jpg',
+                    'Brug.jpg',
+                    'Eifeltoren.jpg',
+                    'Grasondergang.jpg',
+                    'Kunst.jpg',
+                    'Naturaleza.jpg',
+                    'Natuur.jpg',
+                    'nevel.jpg',
+                    'Pisaboom.jpg',
+                    'Planeet.jpg',
+                    'Strand.jpg',
+                    'tarweveld.jpg',
+                    'tijger.jpg',
+                    'Vuurwater.jpg',
+                    'Water.jpg',
+                    'Waterachtig.jpg',
+                    'Waterval.jpg',
+                    'Wolken.jpg',
+                    'Zeeberg.jpg',];
+        var randomNumber = Math.floor(Math.random() * images.length);
+        document.body.style.backgroundImage = 'url(background/' + images[randomNumber] + ')';
+      }
+      window.onclick = background;
     </script> 
+  </head>
+  <body onload="background();">
   </body>
 </html>
