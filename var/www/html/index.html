@@ -2,18 +2,23 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Apache2 Debian Default Page: It works</title>
+    <title>PindaNet Raspberry Pi</title>
     <style type="text/css">
       html {
         height: 100%;
+        margin: 0;
+        padding: 0;
       }
       body {
         background-size: cover;
-        cursor: url(index/cursor.png), auto;
         min-height: 100%;
         margin: 0;
+        padding: 0;
       }
-    </style>
+      #content {
+        position: absolute;
+      }
+      </style>
     <script type="text/javascript">
       function background() {
         var images=['Blauwdraak.jpg',
@@ -39,10 +44,23 @@
                     'Zeeberg.jpg',];
         var randomNumber = Math.floor(Math.random() * images.length);
         document.body.style.backgroundImage = 'url(background/' + images[randomNumber] + ')';
+        document.body.style.cursor = "url(index/cursor.png), auto";
+        document.getElementById("content").style.display = "none";
+//        console.log("e");
       }
-      window.onclick = background;
+      function menu() {
+        // http://www.yr.no/place/Belgium/Flanders/Bruges/meteogram.png
+        document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 + "px";
+        document.getElementById("content").style.left = (window.innerWidth - document.getElementById("content").offsetWidth)/2 + "px";
+        document.getElementById("content").style.display = "";
+        document.body.style.cursor = "default";
+      }
+      window.addEventListener("click", menu, true);
     </script> 
   </head>
   <body onload="background();">
+  <div id="content">
+     <button type="button" onclick="background(); return false;">Fotokader</button>
+  </div>
   </body>
 </html>
