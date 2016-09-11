@@ -64,3 +64,14 @@ sudo nano /etc/apache2/conf-enabled/pinda.conf
     Options +ExecCGI
     AddHandler cgi-script .py
 </Directory>
+
+sudo nano /media/data/var/www/html/index.py
+#!/usr/bin/python3
+# -*- coding: UTF-8 -*-# enable debugging
+import cgitb
+cgitb.enable()
+print("Content-Type: text/html;charset=utf-8")
+print()
+print("Hello World!")
+
+chmod +x /media/data/var/www/html/test.py
