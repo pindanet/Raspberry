@@ -17,6 +17,7 @@
       }
       #content {
         position: absolute;
+        transition: 1s;
       }
       </style>
     <script type="text/javascript">
@@ -45,22 +46,25 @@
         var randomNumber = Math.floor(Math.random() * images.length);
         document.body.style.backgroundImage = 'url(background/' + images[randomNumber] + ')';
         document.body.style.cursor = "url(index/cursor.png), auto";
-        document.getElementById("content").style.display = "none";
+        document.getElementById("content").innerHTML = '';
 //        console.log("e");
       }
-      function menu() {
-        // http://www.yr.no/place/Belgium/Flanders/Bruges/meteogram.png
+      function weather() {
+        document.getElementById("content").innerHTML = `<img src="http://www.yr.no/place/Belgium/Flanders/Bruges/meteogram.png" alt="Weerbericht Brugge" height="272" width="828" onclick="menu();">`;
         document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 + "px";
         document.getElementById("content").style.left = (window.innerWidth - document.getElementById("content").offsetWidth)/2 + "px";
-        document.getElementById("content").style.display = "";
+      }
+      function menu() {
+        document.getElementById("content").innerHTML = `<button type="button" onclick="background();">Fotokader</button>
+        <button type="button" onclick="weather();">Weerbericht</button>`;
         document.body.style.cursor = "default";
+        document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 + "px";
+        document.getElementById("content").style.left = (window.innerWidth - document.getElementById("content").offsetWidth)/2 + "px";
       }
       window.addEventListener("click", menu, true);
     </script> 
   </head>
   <body onload="background();">
-  <div id="content">
-     <button type="button" onclick="background(); return false;">Fotokader</button>
-  </div>
+  <div id="content"></div>
   </body>
 </html>
