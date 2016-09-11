@@ -55,6 +55,9 @@ sudo apt-get install apache2
 sudo mkdir -p /media/data/var/www/html
 sudo rm -r /var/www/html/
 sudo ln -s /media/data/var/www/html/ /var/www/html
+
+Activate python3 CGI
+--------------------
 sudo a2enmod cgid
 sudo nano /etc/apache2/conf-enabled/pinda.conf
 <Directory /var/www/html>
