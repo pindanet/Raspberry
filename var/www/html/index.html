@@ -18,6 +18,17 @@
       #content {
         position: absolute;
         transition: 1s;
+        text-align: center;
+      }
+      #clock {
+        color: white;
+        font-size: 150px;
+        text-shadow: 0 0 2px black;
+      }
+      #date {
+        color: white;
+        font-size: 45px;
+        text-shadow: 0 0 2px black;
       }
       </style>
     <script type="text/javascript">
@@ -49,19 +60,45 @@
         document.getElementById("content").innerHTML = '';
 //        console.log("e");
       }
+      function centerContent() {
+        document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 + "px";
+        document.getElementById("content").style.left = (window.innerWidth - document.getElementById("content").offsetWidth)/2 + "px";
+      }
       function weather() {
         document.getElementById("content").innerHTML = `<img src="http://www.yr.no/place/Belgium/Flanders/Bruges/meteogram.png" alt="Weerbericht Brugge" height="272" width="828" onclick="menu();">`;
-        document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 + "px";
-        document.getElementById("content").style.left = (window.innerWidth - document.getElementById("content").offsetWidth)/2 + "px";
+        centerContent();
       }
       function menu() {
+        clearTimeout(startTimer);
         document.getElementById("content").innerHTML = `<button type="button" onclick="background();">Fotokader</button>
+        <button type="button" onclick="startTime();">Klok</button>
         <button type="button" onclick="weather();">Weerbericht</button>`;
         document.body.style.cursor = "default";
-        document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 + "px";
-        document.getElementById("content").style.left = (window.innerWidth - document.getElementById("content").offsetWidth)/2 + "px";
+        centerContent();
       }
       window.addEventListener("click", menu, true);
+
+      var dayNames = new Array("zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag");
+      var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
+      function toLocaleDateString(datumobj) {
+        return dayNames[datumobj.getDay()] + '&nbsp;' + datumobj.getDate() + '&nbsp;' + monthNames[datumobj.getMonth()] + '&nbsp;' + datumobj.getFullYear();
+      }
+      var startTimer;
+      function startTime() {
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        document.getElementById('content').innerHTML = '<span id="clock">' + h + ":" + m + ":" + s + '</span><br><span id="date">'+ toLocaleDateString(today) + '</span>';
+        centerContent();
+        startTimer = setTimeout(startTime, 500);
+      }
+      function checkTime(i) {
+        if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+        return i;
+      }
     </script> 
   </head>
   <body onload="background();">
