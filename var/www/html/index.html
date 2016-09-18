@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<!--
+TODO
+http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-a-raspberry-pi/
+-->
 <html>
   <head>
     <meta charset="UTF-8">
@@ -14,11 +18,25 @@
         min-height: 100%;
         margin: 0;
         padding: 0;
+        overflow: hidden;
       }
       #content {
         position: absolute;
         transition: 1s;
         text-align: center;
+      }
+      .button {
+        background-color: rgba(128,128,128,0.5);
+        border: 1px solid rgb(128,128,128);
+        color: white;
+        padding: 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
       }
       #clock {
         color: white;
@@ -70,9 +88,9 @@
       }
       function menu() {
         clearTimeout(startTimer);
-        document.getElementById("content").innerHTML = `<button type="button" onclick="background();">Fotokader</button>
-        <button type="button" onclick="startTime();">Klok</button>
-        <button type="button" onclick="weather();">Weerbericht</button>`;
+        document.getElementById("content").innerHTML = `<button class="button" onclick="location.reload();">Fotokader</button>
+        <button class="button" onclick="startTime();">Klok</button>
+        <button class="button" onclick="weather();">Weerbericht</button>`;
         document.body.style.cursor = "default";
         centerContent();
       }
