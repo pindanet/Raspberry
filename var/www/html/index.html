@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!--
 TODO
-http://css3.bradshawenterprises.com/cfimg/
 http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-a-raspberry-pi/
 -->
 <html>
@@ -20,6 +19,17 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
         margin: 0;
         padding: 0;
         overflow: hidden;
+        -moz-transition: background 1.5s linear;
+        transition: background 1.5s linear;
+        opacity: 1.0;
+      }
+      #cf {
+        position: relative;
+      }
+      #cf img {
+        position: absolute;
+        left: 0;
+        transition: opacity 1s ease-in-out;
       }
       #content {
         position: absolute;
@@ -74,10 +84,22 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
                     'Wolken.jpg',
                     'Zeeberg.jpg',];
         var randomNumber = Math.floor(Math.random() * images.length);
-        document.body.style.backgroundImage = 'url(background/' + images[randomNumber] + ')';
+        if(document.getElementById("cf1").style.opacity == "0") {
+          document.getElementById("cf1").src='background/' + images[randomNumber];
+          document.getElementById("cf1").style.opacity = "1";
+          document.getElementById("cf2").style.opacity = "0";
+        } else {
+          document.getElementById("cf2").src='background/' + images[randomNumber];
+          document.getElementById("cf2").style.opacity = "1";
+          document.getElementById("cf1").style.opacity = "0";
+        }
         document.body.style.cursor = "url(index/cursor.png), auto";
         document.getElementById("content").innerHTML = '';
-//        console.log("e");
+        startTimer = setTimeout(background, 5000);
+        document.getElementById("cf1").style.width = document.body.offsetWidth + "px";
+        document.getElementById("cf1").style.height = document.body.offsetHeight + "px";
+        document.getElementById("cf2").style.width = document.body.offsetWidth + "px";
+        document.getElementById("cf2").style.height = document.body.offsetHeight + "px";
       }
       function centerContent() {
         document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 + "px";
@@ -121,6 +143,10 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
     </script> 
   </head>
   <body onload="background();">
+  <div id="cf">
+    <img id="cf1" class="bottom" src="background/Blauwdraak.jpg" />
+    <img id="cf2" class="top" src="background/Bloemen.jpg" />
+  </div>
   <div id="content"></div>
   </body>
 </html>
