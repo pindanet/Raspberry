@@ -27,7 +27,7 @@ My own All In One Raspberry Pi project.
     sudo nano /etc/ssh/sshd_config
       PasswordAuthentication no
 
-# User Access on non system partition
+## User Access on non system partition
     sudo nano /etc/fstab
       /dev/mmcblk0p3  /media/data     ext4    defaults          0       0
     sudo mkdir /media/data
