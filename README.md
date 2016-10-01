@@ -1,5 +1,6 @@
 # Raspberry
 My own All In One Raspberry Pi project.
+
     sudo apt-get update
     sudo apt-get upgrade
 ## Rotate LCD Screen
