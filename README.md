@@ -1,9 +1,9 @@
 # Raspberry
 My own All In One Raspberry Pi project.
-
+...bash
 sudo apt-get update
 sudo apt-get upgrade
-
+...
 ## Rotate LCD Screen
 sudo nano /boot/config.txt
 lcd_rotate=2
