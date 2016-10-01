@@ -44,6 +44,8 @@ My own All In One Raspberry Pi project.
     sudo mkdir -p /media/data/var/www/html
     sudo rm -r /var/www/html/
     sudo ln -s /media/data/var/www/html/ /var/www/html
+### Folder with background pictures
+    sudo ln -s /usr/share/pixel-wallpaper/ /media/data/var/www/html/background
 ## Activate python3 CGI
     sudo a2enmod cgid
     sudo nano /etc/apache2/conf-enabled/pinda.conf
