@@ -29,7 +29,7 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
       #cf img {
         position: absolute;
         left: 0;
-        transition: opacity 1s ease-in-out;
+        transition: opacity 1s;
       }
       #content {
         position: absolute;
@@ -62,44 +62,30 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
       </style>
     <script type="text/javascript">
       function background() {
-        var images=['Blauwdraak.jpg',
-                    'Bloemen.jpg',
-                    'Bloemenweide.jpg',
-                    'Brug.jpg',
-                    'Eifeltoren.jpg',
-                    'Grasondergang.jpg',
-                    'Kunst.jpg',
-                    'Naturaleza.jpg',
-                    'Natuur.jpg',
-                    'nevel.jpg',
-                    'Pisaboom.jpg',
-                    'Planeet.jpg',
-                    'Strand.jpg',
-                    'tarweveld.jpg',
-                    'tijger.jpg',
-                    'Vuurwater.jpg',
-                    'Water.jpg',
-                    'Waterachtig.jpg',
-                    'Waterval.jpg',
-                    'Wolken.jpg',
-                    'Zeeberg.jpg',];
-        var randomNumber = Math.floor(Math.random() * images.length);
-        if(document.getElementById("cf1").style.opacity == "0") {
-          document.getElementById("cf1").src='background/' + images[randomNumber];
-          document.getElementById("cf1").style.opacity = "1";
-          document.getElementById("cf2").style.opacity = "0";
-        } else {
-          document.getElementById("cf2").src='background/' + images[randomNumber];
-          document.getElementById("cf2").style.opacity = "1";
-          document.getElementById("cf1").style.opacity = "0";
-        }
-        document.body.style.cursor = "url(index/cursor.png), auto";
-        document.getElementById("content").innerHTML = '';
-        startTimer = setTimeout(background, 5000);
-        document.getElementById("cf1").style.width = document.body.offsetWidth + "px";
-        document.getElementById("cf1").style.height = document.body.offsetHeight + "px";
-        document.getElementById("cf2").style.width = document.body.offsetWidth + "px";
-        document.getElementById("cf2").style.height = document.body.offsetHeight + "px";
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "background.py", true);
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            var imageFileName = this.responseText;
+            if(document.getElementById("cf1").style.opacity == "0") {
+              document.getElementById("cf1").src=imageFileName;
+              document.getElementById("cf1").style.opacity = "1";
+              document.getElementById("cf2").style.opacity = "0";
+            } else {
+              document.getElementById("cf2").src=imageFileName;
+              document.getElementById("cf2").style.opacity = "1";
+              document.getElementById("cf1").style.opacity = "0";
+            }
+            document.body.style.cursor = "url(index/cursor.png), auto";
+            document.getElementById("content").innerHTML = '';
+            startTimer = setTimeout(background, 50000);
+            document.getElementById("cf1").style.width = document.body.offsetWidth + "px";
+            document.getElementById("cf1").style.height = document.body.offsetHeight + "px";
+            document.getElementById("cf2").style.width = document.body.offsetWidth + "px";
+            document.getElementById("cf2").style.height = document.body.offsetHeight + "px";
+          }
+        };
+        xhr.send();
       }
       function centerContent() {
         document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 + "px";
