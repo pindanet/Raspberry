@@ -63,4 +63,6 @@ My own All In One Raspberry Pi project.
     print()
     print("Hello World!")
 
-    chmod +x /media/data/var/www/html/test.py
+    sudo chmod +x /media/data/var/www/html/test.py
+    
+    sudo chmod +x /media/data/var/www/html/background.py
