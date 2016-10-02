@@ -21,6 +21,9 @@ My own All In One Raspberry Pi project.
     WiFi Country Code: BE Belgium
   
     Enable Camera
+    
+    Advanced Options
+      I2C Enable
 ## Security
     passwd
     ssh-copy-id -i ~/.ssh/id_rsa.pub pi@raspberrypi.local
