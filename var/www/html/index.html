@@ -54,6 +54,11 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
         font-size: 150px;
         text-shadow: 0 0 2px black;
       }
+      #bme280 {
+        color: white;
+        font-size: 30px;
+        text-shadow: 0 0 2px black;
+      }
       #date {
         color: white;
         font-size: 45px;
@@ -92,7 +97,20 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
         document.getElementById("content").style.left = (window.innerWidth - document.getElementById("content").offsetWidth)/2 + "px";
       }
       function weather() {
-        document.getElementById("content").innerHTML = `<img src="http://www.yr.no/place/Belgium/Flanders/Bruges/meteogram.png" alt="Weerbericht Brugge" height="272" width="828" onclick="menu();">`;
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "bme280tph.py", true);
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            var imageFileName = this.responseText;
+            document.getElementById("content").innerHTML = `<img src="http://www.yr.no/place/Belgium/Flanders/Bruges/meteogram.png" alt="Weerbericht Brugge" height="272" width="828" onclick="menu();">
+            <p id="bme280">` + this.responseText + `</p>`;
+            centerContent();
+          }
+        };
+        xhr.send();
+      }
+      function bme280() {
+        document.getElementById("content").innerHTML = `<p>Temperatuur: 20°C<br>Luchtdruk: 1013 hPa<br>Vochtigheid: 60%</p>`;
         centerContent();
       }
       function menu() {
