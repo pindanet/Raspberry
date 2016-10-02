@@ -70,4 +70,14 @@ My own All In One Raspberry Pi project.
     
     sudo chmod +x /media/data/var/www/html/background.py
 ## BME280 I2C Temperature and Pressure Sensor
-    sudo apt-get install i2c-tools
+    Vin > 3v3 (1) (Red)
+    GND > Ground (6) (Black)
+    SCK > BCM 3 (SCL) (5) (White)
+    SDI > BCM 2 (SDA) (3) (Brown)
+    
+    sudo apt-get install i2c-tools python-smbus
+    wget https://bitbucket.org/MattHawkinsUK/rpispy-misc/raw/master/python/bme280.py
+    i2cdetect -y 1
+    nano bme280.py
+      DEVICE = 0x77 # Default device I2C address
+    python bme280.py
