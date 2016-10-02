@@ -83,4 +83,4 @@ My own All In One Raspberry Pi project.
     python bme280.py
     
     sudo mv bme280.py /media/data/var/www/html/
-    sudo chmod o+rw /dev/i2c-1
+    sudo adduser www-data i2c
