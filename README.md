@@ -81,3 +81,6 @@ My own All In One Raspberry Pi project.
     nano bme280.py
       DEVICE = 0x77 # Default device I2C address
     python bme280.py
+    
+    sudo mv bme280.py /media/data/var/www/html/
+    sudo chmod o+rw /dev/i2c-1
