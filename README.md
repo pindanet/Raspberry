@@ -69,3 +69,5 @@ My own All In One Raspberry Pi project.
     sudo chmod +x /media/data/var/www/html/test.py
     
     sudo chmod +x /media/data/var/www/html/background.py
+## BME280 I2C Temperature and Pressure Sensor
+    sudo apt-get install i2c-tools
