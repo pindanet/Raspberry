@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # x11vnc
 # SoftAP
 
