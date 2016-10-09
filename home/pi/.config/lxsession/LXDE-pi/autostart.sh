@@ -1,6 +1,6 @@
 #!/bin/bash
 # Start fullscreen browser
-xte 'sleep 10' 'key F11' &
+xte 'sleep 10' 'mousemove 400 240' 'sleep 1' 'key F11' 'sleep 1' 'key F5' &
 firefox localhost &
 # Disable Screensaver
 xset s off
