@@ -23,6 +23,14 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
         transition: background 1.5s linear;
         opacity: 1.0;
       }
+      th {
+        color: white;
+        text-shadow: 0 0 2px black;
+        text-align: center;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: bold;
+      }
       #cf {
         position: relative;
       }
@@ -48,6 +56,9 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
         font-weight: bold;
         border-radius: 12px;
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+      }
+      td .button {
+        padding: 10px;
       }
       #clock {
         color: white;
@@ -103,7 +114,6 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
           document.getElementById("content").innerHTML = `<img src="http://www.yr.no/place/Belgium/Flanders/Bruges/meteogram.png" alt="Weerbericht Brugge" height="272" width="828" onclick="menu();">
           <p id="bme280"></p>`;
         }
-console.log(hourly);
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "bme280tph.py", true);
         xhr.onload = function(e) {
@@ -115,11 +125,85 @@ console.log(hourly);
         };
         xhr.send();
       }
+      function setThermostat(day, period) {
+          document.getElementById("content").innerHTML = `<button class="button" onclick="thermostat();">&lt;</button>
+          <p>` + dayNames[day] + `</p>`;
+      }
+      function thermostat() {
+        document.getElementById("content").innerHTML = `<table>
+         <tr>
+          <th>Maandag</th>
+          <th>Dinsdag</th>
+          <th>Woensdag</th>
+          <th>Donderdag</th>
+          <th>Vrijdag</th>
+          <th>Zaterdag</th>
+          <th>Zondag</th>
+         </tr>
+         <tr>
+          <td><button class="button" onclick="setThermostat(0,0);">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+         </tr>
+         <tr>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+         </tr>
+         <tr>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+         </tr>
+         <tr>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+         </tr>
+         <tr>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+         </tr>
+         <tr>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+          <td><button class="button" onclick="">14:50 21°C</button></td>
+         </tr>
+        </table>`;
+        document.body.style.cursor = "default";
+        centerContent();
+      }
       function menu() {
         clearTimeout(startTimer);
         document.getElementById("content").innerHTML = `<button class="button" onclick="location.reload();">Fotokader</button>
         <button class="button" onclick="startTime();">Klok</button>
-        <button class="button" onclick="hourly=60;weather();">Weerbericht</button>`;
+        <button class="button" onclick="hourly=60;weather();">Weerbericht</button>
+        <button class="button" onclick="thermostat();">Thermostaat</button>`;
         document.body.style.cursor = "default";
         centerContent();
       }
