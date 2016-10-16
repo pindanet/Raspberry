@@ -86,4 +86,13 @@ My own All In One Raspberry Pi project.
     sudo adduser www-data i2c
 ## YouTube Video Stream
     # Account pictogram > Creataor Studio > Live Streaming
-    
+    sudo apt-get install libmp3lame-dev libx264-dev
+    mkdir software
+    cd software
+    wget http://ffmpeg.org/releases/ffmpeg-3.1.4.tar.bz2
+    cd ..
+    mkdir src
+    cd src/
+    tar xvjf ../software/ffmpeg-3.1.4.tar.bz2
+    cd ffmpeg-3.1.4/
+    ./configure --enable-gpl --enable-nonfree --enable-libx264 --enable-libmp3lame
