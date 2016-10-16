@@ -84,3 +84,6 @@ My own All In One Raspberry Pi project.
     
     sudo mv bme280.py /media/data/var/www/html/
     sudo adduser www-data i2c
+## YouTube Video Stream
+    # Account pictogram > Creataor Studio > Live Streaming
+    
