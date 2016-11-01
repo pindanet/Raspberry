@@ -95,7 +95,7 @@ My own All In One Raspberry Pi project.
 ## YouTube Live Video Stream
     # https://www.assetbank.co.uk/support/documentation/install/ffmpeg-debian-squeeze/ffmpeg-debian-jessie/
     # https://gist.github.com/maxogden/69e4ae18a32d7efd00d9
-    # Account pictogram > Creataor Studio > Live Streaming
+    # Account pictogram > Creator Studio > Live Streaming
     sudo apt-get install libmp3lame-dev libx264-dev
     mkdir software
     cd software
