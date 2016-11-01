@@ -1,7 +1,7 @@
 [Unit]
 Description=Get new Wallpaper
 [Timer]
-OnBootSec=1min
+OnBootSec=10min
 OnUnitActiveSec=24h
 Unit=PindaNetWallpaper.service
 [Install]
