@@ -48,8 +48,14 @@ My own All In One Raspberry Pi project.
     sudo rm -r /var/www/html/
     sudo ln -s /media/data/var/www/html/ /var/www/html
 ### Folder with background pictures
-    # sudo ln -s /usr/share/pixel-wallpaper/ /media/data/var/www/html/background
     sudo mkdir /media/data/var/www/html/background
+    sudo mkdir -p /media/data/etc/systemd/system/
+    sudo ln -s /media/data/etc/systemd/system/PindaNetWallpaper.timer /etc/systemd/system/PindaNetWallpaper.timer
+    sudo ln -s /media/data/etc/systemd/system/PindaNetWallpaper.service /etc/systemd/system/PindaNetWallpaper.service
+    sudo ln -s /media/data/home/pi/wallpaper.sh wallpaper.sh
+    sudo systemctl daemon-reload
+    sudo systemctl enable PindaNetWallpaper.timer
+    sudo systemctl start PindaNetWallpaper.timer
 ## Activate python3 CGI
     sudo a2enmod cgid
     sudo nano /etc/apache2/conf-enabled/pinda.conf
