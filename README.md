@@ -53,6 +53,7 @@ My own All In One Raspberry Pi project.
     sudo ln -s /media/data/etc/systemd/system/PindaNetWallpaper.timer /etc/systemd/system/PindaNetWallpaper.timer
     sudo ln -s /media/data/etc/systemd/system/PindaNetWallpaper.service /etc/systemd/system/PindaNetWallpaper.service
     sudo ln -s /media/data/home/pi/wallpaper.sh wallpaper.sh
+    sudo chmod a+x /media/data/home/pi/wallpaper.sh
     sudo systemctl daemon-reload
     sudo systemctl enable PindaNetWallpaper.timer
     sudo systemctl start PindaNetWallpaper.timer
