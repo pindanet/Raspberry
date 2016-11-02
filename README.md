@@ -57,6 +57,7 @@ My own All In One Raspberry Pi project.
     sudo systemctl daemon-reload
     sudo systemctl enable PindaNetWallpaper.timer
     sudo systemctl start PindaNetWallpaper.timer
+    systemctl list-timers
 ## Activate python3 CGI
     sudo a2enmod cgid
     sudo nano /etc/apache2/conf-enabled/pinda.conf
