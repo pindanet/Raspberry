@@ -50,8 +50,8 @@ My own All In One Raspberry Pi project.
 ### Folder with background pictures
     sudo mkdir /media/data/var/www/html/background
     sudo mkdir -p /media/data/etc/systemd/system/
-    sudo ln -s /media/data/etc/systemd/system/PindaNetWallpaper.timer /etc/systemd/system/PindaNetWallpaper.timer
-    sudo ln -s /media/data/etc/systemd/system/PindaNetWallpaper.service /etc/systemd/system/PindaNetWallpaper.service
+    sudo cp /media/data/etc/systemd/system/PindaNetWallpaper.timer /etc/systemd/system/PindaNetWallpaper.timer
+    sudo cp /media/data/etc/systemd/system/PindaNetWallpaper.service /etc/systemd/system/PindaNetWallpaper.service
     sudo ln -s /media/data/home/pi/wallpaper.sh wallpaper.sh
     sudo chmod a+x /media/data/home/pi/wallpaper.sh
     sudo systemctl daemon-reload
