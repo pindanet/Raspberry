@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!--
 TODO
-http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-a-raspberry-pi/
 -->
 <html>
   <head>
@@ -83,6 +82,7 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
         xhr.onload = function(e) {
           if (this.status == 200) {
             var imageFileName = this.responseText;
+/*
             if(document.getElementById("cf1").style.opacity == "0") {
               document.getElementById("cf1").src=imageFileName;
               document.getElementById("cf1").style.opacity = "1";
@@ -94,11 +94,14 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
             }
             document.body.style.cursor = "url(index/cursor.png), auto";
             document.getElementById("content").innerHTML = '';
-            startTimer = setTimeout(background, 864000);
+            startBackgroundTimer = setTimeout(background, 864000);
             document.getElementById("cf1").style.width = document.body.offsetWidth + "px";
             document.getElementById("cf1").style.height = document.body.offsetHeight + "px";
             document.getElementById("cf2").style.width = document.body.offsetWidth + "px";
             document.getElementById("cf2").style.height = document.body.offsetHeight + "px";
+*/
+            document.body.style.backgroundImage = 'url(' + imageFileName + ')';
+            startBackgroundTimer = setTimeout(background, 864000);
           }
         };
         xhr.send();
@@ -233,10 +236,10 @@ http://www.kianryan.co.uk/2015/10/buliding-a-youtube-live-streaming-camera-with-
     </script> 
   </head>
   <body onload="background();">
-  <div id="cf">
+  <!--div id="cf">
     <img id="cf1" class="bottom" src="" />
     <img id="cf2" class="top" src="" />
-  </div>
+  </div-->
   <div id="content"></div>
   </body>
 </html>
