@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!--
 TODO
+background switch
 -->
 <html>
   <head>
@@ -29,14 +30,6 @@ TODO
         text-decoration: none;
         font-size: 20px;
         font-weight: bold;
-      }
-      #cf {
-        position: relative;
-      }
-      #cf img {
-        position: absolute;
-        left: 0;
-        transition: opacity 2s ease-in-out;
       }
       #content {
         position: absolute;
@@ -82,24 +75,6 @@ TODO
         xhr.onload = function(e) {
           if (this.status == 200) {
             var imageFileName = this.responseText;
-/*
-            if(document.getElementById("cf1").style.opacity == "0") {
-              document.getElementById("cf1").src=imageFileName;
-              document.getElementById("cf1").style.opacity = "1";
-              document.getElementById("cf2").style.opacity = "0";
-            } else {
-              document.getElementById("cf2").src=imageFileName;
-              document.getElementById("cf2").style.opacity = "1";
-              document.getElementById("cf1").style.opacity = "0";
-            }
-            document.body.style.cursor = "url(index/cursor.png), auto";
-            document.getElementById("content").innerHTML = '';
-            startBackgroundTimer = setTimeout(background, 864000);
-            document.getElementById("cf1").style.width = document.body.offsetWidth + "px";
-            document.getElementById("cf1").style.height = document.body.offsetHeight + "px";
-            document.getElementById("cf2").style.width = document.body.offsetWidth + "px";
-            document.getElementById("cf2").style.height = document.body.offsetHeight + "px";
-*/
             document.body.style.backgroundImage = 'url(' + imageFileName + ')';
             startBackgroundTimer = setTimeout(background, 864000);
           }
@@ -133,71 +108,42 @@ TODO
           <p>` + dayNames[day] + `</p>`;
       }
       function thermostat() {
-        document.getElementById("content").innerHTML = `<table>
-         <tr>
-          <th>Maandag</th>
-          <th>Dinsdag</th>
-          <th>Woensdag</th>
-          <th>Donderdag</th>
-          <th>Vrijdag</th>
-          <th>Zaterdag</th>
-          <th>Zondag</th>
-         </tr>
-         <tr>
-          <td><button class="button" onclick="setThermostat(0,0);">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-         </tr>
-         <tr>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-         </tr>
-         <tr>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-         </tr>
-         <tr>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-         </tr>
-         <tr>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-         </tr>
-         <tr>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-          <td><button class="button" onclick="">14:50 21°C</button></td>
-         </tr>
-        </table>`;
+var thermostat = [
+[
+    {"time":"08:00", "temp":"20"},
+    {"time":"21:40", "temp":"15"},
+],
+[
+    {"time":"07:00", "temp":"20"},
+],
+[],
+[],
+[],
+[],
+[]
+];
+        tableel='<table>';
+        tableel+='<tr>';
+        for (day in thermostat) {
+          tableel += '<th>' + dayNames[day] + '</th>';
+        }
+        tableel+='</tr>';
+        timetempcounter=0;
+        timetempvalues=true;
+        while (timetempvalues) {
+          timetempvalues=false;
+          tableel+='<tr>';
+          for (day in thermostat) {
+            if (typeof thermostat[day][timetempcounter] !== 'undefined') {
+              tableel += '<td><button class="button" onclick="setThermostat(0,0);">' + thermostat[day][timetempcounter].time + ' ' + thermostat[day][timetempcounter].temp + '°C</button></td>';
+              timetempvalues=true;
+            }
+          }
+          tableel+='<tr>';
+          timetempcounter++;
+        }
+        tableel+='</table>';
+        document.getElementById("content").innerHTML = tableel;
         document.body.style.cursor = "default";
         centerContent();
       }
@@ -236,10 +182,6 @@ TODO
     </script> 
   </head>
   <body onload="background();">
-  <!--div id="cf">
-    <img id="cf1" class="bottom" src="" />
-    <img id="cf2" class="top" src="" />
-  </div-->
   <div id="content"></div>
   </body>
 </html>
