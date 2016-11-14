@@ -13,7 +13,7 @@ if [[ ! $(whoami) =~ "root" ]]; then
 fi
 
 if [[ -z $1 ]]; then
-  echo "Usage: ./raspbian-resize.sh raspian-netbios-vnc.img"
+  echo "Usage: ./raspbian-truncate.sh raspian-netbios-vnc.img"
   exit
 fi
 
