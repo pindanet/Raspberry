@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
 TODO
-background switch
+Themostaat instelling verwijderen, aanpassen
 -->
 <html>
   <head>
@@ -113,7 +113,9 @@ var thermostat = [
 ],
 [],
 [],
-[],
+[
+    {"time":"07:00", "temp":"20"},
+],
 [],
 []
 ];
@@ -126,7 +128,7 @@ var thermostat = [
         weeklyThermostat();
       }
       function weeklyThermostat() {
-        tableel='<table style="width:786px">';
+        tableel='<table style="width:790px">';
         tableel+='<tr>';
         for (day in thermostat) {
           tableel += '<th>' + dayNames[day] + '</th>';
@@ -143,6 +145,8 @@ var thermostat = [
               timetempvalues=true;
             } else if (typeof thermostat[day][timetemp - 1] !== 'undefined' || timetemp == 0) {
               tableel += '<td><button class="button" onclick="addTimeTemp(' + day + ',' + timetemp + '0);">++:++ ++°C</button></td>';
+            } else {
+              tableel += '<td></td>';
             }
           }
           tableel+='<tr>';
@@ -189,5 +193,5 @@ var thermostat = [
   </head>
   <body onload="background();">
   <div id="content"></div>
-  </body>
+</body>
 </html>
