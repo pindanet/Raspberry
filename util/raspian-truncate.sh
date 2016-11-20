@@ -1,7 +1,6 @@
 #!/bin/bash
 # Truncate Image file
 # Written by Dany Pinoy
-strImgFile=$1
 
 if [[ ! $(whoami) =~ "root" ]]; then
   echo ""
