@@ -1,7 +1,6 @@
 #!/bin/bash
 # Change hostname and resize root partition on SD card
 # Written by Dany Pinoy
-strImgFile=$1
 
 if [[ ! $(whoami) =~ "root" ]]; then
   echo ""
