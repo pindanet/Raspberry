@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <!--
 TODO
-Themostaat instelling verwijderen, aanpassen
+Thermostaat timetemp aanpassen
+Thermostaat sorteren op tijd
 -->
 <html>
   <head>
@@ -23,7 +24,7 @@ Themostaat instelling verwijderen, aanpassen
         transition: background 1.5s linear;
         opacity: 1.0;
       }
-      th {
+      th, .dayname {
         color: white;
         text-shadow: 0 0 2px black;
         text-align: center;
@@ -31,12 +32,16 @@ Themostaat instelling verwijderen, aanpassen
         font-size: 20px;
         font-weight: bold;
       }
+      .inline {
+        display: inline-block;
+        vertical-align: middle;
+      }
       #content {
         position: absolute;
         transition: 1s;
         text-align: center;
       }
-      .button {
+      button {
         background-color: rgba(128,128,128,0.5);
         border: 1px solid rgb(128,128,128);
         color: white;
@@ -49,7 +54,7 @@ Themostaat instelling verwijderen, aanpassen
         border-radius: 12px;
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
       }
-      td .button {
+      td button {
         padding: 10px;
       }
       #clock {
@@ -120,11 +125,31 @@ var thermostat = [
 []
 ];
       function setThermostat(day, timetemp) {
-          document.getElementById("content").innerHTML = `<button class="button" onclick="weeklyThermostat();">&lt;</button>
-          <p>` + dayNames[day] + `</p>`;
+          document.getElementById("content").innerHTML = `<div class="dayname">
+          <button onclick="weeklyThermostat();">&#x25C0;</button> ` + 
+          dayNames[day] + ` ` + thermostat[day][timetemp].time.substring(0, 2) + `
+          <table class="inline">
+            <tr><td><button onclick="hourUp();">&#x25B2;</button></td></tr>
+            <tr><td><button onclick="hourDown();">&#x25BC;</button></td></tr>
+          </table>
+          :` + thermostat[day][timetemp].time.substring(3, 5) + `
+          <table class="inline">
+            <tr><td><button onclick="minUp();">&#x25B2;</button></td></tr>
+            <tr><td><button onclick="minDown();">&#x25BC;</button></td></tr>
+          </table>
+          `+ thermostat[day][timetemp].temp +` °C
+          <table class="inline">
+            <tr><td><button onclick="tempUp();">&#x25B2;</button></td></tr>
+            <tr><td><button onclick="tempDown();">&#x25BC;</button></td></tr>
+          </table>
+          <button onclick="delTimeTemp(` + day + `,` + timetemp + `);">&mdash;</button></div>`;
       }
       function addTimeTemp(day, timetemp) {
         thermostat[day].push({"time": "07:00", "temp":"20"});
+        weeklyThermostat();
+      }
+      function delTimeTemp(day, timetemp) {
+        thermostat[day].splice(timetemp, 1);
         weeklyThermostat();
       }
       function weeklyThermostat() {
@@ -141,10 +166,10 @@ var thermostat = [
           tableel+='<tr>';
           for (day in thermostat) {
             if (typeof thermostat[day][timetemp] !== 'undefined') {
-              tableel += '<td><button class="button" onclick="setThermostat(' + day + ',' + timetemp + '0);">' + thermostat[day][timetemp].time + ' ' + thermostat[day][timetemp].temp + '°C</button></td>';
+              tableel += '<td><button onclick="setThermostat(' + day + ',' + timetemp + ');">' + thermostat[day][timetemp].time + ' ' + thermostat[day][timetemp].temp + '°C</button></td>';
               timetempvalues=true;
             } else if (typeof thermostat[day][timetemp - 1] !== 'undefined' || timetemp == 0) {
-              tableel += '<td><button class="button" onclick="addTimeTemp(' + day + ',' + timetemp + '0);">++:++ ++°C</button></td>';
+                tableel += '<td><button onclick="addTimeTemp(' + day + ',' + timetemp + ');">++:++ ++°C</button></td>';
             } else {
               tableel += '<td></td>';
             }
@@ -159,10 +184,10 @@ var thermostat = [
       }
       function menu() {
         clearTimeout(startTimer);
-        document.getElementById("content").innerHTML = `<button class="button" onclick="location.reload();">Fotokader</button>
-        <button class="button" onclick="startTime();">Klok</button>
-        <button class="button" onclick="hourly=60;weather();">Weerbericht</button>
-        <button class="button" onclick="weeklyThermostat();">Thermostaat</button>`;
+        document.getElementById("content").innerHTML = `<button onclick="location.reload();">Fotokader</button>
+        <button onclick="startTime();">Klok</button>
+        <button onclick="hourly=60;weather();">Weerbericht</button>
+        <button onclick="weeklyThermostat();">Thermostaat</button>`;
         document.body.style.cursor = "default";
         centerContent();
       }
