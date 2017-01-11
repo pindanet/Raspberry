@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Controleer of het script de bash shell gebruikt
 if [ -z ${BASH+x} ]; then
    echo "Dit is een bash script."
@@ -61,7 +60,7 @@ auth_algs=1
 wmm_enabled=1
 # 1 to enable 802.11n
 ieee80211n=1
-#ht_capab=[HT40-][SHORT-GI-20][SHORT-GI-40]
+ht_capab=[HT20][SHORT-GI-20][DSSS_CK-HT40]
 
 # WEP/WPA/WPA2 bitmask, 0 for open/WEP, 1 for WPA, 2 for WPA2
 wpa=2
