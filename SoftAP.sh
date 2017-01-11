@@ -1,8 +1,16 @@
 #!/bin/bash
 
+# Controleer of het script de bash shell gebruikt
+if [ -z ${BASH+x} ]; then
+   echo "Dit is een bash script."
+   echo "Gebruik: sudo bash SoftAP.sh"
+   exit 1
+fi
+
 # Controleer of het script met root rechten is gestart
-if [[ $EUID -ne 0 ]]; then
-   echo "Dit script heeft rootrechten nodig." 1>&2
+if [ $EUID != 0 ]; then
+   echo "Dit script heeft rootrechten nodig."
+   echo "Gebruik: sudo bash SoftAP.sh"
    exit 1
 fi
 
