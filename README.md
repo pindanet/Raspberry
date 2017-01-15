@@ -58,12 +58,13 @@ My own All In One Raspberry Pi project.
     sudo systemctl enable PindaNetWallpaper.timer
     sudo systemctl start PindaNetWallpaper.timer
     systemctl list-timers
-## Activate python3 CGI
+## Activate python3 and Bash CGI
     sudo a2enmod cgid
     sudo nano /etc/apache2/conf-enabled/pinda.conf
     <Directory /var/www/html>
         Options +ExecCGI
         AddHandler cgi-script .py
+        AddHandler cgi-script .sh
     </Directory>
 
     sudo nano /media/data/var/www/html/test.py
