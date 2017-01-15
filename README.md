@@ -65,6 +65,9 @@ My own All In One Raspberry Pi project.
         Options +ExecCGI
         AddHandler cgi-script .py .sh
     </Directory>
+    
+    sudo nano /etc/sudoers
+    www-data ALL = NOPASSWD: /sbin/shutdown -r now
 
     sudo nano /media/data/var/www/html/test.py
     #!/usr/bin/python3
