@@ -63,8 +63,7 @@ My own All In One Raspberry Pi project.
     sudo nano /etc/apache2/conf-enabled/pinda.conf
     <Directory /var/www/html>
         Options +ExecCGI
-        AddHandler cgi-script .py
-        AddHandler cgi-script .sh
+        AddHandler cgi-script .py .sh
     </Directory>
 
     sudo nano /media/data/var/www/html/test.py
