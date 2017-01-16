@@ -73,6 +73,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
         font-size: 45px;
         text-shadow: 0 0 2px black;
       }
+      /* PinPad */
       #PINform input:focus,
       #PINform select:focus,
       #PINform textarea:focus,
@@ -92,7 +93,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
         background: #ededed;
         margin: 3.5%;
         width: 92%;
-        font-size: 4em;
+        font-size: 3em;
         text-align: center;
         border: 1px solid #d5d5d5;
       }
@@ -132,25 +133,28 @@ Helderheid display automatisch regelen via lichtmeting met camera
         background: #47cf73;
         color: #fff;
       }
+      /* End PinPad */
       </style>
     <script type="text/javascript">
-function addNumber(event, element){
-  document.getElementById('PINbox').value = document.getElementById('PINbox').value+element.value;
-  event.stopPropagation();
-}
-function clearForm(event){
-	document.getElementById('PINbox').value = "";
-	event.stopPropagation();
-}
-function submitForm(event, element) {
-	if (element.value == "") {
-		alert("Enter a PIN");
-	} else {
-		alert( "Your PIN has been sent! - " + element.value );
-		document.getElementById('PINbox').value = "";
-	};
-	event.stopPropagation();
-};
+    // PinPad
+      function addNumber(event, element){
+        document.getElementById('PINbox').value = document.getElementById('PINbox').value+element.value;
+        event.stopPropagation();
+      }
+      function clearForm(event){
+        document.getElementById('PINbox').value = "";
+        event.stopPropagation();
+      }
+      function submitForm(event, element) {
+        if (element.value == "") {
+          alert("Enter a PIN");
+        } else {
+          alert( "Your PIN has been sent! - " + element.value );
+          document.getElementById('PINbox').value = "";
+        };
+        event.stopPropagation();
+      };
+    // End PinPad
       function background() {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "background.py", true);
