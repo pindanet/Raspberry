@@ -73,6 +73,18 @@ Helderheid display automatisch regelen via lichtmeting met camera
         font-size: 45px;
         text-shadow: 0 0 2px black;
       }
+      #terminalbox {
+        background-color: rgba(0,0,0,0.5);
+        border: 1px solid rgb(128,128,128);
+        border-radius: 12px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        margin: 3.5%;
+        width: 92%;
+        padding: 1em;
+        text-align: left;
+        color: #fff;
+        text-shadow: 0 0 2px black;
+      }
       /* PinPad */
       #PINform input:focus,
       #PINform select:focus,
@@ -157,18 +169,16 @@ Helderheid display automatisch regelen via lichtmeting met camera
           alert("PINcode invoeren");
         } else {
           var xhr = new XMLHttpRequest();
-          xhr.open('POST', "shutdownr.sh", true);
+          xhr.open('POST', "bash.sh", true);
           xhr.onload = function(e) {
             if (this.status == 200) {
-              document.getElementById("content").innerHTML = this.responseText;
-console.log(this.responseText);
+              document.getElementById("content").innerHTML = '<pre id="terminalbox">' + this.responseText + "</pre>";
               centerContent();
             }
           };
           xhr.send("command=" + callback +"&pin=" + element.value);
-
-//          alert( "Your PIN has been sent! - " + element.value );
-//          document.getElementById('PINbox').value = "";
+          document.getElementById("content").innerHTML = `<pre id="PINbox">Bezig met bijwerken.</pre>`
+          centerContent();
         }
         event.stopPropagation();
       }
@@ -299,8 +309,8 @@ var thermostat = [
       }
       function system(event) {
         document.getElementById("content").innerHTML = `<button onclick="enterPIN(event,'reboot');">Herstart</button>
-        <button onclick="update();">Bijwerken</button>
-        <button onclick="enterPIN(event('halt');">Uitschakelen</button>`;
+        <button onclick="enterPIN(event,'update');">Bijwerken</button>
+        <button onclick="enterPIN(event,'halt');">Uitschakelen</button>`;
         document.body.style.cursor = "default";
         centerContent();
         event.stopPropagation();
