@@ -99,22 +99,26 @@ function cgi_getvars()
 # register all GET and POST variables
 cgi_getvars BOTH ALL
 
-#encoderen
-enc=`echo -n "aaaabbbbccccdddd" | openssl enc -e -aes-256-cbc -a -salt -pass pass:$pin`
-
-# decoderen
-echo $enc | openssl enc -d -aes-256-cbc -a -salt -pass pass:$pin
-
 { myCode=$(</dev/stdin); } << EOF
-echo "<pre>"
-if [ $command == "reboot" ]; then
-  echo $command
-else
-  echo Error
-fi
-echo $pin
-#sudo /sbin/shutdown -r now
-echo "</pre>"
+case "$command" in
+  reboot)
+    sudo /sbin/shutdown -r now
+    ;;
+  update)
+    sudo /usr/bin/apt-get update
+    sudo /usr/bin/apt-get upgrade -y 2>&1
+    ;;
+  halt)
+    sudo /sbin/shutdown -h now
+    ;;
+  *)
+    echo Error
+esac
 EOF
+
+# encoderen
+enc=`echo -n $myCode | openssl enc -e -aes-256-cbc -a -salt -pass pass:$pin`
+# decoderen
+dec=`echo $enc | openssl enc -d -aes-256-cbc -a -salt -pass pass:$pin`
 
 eval "$myCode"
