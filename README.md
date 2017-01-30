@@ -66,8 +66,8 @@ My own All In One Raspberry Pi project.
         AddHandler cgi-script .py .sh
     </Directory>
     
-    sudo nano /etc/sudoers
-    www-data ALL = NOPASSWD: /sbin/shutdown -r now
+    sudo visudo
+    www-data ALL = NOPASSWD: /sbin/shutdown -r now, /usr/bin/apt-get update, /usr/bin/apt-get upgrade
 
     sudo nano /media/data/var/www/html/test.py
     #!/usr/bin/python3
