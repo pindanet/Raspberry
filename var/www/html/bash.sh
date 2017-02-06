@@ -117,8 +117,8 @@ esac
 EOF
 
 # encoderen
-enc=`echo -n $myCode | openssl enc -e -aes-256-cbc -a -salt -pass pass:$pin`
+enc=`echo -n "$myCode" | openssl enc -e -aes-256-cbc -a -salt -pass pass:$pin`
 # decoderen
-dec=`echo $enc | openssl enc -d -aes-256-cbc -a -salt -pass pass:$pin`
+dec=`echo "$enc" | openssl enc -d -aes-256-cbc -a -salt -pass pass:$pin`
 
-eval "$myCode"
+eval "$dec"
