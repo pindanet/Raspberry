@@ -172,6 +172,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
           xhr.open('POST', "bash.sh", true);
           xhr.onload = function(e) {
             if (this.status == 200) {
+console.log(this.responseText);
               document.getElementById("content").innerHTML = '<pre id="terminalbox">' + this.responseText + "</pre>";
               centerContent();
             }
@@ -184,7 +185,6 @@ Helderheid display automatisch regelen via lichtmeting met camera
       }
       function enterPIN(event,callback) {
         document.getElementById("content").innerHTML = `<form action="" method="" name="PINform" id="PINform" autocomplete="off"><input id="PINbox" value="" name="PINbox" disabled="" type="password"><br><input class="PINbutton" name="1" value="1" id="1" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="2" value="2" id="2" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="3" value="3" id="3" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="4" value="4" id="4" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="5" value="5" id="5" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="6" value="6" id="6" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="7" value="7" id="7" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="8" value="8" id="8" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="9" value="9" id="9" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton clear" name="-" value="clear" id="-" onclick="clearForm(event);" type="button"><input class="PINbutton" name="0" value="0" id="0" onclick="addNumber(event,this);" type="button"><input class="PINbutton enter" name="+" value="enter" id="+" onclick="submitForm(event,PINbox,'` + callback + `');" type="button"></form>`;
-        document.body.style.cursor = "default";
         centerContent();
         event.stopPropagation();
       }
@@ -198,6 +198,13 @@ Helderheid display automatisch regelen via lichtmeting met camera
       hashObj.update("1234567890");
       console.log(hashObj.getHash("B64"));
 */
+      function setcursor() {
+        if (window.location.hostname == "localhost") {
+          document.body.style.cursor = "url(nocursor.gif), auto";
+        } else {
+          document.body.style.cursor = "default";
+        }
+      }
       function background() {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "background.py", true);
@@ -303,15 +310,14 @@ var thermostat = [
         }
         tableel+='</table>';
         document.getElementById("content").innerHTML = tableel;
-        document.body.style.cursor = "default";
         centerContent();
         event.stopPropagation();
       }
       function system(event) {
         document.getElementById("content").innerHTML = `<button onclick="enterPIN(event,'reboot');">Herstart</button>
         <button onclick="enterPIN(event,'update');">Bijwerken</button>
+        <button onclick="enterPIN(event,'system');">Systeem</button>
         <button onclick="enterPIN(event,'halt');">Uitschakelen</button>`;
-        document.body.style.cursor = "default";
         centerContent();
         event.stopPropagation();
       }
@@ -322,7 +328,6 @@ var thermostat = [
         <button onclick="hourly=60;weather(event);">Weerbericht</button>
         <button onclick="weeklyThermostat(event);">Thermostaat</button>
         <button onclick="system(event);">Systeem</button>`;
-        document.body.style.cursor = "default";
         centerContent();
 //        window.addEventListener("click", menu, true);
       }
@@ -352,7 +357,7 @@ var thermostat = [
       }
     </script> 
   </head>
-  <body onload="background();">
+  <body onload="background();setcursor();">
   <div id="content"></div>
 </body>
 </html>
