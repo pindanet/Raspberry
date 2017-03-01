@@ -172,7 +172,6 @@ Helderheid display automatisch regelen via lichtmeting met camera
           xhr.open('POST', "bash.sh", true);
           xhr.onload = function(e) {
             if (this.status == 200) {
-console.log(this.responseText);
               document.getElementById("content").innerHTML = '<pre id="terminalbox">' + this.responseText + "</pre>";
               centerContent();
             }
@@ -256,22 +255,25 @@ var thermostat = [
 [],
 []
 ];
-      function outputUpdateHour(event, value) {
-        console.log(value);
-//        event.preventDefault();
-//        return false;
+      function outputUpdate(event, value, elmid, day, timetemp) {
+        document.getElementById(elmid).value = ("0" + value).slice(-2);
+        thermostat[day][timetemp].time = document.getElementById("sethour").value + ":" + document.getElementById("setmin").value;
+        thermostat[day][timetemp].temp = document.getElementById("settemp").value;
         event.stopPropagation();
       }
-      function setThermostat(event,day, timetemp) {
+      function setThermostat(event, day, timetemp) {
           document.getElementById("content").innerHTML = `<div class="dayname">
-          <button onclick="weeklyThermostat();">&#x25C0;</button> ` + 
-          dayNames[day] + ` ` + thermostat[day][timetemp].time.substring(0, 2) + `
-          <input id="test" class="inline" type="range" orient="vertical" min="0" max="24" oninput="outputUpdateHour(event,value)" onclick="outputUpdateHour(event,100)">
-          ` + thermostat[day][timetemp].time.substring(3, 5) + `
-          <input id="test" class="inline" type="range" orient="vertical" min="0" max="60" oninput="outputUpdateHour(value)">
-          `+ thermostat[day][timetemp].temp +` °C
-          <input id="test" class="inline" type="range" orient="vertical" min="0" max="24" oninput="outputUpdateHour(value)">
-          <button onclick="delTimeTemp(` + day + `,` + timetemp + `);">&mdash;</button></div>`;
+          <button onclick="weeklyThermostat(event);">&#x25C0;</button> ` + 
+          dayNames[day] + ` <input type="text" size="2" id="sethour" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(0, 2) + `">
+          <input class="inline" type="range" orient="vertical" min="0" max="23" oninput="outputUpdate(event,value,'sethour',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(0, 2) + `">
+          
+          <input type="text" size="2" id="setmin" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(3, 5) + `">
+          <input class="inline" type="range" orient="vertical" min="0" max="59" oninput="outputUpdate(event,value,'setmin',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value ="` + thermostat[day][timetemp].time.substring(3, 5) + `">
+          
+          <input type="text" size="2" id="settemp" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].temp + `"> °C
+          <input class="inline" type="range" orient="vertical" min="0" max="24" oninput="outputUpdate(event,value,'settemp',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].temp + `">
+
+          <button onclick="delTimeTemp(event,` + day + `,` + timetemp + `);">&mdash;</button></div>`;
           event.stopPropagation();
       }
       function addTimeTemp(event, day, timetemp) {
@@ -279,9 +281,9 @@ var thermostat = [
         weeklyThermostat(event);
         event.stopPropagation();
       }
-      function delTimeTemp(day, timetemp) {
+      function delTimeTemp(event,day, timetemp) {
         thermostat[day].splice(timetemp, 1);
-        weeklyThermostat();
+        weeklyThermostat(event);
       }
       function weeklyThermostat(event) {
         tableel='<table style="width:790px">';
