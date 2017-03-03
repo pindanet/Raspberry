@@ -29,6 +29,8 @@ My own All In One Raspberry Pi project.
     ssh-copy-id -i ~/.ssh/id_rsa.pub pi@raspberrypi.local
     sudo nano /etc/ssh/sshd_config
       PasswordAuthentication no
+    # Rsync backup, with single partition add --exclude="/media/"
+    sudo rsync -aAXv --delete --exclude="/dev/" --exclude="/proc/" --exclude="/sys/" --exclude="/tmp/" --exclude="/run/" --exclude="/mnt/" --exclude="/lost+found/" / backup.local::backup/raspberrypi
 
 ## User Access on non system partition
     sudo nano /etc/fstab
