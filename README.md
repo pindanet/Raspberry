@@ -33,13 +33,6 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     # Rsync backup
     sudo rsync -aAXv --delete --exclude="/dev/" --exclude="/proc/" --exclude="/sys/" --exclude="/tmp/" --exclude="/run/" --exclude="/mnt/" --exclude="/media/" --exclude="/lost+found/" / backup.local::backup/raspberrypi
 
-## User Access on non system partition
-    sudo nano /etc/fstab
-      /dev/mmcblk0p3  /media/data     ext4    defaults          0       0
-    sudo mkdir /media/data
-    sudo mount -a
-    sudo mkdir -p /media/data/home/pi
-    chown pi:pi /media/data/home/pi/
 ## Autostart fullscreen browser
     sudo apt-get install xautomation firefox-esr
     mkdir -p /media/data/home/pi/.config/lxsession/LXDE-pi/
