@@ -1,5 +1,5 @@
 #!/bin/bash
-echo -e "Content-type: text/html\n\n"
+echo -e "Content-type: text/html\n"
 
 # (internal) routine to store POST data
 function cgi_get_POST_vars()
@@ -99,18 +99,32 @@ function cgi_getvars()
 # register all GET and POST variables
 cgi_getvars BOTH ALL
 
+# decrypt: echo "IP7sayYhO9Jxztb69vVeXV/4kdWuQIe4WJoTwRqMpLktEDpLnq4Lczga6CaDoVhAS+CBmdUVNI4SQpd3Wj5BS5kBmHM/O+YOt7/TYgpGmZK/6a33ys61xJNvz/1fcn0qCr8rZTzy5dqzA8Eomvi15imty09qtRXRMjaWsxHwY1Q=" | openssl base64 -d | openssl rsautl -decrypt -inkey /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem
+case "$command" in
+  genkey)
+    openssl genrsa -out /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem 2048
+    openssl rsa -pubout -in /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem -out /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_pub.pem
+    cat /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_pub.pem
+    exit
+    ;;
+esac
+
 { myCode=$(</dev/stdin); } << EOF
 case "$command" in
+  system)
+#    echo $encpin
+#    echo "htmlcode"
+    echo "<button onclick=\"enterPIN(event,'reboot');\">Herstart</button>"
+    echo "<button onclick=\"enterPIN(event,'halt');\">Uitschakelen</button>"
+    ;;
   reboot)
     sudo /sbin/shutdown -r now
-    ;;
-  update)
-    sudo /usr/bin/apt-get update
-    sudo /usr/bin/apt-get upgrade -y 2>&1
     ;;
   halt)
     sudo /sbin/shutdown -h now
     ;;
+  saveThermostat)
+    echo $jason;;
   *)
     echo Error
 esac
