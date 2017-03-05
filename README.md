@@ -105,7 +105,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
       DEVICE = 0x77 # Default device I2C address
     python bme280.py
     
-    sudo mv bme280.py /media/data/var/www/html/
+    sudo mv bme280.py /var/www/html/
     sudo adduser www-data i2c
 ## YouTube Live Video Stream
     # Account pictogram > Creator Studio > Live Streaming
