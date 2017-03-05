@@ -60,12 +60,11 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     nano .config/lxsession/LXDE-pi/autostart
       @sh /home/pi/.config/lxsession/LXDE-pi/autostart.sh
 ### Folder with background pictures
-    sudo mkdir /media/data/var/www/html/background
-    sudo mkdir -p /media/data/etc/systemd/system/
-    sudo cp /media/data/etc/systemd/system/PindaNetWallpaper.timer /etc/systemd/system/PindaNetWallpaper.timer
-    sudo cp /media/data/etc/systemd/system/PindaNetWallpaper.service /etc/systemd/system/PindaNetWallpaper.service
-    sudo ln -s /media/data/home/pi/wallpaper.sh wallpaper.sh
-    sudo chmod a+x /media/data/home/pi/wallpaper.sh
+    sudo mkdir /var/www/html/background
+    sudo mv PindaNetWallpaper.timer /etc/systemd/system/PindaNetWallpaper.timer
+    sudo mv PindaNetWallpaper.service /etc/systemd/system/PindaNetWallpaper.service
+    # copy wallpaper.sh to /home/pi/
+    sudo chmod a+x wallpaper.sh
     sudo systemctl daemon-reload
     sudo systemctl enable PindaNetWallpaper.timer
     sudo systemctl start PindaNetWallpaper.timer
