@@ -39,9 +39,12 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
       @sh /home/pi/.config/lxsession/LXDE-pi/autostart.sh
 ## Webserver
     sudo apt-get install apache2
+    sudo a2enmod ssl
+    sudo a2ensite default-ssl
+    
     sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
     sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
-    sudo nano /etc/apache2/conf-available/ssl-params.conf
+    # sudo nano /etc/apache2/conf-available/ssl-params.conf
       # from https://cipherli.st/
       # and https://raymii.org/s/tutorials/Strong_SSL_Security_On_Apache2.html
 
@@ -61,13 +64,13 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
       SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
 
       SSLOpenSSLConfCmd DHParameters "/etc/ssl/certs/dhparam.pem"
-    sudo cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf.bak
+    # sudo cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf.bak
       ServerName rpipindanet.local
       SSLCertificateFile      /etc/ssl/certs/apache-selfsigned.crt
       SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
-    sudo a2enmod ssl
-    sudo a2enmod headers
-    sudo a2enconf ssl-params
+    # sudo a2enmod ssl
+    # sudo a2enmod headers
+    # sudo a2enconf ssl-params
     
 ### Folder with background pictures
     sudo mkdir /media/data/var/www/html/background
