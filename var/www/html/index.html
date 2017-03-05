@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!--
 TODO
+sudo apt-get install jq
 Thermostaat timetemp aanpassen
 Thermostaat sorteren op tijd
 Helderheid display automatisch regelen via lichtmeting met camera
@@ -154,6 +155,8 @@ Helderheid display automatisch regelen via lichtmeting met camera
       }
       /* End PinPad */
     </style>
+    <!--script src="sha.js"></script-->
+    <script src="jsencrypt.js"></script>
     <script type="text/javascript">
     // PinPad
       function addNumber(event, element){
@@ -164,7 +167,9 @@ Helderheid display automatisch regelen via lichtmeting met camera
         document.getElementById('PINbox').value = "";
         event.stopPropagation();
       }
-      function submitForm(event, element, callback) {
+      var encryptedPIN="";
+      var callback;
+      function submitForm(event) {
         if (document.getElementById('PINbox').value == "") {
           alert("PINcode invoeren");
         } else {
@@ -172,31 +177,27 @@ Helderheid display automatisch regelen via lichtmeting met camera
           xhr.open('POST', "bash.sh", true);
           xhr.onload = function(e) {
             if (this.status == 200) {
-              document.getElementById("content").innerHTML = '<pre id="terminalbox">' + this.responseText + "</pre>";
-              centerContent();
+              var pubkey = this.responseText;
+              // Encrypt with the public key...
+              var encrypt = new JSEncrypt();
+              encrypt.setPublicKey(pubkey);
+              encryptedPIN = encrypt.encrypt(document.getElementById('PINbox').value);
+              
+              document.getElementById("content").innerHTML = "";
+              callback(event);
             }
           };
-          xhr.send("command=" + callback +"&pin=" + element.value);
-          document.getElementById("content").innerHTML = `<pre id="PINbox">Bezig met bijwerken.</pre>`
-          centerContent();
+          xhr.send("command=genkey");
         }
         event.stopPropagation();
       }
-      function enterPIN(event,callback) {
-        document.getElementById("content").innerHTML = `<form action="" method="" name="PINform" id="PINform" autocomplete="off"><input id="PINbox" value="" name="PINbox" disabled="" type="password"><br><input class="PINbutton" name="1" value="1" id="1" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="2" value="2" id="2" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="3" value="3" id="3" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="4" value="4" id="4" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="5" value="5" id="5" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="6" value="6" id="6" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="7" value="7" id="7" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="8" value="8" id="8" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="9" value="9" id="9" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton clear" name="-" value="clear" id="-" onclick="clearForm(event);" type="button"><input class="PINbutton" name="0" value="0" id="0" onclick="addNumber(event,this);" type="button"><input class="PINbutton enter" name="+" value="enter" id="+" onclick="submitForm(event,PINbox,'` + callback + `');" type="button"></form>`;
+      function enterPIN(event) {
+        document.getElementById("content").innerHTML = `<form action="" method="" name="PINform" id="PINform" autocomplete="off"><input id="PINbox" value="" name="PINbox" disabled="" type="password"><br><input class="PINbutton" name="1" value="1" id="1" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="2" value="2" id="2" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="3" value="3" id="3" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="4" value="4" id="4" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="5" value="5" id="5" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="6" value="6" id="6" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="7" value="7" id="7" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="8" value="8" id="8" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="9" value="9" id="9" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton clear" name="-" value="clear" id="-" onclick="clearForm(event);" type="button"><input class="PINbutton" name="0" value="0" id="0" onclick="addNumber(event,this);" type="button"><input class="PINbutton enter" name="+" value="enter" id="+" onclick="submitForm(event);" type="button"></form>`;
         centerContent();
         event.stopPropagation();
       }
     // End PinPad
-/*
-      var hashObj = new jsSHA(
-        "SHA3-512",
-        "TEXT",
-        {numRounds: 10000}
-      );
-      hashObj.update("1234567890");
-      console.log(hashObj.getHash("B64"));
-*/
+
       function setcursor() {
         if (window.location.hostname == "localhost") {
           document.body.style.cursor = "url(nocursor.gif), auto";
@@ -255,6 +256,27 @@ var thermostat = [
 [],
 []
 ];
+console.log(JSON.stringify(thermostat));
+saveThermostat();
+      function saveThermostat(event, element, callback) {
+//        if (document.getElementById('PINbox').value == "") {
+//          alert("PINcode invoeren");
+//        } else {
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', "bash.sh", true);
+          xhr.onload = function(e) {
+            if (this.status == 200) {
+  //            document.getElementById("content").innerHTML = '<pre id="terminalbox">' + this.responseText + "</pre>";
+//              centerContent();
+console.log(this.responseText);
+            }
+          };
+          xhr.send("command=saveThermostat&json=" + JSON.stringify(thermostat) +"&pin=1234567890");
+//          document.getElementById("content").innerHTML = `<pre id="PINbox">Bezig met bijwerken.</pre>`
+//          centerContent();
+//        }
+//        event.stopPropagation();
+      }
       function outputUpdate(event, value, elmid, day, timetemp) {
         document.getElementById(elmid).value = ("0" + value).slice(-2);
         thermostat[day][timetemp].time = document.getElementById("sethour").value + ":" + document.getElementById("setmin").value;
@@ -315,23 +337,46 @@ var thermostat = [
         centerContent();
         event.stopPropagation();
       }
-      function system(event) {
-        document.getElementById("content").innerHTML = `<button onclick="enterPIN(event,'reboot');">Herstart</button>
-        <button onclick="enterPIN(event,'update');">Bijwerken</button>
-        <button onclick="enterPIN(event,'system');">Systeem</button>
-        <button onclick="enterPIN(event,'halt');">Uitschakelen</button>`;
+      function remoteCommand(event, command) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "bash.sh", true);
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            document.getElementById("content").innerHTML = '<pre id="terminalbox">' + this.responseText + "</pre>";
+            centerContent();
+          }
+        };
+        xhr.send("encpin=" + encryptedPIN + "&command=" + command);
+        document.getElementById("content").innerHTML = '<pre id="terminalbox">Bezig met de' + command + " opdracht</pre>";
         centerContent();
+        event.stopPropagation();
+      }
+      function system(event) {
+        if (encryptedPIN == "") {
+          callback=system;
+          enterPIN(event);
+        } else {
+        document.getElementById("content").innerHTML = `<button onclick="location.reload();">Vernieuwen</button>
+        <button onclick="remoteCommand(event,'system');">Systeem</button>
+        <button onclick="remoteCommand(event,'reboot');">Herstart</button>
+        <button onclick="remoteCommand(event,'halt');">Uitschakelen</button>`;
+        centerContent();
+        event.stopPropagation();
+        }
+      }
+      function fotokader(event) {
+        background();
+        document.getElementById("content").innerHTML = "";
         event.stopPropagation();
       }
       function menu() {
         clearTimeout(startTimer);
-        document.getElementById("content").innerHTML = `<button onclick="location.reload();">Fotokader</button>
+        document.getElementById("content").innerHTML = `<button onclick="fotokader(event);">Fotokader</button>
         <button onclick="startTime(event);">Klok</button>
         <button onclick="hourly=60;weather(event);">Weerbericht</button>
         <button onclick="weeklyThermostat(event);">Thermostaat</button>
         <button onclick="system(event);">Systeem</button>`;
         centerContent();
-//        window.addEventListener("click", menu, true);
       }
       window.addEventListener("click", menu);
 
