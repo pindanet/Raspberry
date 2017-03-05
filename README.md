@@ -33,10 +33,6 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     # Rsync backup
     sudo rsync -aAXv --delete --exclude="/dev/" --exclude="/proc/" --exclude="/sys/" --exclude="/tmp/" --exclude="/run/" --exclude="/mnt/" --exclude="/media/" --exclude="/lost+found/" / backup.local::backup/raspberrypi
 
-## Autostart fullscreen browser
-    sudo apt-get install xautomation firefox-esr
-    nano .config/lxsession/LXDE-pi/autostart
-      @sh /home/pi/.config/lxsession/LXDE-pi/autostart.sh
 ## Webserver
     sudo apt-get install apache2
     sudo a2enmod ssl
@@ -59,6 +55,10 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
       Redirect "/" "https://rpipindanet.local/"
     sudo systemctl restart apache2.service
     
+## Autostart fullscreen browser
+    sudo apt-get install xautomation firefox-esr
+    nano .config/lxsession/LXDE-pi/autostart
+      @sh /home/pi/.config/lxsession/LXDE-pi/autostart.sh
 ### Folder with background pictures
     sudo mkdir /media/data/var/www/html/background
     sudo mkdir -p /media/data/etc/systemd/system/
