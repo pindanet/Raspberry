@@ -39,9 +39,9 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
       @sh /home/pi/.config/lxsession/LXDE-pi/autostart.sh
 ## Webserver
     sudo apt-get install apache2
-    sudo mkdir -p /media/data/var/www/html
-    sudo rm -r /var/www/html/
-    sudo ln -s /media/data/var/www/html/ /var/www/html
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+    sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+    
 ### Folder with background pictures
     sudo mkdir /media/data/var/www/html/background
     sudo mkdir -p /media/data/etc/systemd/system/
