@@ -30,8 +30,8 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     ssh-copy-id -i ~/.ssh/id_rsa.pub pi@raspberrypi.local
     sudo nano /etc/ssh/sshd_config
       PasswordAuthentication no
-    # Rsync backup, with single partition add --exclude="/media/"
-    sudo rsync -aAXv --delete --exclude="/dev/" --exclude="/proc/" --exclude="/sys/" --exclude="/tmp/" --exclude="/run/" --exclude="/mnt/" --exclude="/lost+found/" / backup.local::backup/raspberrypi
+    # Rsync backup
+    sudo rsync -aAXv --delete --exclude="/dev/" --exclude="/proc/" --exclude="/sys/" --exclude="/tmp/" --exclude="/run/" --exclude="/mnt/" --exclude="/media/" --exclude="/lost+found/" / backup.local::backup/raspberrypi
 
 ## User Access on non system partition
     sudo nano /etc/fstab
