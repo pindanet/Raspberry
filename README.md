@@ -46,12 +46,14 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo mkdir /etc/apache2/ssl
     sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
     sudo chmod 600 /etc/apache2/ssl/*
-    
+    sudo nano /etc/apache2/sites-enabled/default-ssl.conf
       ServerAdmin webmaster@localhost
       ServerName rpipindanet.local:443
       
       SSLCertificateFile      /etc/apache2/ssl/apache.crt         
       SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+    sudo systemctl restart apache2.service
+    openssl s_client -connect 127.0.0.1:443
     
     sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
     sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
