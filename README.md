@@ -61,6 +61,13 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
       SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
 
       SSLOpenSSLConfCmd DHParameters "/etc/ssl/certs/dhparam.pem"
+    sudo cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf.bak
+      ServerName rpipindanet.local
+      SSLCertificateFile      /etc/ssl/certs/apache-selfsigned.crt
+      SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+    sudo a2enmod ssl
+    sudo a2enmod headers
+    sudo a2enconf ssl-params
     
 ### Folder with background pictures
     sudo mkdir /media/data/var/www/html/background
