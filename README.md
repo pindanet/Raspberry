@@ -36,7 +36,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 ## Autostart fullscreen browser
     sudo apt-get install xautomation firefox-esr
     nano .config/lxsession/LXDE-pi/autostart
-      @sh /media/data/home/pi/.config/lxsession/LXDE-pi/autostart.sh
+      @sh /home/pi/.config/lxsession/LXDE-pi/autostart.sh
 ## Webserver
     sudo apt-get install apache2
     sudo mkdir -p /media/data/var/www/html
