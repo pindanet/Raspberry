@@ -78,7 +78,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     </Directory>
     
     sudo visudo
-    www-data ALL = NOPASSWD: /sbin/shutdown -r now, /sbin/shutdown -h now, /usr/bin/apt-get update, /usr/bin/apt-get upgrade -y
+    www-data ALL = NOPASSWD: /sbin/shutdown -r now, /sbin/shutdown -h now
 
     sudo nano /media/data/var/www/html/test.py
     #!/usr/bin/python3
