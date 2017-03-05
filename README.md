@@ -12,19 +12,18 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo su
     echo 128 > /sys/class/backlight/rpi_backlight/brightness
 
-## Install VNC server
-    sudo apt-get install tightvncserver
-    Start with: vncserver -geometry 800x480 :1
+## Start VNC server
+    sudo systemctl start vncserver-x11-serviced.service
 ## Raspberry Pi Configuration
     sudo raspi-config
+    Localisation Options
       nl_BE.UTF-8 UTF-8 (Locale: nl (Dutch), BE (Belgium))
       Timezone: Europe, Brussels
-
-    WiFi Country Code: BE Belgium
-  
-    Enable Camera
-    
-    Advanced Options
+      WiFi Country Code: BE Belgium
+    Hostname
+    Interfacing Options
+      Enable Camera
+      Enable SSH
       I2C Enable
 ## Security
     passwd
