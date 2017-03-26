@@ -182,7 +182,9 @@ Helderheid display automatisch regelen via lichtmeting met camera
               var encrypt = new JSEncrypt();
               encrypt.setPublicKey(pubkey);
               encryptedPIN = encrypt.encrypt(document.getElementById('PINbox').value);
-              
+console.log(encryptedPIN);
+console.log(encryptedPIN.length);
+              document.getElementById('PINbox').value="";
               document.getElementById("content").innerHTML = "";
               callback(event);
             }
@@ -342,7 +344,7 @@ console.log(this.responseText);
         xhr.open('POST', "bash.sh", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
-            document.getElementById("content").innerHTML = '<pre id="terminalbox">' + this.responseText + "</pre>";
+            document.getElementById("content").innerHTML = '<pre id="terminalbox">Test: ' + this.responseText + "</pre>";
             centerContent();
           }
         };
