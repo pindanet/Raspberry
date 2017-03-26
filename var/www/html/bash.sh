@@ -36,27 +36,27 @@ function cgi_get_POST_vars()
     return
 }
 
-# (internal) routine to decode urlencoded strings
-function cgi_decodevar()
-{
-    [ $# -ne 1 ] && return
-    local v t h
-    # replace all + with whitespace and append %%
-    t="${1//+/ }%%"
-    while [ ${#t} -gt 0 -a "${t}" != "%" ]; do
-        v="${v}${t%%\%*}" # digest up to the first %
-        t="${t#*%}"       # remove digested part
-        # decode if there is anything to decode and if not at end of string
-        if [ ${#t} -gt 0 -a "${t}" != "%" ]; then
-            h=${t:0:2} # save first two chars
-            t="${t:2}" # remove these
-            v="${v}"`echo -e \\\\x${h}` # convert hex to special char
-        fi
-    done
-    # return decoded string
-    echo "${v}"
-    return
-}
+# # (internal) routine to decode urlencoded strings
+# function cgi_decodevar()
+# {
+#     [ $# -ne 1 ] && return
+#     local v t h
+#     # replace all + with whitespace and append %%
+#     t="${1//+/ }%%"
+#     while [ ${#t} -gt 0 -a "${t}" != "%" ]; do
+#         v="${v}${t%%\%*}" # digest up to the first %
+#         t="${t#*%}"       # remove digested part
+#         # decode if there is anything to decode and if not at end of string
+#         if [ ${#t} -gt 0 -a "${t}" != "%" ]; then
+#             h=${t:0:2} # save first two chars
+#             t="${t:2}" # remove these
+#             v="${v}"`echo -e \\\\x${h}` # convert hex to special char
+#         fi
+#     done
+#     # return decoded string
+#     echo "${v}"
+#     return
+# }
 
 # routine to get variables from http requests
 # usage: cgi_getvars method varname1 [.. varnameN]
@@ -91,7 +91,8 @@ function cgi_getvars()
         q="${q#$p&*}" # strip first part from query string
         # decode and assign variable if requested
         [ "$1" = "ALL" -o "${s/ $k /}" != "$s" ] && \
-            export "$k"="`cgi_decodevar \"$v\"`"
+#            export "$k"="`cgi_decodevar \"$v\"`"
+            export "$k"="$v"
     done
     return
 }
@@ -99,7 +100,6 @@ function cgi_getvars()
 # register all GET and POST variables
 cgi_getvars BOTH ALL
 
-# decrypt: echo "IP7sayYhO9Jxztb69vVeXV/4kdWuQIe4WJoTwRqMpLktEDpLnq4Lczga6CaDoVhAS+CBmdUVNI4SQpd3Wj5BS5kBmHM/O+YOt7/TYgpGmZK/6a33ys61xJNvz/1fcn0qCr8rZTzy5dqzA8Eomvi15imty09qtRXRMjaWsxHwY1Q=" | openssl base64 -d | openssl rsautl -decrypt -inkey /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem
 case "$command" in
   genkey)
     openssl genrsa -out /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem 2048
@@ -112,10 +112,11 @@ esac
 { myCode=$(</dev/stdin); } << EOF
 case "$command" in
   system)
-#    echo $encpin
+#     echo $encpin
+     echo "$encpin" | openssl base64 -d | openssl rsautl -decrypt -inkey /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem
 #    echo "htmlcode"
-    echo "<button onclick=\"enterPIN(event,'reboot');\">Herstart</button>"
-    echo "<button onclick=\"enterPIN(event,'halt');\">Uitschakelen</button>"
+#    echo "<button onclick=\"enterPIN(event,'reboot');\">Herstart</button>"
+#    echo "<button onclick=\"enterPIN(event,'halt');\">Uitschakelen</button>"
     ;;
   reboot)
     sudo /sbin/shutdown -r now
