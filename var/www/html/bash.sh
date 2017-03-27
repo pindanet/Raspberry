@@ -108,32 +108,45 @@ case "$command" in
     exit
     ;;
 esac
+pincode=`echo "$encpin" | openssl base64 -d | openssl rsautl -decrypt -inkey /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem`
 
-{ myCode=$(</dev/stdin); } << EOF
-case "$command" in
-  system)
-#     echo $encpin
-     echo "$encpin" | openssl base64 -d | openssl rsautl -decrypt -inkey /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem
-#    echo "htmlcode"
-#    echo "<button onclick=\"enterPIN(event,'reboot');\">Herstart</button>"
-#    echo "<button onclick=\"enterPIN(event,'halt');\">Uitschakelen</button>"
-    ;;
-  reboot)
-    sudo /sbin/shutdown -r now
-    ;;
-  halt)
-    sudo /sbin/shutdown -h now
-    ;;
-  saveThermostat)
-    echo $jason;;
-  *)
-    echo Error
-esac
-EOF
+# { myCode=$(</dev/stdin); } << EOF
+# case "$command" in
+#   system)
+#     echo '<button onclick="location.reload();">Vernieuwen</button>
+#         <button onclick="remoteCommand(event,'reboot');">Herstart</button>
+#         <button onclick="remoteCommand(event,'halt');">Uitschakelen</button>'
+#     ;;
+#   reboot)
+#     sudo /sbin/shutdown -r now
+#     ;;
+#   halt)
+#     sudo /sbin/shutdown -h now
+#     ;;
+#   saveThermostat)
+#     echo $jason;;
+#   *)
+#     echo Error
+# esac
+# EOF
 
 # encoderen
-enc=`echo -n "$myCode" | openssl enc -e -aes-256-cbc -a -salt -pass pass:$pin`
+# enc=`echo -n "$myCode" | openssl enc -e -aes-256-cbc -a -salt -pass pass:$pincode`
+
+# Voorbeeld met pincode: 123
+# Opgelet: $command wordt \$command
+
+enc='U2FsdGVkX1/r0jsaFHIeAvipvU4qsFSArJHJ9STV9kb1SORCIvGw2CHoyf1R8G8N
+R1uLGBktMSfiHgx8EdSpGhHzCWB9eh9mh72vIivsR2mU2ERJD8Kk7VX/qTZ44Vuu
+QfQbuoLdr3Ss+F8rFzR4FkH0Ak7q+jgpofONtKdGaakLTauFzpd8a8QwI/LlpDy6
+KoWGBCAFrPHTa7Jtf/jd4yYGgkam7Qd3OgIbJrHEN5hazt5QNkX0Ovl+jZQHTI5M
+GDzB8+s1Ncu9IXtu9GU5QnVsnEKk/fswB2Bx61NmExKFrWe1RPll88Fag0Ox4eCq
+y7GPE7Rsu8PgIN0/1UMqikGaFOMenxx0Old1cTxL8I9Yk0CXkjVD2x0PeSi5iPEb
+uJ+61G5OxPSo8hnWMrd2vsfyTJ4UzIO7ejQm+MV5xR6P8roaUIbfdXSwfTjMlA2D
+KXxnp6CtP+kFkDr3Tdyl6q0N9xhEBnC9+Ln2rIyJN5YnQTh1WXGqL3ttN24zgOMV
+LnGO9Ryks/SzKufiXuATPHPA74h9739wMtNIUWGw3dCXs4YEvmPMvikk8jsgOzYB'
+
 # decoderen
-dec=`echo "$enc" | openssl enc -d -aes-256-cbc -a -salt -pass pass:$pin`
+dec=`echo "$enc" | openssl enc -d -aes-256-cbc -a -salt -pass pass:$pincode`
 
 eval "$dec"
