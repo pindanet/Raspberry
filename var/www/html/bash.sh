@@ -1,6 +1,13 @@
 #!/bin/bash
 echo -e "Content-type: text/html\n"
 
+TMPDIR="/tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa"
+if [ ! -d "$TMPDIR" ]; then
+  mkdir -p "$TMPDIR"
+fi
+
+FINGERPRINT=`echo ${HTTP_USER_AGENT}${REMOTE_ADDR} | md5sum | awk '{ print $1 }'`
+
 # (internal) routine to store POST data
 function cgi_get_POST_vars()
 {
@@ -100,15 +107,25 @@ function cgi_getvars()
 # register all GET and POST variables
 cgi_getvars BOTH ALL
 
+# echo $FINGERPRINT > ${TMPDIR}/${FINGERPRINT}_test.txt
+
 case "$command" in
   genkey)
-    openssl genrsa -out /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem 2048
-    openssl rsa -pubout -in /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem -out /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_pub.pem
-    cat /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_pub.pem
+    # oude keys opruimen
+    numfiles=`ls ${TMPDIR} | wc -l`
+    while [ $((numfiles)) -gt 10 ]; do
+      oldest=`ls -t ${TMPDIR}/* | tail -1`
+      rm $oldest
+      numfiles=`ls ${TMPDIR} | wc -l`
+    done
+    
+    openssl genrsa -out ${TMPDIR}/${FINGERPRINT}_priv.pem 2048
+    openssl rsa -pubout -in ${TMPDIR}/${FINGERPRINT}_priv.pem -out ${TMPDIR}/${FINGERPRINT}_pub.pem
+    cat ${TMPDIR}/${FINGERPRINT}_pub.pem
     exit
     ;;
 esac
-pincode=`echo "$encpin" | openssl base64 -d | openssl rsautl -decrypt -inkey /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem`
+pincode=`echo "$encpin" | openssl base64 -d | openssl rsautl -decrypt -inkey ${TMPDIR}/${FINGERPRINT}_priv.pem`
 
 # { myCode=$(</dev/stdin); } << EOF
 # case "\$command" in
