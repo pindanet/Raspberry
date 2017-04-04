@@ -111,11 +111,11 @@ esac
 pincode=`echo "$encpin" | openssl base64 -d | openssl rsautl -decrypt -inkey /tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa_priv.pem`
 
 # { myCode=$(</dev/stdin); } << EOF
-# case "$command" in
+# case "\$command" in
 #   system)
-#     echo '<button onclick="location.reload();">Vernieuwen</button>
-#         <button onclick="remoteCommand(event,'reboot');">Herstart</button>
-#         <button onclick="remoteCommand(event,'halt');">Uitschakelen</button>'
+#     echo "<button onclick=\"location.reload();\">Vernieuwen</button>
+#         <button onclick=\"remoteCommand(event,'reboot');\">Herstart</button>
+#         <button onclick=\"remoteCommand(event,'halt');\">Uitschakelen</button>"
 #     ;;
 #   reboot)
 #     sudo /sbin/shutdown -r now
@@ -136,15 +136,15 @@ pincode=`echo "$encpin" | openssl base64 -d | openssl rsautl -decrypt -inkey /tm
 # Voorbeeld met pincode: 123
 # Opgelet: $command wordt \$command
 
-enc='U2FsdGVkX1/r0jsaFHIeAvipvU4qsFSArJHJ9STV9kb1SORCIvGw2CHoyf1R8G8N
-R1uLGBktMSfiHgx8EdSpGhHzCWB9eh9mh72vIivsR2mU2ERJD8Kk7VX/qTZ44Vuu
-QfQbuoLdr3Ss+F8rFzR4FkH0Ak7q+jgpofONtKdGaakLTauFzpd8a8QwI/LlpDy6
-KoWGBCAFrPHTa7Jtf/jd4yYGgkam7Qd3OgIbJrHEN5hazt5QNkX0Ovl+jZQHTI5M
-GDzB8+s1Ncu9IXtu9GU5QnVsnEKk/fswB2Bx61NmExKFrWe1RPll88Fag0Ox4eCq
-y7GPE7Rsu8PgIN0/1UMqikGaFOMenxx0Old1cTxL8I9Yk0CXkjVD2x0PeSi5iPEb
-uJ+61G5OxPSo8hnWMrd2vsfyTJ4UzIO7ejQm+MV5xR6P8roaUIbfdXSwfTjMlA2D
-KXxnp6CtP+kFkDr3Tdyl6q0N9xhEBnC9+Ln2rIyJN5YnQTh1WXGqL3ttN24zgOMV
-LnGO9Ryks/SzKufiXuATPHPA74h9739wMtNIUWGw3dCXs4YEvmPMvikk8jsgOzYB'
+enc='U2FsdGVkX1+lvGGzsjTCC1h59kcdMpUBxNaKtQSxvgcSjVHPgpb2yEBk/JSSaC6j
+w7NpsUFcTXqkdi4KoTeOvd5vgUQ3QVOmLAoRS/Tu0sVg9KI8Uky3ZQu+gAN9unaI
+u+uUceoAgJN2KUgTP+SF2mqaBxpgKx3j79ekYEGAyUq1wRTHRNXCNq6fD5x5J30z
+0KJgJd4nzs/W8IdHDYh9ESTk3Xjv4NqEQ13+tve8F+3h5wk7TYwOuviOi745j4jt
+SZzwva9ENgcU4nrI8VNhfQhtoMLkJPA1RJluEXlQOtdkP4gvNgvAnoTHtF0XHIeC
+v6CScmkIfQ8NrblFYDUZ7d6Nr0IJt0neXYwR5AfdAYnhLkUouVVDJ2hk9M5g/bOk
++Zttc66Q73MywMSPlnbze2/8LVBHVrlVWpIwEz97uvzoq2CnwKIOvTKsRTEf+fWR
+8g14G9OfpY0SyoaeNdhxYhh+jMjqm5dijWKBDSIeIVlrY+FauDy4exAIsRHwvw4x
+4E33oxYtKvdIdgEVyWbIlNauQguOTWuwe2RfsI72NijQqgjJUoXlP//ixB+8vT8A'
 
 # decoderen
 dec=`echo "$enc" | openssl enc -d -aes-256-cbc -a -salt -pass pass:$pincode`
