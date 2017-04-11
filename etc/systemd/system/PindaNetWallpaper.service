@@ -2,4 +2,4 @@
 Description=Get new wallpaper every day
 [Service]
 Type=simple
-ExecStart=/home/pi/wallpaper.sh
+ExecStart=/usr/sbin/wallpaper.sh
