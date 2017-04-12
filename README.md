@@ -111,6 +111,9 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     
     sudo mv bme280.py /var/www/html/
     sudo adduser www-data i2c
+## Thermostat
+    sudo apt-get install jq
+    sudo chmod +x /usr/sbin/thermostat.sh    
 ## YouTube Live Video Stream
     # Account pictogram > Creator Studio > Live Streaming
     sudo apt-get install libmp3lame-dev libx264-dev
