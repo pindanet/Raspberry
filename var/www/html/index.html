@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!--
 TODO
-http://mp3.streampower.be/radio1-mid.mp3
+encrypt (scrypt, aes)
+omxplayer -o local http://mp3.streampower.be/radio1-mid.mp3
 sudo apt-get install jq
-Thermostaat timetemp aanpassen
 Thermostaat sorteren op tijd
 Helderheid display automatisch regelen via lichtmeting met camera
 -->
@@ -249,42 +249,22 @@ Helderheid display automatisch regelen via lichtmeting met camera
         xhr.send();
         event.stopPropagation();
       }
-var thermostat = [
-[
-    {"time":"08:00", "temp":"20"},
-    {"time":"21:40", "temp":"15"},
-],
-[
-    {"time":"07:00", "temp":"20"},
-],
-[],
-[],
-[
-    {"time":"07:00", "temp":"20"},
-],
-[],
-[]
-];
-console.log(JSON.stringify(thermostat));
-saveThermostat();
-      function saveThermostat(event, element, callback) {
-//        if (document.getElementById('PINbox').value == "") {
-//          alert("PINcode invoeren");
-//        } else {
-          var xhr = new XMLHttpRequest();
-          xhr.open('POST', "bash.sh", true);
-          xhr.onload = function(e) {
-            if (this.status == 200) {
-  //            document.getElementById("content").innerHTML = '<pre id="terminalbox">' + this.responseText + "</pre>";
-//              centerContent();
-console.log(this.responseText);
-            }
-          };
-          xhr.send("command=saveThermostat&json=" + JSON.stringify(thermostat) +"&pin=1234567890");
-//          document.getElementById("content").innerHTML = `<pre id="PINbox">Bezig met bijwerken.</pre>`
-//          centerContent();
-//        }
-//        event.stopPropagation();
+var thermostat = "";
+loadThermostat();
+      function saveThermostat() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "bash.sh", true);
+        xhr.send("command=saveThermostat&json=" + btoa(JSON.stringify(thermostat)));
+      }
+      function loadThermostat() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "bash.sh", true);
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            thermostat = JSON.parse(atob(this.responseText));
+          }
+        };
+        xhr.send("command=loadThermostat&json=");
       }
       function outputUpdate(event, value, elmid, day, timetemp) {
         document.getElementById(elmid).value = ("0" + value).slice(-2);
@@ -317,6 +297,33 @@ console.log(this.responseText);
         weeklyThermostat(event);
       }
       function weeklyThermostat(event) {
+        if (thermostat == "") {
+          thermostat = [
+          [
+              {"time":"08:00", "temp":"20"},
+              {"time":"21:40", "temp":"15"},
+              {"time":"10:45", "temp":"21"},
+          ],
+          [
+              {"time":"07:00", "temp":"20"},
+          ],
+          [],
+          [],
+          [
+              {"time":"07:30", "temp":"20"},
+          ],
+          [],
+          []
+          ];
+        
+        }
+      // sorteer op tijd
+        for (day in thermostat) {
+          thermostat[day].sort(function(a,b) {
+            return a.time > b.time;
+          });
+        }
+
         tableel='<table style="width:790px">';
         tableel+='<tr>';
         for (day in thermostat) {
@@ -342,6 +349,7 @@ console.log(this.responseText);
           timetemp++;
         }
         tableel+='</table>';
+        tableel+='<button onclick="saveThermostat();">Opslaan</button>'
         document.getElementById("content").innerHTML = tableel;
         centerContent();
         event.stopPropagation();
