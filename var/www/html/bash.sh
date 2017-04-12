@@ -5,7 +5,6 @@ TMPDIR="/tmp/pindanetZsYTpr5e9CXbcLCJCXNUxSFH1TdLYQqwrsa"
 if [ ! -d "$TMPDIR" ]; then
   mkdir -p "$TMPDIR"
 fi
-
 FINGERPRINT=`echo ${HTTP_USER_AGENT}${REMOTE_ADDR} | md5sum | awk '{ print $1 }'`
 
 # (internal) routine to store POST data
@@ -107,10 +106,11 @@ function cgi_getvars()
 # register all GET and POST variables
 cgi_getvars BOTH ALL
 
-# echo $FINGERPRINT > ${TMPDIR}/${FINGERPRINT}_test.txt
+echo $json > ${TMPDIR}/${FINGERPRINT}_test.txt
 
 case "$command" in
   genkey)
+    get_wallpaper
     # oude keys opruimen
     numfiles=`ls ${TMPDIR} | wc -l`
     while [ $((numfiles)) -gt 10 ]; do
@@ -119,9 +119,25 @@ case "$command" in
       numfiles=`ls ${TMPDIR} | wc -l`
     done
     
-    openssl genrsa -out ${TMPDIR}/${FINGERPRINT}_priv.pem 2048
+    openssl genrsa -out ${TMPDIR}/${FINGERPRINT}_priv.pem 1024
     openssl rsa -pubout -in ${TMPDIR}/${FINGERPRINT}_priv.pem -out ${TMPDIR}/${FINGERPRINT}_pub.pem
-    cat ${TMPDIR}/${FINGERPRINT}_pub.pem
+    cat ${TMPDIR}/${FINGERPRINT}_pub.pem | tail -n +2 | head -n -1
+    rm ${TMPDIR}/${FINGERPRINT}_pub.pem
+    exit
+    ;;
+#   genprivkey)
+#     openssl genrsa -out ${TMPDIR}/${FINGERPRINT}_client_priv.pem 1024
+#     openssl rsa -pubout -in ${TMPDIR}/${FINGERPRINT}_client_priv.pem -out ${TMPDIR}/${FINGERPRINT}_client_pub.pem
+#     cat ${TMPDIR}/${FINGERPRINT}_client_priv.pem | tail -n +2 | head -n -1
+#     rm ${TMPDIR}/${FINGERPRINT}_client_priv.pem
+#     exit
+#     ;;
+  saveThermostat)
+    echo $json > /var/www/html/data/thermostat.json
+    exit
+    ;;
+  loadThermostat)
+    cat /var/www/html/data/thermostat.json
     exit
     ;;
 esac
@@ -130,9 +146,10 @@ pincode=`echo "$encpin" | openssl base64 -d | openssl rsautl -decrypt -inkey ${T
 # { myCode=$(</dev/stdin); } << EOF
 # case "\$command" in
 #   system)
-#     echo "<button onclick=\"location.reload();\">Vernieuwen</button>
+#     html="<button onclick=\"location.reload();\">Vernieuwen</button>
 #         <button onclick=\"remoteCommand(event,'reboot');\">Herstart</button>
 #         <button onclick=\"remoteCommand(event,'halt');\">Uitschakelen</button>"
+#     echo \$html
 #     ;;
 #   reboot)
 #     sudo /sbin/shutdown -r now
@@ -153,15 +170,16 @@ pincode=`echo "$encpin" | openssl base64 -d | openssl rsautl -decrypt -inkey ${T
 # Voorbeeld met pincode: 123
 # Opgelet: $command wordt \$command
 
-enc='U2FsdGVkX1+lvGGzsjTCC1h59kcdMpUBxNaKtQSxvgcSjVHPgpb2yEBk/JSSaC6j
-w7NpsUFcTXqkdi4KoTeOvd5vgUQ3QVOmLAoRS/Tu0sVg9KI8Uky3ZQu+gAN9unaI
-u+uUceoAgJN2KUgTP+SF2mqaBxpgKx3j79ekYEGAyUq1wRTHRNXCNq6fD5x5J30z
-0KJgJd4nzs/W8IdHDYh9ESTk3Xjv4NqEQ13+tve8F+3h5wk7TYwOuviOi745j4jt
-SZzwva9ENgcU4nrI8VNhfQhtoMLkJPA1RJluEXlQOtdkP4gvNgvAnoTHtF0XHIeC
-v6CScmkIfQ8NrblFYDUZ7d6Nr0IJt0neXYwR5AfdAYnhLkUouVVDJ2hk9M5g/bOk
-+Zttc66Q73MywMSPlnbze2/8LVBHVrlVWpIwEz97uvzoq2CnwKIOvTKsRTEf+fWR
-8g14G9OfpY0SyoaeNdhxYhh+jMjqm5dijWKBDSIeIVlrY+FauDy4exAIsRHwvw4x
-4E33oxYtKvdIdgEVyWbIlNauQguOTWuwe2RfsI72NijQqgjJUoXlP//ixB+8vT8A'
+enc='U2FsdGVkX1+X+zCKtg2sLMgNTkpaLtBdKN3IHGZhqyZT907t2d9FjuWxW75DwT6c
+HcwCnTN3jVCdHFRsjq+5fC90jL7gObjp0+k60h964wE3H0SUK0fC0+YA3Fh1wWg1
+v49ToUBIm6/qYGhnPRNBbfreCJnzMHvzm6i/ER3gw0QgkA4ss3AaSLY2MCE2oaR/
+iWjSXMlG8xuJqvCkdEU5glUSgQhbCZEGFKwFh136i3vpnUNPkS9aYXqUAnGHt1X+
+G4OtgheKQ4QH8tepHlwpA6UoEtJmMq7y6kE0ih0XN3S5OK0i7AoopZmuKsUlIDKz
+FbfcdIVxJPyLCIzy+bh6ERMrsJTknGTWvM/LtzXnRFin9geJK9uWz/OFDECUSswA
+ruSXYwdDkxiYZmBVOb9mWBoGxtgNo+mtRMTowMxQOL8rGQ37Mb6BZWkeTQh1LrFw
+1pyyHtKp0cAWrZUX7UJUpn7+ckSluOBuOQjd33PO7YTYsr33TgetyGx6EY3BMw1H
+T/fEA5r1CT1ShrYxMKzpZAS8dQYdSgGu/9q6tUItKWGYLDZFPZh+yA4rxfFKelM6
+R6Mpvu9085n+xbHDXDBofA=='
 
 # decoderen
 dec=`echo "$enc" | openssl enc -d -aes-256-cbc -a -salt -pass pass:$pincode`
