@@ -55,6 +55,9 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
       Redirect "/" "https://rpipindanet.local/"
     sudo systemctl restart apache2.service
     
+    sudo mkdir /var/www/html/data
+    sudo chown -R www-data:www-data /var/www/html/data/
+    
 ## Autostart fullscreen browser
     sudo apt-get install xautomation firefox-esr
     nano .config/lxsession/LXDE-pi/autostart
