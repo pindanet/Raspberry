@@ -119,6 +119,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     echo -n "MA:C-:ad:dr:es:s0" > bluetooth.detection
     sudo hcitool info MA:C-:ad:dr:es:s0 | md5sum | awk '{ print $1 }' >> bluetooth.detection
     sudo mv bluetooth.detection /var/www/html/ /var/www/html/data/
+    sudo chmod +x /usr/sbin/bluetooth-proximity.sh
 ## YouTube Live Video Stream
     # Account pictogram > Creator Studio > Live Streaming
     sudo apt-get install libmp3lame-dev libx264-dev
