@@ -113,7 +113,12 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo adduser www-data i2c
 ## Thermostat
     sudo apt-get install jq
-    sudo chmod +x /var/www/html/thermostat.sh    
+    sudo chmod +x /var/www/html/thermostat.sh
+## Bluetooth Proximity Detection
+    hcitool scan
+    echo -n "MA:C-:ad:dr:es:BT" > bluetooth.detection
+    sudo hcitool info MA:C-:ad:dr:es:BT | md5sum | awk '{ print $1 }' >> bluetooth.detection
+    sudo mv bluetooth.detection /var/www/html/ /var/www/html/data/
 ## YouTube Live Video Stream
     # Account pictogram > Creator Studio > Live Streaming
     sudo apt-get install libmp3lame-dev libx264-dev
