@@ -113,7 +113,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo adduser www-data i2c
 ## Thermostat
     sudo apt-get install jq
-    sudo chmod +x /usr/sbin/thermostat.sh    
+    sudo chmod +x /var/www/html/thermostat.sh    
 ## YouTube Live Video Stream
     # Account pictogram > Creator Studio > Live Streaming
     sudo apt-get install libmp3lame-dev libx264-dev
