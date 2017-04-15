@@ -296,6 +296,16 @@ loadThermostat();
         thermostat[day].splice(timetemp, 1);
         weeklyThermostat(event);
       }
+      function getThermostatTemp() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "thermostat.sh", true);
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            document.getElementById("thermostatTemp").innerHTML = this.responseText;
+          }
+        };
+        xhr.send();
+      }
       function weeklyThermostat(event) {
         if (thermostat == "") {
           thermostat = [
@@ -350,9 +360,11 @@ loadThermostat();
         }
         tableel+='</table>';
         tableel+='<button onclick="saveThermostat();">Opslaan</button>'
+        tableel+=' <span id="terminalbox">Regeltemperatuur: <span id="thermostatTemp">5</span> °C</span>'
         document.getElementById("content").innerHTML = tableel;
         centerContent();
         event.stopPropagation();
+        getThermostatTemp();
       }
       function remoteCommand(event, command) {
         var xhr = new XMLHttpRequest();
