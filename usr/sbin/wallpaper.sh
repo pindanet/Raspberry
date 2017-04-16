@@ -14,7 +14,7 @@ SITE=interfacelift.com
 PAGE=https://$SITE/wallpaper/downloads/random/android/800x480/index.html
 
 # check if InterfaceLift is reachable
-if curl -s --head  --request GET https://$site ; then
+if curl -s --head  --request GET https://$SITE ; then
   # extract wallpaper of the day url
   WOTD=`wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0" -qO - $PAGE | grep "click here to down
 load" | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d '>' -f 1`
