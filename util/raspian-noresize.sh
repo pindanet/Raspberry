@@ -32,6 +32,8 @@ fi
 sed -i 's/ init=\/usr\/lib\/raspi-config\/init_resize.sh//' /mnt/cmdline.txt
 # Geef de aangepaste opstart opdrachten weer
 cat /mnt/cmdline.txt
+# activeer eenmalig SSH toegang
+touch /mnt/ssh
 # Koppel de SD kaart los van de /mnt/ map
 umount /mnt/
 
