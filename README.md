@@ -131,6 +131,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     systemctl list-timers
 ## YouTube Live Video Stream
     # Account pictogram > Creator Studio > Live Streaming
+    # Werkt ook voor Facebook Live Video
 <!---    sudo apt-get install libmp3lame-dev libx264-dev
     mkdir software
     cd software
@@ -145,7 +146,6 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo make install
     sudo /sbin/ldconfig
 -->
-
     wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-armhf-32bit-static.tar.xz
     tar -xvf ffmpeg-release-armhf-32bit-static.tar.xz
     
