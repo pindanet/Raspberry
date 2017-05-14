@@ -115,7 +115,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     wget https://github.com/ssjoholm/rfxcmd_gc/archive/master.zip
     unzip master.zip
     Listen: python rfxcmd_gc-master/rfxcmd.py -l -v -d /dev/ttyUSB0
-    Send: rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s Received (without spaces)
+    Send: python rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s Received (without spaces)
 ## Thermostat
     sudo apt-get install jq
     sudo chmod +x /var/www/html/thermostat.sh
