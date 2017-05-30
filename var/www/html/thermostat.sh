@@ -1,6 +1,7 @@
 #!/bin/bash
 echo -e "Content-type: text/html\n"
 json=`cat /var/www/html/data/thermostat.json | openssl base64 -d`
+
 temp="5"
 weekday=`date +%w`
 currenttime=`date +%H:%M`
@@ -26,3 +27,6 @@ until [[ $thermostatTime == "null" || $thermostatTime > $currenttime ]]; do
   thermostatTime=`echo $json | jq --raw-output ".[$weekday] | .[$timetemp] | .time"`
 done
 echo $temp
+# manual=`echo $json | jq --raw-output ".[7] | .manual"`
+# if [ $manual == "Off" ]; then
+# fi
