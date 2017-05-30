@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
 TODO
-encrypt (scrypt, aes)
+encrypt (scrypt, aes), TLS (https://github.com/digitalbazaar/forge)
 omxplayer -o local http://mp3.streampower.be/radio1-mid.mp3
 sudo apt-get install jq
 Thermostaat sorteren op tijd
@@ -80,7 +80,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
         border: 1px solid rgb(128,128,128);
         border-radius: 12px;
         box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-        margin: 3.5%;
+/*         margin: 3.5%; */
         width: 92%;
         padding: 1em;
         text-align: left;
@@ -234,7 +234,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
       function weather(event) {
         if(++hourly > 59) {
           hourly = 0;
-          document.getElementById("content").innerHTML = `<img src="http://www.yr.no/place/Belgium/Flanders/Bruges/meteogram.png" alt="Weerbericht Brugge" height="272" width="828" onclick="menu();">
+          document.getElementById("content").innerHTML = `<img src="https://www.yr.no/place/Belgium/Flanders/Bruges/meteogram.png" alt="Weerbericht Brugge" height="272" width="828" onclick="menu();">
           <p id="bme280"></p>`;
         }
         var xhr = new XMLHttpRequest();
@@ -301,10 +301,28 @@ loadThermostat();
         xhr.open('POST', "thermostat.sh", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
-            document.getElementById("thermostatTemp").innerHTML = this.responseText;
+            document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + this.responseText + " °C";
+            document.getElementById("thermostatHeating").innerHTML = "Verwarming: " + thermostat[7].heating;
           }
         };
         xhr.send();
+      }
+      function autoThermostat(event) {
+        thermostat[7].manual="Off";
+        saveThermostat();
+        getThermostatTemp();
+        event.stopPropagation();
+      }
+      function onOffThermostat(event) {
+        thermostat[7].manual="On";
+        if (thermostat[7].heating == "Aan") {
+          thermostat[7].heating="Uit";
+        } else {
+          thermostat[7].heating="Aan";
+        }
+        saveThermostat();
+        getThermostatTemp();
+        event.stopPropagation();
       }
       function weeklyThermostat(event) {
         if (thermostat == "") {
@@ -323,12 +341,13 @@ loadThermostat();
               {"time":"07:30", "temp":"20"},
           ],
           [],
-          []
+          [],
+              {"manual":"Off", "heating":"Aan"}
           ];
         
         }
       // sorteer op tijd
-        for (day in thermostat) {
+        for (var day = 0; day < 7; day++) {
           thermostat[day].sort(function(a,b) {
             return a.time > b.time;
           });
@@ -336,7 +355,7 @@ loadThermostat();
 
         tableel='<table style="width:790px">';
         tableel+='<tr>';
-        for (day in thermostat) {
+        for (var day = 0; day < 7; day++) {
           tableel += '<th>' + dayNames[day] + '</th>';
         }
         tableel+='</tr>';
@@ -345,7 +364,7 @@ loadThermostat();
         while (timetempvalues) {
           timetempvalues=false;
           tableel+='<tr>';
-          for (day in thermostat) {
+        for (var day = 0; day < 7; day++) {
             if (typeof thermostat[day][timetemp] !== 'undefined') {
               tableel += '<td><button onclick="setThermostat(event,' + day + ',' + timetemp + ');">' + thermostat[day][timetemp].time + ' ' + thermostat[day][timetemp].temp + '°C</button></td>';
               timetempvalues=true;
@@ -359,8 +378,11 @@ loadThermostat();
           timetemp++;
         }
         tableel+='</table>';
-        tableel+='<button onclick="saveThermostat();">Opslaan</button>'
-        tableel+=' <span id="terminalbox">Regeltemperatuur: <span id="thermostatTemp">5</span> °C</span>'
+        tableel+='<button onclick="saveThermostat();">Opslaan</button>';
+        tableel+=' <button onclick="onOffThermostat(event);">Manueel</button>';
+        tableel+=' <button onclick="autoThermostat(event);">Auto</button>';
+        tableel+=' <span id="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
+        tableel+=' <span id="terminalbox"><span id="thermostatHeating">Heating: Off</span></span>';
         document.getElementById("content").innerHTML = tableel;
         centerContent();
         event.stopPropagation();
