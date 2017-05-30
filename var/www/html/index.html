@@ -378,11 +378,13 @@ loadThermostat();
           timetemp++;
         }
         tableel+='</table>';
+        tableel+='<div style="text-align: left;">';
         tableel+='<button onclick="saveThermostat();">Opslaan</button>';
         tableel+=' <button onclick="onOffThermostat(event);">Manueel</button>';
         tableel+=' <button onclick="autoThermostat(event);">Auto</button>';
         tableel+=' <span id="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
         tableel+=' <span id="terminalbox"><span id="thermostatHeating">Heating: Off</span></span>';
+        tableel+='</div>';
         document.getElementById("content").innerHTML = tableel;
         centerContent();
         event.stopPropagation();
