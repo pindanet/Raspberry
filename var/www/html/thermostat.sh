@@ -27,6 +27,23 @@ until [[ $thermostatTime == "null" || $thermostatTime > $currenttime ]]; do
   thermostatTime=`echo $json | jq --raw-output ".[$weekday] | .[$timetemp] | .time"`
 done
 echo $temp
-# manual=`echo $json | jq --raw-output ".[7] | .manual"`
-# if [ $manual == "Off" ]; then
-# fi
+
+cd data
+manual=`echo $json | jq --raw-output ".[7] | .manual"`
+if [ $manual == "Off" ]; then
+  sensorTemp=`python /var/www/html/bme280.py | tail -3 | head -1 | awk '{ print $3 }'`
+  heating=$(awk 'BEGIN{ print "'$temp'"<"'$sensorTemp'" }')
+  if [ "$heating" -eq 1 ]; then
+    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100010141538601000080
+  else
+    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100000141538601010F80
+  fi
+else
+  heating=`echo $json | jq --raw-output ".[7] | .heating"`
+  if [ "$heating" == "Uit" ]; then
+    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100010141538601000080
+  else
+    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100000141538601010F80
+  fi
+fi
+cd ..
