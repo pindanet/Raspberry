@@ -116,6 +116,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     unzip master.zip
     Listen: python rfxcmd_gc-master/rfxcmd.py -l -v -d /dev/ttyUSB0
     Send: python rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s Received (without spaces)
+    sudo adduser www-data dialout
 ## Thermostat
     sudo apt-get install jq
     sudo chmod +x /var/www/html/thermostat.sh
