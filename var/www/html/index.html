@@ -254,6 +254,11 @@ loadThermostat();
       function saveThermostat() {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "bash.sh", true);
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            getThermostatTemp();
+          }
+        };
         xhr.send("command=saveThermostat&json=" + btoa(JSON.stringify(thermostat)));
       }
       function loadThermostat() {
@@ -310,7 +315,6 @@ loadThermostat();
       function autoThermostat(event) {
         thermostat[7].manual="Off";
         saveThermostat();
-        getThermostatTemp();
         event.stopPropagation();
       }
       function onOffThermostat(event) {
@@ -321,7 +325,6 @@ loadThermostat();
           thermostat[7].heating="Aan";
         }
         saveThermostat();
-        getThermostatTemp();
         event.stopPropagation();
       }
       function weeklyThermostat(event) {
