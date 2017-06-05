@@ -26,7 +26,7 @@ until [[ $thermostatTime == "null" || $thermostatTime > $currenttime ]]; do
   let timetemp=timetemp+1
   thermostatTime=`echo $json | jq --raw-output ".[$weekday] | .[$timetemp] | .time"`
 done
-echo $temp
+json="${json/controltemp\":\"[^\"]*\"/controltemp\":\"$temp\"}"
 
 cd data
 manual=`echo $json | jq --raw-output ".[7] | .manual"`
@@ -35,15 +35,22 @@ if [ $manual == "Off" ]; then
   heating=$(awk 'BEGIN{ print "'$temp'"<"'$sensorTemp'" }')
   if [ "$heating" -eq 1 ]; then
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100010141538601000080
+    json="${json/heating\":\"On/heating\":\"Off}"
   else
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100000141538601010F80
+    json="${json/heating\":\"Off/heating\":\"On}"
   fi
 else
   heating=`echo $json | jq --raw-output ".[7] | .heating"`
-  if [ "$heating" == "Uit" ]; then
+  if [ "$heating" == "Off" ]; then
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100010141538601000080
+    json="${json/heating\":\"On/heating\":\"Off}"
   else
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100000141538601010F80
+    json="${json/heating\":\"Off/heating\":\"On}"
   fi
 fi
 cd ..
+printf $json | openssl base64 -A > /var/www/html/data/thermostat.json
+echo >> /var/www/html/data/thermostat.json
+cat /var/www/html/data/thermostat.json
