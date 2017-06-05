@@ -250,7 +250,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
         event.stopPropagation();
       }
 var thermostat = "";
-loadThermostat();
+//loadThermostat();
       function saveThermostat() {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "bash.sh", true);
@@ -306,8 +306,22 @@ loadThermostat();
         xhr.open('POST', "thermostat.sh", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
-            document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + this.responseText + " °C";
-            document.getElementById("thermostatHeating").innerHTML = "Verwarming: " + thermostat[7].heating;
+            thermostat = JSON.parse(atob(this.responseText));
+            if (thermostat[7].manual == "Off") {
+              document.getElementById("autoThermostat").style = "color: black;";
+              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + thermostat[7].controltemp + " °C";
+            } else {
+              document.getElementById("autoThermostat").style = "";
+              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: -- °C";
+            }
+            if (thermostat[7].heating == "Off") {
+              document.getElementById("offThermostat").style = "color: black;";
+              document.getElementById("onThermostat").style = "";
+            } else {
+              document.getElementById("onThermostat").style = "color: black;";
+              document.getElementById("offThermostat").style = "";
+            }
+//            document.getElementById("roomTemp").innerHTML = "Kamertemp: " + thermostat[7].roomtemp + " °C";
           }
         };
         xhr.send();
@@ -317,13 +331,15 @@ loadThermostat();
         saveThermostat();
         event.stopPropagation();
       }
-      function onOffThermostat(event) {
+      function onThermostat(event) {
         thermostat[7].manual="On";
-        if (thermostat[7].heating == "Aan") {
-          thermostat[7].heating="Uit";
-        } else {
-          thermostat[7].heating="Aan";
-        }
+        thermostat[7].heating="On";
+        saveThermostat();
+        event.stopPropagation();
+      }
+      function offThermostat(event) {
+        thermostat[7].manual="On";
+        thermostat[7].heating="Off";
         saveThermostat();
         event.stopPropagation();
       }
@@ -345,9 +361,9 @@ loadThermostat();
           ],
           [],
           [],
-              {"manual":"Off", "heating":"Aan"}
+              {"manual":"Off", "heating":"Off", "controltemp":"5", "roomtemp":"15"}
           ];
-        
+          saveThermostat();
         }
       // sorteer op tijd
         for (var day = 0; day < 7; day++) {
@@ -383,10 +399,11 @@ loadThermostat();
         tableel+='</table>';
         tableel+='<div style="text-align: left;">';
         tableel+='<button onclick="saveThermostat();">Opslaan</button>';
-        tableel+=' <button onclick="onOffThermostat(event);">Manueel</button>';
-        tableel+=' <button onclick="autoThermostat(event);">Auto</button>';
+        tableel+=' <button id="onThermostat" onclick="onThermostat(event);">Aan</button>';
+        tableel+=' <button id="offThermostat" onclick="offThermostat(event);">Uit</button>';
+        tableel+=' <button id="autoThermostat" onclick="autoThermostat(event);">Auto</button>';
         tableel+=' <span id="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
-        tableel+=' <span id="terminalbox"><span id="thermostatHeating">Heating: Off</span></span>';
+//        tableel+=' <span id="terminalbox"><span id="roomTemp">Kamertemp: 5 °C</span></span>';
         tableel+='</div>';
         document.getElementById("content").innerHTML = tableel;
         centerContent();
