@@ -250,7 +250,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
         event.stopPropagation();
       }
 var thermostat = "";
-//loadThermostat();
+loadThermostat();
       function saveThermostat() {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "bash.sh", true);
@@ -363,8 +363,8 @@ var thermostat = "";
           [],
               {"manual":"Off", "heating":"Off", "controltemp":"5", "roomtemp":"15"}
           ];
-          saveThermostat();
         }
+        saveThermostat();
       // sorteer op tijd
         for (var day = 0; day < 7; day++) {
           thermostat[day].sort(function(a,b) {
@@ -398,7 +398,6 @@ var thermostat = "";
         }
         tableel+='</table>';
         tableel+='<div style="text-align: left;">';
-        tableel+='<button onclick="saveThermostat();">Opslaan</button>';
         tableel+=' <button id="onThermostat" onclick="onThermostat(event);">Aan</button>';
         tableel+=' <button id="offThermostat" onclick="offThermostat(event);">Uit</button>';
         tableel+=' <button id="autoThermostat" onclick="autoThermostat(event);">Auto</button>';
