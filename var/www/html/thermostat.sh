@@ -26,7 +26,7 @@ until [[ $thermostatTime == "null" || $thermostatTime > $currenttime ]]; do
   let timetemp=timetemp+1
   thermostatTime=`echo $json | jq --raw-output ".[$weekday] | .[$timetemp] | .time"`
 done
-json="${json/controltemp\":\"[^\"]*\"/controltemp\":\"$temp\"}"
+#json="${json/controltemp\":\"[^\"]*\"/controltemp\":\"$temp\"}"
 
 cd data
 manual=`echo $json | jq --raw-output ".[7] | .manual"`
