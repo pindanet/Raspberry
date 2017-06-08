@@ -30,10 +30,13 @@ done
 controltemp=`echo $json | jq --raw-output ".[7] | .controltemp"`
 json="${json/controltemp\":\"$controltemp\"/controltemp\":\"$temp\"}"
 
+sensorTemp=`python /var/www/html/bme280.py | tail -3 | head -1 | awk '{ print $3 }'`
+roomtemp=`echo $json | jq --raw-output ".[7] | .roomtemp"`
+json="${json/roomtemp\":\"$roomtemp\"/roomtemp\":\"$sensorTemp\"}"
+
 cd data
 manual=`echo $json | jq --raw-output ".[7] | .manual"`
 if [ $manual == "Off" ]; then
-  sensorTemp=`python /var/www/html/bme280.py | tail -3 | head -1 | awk '{ print $3 }'`
   heating=$(awk 'BEGIN{ print "'$temp'"<"'$sensorTemp'" }')
   if [ "$heating" -eq 1 ]; then
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100010141538601000080
