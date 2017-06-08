@@ -321,7 +321,7 @@ loadThermostat();
               document.getElementById("onThermostat").style = "color: black;";
               document.getElementById("offThermostat").style = "";
             }
-//            document.getElementById("roomTemp").innerHTML = "Kamertemp: " + thermostat[7].roomtemp + " °C";
+            document.getElementById("roomTemp").innerHTML = "Kamertemp: " + thermostat[7].roomtemp + " °C";
           }
         };
         xhr.send();
@@ -402,7 +402,7 @@ loadThermostat();
         tableel+=' <button id="offThermostat" onclick="offThermostat(event);">Uit</button>';
         tableel+=' <button id="autoThermostat" onclick="autoThermostat(event);">Auto</button>';
         tableel+=' <span id="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
-//        tableel+=' <span id="terminalbox"><span id="roomTemp">Kamertemp: 5 °C</span></span>';
+        tableel+=' <span id="terminalbox"><span id="roomTemp">Kamertemp: 5 °C</span></span>';
         tableel+='</div>';
         document.getElementById("content").innerHTML = tableel;
         centerContent();
