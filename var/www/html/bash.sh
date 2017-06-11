@@ -136,10 +136,10 @@ case "$command" in
     echo $json > /var/www/html/data/thermostat.json
     exit
     ;;
-  loadThermostat)
-    cat /var/www/html/data/thermostat.json
-    exit
-    ;;
+#  loadThermostat)
+#    cat /var/www/html/data/thermostat.json
+#    exit
+#    ;;
 esac
 pincode=`echo "$encpin" | openssl base64 -d | openssl rsautl -decrypt -inkey ${TMPDIR}/${FINGERPRINT}_priv.pem`
 
