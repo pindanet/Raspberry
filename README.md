@@ -120,6 +120,10 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 ## Thermostat
     sudo apt-get install jq
     sudo chmod +x /var/www/html/thermostat.sh
+    sudo systemctl daemon-reload
+    sudo systemctl enable PindaNetThermostat.timer
+    sudo systemctl start PindaNetThermostat.timer
+    systemctl list-timers
 ## Bluetooth Detection
     hcitool scan
     echo -n "MA:C-:ad:dr:es:s0" > bluetooth.detection
