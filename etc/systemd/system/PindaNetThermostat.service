@@ -1,12 +1,8 @@
 [Unit]
 Description=Thermostat
-After=network.target
 
 [Service]
 Type=simple
 User=www-data
 WorkingDirectory=/var/www/html
 ExecStart=/var/www/html/thermostat.sh
-
-[Install]
-WantedBy=multi-user.target
