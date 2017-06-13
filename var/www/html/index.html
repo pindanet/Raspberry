@@ -252,6 +252,12 @@ Helderheid display automatisch regelen via lichtmeting met camera
 var thermostat = "";
 loadThermostat();
       function saveThermostat() {
+      // sorteer op tijd
+        for (var day = 0; day < 7; day++) {
+          thermostat[day].sort(function(a,b) {
+            return a.time > b.time;
+          });
+        }
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "bash.sh", true);
         xhr.onload = function(e) {
@@ -293,7 +299,7 @@ loadThermostat();
           event.stopPropagation();
       }
       function addTimeTemp(event, day, timetemp) {
-        thermostat[day].push({"time": "07:00", "temp":"20"});
+        thermostat[day].push({"time": "23:59", "temp":"15"});
         weeklyThermostat(event);
         event.stopPropagation();
       }
@@ -365,12 +371,6 @@ loadThermostat();
           ];
         }
         saveThermostat();
-      // sorteer op tijd
-        for (var day = 0; day < 7; day++) {
-          thermostat[day].sort(function(a,b) {
-            return a.time > b.time;
-          });
-        }
 
         tableel='<table style="width:790px">';
         tableel+='<tr>';
