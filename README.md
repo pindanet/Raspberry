@@ -111,6 +111,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     
     sudo mv bme280.py /var/www/html/
     sudo adduser www-data i2c
+    sudo chmod +x /var/www/html/bme280.sh
 ## RFXtrx433E
     wget https://github.com/ssjoholm/rfxcmd_gc/archive/master.zip
     unzip master.zip
