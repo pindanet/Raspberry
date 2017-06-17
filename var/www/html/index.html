@@ -238,7 +238,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
           <p id="bme280"></p>`;
         }
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', "bme280tph.py", true);
+        xhr.open('POST', "bme280.sh", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
             document.getElementById("bme280").innerHTML = this.responseText;
