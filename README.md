@@ -95,7 +95,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 
     sudo chmod +x /media/data/var/www/html/test.py
     
-    sudo chmod +x /media/data/var/www/html/background.py
+    sudo chmod +x /media/data/var/www/html/background.sh
 ## BME280 I2C Temperature and Pressure Sensor
     Vin > 3v3 (1) (Red)
     GND > Ground (6) (Black)
