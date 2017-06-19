@@ -216,11 +216,11 @@ Helderheid display automatisch regelen via lichtmeting met camera
           document.getElementById("content").innerHTML = "";
         }
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', "background.py", true);
+        xhr.open('POST', "background.sh", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
             var imageFileName = this.responseText;
-            document.body.style.backgroundImage = 'url(' + imageFileName + ')';
+            document.body.style.backgroundImage = 'url(background/' + imageFileName + ')';
             startBackgroundTimer = setTimeout(background, 864000);
           }
         };
