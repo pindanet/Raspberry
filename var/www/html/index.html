@@ -285,13 +285,13 @@ loadThermostat();
       }
       function setThermostat(event, day, timetemp) {
           document.getElementById("content").innerHTML = `<div class="dayname">
-          <button onclick="weeklyThermostat(event);">&#x25C0;</button> ` + 
+          <button onclick="weeklyThermostat(event);">&#x25C0;</button> ` +
           dayNames[day] + ` <input type="text" size="2" id="sethour" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(0, 2) + `">
           <input class="inline" type="range" orient="vertical" min="0" max="23" oninput="outputUpdate(event,value,'sethour',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(0, 2) + `">
-          
+
           <input type="text" size="2" id="setmin" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(3, 5) + `">
           <input class="inline" type="range" orient="vertical" min="0" max="59" oninput="outputUpdate(event,value,'setmin',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value ="` + thermostat[day][timetemp].time.substring(3, 5) + `">
-          
+
           <input type="text" size="2" id="settemp" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].temp + `"> °C
           <input class="inline" type="range" orient="vertical" min="0" max="24" oninput="outputUpdate(event,value,'settemp',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].temp + `">
 
@@ -370,7 +370,6 @@ loadThermostat();
               {"manual":"Off", "heating":"Off", "controltemp":"5", "roomtemp":"15"}
           ];
         }
-        saveThermostat();
 
         tableel='<table style="width:790px">';
         tableel+='<tr>';
@@ -407,7 +406,7 @@ loadThermostat();
         document.getElementById("content").innerHTML = tableel;
         centerContent();
         event.stopPropagation();
-        getThermostatTemp();
+        saveThermostat();
       }
       function remoteCommand(event, command) {
         var xhr = new XMLHttpRequest();
@@ -480,7 +479,7 @@ loadThermostat();
         if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
         return i;
       }
-    </script> 
+    </script>
   </head>
   <body onload="background();setcursor();">
   <div id="content"></div>
