@@ -286,13 +286,13 @@ loadThermostat();
       function setThermostat(event, day, timetemp) {
           document.getElementById("content").innerHTML = `<div class="dayname">
           <button onclick="weeklyThermostat(event);">&#x25C0;</button> ` +
-          dayNames[day] + ` <input type="text" size="2" id="sethour" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(0, 2) + `">
+          dayNames[day] + ` <input type="text" size="2" id="sethour" onchange="outputUpdate(event,value,'sethour',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(0, 2) + `">
           <input class="inline" type="range" orient="vertical" min="0" max="23" oninput="outputUpdate(event,value,'sethour',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(0, 2) + `">
 
-          <input type="text" size="2" id="setmin" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(3, 5) + `">
+          <input type="text" size="2" id="setmin" onchange="outputUpdate(event,value,'setmin',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(3, 5) + `">
           <input class="inline" type="range" orient="vertical" min="0" max="59" oninput="outputUpdate(event,value,'setmin',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value ="` + thermostat[day][timetemp].time.substring(3, 5) + `">
 
-          <input type="text" size="2" id="settemp" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].temp + `"> °C
+          <input type="text" size="2" id="settemp" onchange="outputUpdate(event,value,'settemp',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].temp + `"> °C
           <input class="inline" type="range" orient="vertical" min="0" max="24" oninput="outputUpdate(event,value,'settemp',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].temp + `">
 
           <button onclick="delTimeTemp(event,` + day + `,` + timetemp + `);">&mdash;</button></div>`;
@@ -313,6 +313,42 @@ loadThermostat();
         xhr.onload = function(e) {
           if (this.status == 200) {
             thermostat = JSON.parse(atob(this.responseText));
+            
+            tableel='<table style="width:790px">';
+            tableel+='<tr>';
+            for (var day = 0; day < 7; day++) {
+              tableel += '<th>' + dayNames[day] + '</th>';
+            }
+            tableel+='</tr>';
+            timetemp=0;
+            timetempvalues=true;
+            while (timetempvalues) {
+              timetempvalues=false;
+              tableel+='<tr>';
+            for (var day = 0; day < 7; day++) {
+                if (typeof thermostat[day][timetemp] !== 'undefined') {
+                  tableel += '<td><button onclick="setThermostat(event,' + day + ',' + timetemp + ');">' + thermostat[day][timetemp].time + ' ' + thermostat[day][timetemp].temp + '°C</button></td>';
+                  timetempvalues=true;
+                } else if (typeof thermostat[day][timetemp - 1] !== 'undefined' || timetemp == 0) {
+                    tableel += '<td><button onclick="addTimeTemp(event,' + day + ',' + timetemp + ');">++:++ ++°C</button></td>';
+                } else {
+                  tableel += '<td></td>';
+                }
+              }
+              tableel+='<tr>';
+              timetemp++;
+            }
+            tableel+='</table>';
+            tableel+='<div style="text-align: left;">';
+            tableel+=' <button id="onThermostat" onclick="onThermostat(event);">Aan</button>';
+            tableel+=' <button id="offThermostat" onclick="offThermostat(event);">Uit</button>';
+            tableel+=' <button id="autoThermostat" onclick="autoThermostat(event);">Auto</button>';
+            tableel+=' <span id="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
+            tableel+=' <span id="terminalbox"><span id="roomTemp">Kamertemp: 5 °C</span></span>';
+            tableel+='</div>';
+            document.getElementById("content").innerHTML = tableel;
+            centerContent();
+
             if (thermostat[7].manual == "Off") {
               document.getElementById("autoThermostat").style = "color: black;";
               document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + thermostat[7].controltemp + " °C";
@@ -370,40 +406,7 @@ loadThermostat();
               {"manual":"Off", "heating":"Off", "controltemp":"5", "roomtemp":"15"}
           ];
         }
-
-        tableel='<table style="width:790px">';
-        tableel+='<tr>';
-        for (var day = 0; day < 7; day++) {
-          tableel += '<th>' + dayNames[day] + '</th>';
-        }
-        tableel+='</tr>';
-        timetemp=0;
-        timetempvalues=true;
-        while (timetempvalues) {
-          timetempvalues=false;
-          tableel+='<tr>';
-        for (var day = 0; day < 7; day++) {
-            if (typeof thermostat[day][timetemp] !== 'undefined') {
-              tableel += '<td><button onclick="setThermostat(event,' + day + ',' + timetemp + ');">' + thermostat[day][timetemp].time + ' ' + thermostat[day][timetemp].temp + '°C</button></td>';
-              timetempvalues=true;
-            } else if (typeof thermostat[day][timetemp - 1] !== 'undefined' || timetemp == 0) {
-                tableel += '<td><button onclick="addTimeTemp(event,' + day + ',' + timetemp + ');">++:++ ++°C</button></td>';
-            } else {
-              tableel += '<td></td>';
-            }
-          }
-          tableel+='<tr>';
-          timetemp++;
-        }
-        tableel+='</table>';
-        tableel+='<div style="text-align: left;">';
-        tableel+=' <button id="onThermostat" onclick="onThermostat(event);">Aan</button>';
-        tableel+=' <button id="offThermostat" onclick="offThermostat(event);">Uit</button>';
-        tableel+=' <button id="autoThermostat" onclick="autoThermostat(event);">Auto</button>';
-        tableel+=' <span id="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
-        tableel+=' <span id="terminalbox"><span id="roomTemp">Kamertemp: 5 °C</span></span>';
-        tableel+='</div>';
-        document.getElementById("content").innerHTML = tableel;
+        document.getElementById("content").innerHTML = '<pre id="terminalbox">Bezig met de het ophalen van de Thermostaat...</pre>';
         centerContent();
         event.stopPropagation();
         saveThermostat();
