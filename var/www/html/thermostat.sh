@@ -1,6 +1,10 @@
 #!/bin/bash
 echo -e "Content-type: text/html\n"
-json=`cat /var/www/html/data/thermostat.json | openssl base64 -d`
+if [ -f /var/www/html/data/thermostat.json ]; then
+  json=`cat /var/www/html/data/thermostat.json | openssl base64 -d`
+else
+  json='[[{"time":"08:00","temp":"20"},{"time":"10:45","temp":"21"},{"time":"21:40","temp":"15"}],[{"time":"07:00","temp":"20"}],[],[{"time":"23:59","temp":"15"}],[{"time":"07:30","temp":"20"}],[],[],{"manual":"Off","heating":"Off","controltemp":"20","roomtemp":"32.72"}]'
+fi
 
 temp="5"
 weekday=`date +%w`
