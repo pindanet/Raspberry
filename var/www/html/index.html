@@ -345,6 +345,7 @@ loadThermostat();
             tableel+=' <button id="autoThermostat" onclick="autoThermostat(event);">Auto</button>';
             tableel+=' <span id="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
             tableel+=' <span id="terminalbox"><span id="roomTemp">Kamertemp: 5 °C</span></span>';
+            tableel+=' <button id="resetThermostat" onclick="resetThermostat(event);">Reset</button>';
             tableel+='</div>';
             document.getElementById("content").innerHTML = tableel;
             centerContent();
@@ -385,30 +386,49 @@ loadThermostat();
         saveThermostat();
         event.stopPropagation();
       }
+      function resetThermostat(event) {
+        event.stopPropagation();
+        thermostat = [
+        [
+            {"time":"07:00", "temp":"20"},
+            {"time":"21:40", "temp":"15"},
+        ],
+        [
+            {"time":"07:00", "temp":"20"},
+            {"time":"21:40", "temp":"15"},
+        ],
+        [
+            {"time":"07:00", "temp":"20"},
+            {"time":"21:40", "temp":"15"},
+        ],
+        [
+            {"time":"07:00", "temp":"20"},
+            {"time":"21:40", "temp":"15"},
+        ],
+        [
+            {"time":"07:00", "temp":"20"},
+            {"time":"21:40", "temp":"15"},
+        ],
+        [
+            {"time":"07:00", "temp":"20"},
+            {"time":"21:40", "temp":"15"},
+        ],
+        [
+            {"time":"07:00", "temp":"20"},
+            {"time":"21:40", "temp":"15"},
+        ],
+            {"manual":"Off", "heating":"Off", "controltemp":"5", "roomtemp":"15"}
+        ];
+        weeklyThermostat(event);
+      }
       function weeklyThermostat(event) {
-        if (thermostat == "") {
-          thermostat = [
-          [
-              {"time":"08:00", "temp":"20"},
-              {"time":"21:40", "temp":"15"},
-              {"time":"10:45", "temp":"21"},
-          ],
-          [
-              {"time":"07:00", "temp":"20"},
-          ],
-          [],
-          [],
-          [
-              {"time":"07:30", "temp":"20"},
-          ],
-          [],
-          [],
-              {"manual":"Off", "heating":"Off", "controltemp":"5", "roomtemp":"15"}
-          ];
-        }
         document.getElementById("content").innerHTML = '<pre id="terminalbox">Bezig met de het ophalen van de Thermostaat...</pre>';
         centerContent();
         event.stopPropagation();
+        if (thermostat == "") {
+          setTimeout(weeklyThermostat, 1000, event);
+          return;
+        }
         saveThermostat();
       }
       function remoteCommand(event, command) {
