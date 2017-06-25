@@ -75,7 +75,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
         font-size: 45px;
         text-shadow: 0 0 2px black;
       }
-      #terminalbox {
+      .terminalbox {
         background-color: rgba(0,0,0,0.5);
         border: 1px solid rgb(128,128,128);
         border-radius: 12px;
@@ -186,7 +186,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
         event.stopPropagation();
       }
       function enterPIN(event) {
-        document.getElementById("content").innerHTML = '<pre id="terminalbox">Even geduld...</pre>';
+        document.getElementById("content").innerHTML = '<pre class="terminalbox">Even geduld...</pre>';
         centerContent();
         event.stopPropagation();
         var xhr = new XMLHttpRequest();
@@ -267,6 +267,10 @@ loadThermostat();
         };
         xhr.send("command=saveThermostat&json=" + btoa(JSON.stringify(thermostat)));
       }
+      function exportThermostat(event) {
+        window.open("exportthermostat.sh");
+        event.stopPropagation();
+      }
       function loadThermostat() {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "thermostat.sh", true);
@@ -277,6 +281,47 @@ loadThermostat();
         };
         xhr.send("command=loadThermostat&json=");
       }
+      function importThermostat(event) {
+        document.getElementById("content").innerHTML = `      
+        <form class="terminalbox" id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
+            <h2 style="text-align: center;">Thermostaat importeren</h2>
+            <input type='file' id='fileinput' onclick="event.stopPropagation();">
+            <input type='button' id='btnLoad' value='Laden' onclick='loadFile();'>
+        </form>`
+        centerContent();
+        event.stopPropagation();
+      }
+      function loadFile() {
+        var input, file, fr;
+
+        if (typeof window.FileReader !== 'function') {
+          alert("The file API isn't supported on this browser yet.");
+          return;
+        }
+
+        input = document.getElementById('fileinput');
+        if (!input) {
+          alert("Um, couldn't find the fileinput element.");
+        }
+        else if (!input.files) {
+          alert("This browser doesn't seem to support the `files` property of file inputs.");
+        }
+        else if (!input.files[0]) {
+          alert("Please select a file before clicking 'Load'");
+        }
+        else {
+          file = input.files[0];
+          fr = new FileReader();
+          fr.onload = receivedText;
+          fr.readAsText(file);
+        }
+      }
+      function receivedText(e) {
+        lines = e.target.result;
+        thermostat = JSON.parse(lines);
+        weeklyThermostat(e);
+      }
+
       function outputUpdate(event, value, elmid, day, timetemp) {
         document.getElementById(elmid).value = ("0" + value).slice(-2);
         thermostat[day][timetemp].time = document.getElementById("sethour").value + ":" + document.getElementById("setmin").value;
@@ -343,9 +388,11 @@ loadThermostat();
             tableel+=' <button id="onThermostat" onclick="onThermostat(event);">Aan</button>';
             tableel+=' <button id="offThermostat" onclick="offThermostat(event);">Uit</button>';
             tableel+=' <button id="autoThermostat" onclick="autoThermostat(event);">Auto</button>';
-            tableel+=' <span id="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
-            tableel+=' <span id="terminalbox"><span id="roomTemp">Kamertemp: 5 °C</span></span>';
+            tableel+=' <span class="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
+            tableel+=' <span class="terminalbox"><span id="roomTemp">Kamertemp: 5 °C</span></span>';
             tableel+=' <button id="resetThermostat" onclick="resetThermostat(event);">Reset</button>';
+            tableel+=' <button title="Opslaan" onclick="exportThermostat(event);">&DownArrowBar;</button>';
+            tableel+=' <button title="Laden" onclick="importThermostat(event);">&UpArrowBar;</button>';
             tableel+='</div>';
             document.getElementById("content").innerHTML = tableel;
             centerContent();
@@ -422,7 +469,7 @@ loadThermostat();
         weeklyThermostat(event);
       }
       function weeklyThermostat(event) {
-        document.getElementById("content").innerHTML = '<pre id="terminalbox">Bezig met de het ophalen van de Thermostaat...</pre>';
+        document.getElementById("content").innerHTML = '<pre class="terminalbox">Bezig met het ophalen van de Thermostaat...</pre>';
         centerContent();
         event.stopPropagation();
         if (thermostat == "") {
@@ -436,12 +483,12 @@ loadThermostat();
         xhr.open('POST', "bash.sh", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
-            document.getElementById("content").innerHTML = '<pre id="terminalbox">Test: ' + this.responseText + "</pre>";
+            document.getElementById("content").innerHTML = '<pre class="terminalbox">Test: ' + this.responseText + "</pre>";
             centerContent();
           }
         };
         xhr.send("encpin=" + encryptedPIN + "&command=" + command);
-        document.getElementById("content").innerHTML = '<pre id="terminalbox">Bezig met de ' + command + " opdracht</pre>";
+        document.getElementById("content").innerHTML = '<pre class="terminalbox">Bezig met de ' + command + " opdracht</pre>";
         centerContent();
         event.stopPropagation();
       }
@@ -459,7 +506,7 @@ loadThermostat();
             }
           };
           xhr.send("encpin=" + encryptedPIN + "&command=system");
-          document.getElementById("content").innerHTML = '<pre id="terminalbox">Even geduld...</pre>';
+          document.getElementById("content").innerHTML = '<pre class="terminalbox">Even geduld...</pre>';
           centerContent();
           event.stopPropagation();
         }
