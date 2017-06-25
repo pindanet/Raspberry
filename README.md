@@ -110,6 +110,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 ## Thermostat
     sudo apt-get install jq
     sudo chmod +x /var/www/html/thermostat.sh
+    sudo chmod +x /var/www/html/exportthermostat.sh
     sudo systemctl daemon-reload
     sudo systemctl enable PindaNetThermostat.timer
     sudo systemctl start PindaNetThermostat.timer
