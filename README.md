@@ -126,6 +126,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo systemctl start PindaNetBluetoothDetection.timer
     systemctl list-timers
 ## Motion Detection
+    sudo mkdir -p /var/www/html/motion/fotos
     sudo chmod +x /usr/sbin/motion-detection.sh
     sudo systemctl daemon-reload
     sudo systemctl enable PindaNetMotionDetection.timer
