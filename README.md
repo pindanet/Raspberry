@@ -125,6 +125,12 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo systemctl enable PindaNetBluetoothDetection.timer
     sudo systemctl start PindaNetBluetoothDetection.timer
     systemctl list-timers
+## Motion Detection
+    sudo chmod +x /usr/sbin/motion-detection.sh
+    sudo systemctl daemon-reload
+    sudo systemctl enable PindaNetMotionDetection.timer
+    sudo systemctl start PindaNetMotionDetection.timer
+    systemctl list-timers
 ## YouTube Live Video Stream
     # Account pictogram > Creator Studio > Live Streaming
     # Werkt ook voor Facebook Live Video
