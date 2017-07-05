@@ -10,7 +10,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     lcd_rotate=2
 ## Brightness LCD Screen (0-255)
     sudo su
-    echo 128 > /sys/class/backlight/rpi_backlight/brightness
+    echo 32 > /sys/class/backlight/rpi_backlight/brightness
 
 ## Start VNC server
     sudo systemctl start vncserver-x11-serviced.service
