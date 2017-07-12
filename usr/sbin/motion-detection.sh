@@ -10,7 +10,7 @@ if [ $home == "1" ]; then # not home
   echo $DIFF
   if [ "$DIFF" -gt "20" ]; then
 #    echo "Alarm"
-    cp /var/www/html/motion/foto1.png "/var/www/html/motion/fotos/`date +"%R %d %m %Y"`.png"
+    cp /var/www/html/motion/foto1.png "/var/www/html/motion/fotos/`date +"%Y %m %d %R"`.png"
 #  else
 #    echo "No Alarm"
   fi
