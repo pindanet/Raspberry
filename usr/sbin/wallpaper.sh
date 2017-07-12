@@ -2,7 +2,7 @@
 
 # Keep the 100 latest wallpapers
 numfiles=`ls /var/www/html/background | wc -l`
-while [ $((numfiles)) -gt 99 ]; do
+while [ $((numfiles)) -gt 199 ]; do
   oldest=`ls -t /var/www/html/background/* | tail -1`
   rm $oldest
   numfiles=`ls /var/www/html/background | wc -l`
