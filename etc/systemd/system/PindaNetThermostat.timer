@@ -1,7 +1,7 @@
 [Unit]
 Description=Thermostat
 [Timer]
-OnBootSec=5min
+OnBootSec=1min
 OnUnitActiveSec=5min
 Unit=PindaNetThermostat.service
 [Install]
