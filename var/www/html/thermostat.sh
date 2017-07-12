@@ -43,19 +43,19 @@ manual=`echo $json | jq --raw-output ".[7] | .manual"`
 if [ $manual == "Off" ]; then
   heating=$(awk 'BEGIN{ print "'$temp'"<"'$sensorTemp'" }')
   if [ "$heating" -eq 1 ]; then
-    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100010141538601000080 &
+    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 41 53 86 01 00 00 80" &
     json="${json/heating\":\"On/heating\":\"Off}"
   else
-    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100000141538601010F80 &
+    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 41 53 86 01 01 0F 80" &
     json="${json/heating\":\"Off/heating\":\"On}"
   fi
 else
   heating=`echo $json | jq --raw-output ".[7] | .heating"`
   if [ "$heating" == "Off" ]; then
-    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100010141538601000080 &
+    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 41 53 86 01 00 00 80" &
     json="${json/heating\":\"On/heating\":\"Off}"
   else
-    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s 0B1100000141538601010F80 &
+    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 41 53 86 01 01 0F 80" &
     json="${json/heating\":\"Off/heating\":\"On}"
   fi
 fi
