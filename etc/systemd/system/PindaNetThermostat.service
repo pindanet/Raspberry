@@ -1,8 +1,0 @@
-[Unit]
-Description=Thermostat
-
-[Service]
-Type=simple
-User=www-data
-WorkingDirectory=/var/www/html
-ExecStart=/var/www/html/thermostat.sh
