@@ -3,8 +3,6 @@
 TODO
 encrypt (scrypt, aes), TLS (https://github.com/digitalbazaar/forge)
 omxplayer -o local http://mp3.streampower.be/radio1-mid.mp3
-sudo apt-get install jq
-Thermostaat sorteren op tijd
 Helderheid display automatisch regelen via lichtmeting met camera
 -->
 <html>
@@ -276,10 +274,13 @@ loadThermostat();
         xhr.open('POST', "thermostat.sh", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
-            thermostat = JSON.parse(atob(this.responseText));
+            if (thermostat == "") {
+              thermostat = JSON.parse(atob(this.responseText));
+            }
+            thermostatTimer = setTimeout(loadThermostat, 300000);
           }
         };
-        xhr.send("command=loadThermostat&json=");
+        xhr.send();
       }
       function importThermostat(event) {
         document.getElementById("content").innerHTML = `      
