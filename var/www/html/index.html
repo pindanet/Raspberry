@@ -277,7 +277,9 @@ loadThermostat();
             if (thermostat == "") {
               thermostat = JSON.parse(atob(this.responseText));
             }
-            thermostatTimer = setTimeout(loadThermostat, 300000);
+            if (window.location.hostname == "localhost") { // enkel lokaal
+              thermostatTimer = setTimeout(loadThermostat, 300000);
+            }
           }
         };
         xhr.send();
