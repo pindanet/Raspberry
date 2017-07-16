@@ -225,7 +225,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
         xhr.send();
       }
       function centerContent() {
-        document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 + "px";
+        document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 - 8 + "px";
         document.getElementById("content").style.left = (window.innerWidth - document.getElementById("content").offsetWidth)/2 + "px";
       }
       var hourly = 0;
@@ -247,17 +247,41 @@ Helderheid display automatisch regelen via lichtmeting met camera
         xhr.send();
         event.stopPropagation();
       }
+var motionPhoto;
+var motionPhotos = "";
+      function motionNextPhoto(event) {
+        motionPhoto += 1;
+        if (motionPhoto == motionPhotos.length - 1) {
+          motionPhoto = 0;
+        }
+        motionDisplayPhoto();
+        event.stopPropagation();
+      }
+      function motionPrevPhoto(event) {
+        motionPhoto -= 1;
+        if (motionPhoto < 0) {
+          motionPhoto = motionPhotos.length - 2;
+        }
+        motionDisplayPhoto();
+        event.stopPropagation();
+      }
+      function motionDisplayPhoto() {
+        document.getElementById("content").innerHTML = `      
+        <div style="height: 480px; width: 800px; background-image: url('motion/fotos/` + motionPhotos[motionPhoto] + `');">
+        <p style="color: white;">` + motionPhotos[motionPhoto].substring(0, 16) + `</p>
+        <button style="position: absolute; right: 2px; top: 50%;" title="Volgende" onclick="motionNextPhoto(event);">&gt;</button>'
+        <button style="position: absolute; left: 2px; top: 50%;" title="Vorige" onclick="motionPrevPhoto(event);">&lt;</button>'
+        </div>`
+        centerContent();
+      }
       function motionDetection(event) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "motion.sh", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
             motionPhotos = JSON.parse(this.responseText);
-            document.getElementById("content").innerHTML = `      
-            <div style="height: 480px; width: 800px; background-image: url('motion/fotos/` + motionPhotos[1] + `');">
-            <p>Dit is een test.</p>
-            </div>`
-            centerContent();
+            motionPhoto = 0;
+            motionDisplayPhoto();
             event.stopPropagation();
           }
         };
