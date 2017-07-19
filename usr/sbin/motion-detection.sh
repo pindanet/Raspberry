@@ -2,10 +2,13 @@
 # PiCam Motion Detection
 
 home=`cat /sys/class/backlight/rpi_backlight/bl_power`
-DIFF="$(cat /var/www/html/motion/foto_diff.txt)"
-if [ "$DIFF" -gt "20" ]; then # Alarm uitschakelen
-  python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 01 01 41 53 86 0D 00 00 80"
-  echo "0" > /var/www/html/motion/foto_diff.txt
+if [ -f /var/www/html/motion/foto_diff.txt ]; then
+  DIFF="$(cat /var/www/html/motion/foto_diff.txt)"
+  if [ "$DIFF" -gt "20" ]; then # Alarm uitschakelen
+    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 01 01 41 53 86 0D 00 00 80"
+    echo "0" > /var/www/html/motion/foto_diff.txt
+  fi
+  rm -f /var/www/html/motion/foto_diff.txt
 fi
 if [ $home == "1" ]; then # not home
   if [ -f /var/www/html/motion/foto.png ]; then # Motion detection active
