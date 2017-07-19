@@ -300,10 +300,11 @@ var motionPhotoPage;
         for (tr = 0; tr < 5; tr++) {
           innerHTML += "<tr>";
           for (td = 0; td < 5; td++) {
-            innerHTML += `<td onclick="motionDisplayPhoto(event,` + ((tr * 5) + td + (motionPhotoPage * 25)) +`);" style="vertical-align: top; color: white; height: 96px; width: 160px; background-size: 100% 100%; background-repeat: no-repeat; background-image: url('motion/fotos/` + motionPhotos[(tr * 5) + td + (motionPhotoPage * 25)] + `');">`;
             if ((tr * 5) + td + (motionPhotoPage * 25) < motionPhotos.length - 1) {
+              innerHTML += `<td onclick="motionDisplayPhoto(event,` + ((tr * 5) + td + (motionPhotoPage * 25)) +`);" style="vertical-align: top; color: white; height: 96px; width: 160px; background-size: 100% 100%; background-repeat: no-repeat; background-image: url('motion/fotos/` + motionPhotos[(tr * 5) + td + (motionPhotoPage * 25)] + `');">`;
               innerHTML += motionPhotos[(tr * 5) + td + (motionPhotoPage * 25)].substring(0, 16);
             } else {
+              innerHTML += `<td style="vertical-align: top; color: white; height: 96px; width: 160px;">`;
               innerHTML += "Foto " + ((tr * 5) + td + (motionPhotoPage * 25) + 1);
             }
             innerHTML += "</td>";
