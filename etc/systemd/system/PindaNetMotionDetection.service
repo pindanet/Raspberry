@@ -1,5 +1,0 @@
-[Unit]
-Description=Motion Detection
-[Service]
-Type=simple
-ExecStart=/usr/sbin/motion-detection.sh
