@@ -128,7 +128,7 @@ script included in /usr/sbin/bluetooth-detection.sh
     alsamixer # set volume
     sudo apt-get install mpd mpc
     sudo nano /etc/mpd.conf
-audio_output {
+<pre>audio_output {
         type            "alsa"
         name            "My ALSA Device"
 #       device          "hw:0,0"        # optional
@@ -137,7 +137,7 @@ audio_output {
 #       mixer_device    "default"       # optional
 #       mixer_control   "PCM"           # optional
 #       mixer_index     "0"             # optional
-}
+}</pre>
     sudo systemctl restart mpd.service
     mpc add http://mp3.streampower.be/radio1-high.mp3
     mpc add http://mp3.streampower.be/ra2ant-high.mp3
