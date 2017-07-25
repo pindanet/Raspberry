@@ -124,6 +124,28 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 ## Motion Detection
     sudo mkdir -p /var/www/html/motion/fotos
 script included in /usr/sbin/bluetooth-detection.sh
+## Radio
+    alsamixer # set volume
+    sudo apt-get install mpd mpc
+    sudo nano /etc/mpd.conf
+audio_output {
+        type            "alsa"
+        name            "My ALSA Device"
+#       device          "hw:0,0"        # optional
+#       mixer_type      "hardware"      # optional
+        mixer_type      "software"      # optional
+#       mixer_device    "default"       # optional
+#       mixer_control   "PCM"           # optional
+#       mixer_index     "0"             # optional
+}
+    sudo systemctl restart mpd.service
+    mpc add http://mp3.streampower.be/radio1-high.mp3
+    mpc add http://mp3.streampower.be/ra2ant-high.mp3
+    mpc play 1
+    mpc volume 100
+    mpc stop
+    mpc play 2
+    mpc stop    
 ## YouTube Live Video Stream
     # Account pictogram > Creator Studio > Live Streaming
     # Werkt ook voor Facebook Live Video
