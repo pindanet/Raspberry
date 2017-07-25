@@ -146,6 +146,7 @@ script included in /usr/sbin/bluetooth-detection.sh
     mpc add http://mp3.streampower.be/stubru-high.mp3
     mpc add http://mp3.streampower.be/mnm-high.mp3
     mpc add http://mp3.streampower.be/mnm_hits-high.mp3
+    mpc add http://mp3.streampower.be/sporza-high.mp3
     mpc play 1
     mpc volume 100
     mpc stop
