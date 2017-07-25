@@ -140,7 +140,15 @@ script included in /usr/sbin/bluetooth-detection.sh
 }</pre>
     sudo systemctl restart mpd.service
     mpc add http://mp3.streampower.be/radio1-high.mp3
-    mpc add http://mp3.streampower.be/ra2ant-high.mp3
+    mpc add http://mp3.streampower.be/ra2wvl-high.mp3
+    mpc add http://mp3.streampower.be/klara-high.mp3
+    mpc add http://mp3.streampower.be/klaracontinuo-high.mp3
+    mpc add http://mp3.streampower.be/stubru-high.mp3
+    mpc add http://mp3.streampower.be/mnm-high.mp3
+    mpc add http://mp3.streampower.be/mnm_hits-high.mp3
+    mpc add http://mp3.streampower.be/rvi-high.mp3
+    mpc add http://mp3.streampower.be/rv-high.mp3
+    mpc add http://download.streampower.be/vrt/radio1/11_11niws-snip_hi.mp3
     mpc play 1
     mpc volume 100
     mpc stop
