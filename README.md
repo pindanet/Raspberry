@@ -147,6 +147,11 @@ script included in /usr/sbin/bluetooth-detection.sh
     mpc add http://mp3.streampower.be/mnm-high.mp3
     mpc add http://mp3.streampower.be/mnm_hits-high.mp3
     mpc add http://mp3.streampower.be/sporza-high.mp3
+    mpc add http://mp3.streampower.be/ketnetradio-high.mp3
+    mpc add http://77.92.64.44:8045/stream
+    mpc add http://stream.vbro.be:9100/vbro
+    mpc add http://icecast-qmusic.cdp.triple-it.nl/JOEfm_be_live_128.mp3
+    mpc add http://icecast-qmusic.cdp.triple-it.nl/Qmusic_be_live_128.mp3
     mpc play 1
     mpc volume 100
     mpc stop
