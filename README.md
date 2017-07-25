@@ -151,6 +151,7 @@ script included in /usr/sbin/bluetooth-detection.sh
     mpc stop
     mpc play 2
     mpc stop    
+    sudo chmod +x /var/www/html/mpc.sh
 ## YouTube Live Video Stream
     # Account pictogram > Creator Studio > Live Streaming
     # Werkt ook voor Facebook Live Video
