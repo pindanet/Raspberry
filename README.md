@@ -158,6 +158,62 @@ script included in /usr/sbin/bluetooth-detection.sh
     mpc play 2
     mpc stop    
     sudo chmod +x /var/www/html/mpc.sh
+## Software Access Point
+    sudo apt-get install hostapd bridge-utils
+    sudo nano /etc/hostapd.conf
+<pre>interface=wlan0
+driver=nl80211
+channel=6
+ssid=SoftAP
+hw_mode=g
+auth_algs=1
+# Wireless Multimedia Extension/Wi-Fi Multimedia needed for
+# IEEE 802.11n (HT)
+wmm_enabled=1
+# 1 to enable 802.11n
+ieee80211n=1
+ht_capab=[HT20][SHORT-GI-20][DSSS_CK-HT40]
+
+# WEP/WPA/WPA2 bitmask, 0 for open/WEP, 1 for WPA, 2 for WPA2
+wpa=2
+
+# WPA2 settings
+wpa_passphrase=snt+-456
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP CCMP
+rsn_pairwise=CCMP
+
+bridge=br0</pre>
+    sudo nano /etc/default/hostapd
+<pre>DAEMON_CONF="/etc/hostapd.conf"</pre>
+    sudo nano /etc/network/interfaces
+<pre># interfaces(5) file used by ifup(8) and ifdown(8)
+
+# Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+auto lo
+iface lo inet loopback
+
+#iface eth0 inet manual
+
+#allow-hotplug wlan0
+#iface wlan0 inet manual
+#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+#allow-hotplug wlan1
+#iface wlan1 inet manual
+#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+# Create a bridge with dynamic IP
+auto br0
+iface br0 inet dhcp
+        bridge_ports eth0</pre>
+    sudo systemctl disable hostapd.service 
+    sudo systemctl stop hostapd.service
 ## YouTube Live Video Stream
     # Account pictogram > Creator Studio > Live Streaming
     # Werkt ook voor Facebook Live Video
