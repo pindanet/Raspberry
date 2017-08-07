@@ -231,7 +231,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
       function weather(event) {
         if(++hourly > 59) {
           hourly = 0;
-          document.getElementById("content").innerHTML = `<img src="https://www.yr.no/place/Belgium/Flanders/Bruges/meteogram.png" alt="Weerbericht Brugge" height="272" width="828" onclick="menu();">
+          document.getElementById("content").innerHTML = `<img src="https://www.yr.no/place/Belgium/Flanders/Bruges/meteogram.svg" alt="Weerbericht Brugge" width="800" onclick="menu();">
           <p id="bme280"></p>`;
         }
         var xhr = new XMLHttpRequest();
