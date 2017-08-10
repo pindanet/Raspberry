@@ -1,5 +1,4 @@
 #!/bin/bash
-echo -e "Content-type: text/html\n"
 bme=`python /var/www/html/bme280.py`
 
 temp=${bme#*Temperature :}
