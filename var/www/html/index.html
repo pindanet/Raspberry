@@ -63,8 +63,26 @@ Helderheid display automatisch regelen via lichtmeting met camera
         text-shadow: 0 0 2px black;
       }
       #forecast {
-        background-color: white;
         width: 100%;
+        border-collapse:collapse;
+        top: 0;
+        left: 0;
+        position: fixed;
+      }
+      #forecast th {
+        background-color: rgba(0,0,0,0.5);
+        text-shadow: 0 0 1px black;
+        font-size: 1em;
+      }
+      #forecast .bme280 {
+        font-size: 28px;
+        padding-top: 0px;
+      }
+      #forecast th a {
+        color: white;
+      }
+      #forecast td {
+        background-color: white;
       }
       #forecast svg {
         height: 20px;
@@ -123,12 +141,6 @@ Helderheid display automatisch regelen via lichtmeting met camera
         fill: #ffdd15;
       }
 
-      #bme280 {
-        font-size: 29px;
-        background-color: white;
-        width: 100%;
-        margin-top: 4px;
-      }
       #date {
         color: white;
         font-size: 45px;
@@ -289,35 +301,17 @@ Helderheid display automatisch regelen via lichtmeting met camera
         document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 - 8 + "px";
         document.getElementById("content").style.left = (window.innerWidth - document.getElementById("content").offsetWidth)/2 + "px";
       }
-      var hourly = 0;
       function weather(event) {
-        if(++hourly > 59) {
-          hourly = 0;
-//https://www.yr.no/place/Belgium/Flanders/Bruges/forecast.xml
-//https://www.yr.no/place/Belgium/Flanders/Bruges/forecast_hour_by_hour.xml
-          document.getElementById("content").innerHTML = `<table id="forecast"></table>`;
-        }
-        var xhr = new XMLHttpRequest();
-//        xhr.open('POST', "bme280.sh", true);
-//        xhr.onload = function(e) {
-//          if (this.status == 200) {
-//            document.getElementById("bme280").innerHTML = this.responseText;
+        var xhrforecast = new XMLHttpRequest();
+        xhrforecast.open('POST', "forecast.sh", true);
+        xhrforecast.onload = function(e) {
+          if (this.status == 200) {
+            document.getElementById("content").innerHTML = this.responseText;
+          }
+        };
+        xhrforecast.send();
 
-            var xhrforecast = new XMLHttpRequest();
-            xhrforecast.open('POST', "forecast.sh", true);
-            xhrforecast.onload = function(e) {
-              if (this.status == 200) {
-                document.getElementById("forecast").innerHTML = this.responseText;
-                console.log(this.responseText);
-                centerContent();
-              }
-            };
-            xhrforecast.send();
-
-            startTimer = setTimeout(weather, 600000); // herhaal elke 10 min
-//          }
-//        };
-//        xhr.send();
+        startTimer = setTimeout(weather, 600000); // herhaal elke 10 min
         event.stopPropagation();
       }
       function radioCommand(event, command, options) {
@@ -796,6 +790,12 @@ loadThermostat();
     <symbol id="s01d">
       <use xlink:href="#sun" class="sun-primitive" x="0" y="0" width="100" height="100" transform="translate(5,5) scale(1,1)"/>
     </symbol>
+    <symbol id="s01d">
+      <use xlink:href="#sun" class="sun-primitive" x="0" y="0" width="100" height="100" transform="translate(5,5) scale(1,1)"/>
+    </symbol>
+    <symbol id="s01n">
+       <use xlink:href="#moon" class="moon-primitive" x="0" y="0" width="100" height="100" transform="translate(15,5) scale(1,1)"></use>
+    </symbol>
     <symbol id="s02d">
       <use xlink:href="#sun" class="sun-primitive" x="0" y="0" width="100" height="100" transform="translate(0,0) scale(1,1)"/>
       <use xlink:href="#cloud" class="cloud1-primitive" x="0" y="0" width="100" height="100" transform="translate(35,38) scale(0.714285714,0.714285714)"/>
@@ -815,6 +815,13 @@ loadThermostat();
     <symbol id="s04">
       <use xlink:href="#cloud" class="cloud1-primitive" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"/>
     </symbol>
+    <symbol id="s05d">
+      <use xlink:href="#sun" class="sun-primitive" x="0" y="0" width="100" height="100" transform="translate(0,0) scale(0.666666667,0.666666667)"></use>
+      <use xlink:href="#cloud" class="cloud3-primitive" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"></use>
+      <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(32,78) scale(1,1)"></use>
+      <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(45,87) scale(1,1)"></use>
+      <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(60,78) scale(1,1)"></use>
+    </symbol>
     <symbol id="s09">
       <use xlink:href="#cloud" class="cloud3-primitive" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"/>
       <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(32,78) scale(1,1)"/>
@@ -831,6 +838,15 @@ loadThermostat();
       <use xlink:href="#cloud" class="cloud2-primitive" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"/>
       <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(32,87) scale(1,1)"/>
       <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(56,78) scale(1,1)"/>
+    </symbol>
+    <symbol id="s41d">
+      <use xlink:href="#sun" class="sun-primitive" x="0" y="0" width="100" height="100" transform="translate(0,0) scale(0.666666667,0.666666667)"></use>
+      <use xlink:href="#cloud" class="cloud4-primitive" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"></use>
+      <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(18,78) scale(1,1)"></use>
+      <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(32,87) scale(1,1)"></use>
+      <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(47,79) scale(1,1)"></use>
+      <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(60,78) scale(1,1)"></use>
+      <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(74,87) scale(1,1)"></use>
     </symbol>
     <symbol id="s46">
       <use xlink:href="#s40n"/>
