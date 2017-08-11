@@ -12,13 +12,16 @@ echo -e "Content-type: text/html\n"
 export LANG=nl_BE.UTF-8
 
 forecastXML="/var/www/html/data/forecast.xml"
-if [ -f "$forecastXML" ]; then
+forecastSVG="data/avansert_meteogram.svg"
+if [ -f /var/www/html/"$forecastSVG" ]; then
   nextupdate=$(date -d `xmllint --xpath "string(//weatherdata/meta/nextupdate)" "$forecastXML"` +"%s")
   if [ $(date +"%s") -gt $nextupdate ]; then
     wget -O $forecastXML "https://www.yr.no/place/Belgium/Flanders/Bruges/forecast.xml"
+    wget -O /var/www/html/"$forecastSVG" "https://www.yr.no/place/Belgium/Flanders/Bruges/avansert_meteogram.svg"
   fi
 else
   wget -O $forecastXML "https://www.yr.no/place/Belgium/Flanders/Bruges/forecast.xml"
+  wget -O /var/www/html/"$forecastSVG" "https://www.yr.no/place/Belgium/Flanders/Bruges/avansert_meteogram.svg"
 fi
 period=$(xmllint --xpath "string(//weatherdata/forecast/tabular/time[1]/@period)" "$forecastXML")
 item=$period
@@ -30,9 +33,9 @@ while [ $period -lt 32 ]; do
 done
 
 cat <<EOF
-  <tr><td colspan="9"><img src="https://www.yr.no/place/Belgium/Flanders/Bruges/avansert_meteogram.svg" alt="Weerbericht Brugge" width="800" onclick="menu();"></td></tr>
-  <tr><td colspan="9"><a href="$(xmllint --xpath "string(//weatherdata/credit/link/@url)" "$forecastXML")" target="_blank">$(xmllint --xpath "string(//weatherdata/credit/link/@text)" "$forecastXML")</a></td></tr>
-  <tr><td colspan="9">$(/var/www/html/bme280.sh)</td></tr>
+<table id="forecast">
+  <tr><th colspan="9"><a href="$(xmllint --xpath "string(//weatherdata/credit/link/@url)" "$forecastXML")" target="_blank">$(xmllint --xpath "string(//weatherdata/credit/link/@text)" "$forecastXML")</a></td></th>
+  <tr><td colspan="9"><img src="$forecastSVG" alt="Weerbericht Brugge" width="800"></td></tr>
   <tr>
     <td></td>
     <td>vandaag</td>
@@ -57,7 +60,7 @@ cat <<EOF
   <tr>
   <tr>
     <td>9u</td>
-    <td>${periodTemp[1]}</td>
+    <td>${periodTemp[1]} <svg viewbox="0 0 100 100"><use xlink:href="#s${periodWeather[1]}" /></svg></td>
     <td>${periodTemp[5]} <svg viewbox="0 0 100 100"><use xlink:href="#s${periodWeather[5]}" /></svg></td>
     <td>${periodTemp[9]} <svg viewbox="0 0 100 100"><use xlink:href="#s${periodWeather[9]}" /></svg></td>
     <td>${periodTemp[13]} <svg viewbox="0 0 100 100"><use xlink:href="#s${periodWeather[13]}" /></svg></td>
@@ -68,7 +71,7 @@ cat <<EOF
   <tr>
   <tr>
     <td>15u</td>
-    <td>${periodTemp[2]}</td>
+    <td>${periodTemp[2]} <svg viewbox="0 0 100 100"><use xlink:href="#s${periodWeather[2]}" /></svg></td>
     <td>${periodTemp[6]} <svg viewbox="0 0 100 100"><use xlink:href="#s${periodWeather[6]}" /></svg></td>
     <td>${periodTemp[10]} <svg viewbox="0 0 100 100"><use xlink:href="#s${periodWeather[10]}" /></svg></td>
     <td>${periodTemp[14]} <svg viewbox="0 0 100 100"><use xlink:href="#s${periodWeather[14]}" /></svg></td>
@@ -88,4 +91,6 @@ cat <<EOF
     <td>${periodTemp[27]} <svg viewbox="0 0 100 100"><use xlink:href="#s${periodWeather[27]}" /></svg></td>
     <td>${periodTemp[31]} <svg viewbox="0 0 100 100"><use xlink:href="#s${periodWeather[31]}" /></svg></td>
   <tr>
+  <tr><th class="bme280" colspan="9">$(/var/www/html/bme280.sh)</th></tr>
+</table>
 EOF
