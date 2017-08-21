@@ -302,17 +302,20 @@ Helderheid display automatisch regelen via lichtmeting met camera
         document.getElementById("content").style.left = (window.innerWidth - document.getElementById("content").offsetWidth)/2 + "px";
       }
       function weather(event) {
+        document.getElementById("content").innerHTML = '<pre class="terminalbox">Bezig met het ophalen van het weerbericht...</pre>';
+        centerContent();
+        event.stopPropagation();
         var xhrforecast = new XMLHttpRequest();
         xhrforecast.open('POST', "forecast.sh", true);
         xhrforecast.onload = function(e) {
           if (this.status == 200) {
+            document.getElementById("content").style.width = window.innerWidth + "px";
             document.getElementById("content").innerHTML = this.responseText;
           }
         };
         xhrforecast.send();
 
         startTimer = setTimeout(weather, 600000); // herhaal elke 10 min
-        event.stopPropagation();
       }
       function radioCommand(event, command, options) {
         var xhr = new XMLHttpRequest();
@@ -852,7 +855,6 @@ loadThermostat();
       <use xlink:href="#s40n"/>
     </symbol>
   </svg>
-
   <div id="content"></div>
 </body>
 </html>
