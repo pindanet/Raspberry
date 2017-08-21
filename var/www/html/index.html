@@ -711,16 +711,14 @@ loadThermostat();
       }
       function menu() {
         clearTimeout(startTimer);
-        document.getElementById("content").style.width = window.innerWidth + "px";
-        document.getElementById("content").innerHTML = `<button onclick="fotokader(event);">Fotokader</button>
+        document.getElementById("content").innerHTML = `<p style="width: 800px; text-align: center;"><button onclick="fotokader(event);">Fotokader</button>
         <button onclick="startTime(event);">Klok</button>
         <button onclick="hourly=60;weather(event);">Weerbericht</button>
         <button onclick="weeklyThermostat(event);">Thermostaat</button>
         <button onclick="motionDetection(event);">Beweging</button>
         <button onclick="radio(event);">Radio</button>
-        <button onclick="system(event);">Systeem</button>`;
+        <button onclick="system(event);">Systeem</button></p>`;
         centerContent();
-        document.getElementById("content").style.width = "";
       }
       window.addEventListener("click", menu);
 
