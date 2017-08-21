@@ -677,7 +677,7 @@ loadThermostat();
         xhr.open('POST', "bash.sh", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
-            document.getElementById("content").innerHTML = '<pre class="terminalbox">Test: ' + this.responseText + "</pre>";
+            document.getElementById("content").innerHTML = '<pre class="terminalbox">' + this.responseText + "</pre>";
             centerContent();
           }
         };
