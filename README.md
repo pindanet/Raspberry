@@ -82,7 +82,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     </Directory>
     
     sudo visudo
-    www-data ALL = NOPASSWD: /sbin/shutdown -r now, /sbin/shutdown -h now
+    www-data ALL = NOPASSWD: /sbin/shutdown -r now, /sbin/shutdown -h now, /bin/systemctl start hostapd.service, /bin/systemctl stop hostapd.service
 
     sudo chmod +x /media/data/var/www/html/background.sh
 ## BME280 I2C Temperature and Pressure Sensor
