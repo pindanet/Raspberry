@@ -14,8 +14,11 @@ export LANG=nl_BE.UTF-8
 forecastXML="/var/www/html/data/forecast.xml"
 forecastSVG="data/avansert_meteogram.svg"
 if [ -f /var/www/html/"$forecastSVG" ]; then
-  nextupdate=$(date -d `xmllint --xpath "string(//weatherdata/meta/nextupdate)" "$forecastXML"` +"%s")
-  if [ $(date +"%s") -gt $nextupdate ]; then
+#  nextupdate=$(date -d `xmllint --xpath "string(//weatherdata/meta/nextupdate)" "$forecastXML"` +"%s")
+#  if [ $(date +"%s") -gt $nextupdate ]; then
+  filemtime=`stat -c %Y $forecastSVG`
+  currtime=`date +%s`
+  if [ $((currtime - filemtime)) -gt 3600 ]; then # weerbericht is één uur geldig
     wget -O $forecastXML "https://www.yr.no/place/Belgium/Flanders/Bruges/forecast.xml"
     wget -O /var/www/html/"$forecastSVG" "https://www.yr.no/place/Belgium/Flanders/Bruges/avansert_meteogram.svg"
   fi
