@@ -143,43 +143,54 @@ case "$command" in
 esac
 pincode=`echo "$encpin" | openssl base64 -d | openssl rsautl -decrypt -inkey ${TMPDIR}/${FINGERPRINT}_priv.pem`
 
-# { myCode=$(</dev/stdin); } << EOF
-# case "\$command" in
-#   system)
-#     html="<button onclick=\"location.reload();\">Vernieuwen</button>
-#         <button onclick=\"remoteCommand(event,'reboot');\">Herstart</button>
-#         <button onclick=\"remoteCommand(event,'halt');\">Uitschakelen</button>"
-#     echo \$html
-#     ;;
-#   reboot)
-#     sudo /sbin/shutdown -r now
-#     ;;
-#   halt)
-#     sudo /sbin/shutdown -h now
-#     ;;
-#   saveThermostat)
-#     echo $jason;;
-#   *)
-#     echo Error
-# esac
-# EOF
+{ myCode=$(</dev/stdin); } << EOF
+case "\$command" in
+  system)
+    html="<button onclick=\"location.reload();\">Vernieuwen</button>
+        <button onclick=\"remoteCommand(event,'softap');\">WiFi AP</button>
+        <button onclick=\"remoteCommand(event,'reboot');\">Herstart</button>
+        <button onclick=\"remoteCommand(event,'halt');\">Uitschakelen</button>"
+    echo \$html
+    ;;
+  softap)
+    hostapd=`/bin/systemctl is-active hostapd.service`
+    if [ \$hostapd == "inactive" ] || [ \$hostapd == "failed" ] || [ \$hostapd == "unknown" ]; then # start hostapd
+      sudo /bin/systemctl start hostapd.service
+      echo "WiFi AP actief"
+    else
+      sudo /bin/systemctl stop hostapd.service
+      echo "WiFi AP uitgeschakeld"
+    fi
+    ;;
+  reboot)
+    sudo /sbin/shutdown -r now
+    ;;
+  halt)
+    sudo /sbin/shutdown -h now
+    ;;
+  saveThermostat)
+    echo $jason;;
+  *)
+    echo Error
+esac
+EOF
 
 # encoderen
-# enc=`echo -n "$myCode" | openssl enc -e -aes-256-cbc -a -salt -pass pass:$pincode`
+enc=`echo -n "$myCode" | openssl enc -e -aes-256-cbc -a -salt -pass pass:$pincode`
 
 # Voorbeeld met pincode: 123
 # Opgelet: $command wordt \$command
 
-enc='U2FsdGVkX1+X+zCKtg2sLMgNTkpaLtBdKN3IHGZhqyZT907t2d9FjuWxW75DwT6c
-HcwCnTN3jVCdHFRsjq+5fC90jL7gObjp0+k60h964wE3H0SUK0fC0+YA3Fh1wWg1
-v49ToUBIm6/qYGhnPRNBbfreCJnzMHvzm6i/ER3gw0QgkA4ss3AaSLY2MCE2oaR/
-iWjSXMlG8xuJqvCkdEU5glUSgQhbCZEGFKwFh136i3vpnUNPkS9aYXqUAnGHt1X+
-G4OtgheKQ4QH8tepHlwpA6UoEtJmMq7y6kE0ih0XN3S5OK0i7AoopZmuKsUlIDKz
-FbfcdIVxJPyLCIzy+bh6ERMrsJTknGTWvM/LtzXnRFin9geJK9uWz/OFDECUSswA
-ruSXYwdDkxiYZmBVOb9mWBoGxtgNo+mtRMTowMxQOL8rGQ37Mb6BZWkeTQh1LrFw
-1pyyHtKp0cAWrZUX7UJUpn7+ckSluOBuOQjd33PO7YTYsr33TgetyGx6EY3BMw1H
-T/fEA5r1CT1ShrYxMKzpZAS8dQYdSgGu/9q6tUItKWGYLDZFPZh+yA4rxfFKelM6
-R6Mpvu9085n+xbHDXDBofA=='
+# enc='U2FsdGVkX1+X+zCKtg2sLMgNTkpaLtBdKN3IHGZhqyZT907t2d9FjuWxW75DwT6c
+# HcwCnTN3jVCdHFRsjq+5fC90jL7gObjp0+k60h964wE3H0SUK0fC0+YA3Fh1wWg1
+# v49ToUBIm6/qYGhnPRNBbfreCJnzMHvzm6i/ER3gw0QgkA4ss3AaSLY2MCE2oaR/
+# iWjSXMlG8xuJqvCkdEU5glUSgQhbCZEGFKwFh136i3vpnUNPkS9aYXqUAnGHt1X+
+# G4OtgheKQ4QH8tepHlwpA6UoEtJmMq7y6kE0ih0XN3S5OK0i7AoopZmuKsUlIDKz
+# FbfcdIVxJPyLCIzy+bh6ERMrsJTknGTWvM/LtzXnRFin9geJK9uWz/OFDECUSswA
+# ruSXYwdDkxiYZmBVOb9mWBoGxtgNo+mtRMTowMxQOL8rGQ37Mb6BZWkeTQh1LrFw
+# 1pyyHtKp0cAWrZUX7UJUpn7+ckSluOBuOQjd33PO7YTYsr33TgetyGx6EY3BMw1H
+# T/fEA5r1CT1ShrYxMKzpZAS8dQYdSgGu/9q6tUItKWGYLDZFPZh+yA4rxfFKelM6
+# R6Mpvu9085n+xbHDXDBofA=='
 
 # decoderen
 dec=`echo "$enc" | openssl enc -d -aes-256-cbc -a -salt -pass pass:$pincode`
