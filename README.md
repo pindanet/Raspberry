@@ -195,23 +195,10 @@ bridge=br0</pre>
 # Include files from /etc/network/interfaces.d:
 source-directory /etc/network/interfaces.d
 
-auto lo
-iface lo inet loopback
-
-#iface eth0 inet manual
-
-#allow-hotplug wlan0
-#iface wlan0 inet manual
-#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
-
-#allow-hotplug wlan1
-#iface wlan1 inet manual
-#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
-
 # Create a bridge with dynamic IP
 auto br0
 iface br0 inet dhcp
-        bridge_ports eth0</pre>
+        bridge_ports enxb827ebbd71d7</pre>
     sudo systemctl disable hostapd.service 
     sudo systemctl stop hostapd.service
 ## YouTube Live Video Stream
