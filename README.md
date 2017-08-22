@@ -85,6 +85,11 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     www-data ALL = NOPASSWD: /sbin/shutdown -r now, /sbin/shutdown -h now, /bin/systemctl start hostapd.service, /bin/systemctl stop hostapd.service
 
     sudo chmod +x /var/www/html/background.sh
+    sudo chmod +x /var/www/html/bash.sh
+    sudo chmod +x /var/www/html/exportthermostat.sh
+    sudo chmod +x /var/www/html/forecast.sh
+    sudo chmod +x /var/www/html/motion.sh
+    sudo chmod +x /var/www/html/thermostat.sh
 ## BME280 I2C Temperature and Pressure Sensor
     Vin > 3v3 (1) (Red)
     GND > Ground (6) (Black)
