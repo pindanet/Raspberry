@@ -86,7 +86,6 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 
     sudo chmod +x /var/www/html/background.sh
     sudo chmod +x /var/www/html/bash.sh
-    sudo chmod +x /var/www/html/forecast.sh
     sudo chmod +x /var/www/html/motion.sh
 ## BME280 I2C Temperature and Pressure Sensor
     Vin > 3v3 (1) (Red)
@@ -114,6 +113,9 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo apt-get install jq
     sudo chmod +x /var/www/html/thermostat.sh
     sudo chmod +x /var/www/html/exportthermostat.sh
+## Weather forecast
+    sudo apt-get install libxml2-utils
+    sudo chmod +x /var/www/html/forecast.sh
 ## Bluetooth Detection
     hcitool scan
     echo -n "MA:C-:ad:dr:es:s0" > bluetooth.detection
