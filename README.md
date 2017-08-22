@@ -115,7 +115,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     hcitool scan
     echo -n "MA:C-:ad:dr:es:s0" > bluetooth.detection
     sudo hcitool info MA:C-:ad:dr:es:s0 | md5sum | awk '{ print $1 }' >> bluetooth.detection
-    sudo mv bluetooth.detection /var/www/html/ /var/www/html/data/
+    sudo mv bluetooth.detection /var/www/html/data/
     sudo chmod +x /usr/sbin/bluetooth-detection.sh
     sudo systemctl daemon-reload
     sudo systemctl enable PindaNetBluetoothDetection.timer
