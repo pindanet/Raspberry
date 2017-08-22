@@ -4,7 +4,7 @@
 # hcitool scan
 # echo -n "MA:C-:ad:dr:es:BT" > bluetooth.detection
 # sudo hcitool info MA:C-:ad:dr:es:BT | md5sum | awk '{ print $1 }' >> bluetooth.detection
-# sudo mv bluetooth.detection /var/www/html/ /var/www/html/data/
+# sudo mv bluetooth.detection /var/www/html/data/
 
 # alarm indien nodig uitschakelen
 if [ -f /var/www/html/motion/foto_diff.txt ]; then
