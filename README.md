@@ -67,8 +67,8 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo mv PindaNetWallpaper.timer /etc/systemd/system/PindaNetWallpaper.timer
     sudo mv PindaNetWallpaper.service /etc/systemd/system/PindaNetWallpaper.service
     sudo apt-get install imagemagick
-    # copy wallpaper.sh to /usr/sbin/
-    sudo chmod a+x wallpaper.sh
+    copy wallpaper.sh to /usr/sbin/
+    sudo chmod a+x /usr/sbin/wallpaper.sh
     sudo systemctl daemon-reload
     sudo systemctl enable PindaNetWallpaper.timer
     sudo systemctl start PindaNetWallpaper.timer
