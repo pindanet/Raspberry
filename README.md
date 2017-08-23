@@ -113,6 +113,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo apt-get install jq
     sudo chmod +x /var/www/html/thermostat.sh
     sudo chmod +x /var/www/html/exportthermostat.sh
+    sudo chown www-data:www-data /var/www/html/data/thermostat.json
 ## Weather forecast
     sudo apt-get install libxml2-utils
     sudo chmod +x /var/www/html/forecast.sh
