@@ -303,8 +303,6 @@ Helderheid display automatisch regelen via lichtmeting met camera
       }
       function weather(event) {
         document.getElementById("content").innerHTML = '<pre class="terminalbox">Bezig met het ophalen van het weerbericht...</pre>';
-        centerContent();
-        event.stopPropagation();
         var xhrforecast = new XMLHttpRequest();
         xhrforecast.open('POST', "forecast.sh", true);
         xhrforecast.onload = function(e) {
@@ -315,6 +313,8 @@ Helderheid display automatisch regelen via lichtmeting met camera
         xhrforecast.send();
 
         startTimer = setTimeout(weather, 600000); // herhaal elke 10 min
+        centerContent();
+        event.stopPropagation();
       }
       function radioCommand(event, command, options) {
         var xhr = new XMLHttpRequest();
