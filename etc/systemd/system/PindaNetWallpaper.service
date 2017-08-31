@@ -1,5 +1,0 @@
-[Unit]
-Description=Get new wallpaper every day
-[Service]
-Type=simple
-ExecStart=/usr/sbin/wallpaper.sh
