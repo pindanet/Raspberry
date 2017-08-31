@@ -65,15 +65,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 ## Folder with background pictures
     sudo mkdir /var/www/html/background
     sudo chown -R www-data:www-data  background
-    sudo mv PindaNetWallpaper.timer /etc/systemd/system/PindaNetWallpaper.timer
-    sudo mv PindaNetWallpaper.service /etc/systemd/system/PindaNetWallpaper.service
     sudo apt-get install imagemagick
-    copy wallpaper.sh to /usr/sbin/
-    sudo chmod a+x /usr/sbin/wallpaper.sh
-    sudo systemctl daemon-reload
-    sudo systemctl enable PindaNetWallpaper.timer
-    sudo systemctl start PindaNetWallpaper.timer
-    systemctl list-timers
 ## Activate Bash CGI
     sudo a2enmod cgid
     sudo nano /etc/apache2/conf-enabled/pinda.conf
