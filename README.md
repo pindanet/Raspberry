@@ -62,8 +62,9 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo apt-get install xautomation firefox-esr
     nano .config/lxsession/LXDE-pi/autostart
       @sh /home/pi/.config/lxsession/LXDE-pi/autostart.sh
-### Folder with background pictures
+## Folder with background pictures
     sudo mkdir /var/www/html/background
+    sudo chown -R www-data:www-data  background
     sudo mv PindaNetWallpaper.timer /etc/systemd/system/PindaNetWallpaper.timer
     sudo mv PindaNetWallpaper.service /etc/systemd/system/PindaNetWallpaper.service
     sudo apt-get install imagemagick
