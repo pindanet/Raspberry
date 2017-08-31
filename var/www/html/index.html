@@ -290,8 +290,9 @@ Helderheid display automatisch regelen via lichtmeting met camera
         xhr.open('POST', "background.sh", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
-            var imageFileName = this.responseText;
-            document.body.style.backgroundImage = 'url(background/' + imageFileName + ')';
+            var lines = this.responseText.split("\n");
+            var imageFileName = lines[0];
+            document.body.style.backgroundImage = 'url(' + imageFileName + ')';
             startBackgroundTimer = setTimeout(background, 864000);
           }
         };
