@@ -59,7 +59,12 @@ Helderheid display automatisch regelen via lichtmeting met camera
       }
       #clock {
         color: white;
-        font-size: 150px;
+        font-size: 300px;
+        text-shadow: 0 0 2px black;
+      }
+      #date {
+        color: white;
+        font-size: 60px;
         text-shadow: 0 0 2px black;
       }
       #forecast {
@@ -141,11 +146,6 @@ Helderheid display automatisch regelen via lichtmeting met camera
         fill: #ffdd15;
       }
 
-      #date {
-        color: white;
-        font-size: 45px;
-        text-shadow: 0 0 2px black;
-      }
       .terminalbox {
         background-color: rgba(0,0,0,0.5);
         border: 1px solid rgb(128,128,128);
@@ -733,10 +733,11 @@ loadThermostat();
         var today = new Date();
         var h = today.getHours();
         var m = today.getMinutes();
-        var s = today.getSeconds();
+//        var s = today.getSeconds();
         m = checkTime(m);
-        s = checkTime(s);
-        document.getElementById('content').innerHTML = '<span id="clock">' + h + ":" + m + ":" + s + '</span><br><span id="date">'+ toLocaleDateString(today) + '</span>';
+//        s = checkTime(s);
+//        document.getElementById('content').innerHTML = '<span id="clock">' + h + ":" + m + ":" + s + '</span><br><span id="date">'+ toLocaleDateString(today) + '</span>';
+        document.getElementById('content').innerHTML = '<span id="clock">' + h + ":" + m + '</span><br><span id="date">'+ toLocaleDateString(today) + '</span>';
         centerContent();
         startTimer = setTimeout(startTime, 500);
         event.stopPropagation();
