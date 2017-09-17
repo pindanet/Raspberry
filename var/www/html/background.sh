@@ -28,7 +28,7 @@ if [[ `date -r background/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]; then
     # extract wallpaper of the day url
     WOTD=`wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0" -qO - $PAGE | grep "click here to download" | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d '>' -f 1`
 
-    wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0"  --directory-prefix=/var/www/html/background/ https://$SITE$WOTD
+    wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0"  --output-document=/var/www/html/background/$(basename $WOTD) https://$SITE$WOTD
   else
     PICPAGEURL=`wget -qO - http://wallpaperswide.com/latest_wallpapers.html | awk '/mini-hud/{getline; print}' | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
     PICURL=`wget -qO - http://wallpaperswide.com$PICPAGEURL | grep 800x600.jpg | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
