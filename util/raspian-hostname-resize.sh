@@ -22,8 +22,6 @@ if [[ ! -e $1 || ! $(file $1) =~ "block special" ]]; then
 fi
 
 mount $1p2 /mnt/
-sed -i "s/raspberrypi/$2/" /mnt/etc/samba/smb.conf
-cat /mnt/etc/samba/smb.conf
 sed -i "s/raspberrypi/$2/" /mnt/etc/hostname
 cat /mnt/etc/hostname
 umount /mnt/
