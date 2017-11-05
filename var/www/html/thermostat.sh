@@ -41,7 +41,7 @@ json="${json/roomtemp\":\"$roomtemp\"/roomtemp\":\"$sensorTemp\"}"
 cd data
 manual=`echo $json | jq --raw-output ".[7] | .manual"`
 if [ $manual == "Off" ]; then
-  heating=$(awk 'BEGIN{ print "'$temp'"<"'$sensorTemp'" }')
+  heating=$(awk 'BEGIN{ print '$temp'<'$sensorTemp' }')
   if [ "$heating" -eq 1 ]; then
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 41 53 86 01 00 00 80" &
     json="${json/heating\":\"On/heating\":\"Off}"
