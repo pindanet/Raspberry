@@ -1,0 +1,5 @@
+[Unit]
+Description=Bluetooth Detection Scan
+[Service]
+Type=simple
+ExecStart=/usr/sbin/bluetoothscan.sh
