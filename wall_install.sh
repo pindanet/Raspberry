@@ -1,6 +1,7 @@
 #!/bin/bash
 
 LOCALE="nl_BE.UTF-8"
+TIMEZONE="Europe/Brussels"
 NEW_HOSTNAME="rpiwall"
 
 # Change locale
@@ -14,10 +15,17 @@ sudo sed -i "s/^\s*LANG=\S*/LANG=$LOCALE/" /etc/default/locale
 
 sudo dpkg-reconfigure -f noninteractive locales
 
+# Change timezone
+if [ ! -f "/usr/share/zoneinfo/$TIMEZONE" ]; then
+  printf '\033[1;31;40mTIMEZONE %s not supported.\n\033[0m' $TIMEZONE # Rode letters op zwarte achtergrond
+  exit
+fi
+sudo rm /etc/localtime
+echo "$TIMEZONE" | sudo tee /etc/timezone
+sudo dpkg-reconfigure -f noninteractive tzdata
+
 exit
 
-# Change timezone
-sudo dpkg-reconfigure tzdata
 # Change WiFi country
 IFS="/"
 value=$(cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' '/' | tr '\n' '/')
