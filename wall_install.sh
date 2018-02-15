@@ -35,13 +35,12 @@ if [ -e /etc/wpa_supplicant/wpa_supplicant.conf ]; then
 else
   echo "country=$COUNTRY" | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf
 fi
-sudo cat /etc/wpa_supplicant/wpa_supplicant.conf
-exit
 
 # Change hostname
 CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
-sudo echo $NEW_HOSTNAME > /etc/hostname
+echo $NEW_HOSTNAME | sudo tee /etc/hostname
 sudo sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
+
 # Change password
 passwd
 
