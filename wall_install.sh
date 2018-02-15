@@ -49,5 +49,7 @@ sudo update-rc.d ssh enable
 sudo invoke-rc.d ssh start
 
 printf '\033[1;37;40mOn the main computer: ssh-copy-id -i ~/.ssh/id_rsa.pub pi@rpiwall.local\n\033[0m' # Witte letters op zwarte achtergrond
-printf '\033[1;32;40mPress key to continue.\033[0m' # Groene letters op zwarte achtergrond
+printf '\033[1;32;40mPress key to secure ssh.\033[0m' # Groene letters op zwarte achtergrond
 read Keypress
+
+sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
