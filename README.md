@@ -111,13 +111,13 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo apt-get install libxml2-utils
     sudo chmod +x /var/www/html/forecast.sh
 ## Bluetooth Detection
-### Nokia Steel Watch
+### Bluetooth SmartPhone or Nokia Steel Watch
     sudo chmod +x /usr/sbin/bluetoothscan.sh
     sudo systemctl daemon-reload
     sudo systemctl enable PindaNetBluetoothScan.timer
     sudo systemctl start PindaNetBluetoothScan.timer
     systemctl list-timers
-### Bluetooth GSM
+### Bluetooth GSM (old version)
     hcitool scan
     echo -n "MA:C-:ad:dr:es:s0" > bluetooth.detection
     sudo hcitool info MA:C-:ad:dr:es:s0 | md5sum | awk '{ print $1 }' >> bluetooth.detection
