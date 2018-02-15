@@ -53,3 +53,8 @@ printf '\033[1;32;40mPress key to secure ssh.\033[0m' # Groene letters op zwarte
 read Keypress
 
 sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
+
+# Upgrade
+sudo apt-get update
+sudo apt-get dist-upgrade -y
+sudo apt-get autoremove -y
