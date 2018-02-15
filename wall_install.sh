@@ -2,6 +2,7 @@
 
 LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
+COUNTRY="BE"
 NEW_HOSTNAME="rpiwall"
 
 # Change locale
@@ -24,12 +25,7 @@ sudo rm /etc/localtime
 echo "$TIMEZONE" | sudo tee /etc/timezone
 sudo dpkg-reconfigure -f noninteractive tzdata
 
-exit
-
 # Change WiFi country
-IFS="/"
-value=$(cat /usr/share/zoneinfo/iso3166.tab | tail -n +26 | tr '\t' '/' | tr '\n' '/')
-COUNTRY=$(whiptail --menu "Select the country in which the Pi is to be used" 20 60 10 ${value} 3>&1 1>&2 2>&3)
 if [ -e /etc/wpa_supplicant/wpa_supplicant.conf ]; then
   if sudo grep -q "^country=" /etc/wpa_supplicant/wpa_supplicant.conf ; then
     sudo sed -i --follow-symlinks "s/^country=.*/country=$COUNTRY/g" /etc/wpa_supplicant/wpa_supplicant.conf
@@ -37,8 +33,11 @@ if [ -e /etc/wpa_supplicant/wpa_supplicant.conf ]; then
     sudo sed -i --follow-symlinks "1i country=$COUNTRY" /etc/wpa_supplicant/wpa_supplicant.conf
   fi
 else
-  sudo echo "country=$COUNTRY" > /etc/wpa_supplicant/wpa_supplicant.conf
+  echo "country=$COUNTRY" | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf
 fi
+sudo cat /etc/wpa_supplicant/wpa_supplicant.conf
+exit
+
 # Change hostname
 CURRENT_HOSTNAME=`cat /etc/hostname | tr -d " \t\n\r"`
 sudo echo $NEW_HOSTNAME > /etc/hostname
