@@ -84,18 +84,12 @@ openssl s_client -connect 127.0.0.1:443
 sudo sed -i "/<VirtualHost \*:80>/a\        Redirect \"\/\" \"https:\/\/$NEW_HOSTNAME.local\/\"" /etc/apache2/sites-available/000-default.conf
 sudo systemctl restart apache2.service
 sudo mkdir /var/www/html/data
+sudo chown -R www-data:www-data /var/www/html/data/
 
-cat << EOF | sudo tee /var/www/html/index.html
-<!DOCTYPE html>
-<html>
-<head>
-<title>Page Title</title>
-</head>
-<body>
+echo "# Start fullscreen browser" >> $HOME/.config/lxsession/LXDE-pi/autostart
+echo "@chromium-browser --incognito --kiosk http://localhost/" >> $HOME/.config/lxsession/LXDE-pi/autostart
 
-<h1>This is a Heading</h1>
-<p>This is a paragraph.</p>
-
-</body>
-</html>
-EOF
+echo "# Disable Screensaver" >> $HOME/.config/lxsession/LXDE-pi/autostart
+echo "xset s off" >> $HOME/.config/lxsession/LXDE-pi/autostart
+echo "xset -dpms" >> $HOME/.config/lxsession/LXDE-pi/autostart
+echo "xset s noblank" >> $HOME/.config/lxsession/LXDE-pi/autostart
