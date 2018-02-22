@@ -86,6 +86,10 @@ sudo systemctl restart apache2.service
 sudo mkdir /var/www/html/data
 sudo chown -R www-data:www-data /var/www/html/data/
 
+# Muiscursor verbergen
+sudo apt-get install unclutter
+
+# Autostart
 echo "# Start fullscreen browser" >> $HOME/.config/lxsession/LXDE-pi/autostart
 echo "@chromium-browser --incognito --kiosk http://localhost/" >> $HOME/.config/lxsession/LXDE-pi/autostart
 
@@ -93,3 +97,8 @@ echo "# Disable Screensaver" >> $HOME/.config/lxsession/LXDE-pi/autostart
 echo "xset s off" >> $HOME/.config/lxsession/LXDE-pi/autostart
 echo "xset -dpms" >> $HOME/.config/lxsession/LXDE-pi/autostart
 echo "xset s noblank" >> $HOME/.config/lxsession/LXDE-pi/autostart
+
+echo "# Hide mousecursor" >> $HOME/.config/lxsession/LXDE-pi/autostart
+echo "@unclutter -idle 0" >> $HOME/.config/lxsession/LXDE-pi/autostart
+
+sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.html
