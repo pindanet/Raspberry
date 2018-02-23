@@ -102,3 +102,4 @@ echo "xset s noblank" >> $HOME/.config/lxsession/LXDE-pi/autostart
 #echo "@unclutter -idle 0" >> $HOME/.config/lxsession/LXDE-pi/autostart
 
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.html
+sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/nocursor.gif
