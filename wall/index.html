@@ -23,12 +23,15 @@ body {
   opacity: 0;
 }
 </style>
-</head>
-<body>
-<div id="backgroundtransition"></div>
 <script>
-  setTimeout(function(){ document.getElementById("backgroundtransition").style.opacity = 1; }, 1000);
+function changeBackground() {
+  document.getElementById("backgroundtransition").style.opacity = 1;
+  setTimeout(function(){ document.getElementById("backgroundtransition").style.opacity = 0; }, 10000);
+}
 </script>
+</head>
+<body onload="changeBackground();">
+<div id="backgroundtransition"></div>
 <!-- http://lorempixel.com/1920/1200/nature/
 https://source.unsplash.com/random/1920x1200/?nature  ->
 </body>
