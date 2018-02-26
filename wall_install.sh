@@ -103,3 +103,7 @@ echo "xset s noblank" >> $HOME/.config/lxsession/LXDE-pi/autostart
 
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.html
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/nocursor.gif
+
+# Get new background image
+wget -P $HOME/bin https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.sh
+echo "@bash $HOME/bin/background.sh" >> $HOME/.config/lxsession/LXDE-pi/autostart
