@@ -9,11 +9,27 @@ html {
 body {
   padding: 0;
   margin: 0;
-  background-image: url("https://source.unsplash.com/random/1920x1200/?nature");
+  background-image: url("background/01578_potomacmorning_1920x1200.jpg");
   cursor: url(nocursor.gif), default;
+}
+#backgroundtransition {
+  background-image: url("background/03356_haystacksunset_1920x1200.jpg");
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: opacity 10s ease-in-out;
+  opacity: 0;
 }
 </style>
 </head>
 <body>
+<div id="backgroundtransition"></div>
+<script>
+  setTimeout(function(){ document.getElementById("backgroundtransition").style.opacity = 1; }, 1000);
+</script>
+<!-- http://lorempixel.com/1920/1200/nature/
+https://source.unsplash.com/random/1920x1200/?nature  ->
 </body>
 </html> 
