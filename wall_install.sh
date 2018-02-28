@@ -68,7 +68,7 @@ sudo apt-get dist-upgrade -y
 sudo apt-get autoremove -y
 
 # Webserver
-sudo apt-get install apache2 -y
+sudo apt-get install apache2 php libapache2-mod-php -y
 sudo a2enmod ssl
 sudo a2ensite default-ssl
 sudo systemctl restart apache2.service
