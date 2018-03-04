@@ -101,7 +101,8 @@ echo "xset s noblank" >> $HOME/.config/lxsession/LXDE-pi/autostart
 #echo "# Hide mousecursor" >> $HOME/.config/lxsession/LXDE-pi/autostart
 #echo "@unclutter -idle 0" >> $HOME/.config/lxsession/LXDE-pi/autostart
 
-sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.php
+sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.html
+sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/random_pic.php
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/nocursor.gif
 
 # Get new background image
