@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RPiWall</title>
+<style>
+html {
+  cursor: url(nocursor.gif), default;
+}
+body {
+  padding: 0;
+  margin: 0;
+  cursor: url(nocursor.gif), default;
+}
+#backgroundtransition {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: opacity 10s ease-in-out;
+  opacity: 0;
+}
+</style>
+<script>
+function getBackground() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "random_pic.php", true);
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+      var lines = this.responseText.split("\n");
+      var imageFileName = lines[0];
+      document.getElementById("backgroundtransition").style.backgroundImage = 'url(' + imageFileName + ')';
+      setTimeout(changeBackground, 10000);
+    }
+  };
+  xhr.send();
+}
+function copyBackground() {
+  document.body.style.backgroundImage = document.getElementById("backgroundtransition").style.backgroundImage;
+  document.getElementById("backgroundtransition").style.opacity = 0;
+  setTimeout(getBackground, 10000);
+}
+function changeBackground() {
+  document.getElementById("backgroundtransition").style.opacity = 1;
+  setTimeout(copyBackground, 10000);
+}
+</script>
+</head>
+<body onload="getBackground();">
+<div id="backgroundtransition"></div>
+<!-- http://lorempixel.com/1920/1200/nature/
+https://source.unsplash.com/random/1920x1200/?nature  ->
+</body>
+</html> 
