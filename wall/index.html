@@ -20,8 +20,19 @@ body {
   transition: opacity 10s ease-in-out;
   opacity: 0;
 }
+#redshift {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  transition: opacity 10s ease-in-out;
+}
 </style>
+<script src="suncalc.js"></script> 
 <script>
+var changeBackgroundMinutes = 15;
 function getBackground() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "random_pic.php", true);
@@ -38,16 +49,25 @@ function getBackground() {
 function copyBackground() {
   document.body.style.backgroundImage = document.getElementById("backgroundtransition").style.backgroundImage;
   document.getElementById("backgroundtransition").style.opacity = 0;
-  setTimeout(getBackground, 10000);
+  setTimeout(getBackground, changeBackgroundMinutes*60000);
 }
 function changeBackground() {
   document.getElementById("backgroundtransition").style.opacity = 1;
   setTimeout(copyBackground, 10000);
+// adjust brightness
+  var twilight = SunCalc.getTimes(new Date(), 51.2, 3.3);
+  var now = new Date();
+  if (twilight.sunrise < now && twilight.sunset > now) { // daylight
+    document.getElementById("redshift").style.opacity = 0;
+  } else { // dark
+    document.getElementById("redshift").style.opacity = 0.5;
+  }
 }
 </script>
 </head>
 <body onload="getBackground();">
 <div id="backgroundtransition"></div>
+<div id="redshift" style="opacity: 1;"></div>
 <!-- http://lorempixel.com/1920/1200/nature/
 https://source.unsplash.com/random/1920x1200/?nature  ->
 </body>
