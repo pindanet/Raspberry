@@ -37,3 +37,5 @@ if [[ `date -r ${backgroundDir}/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]
 #    mogrify -crop 800x480+0+60 /var/www/html/background/${PICURL:10}
   fi
 fi
+# make backup
+sudo rsync -aAXv --delete --relative /home/pi/install.sh /home/pi/bin/ /var/www/  pindabackup.local::backup/rpiwall
