@@ -109,3 +109,6 @@ sudo wget -P /var/www/html https://raw.githubusercontent.com/mourner/suncalc/mas
 # Get new background image
 wget -P $HOME/bin https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.sh
 echo "@bash $HOME/bin/background.sh" >> $HOME/.config/lxsession/LXDE-pi/autostart
+
+# Restart Raspberry Pi
+sudo shutdown -r now
