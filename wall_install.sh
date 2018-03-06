@@ -69,20 +69,20 @@ sudo apt-get autoremove -y
 
 # Webserver
 sudo apt-get install apache2 php libapache2-mod-php -y
-sudo a2enmod ssl
-sudo a2ensite default-ssl
+#sudo a2enmod ssl
+#sudo a2ensite default-ssl
 sudo systemctl restart apache2.service
 
-sudo mkdir /etc/apache2/ssl
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt -subj "/C=BE/ST=West Vlaanderen/L=Brugge/O=PinDaNet/OU=Raspberry/CN=Dany Pinoy"
-sudo chmod 600 /etc/apache2/ssl/*
-sudo sed -i "/ServerAdmin webmaster@localhost/a\                ServerName $NEW_HOSTNAME.local:443" /etc/apache2/sites-enabled/default-ssl.conf
-sudo sed -i "s/SSLCertificateFile\t.*$/SSLCertificateFile\t\/etc\/apache2\/ssl\/apache.crt/g" /etc/apache2/sites-enabled/default-ssl.conf
-sudo sed -i "s/SSLCertificateKeyFile .*$/SSLCertificateKeyFile \/etc\/apache2\/ssl\/apache.key/g" /etc/apache2/sites-enabled/default-ssl.conf
-sudo systemctl restart apache2.service
-openssl s_client -connect 127.0.0.1:443
-sudo sed -i "/<VirtualHost \*:80>/a\        Redirect \"\/\" \"https:\/\/$NEW_HOSTNAME.local\/\"" /etc/apache2/sites-available/000-default.conf
-sudo systemctl restart apache2.service
+#sudo mkdir /etc/apache2/ssl
+#sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt -subj "/C=BE/ST=West Vlaanderen/L=Brugge/O=PinDaNet/OU=Raspberry/CN=Dany Pinoy"
+#sudo chmod 600 /etc/apache2/ssl/*
+#sudo sed -i "/ServerAdmin webmaster@localhost/a\                ServerName $NEW_HOSTNAME.local:443" /etc/apache2/sites-enabled/default-ssl.conf
+#sudo sed -i "s/SSLCertificateFile\t.*$/SSLCertificateFile\t\/etc\/apache2\/ssl\/apache.crt/g" /etc/apache2/sites-enabled/default-ssl.conf
+#sudo sed -i "s/SSLCertificateKeyFile .*$/SSLCertificateKeyFile \/etc\/apache2\/ssl\/apache.key/g" /etc/apache2/sites-enabled/default-ssl.conf
+#sudo systemctl restart apache2.service
+#openssl s_client -connect 127.0.0.1:443
+#sudo sed -i "/<VirtualHost \*:80>/a\        Redirect \"\/\" \"https:\/\/$NEW_HOSTNAME.local\/\"" /etc/apache2/sites-available/000-default.conf
+#sudo systemctl restart apache2.service
 sudo mkdir /var/www/html/data
 sudo chown -R www-data:www-data /var/www/html/data/
 
