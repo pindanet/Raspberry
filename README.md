@@ -30,7 +30,10 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     ssh-copy-id -i ~/.ssh/id_rsa.pub pi@raspberrypi.local
     sudo nano /etc/ssh/sshd_config
       PasswordAuthentication no
-    # Rsync backup
+### rpiwall command execution
+    ssh-keygen -t rsa -C dany.pinoy@rpipindanet.local
+    ssh-copy-id -i ~/.ssh/id_rsa.pub pi@rpiwall.local
+### Rsync backup
     sudo rsync -aAXv --delete --exclude="/dev/" --exclude="/proc/" --exclude="/sys/" --exclude="/tmp/" --exclude="/run/" --exclude="/mnt/" --exclude="/media/" --exclude="/lost+found/" / backup.local::backup/raspberrypi
 
 ## Webserver
