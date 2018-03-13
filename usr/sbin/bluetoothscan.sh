@@ -6,7 +6,7 @@ absent=$(cat /var/www/html/data/absent)
 function sdptoolscan  {
   # bluetooth="94:0E:6B:F8:97:31$(sdptool browse 94:0E:6B:F8:97:31 | sed '/Withings/,+8d' | md5sum | awk '{ print $1 }')"
   # echo $bluetooth
-  bluetooth="94:0E:6B:F8:97:3156b1c7575ca9c261c171e65206030d08"
+  bluetooth="94:0E:6B:F8:97:31756e54a95c34f7ccf8c211995fb35559"
   info=$(sdptool browse ${bluetooth:0:17} | sed '/Withings/,+8d' | md5sum)
   if [ ${bluetooth:17:32} == ${info:0:32} ]; then # home
     absent="0"
