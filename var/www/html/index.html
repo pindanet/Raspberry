@@ -468,6 +468,7 @@ loadThermostat();
         }
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "bash.sh", true);
+//        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.onload = function(e) {
           if (this.status == 200) {
             getThermostatTemp();
@@ -693,7 +694,8 @@ loadThermostat();
       }
       function remoteCommand(event, command) {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', "bash.sh", true);
+        xhr.open('POST', "system.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.onload = function(e) {
           if (this.status == 200) {
             document.getElementById("content").innerHTML = '<pre class="terminalbox">' + this.responseText + "</pre>";
@@ -711,7 +713,8 @@ loadThermostat();
           enterPIN(event);
         } else {
           var xhr = new XMLHttpRequest();
-          xhr.open('POST', "bash.sh", true);
+          xhr.open('POST', "system.php", true);
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
           xhr.onload = function(e) {
             if (this.status == 200) {
               document.getElementById("content").innerHTML = this.responseText;
