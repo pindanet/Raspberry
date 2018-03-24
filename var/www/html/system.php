@@ -14,11 +14,7 @@ case "system": ?>
   <button onclick="remoteCommand(event,'softap');">WiFi AP</button>
   <button onclick="remoteCommand(event,'reboot');">Herstart</button>
   <button onclick="remoteCommand(event,'halt');">Uitschakelen</button>
-  <button onclick="remoteCommand(event,'rpiwall');" <?php
-    if (! checkWall()) {
-      echo "style=\"color: black;\"";
-    }
-  ?>>Wall</button>
+  <button onclick="remoteCommand(event,'rpiwall');">Wall</button>
 <?php break;
 case "softap": 
   exec("/bin/systemctl is-active hostapd.service", $output, $return);
@@ -51,7 +47,8 @@ case "rpiwall":
     fclose($stream);
 //    exec("ssh -o StrictHostKeyChecking=no pi@rpiwall.local sudo shutdown -h now");
   } else {
-    echo "Wall down";
+    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 02 01 25 4A AE 0E 01 0F 80\"");
+    echo "Stroomtoevoer naar Wall ingeschakeld.";
   }
 //  sleep(30); // wait 5 minutes
   break;
