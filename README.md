@@ -33,6 +33,9 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 ### SSH rpiwall command execution
     ssh-keygen -t rsa -C dany.pinoy@rpipindanet.local
     ssh-copy-id -i ~/.ssh/id_rsa.pub pi@rpiwall.local
+    sudo mkdir /var/www/html/.newssh_keys
+    sudo cp .ssh/id_rsa* /var/www/html/.newssh_keys/
+    sudo chmod +r /var/www/html/.newssh_keys/id_rsa
 ### Rsync backup
     sudo rsync -aAXv --delete --exclude="/dev/" --exclude="/proc/" --exclude="/sys/" --exclude="/tmp/" --exclude="/run/" --exclude="/mnt/" --exclude="/media/" --exclude="/lost+found/" / backup.local::backup/raspberrypi
 
