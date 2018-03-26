@@ -34,23 +34,23 @@ case "halt":
   break;
 case "rpiwall": 
   if (checkWall()) {
-    echo "Wall up";
     $connection = ssh2_connect("rpiwall.local", 22,  array('hostkey'=>'ssh-rsa'));
     ssh2_auth_pubkey_file($connection, 'pi',
-                          '/home/pi/.ssh/id_rsa.pub',
-                          '/home/pi/.ssh/id_rsa', '');
-    $stream = ssh2_exec($connection, 'ls /var/www/html/background/');
-//    $stream = ssh2_exec($connection, "sudo shutdown -h now");
+                          '.newssh_keys/id_rsa.pub',
+                          '.newssh_keys/id_rsa', '');
+//    $stream = ssh2_exec($connection, 'ls /var/www/html/background/');
+    $stream = ssh2_exec($connection, "sudo shutdown -h now");
     stream_set_blocking($stream, true);
     $output = stream_get_contents($stream);
-    echo "<pre>{$output}</pre>";
+//    echo "<pre>{$output}</pre>";
     fclose($stream);
-//    exec("ssh -o StrictHostKeyChecking=no pi@rpiwall.local sudo shutdown -h now");
+    sleep(60); // wait 1 minute
+    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 04 01 25 4A AE 0E 00 00 80\"");
+    echo "Wall afgesloten en stroomtoevoer uitgeschakeld.";
   } else {
     exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 02 01 25 4A AE 0E 01 0F 80\"");
     echo "Stroomtoevoer naar Wall ingeschakeld.";
   }
-//  sleep(30); // wait 5 minutes
   break;
 case "saveThermostat":
   file_put_contents ("data/thermostat.json", $_POST["json"]);
@@ -58,4 +58,3 @@ case "saveThermostat":
   break;
 
 endswitch ?>
-<!-- Stroom RPIWall Uitschakelen: python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 04 01 25 4A AE 0E 00 00 80" -->
