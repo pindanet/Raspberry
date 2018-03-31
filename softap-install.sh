@@ -61,9 +61,6 @@ sudo sed -i '/^#.*net\.ipv6\.conf\.all\.forwarding=/s/^#//' /etc/sysctl.conf
 sudo apt-get install apache2 php libapache2-mod-php -y
 sudo systemctl restart apache2.service
 
-sudo mkdir /var/www/html/data
-sudo chown -R www-data:www-data /var/www/html/data/
-
 #sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/index.html
 
 # Restart Raspberry Pi
