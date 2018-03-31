@@ -210,13 +210,13 @@ source-directory /etc/network/interfaces.d
 # Create a bridge with dynamic IP
 auto br0
 iface br0 inet dhcp
-        bridge_ports enxb827ebbd71d7
+        bridge_ports enxb827ebbd71d7</pre>
 
-# Enable ip_forward</pre>
+### Enable ip_forward
     sudo nano /etc/sysctl.conf    
-    <pre>net.ipv4.ip_forward=1</pre>
+<pre>net.ipv4.ip_forward=1</pre>
     sudo systemctl disable hostapd.service 
-    sudo systemctl stop hostapd.service</pre>
+    sudo systemctl stop hostapd.service
 ## YouTube Live Video Stream
     # Account pictogram > Creator Studio > Live Streaming
     # Werkt ook voor Facebook Live Video
