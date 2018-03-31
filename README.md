@@ -210,7 +210,7 @@ source-directory /etc/network/interfaces.d
 # Create a bridge with dynamic IP
 auto br0
 iface br0 inet dhcp
-        bridge_ports enxb827ebbd71d7</pre>
+        bridge_ports eth0</pre>
 
 ### Enable ip_forward
     sudo nano /etc/sysctl.conf    
