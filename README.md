@@ -211,6 +211,10 @@ source-directory /etc/network/interfaces.d
 auto br0
 iface br0 inet dhcp
         bridge_ports enxb827ebbd71d7</pre>
+
+# Enable ip_forward
+    sudo nano /etc/sysctl.conf
+        net.ipv4.ip_forward=1
     sudo systemctl disable hostapd.service 
     sudo systemctl stop hostapd.service
 ## YouTube Live Video Stream
