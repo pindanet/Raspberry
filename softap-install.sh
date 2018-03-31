@@ -53,6 +53,10 @@ sudo apt-get update
 sudo apt-get dist-upgrade -y
 sudo apt-get autoremove -y
 
+# SoftAP
+sudo sed -i '/^#.*net\.ipv4\.ip_forward=/s/^#//' /etc/sysctl.conf
+sudo sed -i '/^#.*net\.ipv6\.conf\.all\.forwarding=/s/^#//' /etc/sysctl.conf
+
 # Webserver
 sudo apt-get install apache2 php libapache2-mod-php -y
 sudo systemctl restart apache2.service
