@@ -69,5 +69,11 @@ sudo wget -O /var/www/html/system.php https://raw.githubusercontent.com/pindanet
 
 echo "www-data ALL = NOPASSWD: /sbin/shutdown -h now" | sudo tee -a /etc/sudoers
 
+# Automount
+echo 'ACTION=="add", KERNEL=="sd*", TAG+="systemd", ENV{SYSTEMD_WANTS}="usbstick-handler@%k"' | sudo tee /etc/udev/rules.d/usbstick.rules
+sudo wget -O /lib/systemd/system/usbstick-handler@.service https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/usbstick-handler
+sudo wget -O /usr/local/bin/automount https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/automount
+sudo chmod +x /usr/local/bin/automount
+
 # Restart Raspberry Pi
 sudo shutdown -r now
