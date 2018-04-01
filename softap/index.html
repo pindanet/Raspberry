@@ -1,0 +1,205 @@
+<!DOCTYPE html> 
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<link rel="shortcut icon" href="favicon.png" type="image/png" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNT SoftAP</title>
+<style>
+body {
+  font-size: 16px;
+  margin: 0;
+}
+#inhoud {
+  padding: 0 5px;
+}
+nav {
+  line-height: 45px;
+  background-color: #e2e581;
+  background: linear-gradient(to top, white, #e2e581);
+  margin-bottom: 8px;
+}
+nav a {
+  text-decoration: none;
+  font-size: larger;
+}
+nav a:hover {
+  border-bottom: 1px solid #96a128;
+  border-top: 1px solid #96a128;
+}
+a {
+  color: #7a7e0f;
+  font-size: larger;
+  text-decoration: none;
+}
+a:hover {
+  color: #482C1E;
+  text-shadow: 1px 1px #7a7e0f;
+}
+h1 {
+  background-color: #96a01e;
+  color: #ffffff;
+  padding: 5px;
+  margin: 5px -5px;
+  clear: both;
+}
+#logopinda {
+  position: absolute;
+  left: -98px;
+  top: 0px;
+  animation-name: logopinda;
+  animation-timing-function: ease-in-out;
+  animation-duration: 30s;
+  clip: rect(0, 98px, 142px, 0);
+}
+#logokoffer {
+  position: absolute;
+  top: -123px;
+  left: 50px;
+  animation-name: logokoffer;
+  animation-timing-function: ease-in-out;
+  animation-duration: 30s;
+}
+#logo {
+  position: relative;
+  padding: 28px 0;
+  animation-name: logo;
+  animation-timing-function: ease-in-out;
+  animation-duration: 30s;
+}
+#spanPindaNet {
+  font-size: 39px;
+  font-family: sans-serif;
+  position: absolute;
+  top: -50px;
+  left: 200px;
+  animation-name: spanPindaNet;
+  animation-timing-function: ease-in-out;
+  animation-duration: 30s;
+}
+#spanbe {
+  position: relative;
+  font-weight: bold;
+  font-size: 16px;
+  font-family: sans-serif;
+  left: 50px;
+  color: rgb(150, 161, 40);
+  animation-name: spanbe;
+  animation-timing-function: ease-in-out;
+  animation-duration: 30s;
+}
+#spanSNT {
+  position: relative;
+  font-size: 46px;
+  font-family: sans-serif;
+  line-height: 47px;
+  animation-name: spanSNT;
+  animation-timing-function: ease-in-out;
+  animation-duration: 30s;
+}
+#spanVolwassenenonderwijs {
+  font-family: sans-serif;
+  animation-name: spanVolwassenenonderwijs;
+  animation-timing-function: ease-in-out;
+  animation-duration: 30s;
+  opacity: 1;
+}
+#linuxELO {
+  font-family: sans-serif;
+  position: absolute;
+  top: 75px;
+  left: 195px;
+  animation-name: linuxELO;
+  animation-timing-function: ease-in-out;
+  animation-duration: 30s;
+  opacity: 0;
+}
+@keyframes linuxELO {
+  0% {opacity: 0; top: 150px;}
+  14% {opacity: 1; top: 75px;}
+  29% {opacity: 1; top: 75px;}
+  43% {opacity: 0; top: 150px;}
+  100% {opacity: 0; top: 150px;}
+}
+@keyframes spanVolwassenenonderwijs {
+  0% {opacity: 0;}
+  29% {opacity: 0;}
+  43% {opacity: 1;}
+  57% {opacity: 1;}
+  71% {opacity: 1;}
+  100% {opacity: 1;}
+}
+@keyframes spanSNT {
+  0% {font-size: 0;}
+  29% {font-size: 0;}
+  43% {font-size: 46px;}
+  57% {font-size: 46px;}
+  71% {font-size: 46px;}
+  100% {font-size: 46px;}
+}
+@keyframes spanPindaNet {
+  0% {top: -50px;}
+  14% {top: 25px;}
+  29% {top: 25px;}
+  43% {top: -50px;}
+  100% {top: -50px;}
+}
+@keyframes spanbe {
+  0% {left: 50px; color: rgb(150, 161, 40);}
+  14% {left: 0; color: #ffffff;}
+  29% {left: 0; color: #ffffff;}
+  43% {left: 50px; color: rgb(150, 161, 40);}
+  100% {left: 50px; color: rgb(150, 161, 40);}
+}
+@keyframes logopinda {
+  0% {top: 0px; left: -98px; clip: rect(0, 98px, 142px, 0);}
+  14% {top: 0px; left: 30px; clip: rect(0, 98px, 142px, 0);}
+  29% {top: 0px; left: 30px; clip: rect(0, 98px, 142px, 0);}
+  43% {top: 142px; left: 30px; clip: rect(0, 98px, 0, 0);}
+  100% {top: 142px; clip: rect(0, 98px, 0, 0);}
+}
+@keyframes logokoffer {
+  0% {top: -123px;}
+  29% {top: -123px;}
+  43% {top: 19px;}
+  57% {top: 19px; transform: scale(1,1);}
+  71% {top: 19px; transform: scale(0,0);}
+  100% {top: -123px; transform: scale(0,0);}
+}
+@keyframes logo {
+  0% {left: -194px;}
+  57% {left: -194px;}
+  71% {left: 0;}
+  85% {left: 0;}
+  100% {left: 0;}
+}
+</style>
+</head>
+<body>
+<div style="display: table; width: 100%; "><div style="display: table-row; ">
+  <div style="display: table-cell; width: 194px; height: 142; text-align: center; vertical-align: middle; ">
+    <img src="pinda.png" width="98" height="142" alt="PindaNet" id="logopinda">
+    <img src="index/koffer.png" width="112" height="123" alt="SNT" id="logokoffer">
+    <img src="index/brugge.svg" width="129" height="84" alt="Brugge" id="logo">
+  </div>
+  <div style="background-color: #97a120; display: table-cell; width: 200px; text-align: center; vertical-align: middle; color: white; ">
+    <span id="spanPindaNet">PindaNet<span id="spanbe">.be</span></span>
+    <span id="spanSNT">SNT</span><br>
+    <span id="linuxELO">LINUX<br>Elektronische Leeromgeving</span>
+	<span id="spanVolwassenenonderwijs">VOLWASSENEN<br>
+	ONDERWIJS</span></div>
+  <div style="display: table-cell; text-align: center; vertical-align: middle; "><h1 style="color: black; background-color: transparent; margin: 5px; ">Soft Bridged Access Point</h1>
+<p>Auteur: Dany Pinoy<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Versie: September 2016--></p></div>
+  <div style="color: #92acbe; display: table-cell; width: 17%; text-align: center; vertical-align: top; ">snt.be</div>
+</div></div>
+<nav style="z-index: 10; position: relative;">&nbsp;&nbsp;<a href="akkoord.php" title="U gaat akkoord met ...">Akkoord</a> | <a href="evaluaties.php" title="Evaluaties aan de SNT">Evaluaties</a> | <a href="inhoud.php">Inhoud</a>
+<?php include("elo/logout.php"); ?><span style="float: right; "><a href="https://netwerk.pindanet.be" target="_blank" title="SNT cursus Thuisnetwerken">Thuisnetwerken</a>&nbsp;&nbsp;</span>
+</nav>
+<div id="inhoud">
+</div>
+<div style="font-weight: bold; vertical-align: middle; display: inline-block; padding-left: 2em; "><span style="color: #96a128; font-size: 56px; ">SNT</span>.be</div>
+<div style="background-color: #97a120; font-weight: bold; color: white; padding-left: 2em; padding-right: 1em; padding-top: 2px; "><span style="color: black; ">Volwassenen</span>onderwijs overdag en 's avonds<span style="float: right; ">Arsenaalstraat 4 8000 Brugge | 050 44 11 40 | info@snt.be | www.snt.be</span>
+  <div style="text-align: center; font-weight: normal; padding-top: 1em; padding-bottom: 1em; ">Informatica | Talen | Vlaamse gebarentaal | Koken & Bakken | Mode | Fotografie | Nederlands voor anderstaligen | Bedrijfsbeheer</div>
+</div>
+</body>
+</html>
