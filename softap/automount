@@ -1,0 +1,29 @@
+#!/bin/bash
+# https://www.raspberrypi.org/forums/viewtopic.php?t=192291
+
+PART=$1
+FS_LABEL=`lsblk -o name,label | grep ${PART} | cut -c13-`
+
+if [ $2 = "Start" ]
+then
+  if [ -z "${FS_LABEL}" ]
+  then
+    /bin/mkdir /media/${PART}
+    /bin/mount /dev/${PART} /media/${PART}
+  else
+    /bin/mkdir /media/"${FS_LABEL}"
+    /bin/mount /dev/${PART} /media/"${FS_LABEL}"
+  fi
+fi
+
+if [ $2 = "Stop" ]
+then
+  if [ -z "${FS_LABEL}" ]
+  then
+    /bin/umount /dev/${PART}
+    /bin/rm -r /media/${PART}
+  else
+    /bin/umount /dev/${PART}
+    /bin/rm -r /media/"${FS_LABEL}"
+  fi
+fi
