@@ -78,6 +78,12 @@ sudo apt-get install exfat-fuse -y
 
 # Share automounted USB-sticks
 sudo apt-get install samba samba-common-bin -y
+echo "[Media]" | sudo tee -a /etc/samba/smb.conf
+echo "  comment = SoftAP-Network-Attached Storage" | sudo tee -a /etc/samba/smb.conf
+echo "  path = /media" | sudo tee -a /etc/samba/smb.conf
+echo "  public = yes" | sudo tee -a /etc/samba/smb.conf
+echo "  force user = pi" | sudo tee -a /etc/samba/smb.conf
+sudo systemctl restart smbd.service
 
 # Restart Raspberry Pi
 sudo shutdown -r now
