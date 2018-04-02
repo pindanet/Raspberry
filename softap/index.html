@@ -39,6 +39,15 @@ h1 {
   margin: 0px -5px;
   clear: both;
 }
+h2 {
+  background-color: #f1f5c9;
+  color: #4e5314;
+  padding: 5px;
+  margin: 5px -5px;
+  border: 1px solid #96a01e;
+  border-top-width: 2px;
+  clear: both;
+}
 #logopinda {
   position: absolute;
   left: -98px;
@@ -217,9 +226,17 @@ h1 {
   <p>Sluit het WiFi Access Point af door op de knop <button onclick="remoteCommand(event,'halt');">Afsluiten</button> te klikken.
     <span id="content"></span>
   </p>
-  <p>Wacht tot het WiFi Access Point volledig is afgesloten, m.a.w. wacht tot het groene lampje (naast het rode power lampje) op het WiFi Access Point niet meer knippert.</p>
+  <p><b style="color: green;">Wacht tot het WiFi Access Point volledig is afgesloten</b>, m.a.w. wacht tot het groene lampje (naast het rode power lampje) op het WiFi Access Point niet meer knippert.</p>
   <p>Verwijder de stroomadapter uit het stopcontact.</p>
   <p>Om het WiFi Access Point te starten, plug je de stroomadapter terug in het stopcontact, enkele minuten later is het WiFi Access Point opgestart en beschikbaar.</p>
+  <h2>Gedeelde USB-sticks</h2>
+  <img style="float: left;" src="https://www.appbridge.io/images/Source_Fileshare.svg" width="194">
+  <p>Plug een USB-stick in het WiFi Access Point om de inhoud ervan te delen op het netwerk.</p>
+  <p>Het WiFi Access Point ondersteunt enkel VFAT (standaard) en ExFAT (voor grote bestanden) geformateerde USB-sticks.</p>
+  <p>De op het WiFi Access Point aangesloten USB-sticks zijn voor de veiligheid enkel te lezen.
+    Je kunt ze dan ook zonder problemen verwijderen.</p>
+  <p><b style="color: red;">Sluit geen USB harde schijven aan</b>, de voeding en het WiFi Access Point kunnen dit niet aan.
+    Extern gevoede USB harde schijven kan je wel aansluiten.</p>
 </div>
 <div style="font-weight: bold; vertical-align: middle; display: inline-block; padding-left: 2em; ">
   <span style="color: #96a128; font-size: 56px; ">SNT</span>.be
