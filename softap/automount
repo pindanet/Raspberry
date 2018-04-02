@@ -1,25 +1,26 @@
 #!/bin/bash
-# https://www.raspberrypi.org/forums/viewtopic.php?t=192291
-
 PART=$1
-FS_LABEL=`lsblk -o name,label | grep ${PART} | cut -c13-`
-
 if [ $2 = "Start" ]
 then
-  if [ -z "${FS_LABEL}" ]
+  FS_TYPE=`lsblk -o name,fstype | grep "${PART} " | awk '{print $2}'`
+  if [ ! -z "${FS_TYPE}" ]
   then
-    /bin/mkdir /media/${PART}
-    /bin/mount /dev/${PART} /media/${PART} -o ro
-  else
-    /bin/mkdir /media/"${FS_LABEL}"
-    /bin/mount /dev/${PART} /media/"${FS_LABEL}" -o ro
+    FS_PRE_LABEL=`ls -lS /dev/disk/by-label | grep ${PART}$ | awk '{print $9}'`
+    FS_LABEL=`echo -ne ${FS_PRE_LABEL}`
+    if [ -z "${FS_LABEL}" ]
+    then
+      /bin/mkdir /media/${PART}
+      /bin/mount /dev/${PART} /media/${PART} -o ro
+    else
+      /bin/mkdir /media/"${FS_LABEL}"
+      /bin/mount /dev/${PART} /media/"${FS_LABEL}" -o ro
+    fi
   fi
 fi
 
 if [ $2 = "Stop" ]
 then
-  mount > /home/pi/debug.txt
-  FS_MOUNTPOINT=`mount | grep ${PART} | grep -o -P '(?<=on ).*(?= type)'`
+  FS_MOUNTPOINT=`mount | grep "${PART} " | grep -o -P '(?<=on ).*(?= type)'`
   /bin/umount /dev/${PART}
   /bin/rm -r "${FS_MOUNTPOINT}"
 fi
