@@ -9,21 +9,17 @@ then
   if [ -z "${FS_LABEL}" ]
   then
     /bin/mkdir /media/${PART}
-    /bin/mount /dev/${PART} /media/${PART}
+    /bin/mount /dev/${PART} /media/${PART} -o ro
   else
     /bin/mkdir /media/"${FS_LABEL}"
-    /bin/mount /dev/${PART} /media/"${FS_LABEL}"
+    /bin/mount /dev/${PART} /media/"${FS_LABEL}" -o ro
   fi
 fi
 
 if [ $2 = "Stop" ]
 then
-  if [ -z "${FS_LABEL}" ]
-  then
-    /bin/umount /dev/${PART}
-    /bin/rm -r /media/${PART}
-  else
-    /bin/umount /dev/${PART}
-    /bin/rm -r /media/"${FS_LABEL}"
-  fi
+  mount > /home/pi/debug.txt
+  FS_MOUNTPOINT=`mount | grep ${PART} | grep -o -P '(?<=on ).*(?= type)'`
+  /bin/umount /dev/${PART}
+  /bin/rm -r "${FS_MOUNTPOINT}"
 fi
