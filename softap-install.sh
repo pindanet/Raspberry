@@ -74,6 +74,7 @@ echo 'ACTION=="add", KERNEL=="sd*", TAG+="systemd", ENV{SYSTEMD_WANTS}="usbstick
 sudo wget -O /lib/systemd/system/usbstick-handler@.service https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/usbstick-handler
 sudo wget -O /usr/local/bin/automount https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/automount
 sudo chmod +x /usr/local/bin/automount
+sudo apt-get install exfat-fuse -y
 
 # Restart Raspberry Pi
 sudo shutdown -r now
