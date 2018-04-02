@@ -76,5 +76,8 @@ sudo wget -O /usr/local/bin/automount https://raw.githubusercontent.com/pindanet
 sudo chmod +x /usr/local/bin/automount
 sudo apt-get install exfat-fuse -y
 
+# Share automounted USB-sticks
+sudo apt-get install samba samba-common-bin -y
+
 # Restart Raspberry Pi
 sudo shutdown -r now
