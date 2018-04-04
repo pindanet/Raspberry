@@ -32,15 +32,13 @@ body {
 }
 
 #clock-container {
-  position: absolute;
-  top: 2px;
-  left: 1em;
-  width: 140px;
+  position: relative;
+  width: 334px;
 }
 .clock {
   background: rgba(236,236,236,0);
   width: 100%;
-  height: 140px;
+  height: 334px;
   position: relative;
 }
 .dot {
@@ -71,7 +69,7 @@ body {
   height: 20%;
   left: 48.75%;
   position: absolute;
-  top: 29%;
+  top: 29.2%;
   transform-origin: 50% 100%;
   width: 2%;
   border-top-left-radius: 50%;
@@ -81,9 +79,9 @@ body {
   background: black;
   border: 1px solid white;
   height: 40%;
-  left: 49%;
+  left: 48.7%;
   position: absolute;
-  top: 8.9%;
+  top: 9.2%;
   transform-origin: 50% 100%;
   width: 2%;
   border-top-left-radius: 50%;
@@ -110,7 +108,7 @@ body {
   animation: rotate 43200s infinite linear;
 }
 .minutes-container {
-  animation: rotate 3600s infinite steps(60);
+  animation: rotate 3600s infinite linear;
 }
 .seconds-container {
   animation: rotate 60s infinite linear;
@@ -119,20 +117,21 @@ body {
   display: inline-block;
   position: absolute;
   color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   font-weight: 700;
   z-index: 4;
 }
 .h12 {
   top: -1.5%;
-  left: 46.5%;
+  left: 46.2%;
 }
 .h3 {
   top: 46%;
   right: 1%;
 }
 .h6 {
-  bottom: -1px;
-  left: 48.5%;
+  bottom: -1%;
+  left: 48.3%;
 }
 .h9 {
   left: 1%%;
@@ -160,15 +159,11 @@ body {
 .diallines:nth-of-type(15n+6) {
   display: none;
 }
-#day, #date {
+#date {
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   text-align: center;
   width: 100%;
-}
-#day {
-  color: white;
-}
-#date {
-  color: black;
 }
 </style>
 <script src="suncalc.js"></script> 
@@ -255,46 +250,11 @@ function initLocalClocks() {
         }
     }
   }
-  setUpMinuteHands();
-}
-/*
- * Set a timeout for the first minute hand movement (less than 1 minute), then rotate it every minute after that
- */
-function setUpMinuteHands() {
-  // Find out how far into the minute we are
-  var containers = document.querySelectorAll('.minutes-container');
-  var secondAngle = containers[0].getAttribute("data-second-angle");
-  if (secondAngle > 0) {
-    // Set a timeout until the end of the current minute, to move the hand
-    var delay = (((360 - secondAngle) / 6) + 0.1) * 1000;
-    setTimeout(function() {
-      moveMinuteHands(containers);
-    }, delay);
-  }
-}
-
-/*
- * Do the first minute's rotation
- */
-function moveMinuteHands(containers) {
-  for (var i = 0; i < containers.length; i++) {
-    containers[i].style.webkitTransform = 'rotateZ(6deg)';
-    containers[i].style.transform = 'rotateZ(6deg)';
-  }
-  // Then continue with a 60 second interval
+  document.getElementById('date').style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
+  // display date every minute
   setInterval(function() {
-    for (var i = 0; i < containers.length; i++) {
-      if (containers[i].angle === undefined) {
-        containers[i].angle = 12;
-      } else {
-        containers[i].angle += 6;
-      }
-      containers[i].style.webkitTransform = 'rotateZ('+ containers[i].angle +'deg)';
-      containers[i].style.transform = 'rotateZ('+ containers[i].angle +'deg)';
-    }
     var d = new Date();
-    document.getElementById("day").innerHTML = weekday[d.getDay()];
-    document.getElementById("date").innerHTML = d.getDate() + " " + month[d.getMonth()] + " " + d.getFullYear(); 
+    document.getElementById("date").innerHTML = weekday[d.getDay()] + ", " + d.getDate() + " " + month[d.getMonth()] + " " + d.getFullYear(); 
   }, 60000);
 }
 </script>
@@ -302,13 +262,14 @@ function moveMinuteHands(containers) {
 <body onload="getBackground(); initLocalClocks();">
 <div id="backgroundtransition"></div>
 <div id="redshift" style="opacity: 1;"></div>
-<div style="position: absolute; right: 0px; top: -29px;">
-<iframe scrolling="no" width="334" height="158" frameborder="0" marginwidth="0" marginheight="0" src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=2&type=4&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
-</div>
-<!-- https://cssanimation.rocks/nl/clocks/
-http://freefrontend.com/css-clocks/  -->
-<div id="clock-container">
-  <div id="day"></div>
+ <table style="position: absolute;">
+  <tr>
+    <td>
+      <iframe style="margin-top: -32px;" scrolling="no" width="334" height="158" frameborder="0" marginwidth="0" marginheight="0" src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=2&type=4&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
+    </td>
+  </tr>
+  <tr>
+    <td id="clock-container">
   <article class="clock">
     <div class="dot"></div>
     <div class="hours-container">
@@ -328,7 +289,13 @@ http://freefrontend.com/css-clocks/  -->
     </div>
     <div class="diallines"></div>
   </article>
-  <div id="date"></div>
+  <div id="date">Donderdag, 31 december 2018</div>
+    </td>
+  </tr>
+</table> 
+<!-- https://cssanimation.rocks/nl/clocks/
+http://freefrontend.com/css-clocks/  -->
+<div>
 </div>
 <!-- http://lorempixel.com/1920/1200/nature/
 https://source.unsplash.com/random/1920x1200/?nature  -->
