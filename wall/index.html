@@ -10,6 +10,7 @@ body {
   padding: 0;
   margin: 0;
   cursor: url(nocursor.gif), default;
+  font-family: sans-serif;
 }
 #backgroundtransition {
   position: absolute;
@@ -30,15 +31,17 @@ body {
   transition: opacity 10s ease-in-out;
 }
 
+#clock-container {
+  position: absolute;
+  top: 2px;
+  left: 1em;
+  width: 140px;
+}
 .clock {
   background: rgba(236,236,236,0);
-  width: 131px;
-  height: 131px;
-  margin: 8% auto 0;
-  border-radius: 50%;
-  border: 1px solid #333;
-  position: absolute;
-  box-shadow: 0 2vw 4vw -1vw rgba(0,0,0,0.8);
+  width: 100%;
+  height: 140px;
+  position: relative;
 }
 .dot {
   width: 5%;
@@ -52,7 +55,7 @@ body {
   margin: auto;
   position: absolute;
   z-index: 10;
-  box-shadow: 0 2px 4px -1px black;
+  box-shadow: 0 0 4px -1px black;
 }
 
 .minutes-container, .hours-container, .seconds-container {
@@ -63,22 +66,24 @@ body {
   left: 0;
 }
 .hours {
-  background: #333;
+  background: black;
+  border: 1px solid white;
   height: 20%;
   left: 48.75%;
   position: absolute;
-  top: 30%;
+  top: 29%;
   transform-origin: 50% 100%;
   width: 2%;
   border-top-left-radius: 50%;
   border-top-right-radius: 50%;
 }
 .minutes {
-  background: #666;
-  height: 37%;
+  background: black;
+  border: 1px solid white;
+  height: 40%;
   left: 49%;
   position: absolute;
-  top: 13%;
+  top: 8.9%;
   transform-origin: 50% 100%;
   width: 2%;
   border-top-left-radius: 50%;
@@ -113,25 +118,25 @@ body {
 .h12, .h9, .h6, .h3 {
   display: inline-block;
   position: absolute;
-  color: #333;
+  color: white;
   font-weight: 700;
   z-index: 4;
 }
 .h12 {
-  top: 8%;
-  left: 46%;
+  top: -1.5%;
+  left: 46.5%;
 }
 .h3 {
-  top: 45%;
-  right: 10%;
+  top: 46%;
+  right: 1%;
 }
 .h6 {
-  bottom: 8%;
-  left: 48%;
+  bottom: -1px;
+  left: 48.5%;
 }
 .h9 {
-  left: 10%;
-  top: 45%;
+  left: 1%%;
+  top: 46%;
 }
 
 .diallines {
@@ -139,37 +144,32 @@ body {
   z-index: 2;
   width: 2px;
   height: 5%;
-  background: #666;
+  background: black;
   left: 50%;
   margin-left: -1px;
 }
 .diallines:nth-of-type(5n+1) {
   position: absolute;
   z-index: 2;
-  width: 1.3%;
+  width: 2px;
   height: 8.3%;
-  background: #666;
+  background: white;
   left: 50%;
   margin-left: -1px;
 }
-.date {
-  position: absolute;
-  width: 40%;
-  height: 6.7%;
-  border-radius: 29%;
-  background: #888;
-  text-align: center;
-  line-height: 20px;
-  color: #fff;
-  font-size: 11px;
-  top: 26.7%;
-  left: 30%;
-  font-family: "Poiret One";
-  font-weight: 700;
-  z-index: 3;
-  letter-spacing: 3px;
+.diallines:nth-of-type(15n+6) {
+  display: none;
 }
-
+#day, #date {
+  text-align: center;
+  width: 100%;
+}
+#day {
+  color: white;
+}
+#date {
+  color: black;
+}
 </style>
 <script src="suncalc.js"></script> 
 <script>
@@ -204,14 +204,16 @@ function changeBackground() {
     document.getElementById("redshift").style.opacity = 0.5;
   }
 }
+
+var weekday = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
+var month = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "october", "november", "december"];
 /*
  * Starts any clocks using the user's local time
- * From: cssanimation.rocks/clocks
  */
 function initLocalClocks() {
   var dialLines = document.getElementsByClassName('diallines');
   var clockEl = document.getElementsByClassName('clock')[0];
-  for (var i = 1; i < 60; i++) {
+  for (var i = 0; i < 60; i++) {
     clockEl.innerHTML += "<div class='diallines'></div>";
     dialLines[i].style.transform = "rotate(" + 6 * i + "deg)";
     dialLines[i].style.transformOrigin = "50% " + parseInt((clockEl.clientHeight * 150) / 300) + "px";
@@ -290,8 +292,9 @@ function moveMinuteHands(containers) {
       containers[i].style.webkitTransform = 'rotateZ('+ containers[i].angle +'deg)';
       containers[i].style.transform = 'rotateZ('+ containers[i].angle +'deg)';
     }
-//    var d = new Date();
-//    console.log(d.getDate() + " / " + d.getMonth() + " / " + d.getFullYear());
+    var d = new Date();
+    document.getElementById("day").innerHTML = weekday[d.getDay()];
+    document.getElementById("date").innerHTML = d.getDate() + " " + month[d.getMonth()] + " " + d.getFullYear(); 
   }, 60000);
 }
 </script>
@@ -300,11 +303,12 @@ function moveMinuteHands(containers) {
 <div id="backgroundtransition"></div>
 <div id="redshift" style="opacity: 1;"></div>
 <div style="position: absolute; right: 0px; top: -29px;">
-<iframe scrolling="no" width="334" height ="160" frameborder="0" marginwidth="0" marginheight="0" src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=2&type=4&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
+<iframe scrolling="no" width="334" height="158" frameborder="0" marginwidth="0" marginheight="0" src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=2&type=4&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
 </div>
 <!-- https://cssanimation.rocks/nl/clocks/
 http://freefrontend.com/css-clocks/  -->
-<div style="position: absolute;">
+<div id="clock-container">
+  <div id="day"></div>
   <article class="clock">
     <div class="dot"></div>
     <div class="hours-container">
@@ -324,6 +328,7 @@ http://freefrontend.com/css-clocks/  -->
     </div>
     <div class="diallines"></div>
   </article>
+  <div id="date"></div>
 </div>
 <!-- http://lorempixel.com/1920/1200/nature/
 https://source.unsplash.com/random/1920x1200/?nature  -->
