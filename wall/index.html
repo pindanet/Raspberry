@@ -99,6 +99,7 @@ body {
   border-top-left-radius: 50%;
   border-top-right-radius: 50%;
 }
+/*
 @keyframes rotate {
   100% {
     transform: rotateZ(360deg);
@@ -113,6 +114,10 @@ body {
 .seconds-container {
   animation: rotate 60s infinite linear;
 }
+.seconds-container {
+  transition: transform 1s linear;
+}
+*/
 .h12, .h9, .h6, .h3 {
   display: inline-block;
   position: absolute;
@@ -141,18 +146,20 @@ body {
 .diallines {
   position: absolute;
   z-index: 2;
-  width: 2px;
+  width: 1px;
   height: 5%;
-  background: black;
+  background: white;
+  border: 1px solid black;
   left: 50%;
   margin-left: -1px;
 }
 .diallines:nth-of-type(5n+1) {
   position: absolute;
   z-index: 2;
-  width: 2px;
+  width: 1px;
   height: 8.3%;
   background: white;
+  border: 1px solid black;
   left: 50%;
   margin-left: -1px;
 }
@@ -202,9 +209,6 @@ function changeBackground() {
 
 var weekday = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
 var month = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "october", "november", "december"];
-/*
- * Starts any clocks using the user's local time
- */
 function initLocalClocks() {
   var dialLines = document.getElementsByClassName('diallines');
   var clockEl = document.getElementsByClassName('clock')[0];
@@ -217,45 +221,32 @@ function initLocalClocks() {
   document.getElementsByClassName('h9')[0].style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
   document.getElementsByClassName('h6')[0].style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
   document.getElementsByClassName('h3')[0].style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
-  // Get the local time using JS
-  var date = new Date;
-  var seconds = date.getSeconds();
-  var minutes = date.getMinutes();
-  var hours = date.getHours();
-
-  // Create an object with each hand and it's angle in degrees
-  var hands = [
-    {
-      hand: 'hours',
-      angle: (hours * 30) + (minutes / 2)
-    },
-    {
-      hand: 'minutes',
-      angle: (minutes * 6)
-    },
-    {
-      hand: 'seconds',
-      angle: (seconds * 6)
-    }
-  ];
-  // Loop through each of these hands to set their angle
-  for (var j = 0; j < hands.length; j++) {
-    var elements = document.querySelectorAll('.' + hands[j].hand);
-    for (var k = 0; k < elements.length; k++) {
-        elements[k].style.webkitTransform = 'rotateZ('+ hands[j].angle +'deg)';
-        elements[k].style.transform = 'rotateZ('+ hands[j].angle +'deg)';
-        // If this is a minute hand, note the seconds position (to calculate minute position later)
-        if (hands[j].hand === 'minutes') {
-          elements[k].parentNode.setAttribute('data-second-angle', hands[j + 1].angle);
-        }
-    }
-  }
   document.getElementById('date').style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
-  // display date every minute
+  
+  document.getElementsByClassName('seconds-container')[0].style.transition = "transform 1s linear";
+  // Then continue with a 1 second interval
   setInterval(function() {
-    var d = new Date();
-    document.getElementById("date").innerHTML = weekday[d.getDay()] + ", " + d.getDate() + " " + month[d.getMonth()] + " " + d.getFullYear(); 
-  }, 60000);
+    var date = new Date;
+    var seconds = date.getSeconds();
+    var secondsContainer = document.getElementsByClassName('seconds-container')[0];
+    if (seconds == 0) {
+      secondsContainer.style.transform = 'rotateZ(359deg)';
+      setTimeout(function() {
+        secondsContainer.style.transition = "";
+        setTimeout(function(){
+          secondsContainer.style.transform = 'rotateZ(0deg)';
+          setTimeout(function(){
+            document.getElementsByClassName('minutes-container')[0].style.transform = 'rotateZ('+ (date.getMinutes() * 6) +'deg)';
+            document.getElementsByClassName('hours-container')[0].style.transform = 'rotateZ('+ ((date.getHours() * 30) + (date.getMinutes() / 2)) +'deg)';
+            document.getElementById("date").innerHTML = weekday[date.getDay()] + ", " + date.getDate() + " " + month[date.getMonth()] + " " + date.getFullYear(); 
+            secondsContainer.style.transition = "transform 1s linear";
+          }, 15);
+        }, 15);
+      }, 960);
+    } else {
+      secondsContainer.style.transform = 'rotateZ('+ (seconds * 6) +'deg)';
+    }
+  }, 1000);
 }
 </script>
 </head>
