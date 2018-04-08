@@ -240,9 +240,9 @@ function initLocalClocks() {
             document.getElementsByClassName('hours-container')[0].style.transform = 'rotateZ('+ ((date.getHours() * 30) + (date.getMinutes() / 2)) +'deg)';
             document.getElementById("date").innerHTML = weekday[date.getDay()] + ", " + date.getDate() + " " + month[date.getMonth()] + " " + date.getFullYear(); 
             secondsContainer.style.transition = "transform 1s linear";
-          }, 15);
-        }, 15);
-      }, 960);
+          }, 25);
+        }, 25);
+      }, 925);
     } else {
       secondsContainer.style.transform = 'rotateZ('+ (seconds * 6) +'deg)';
     }
