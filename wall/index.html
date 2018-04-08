@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
 <title>RPiWall</title>
 <style>
 html {
@@ -166,7 +167,7 @@ body {
 .diallines:nth-of-type(15n+6) {
   display: none;
 }
-#date {
+#date, #temperature {
   color: white;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   text-align: center;
@@ -248,6 +249,19 @@ function initLocalClocks() {
     }
   }, 1000);
 }
+
+setInterval(function() {  // get info from other Raspberry Pi with thermostat
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "getjson.php", true);
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+      thermostat = JSON.parse(atob(this.responseText));
+      document.getElementById("temperature").innerHTML = thermostat[7].roomtemp + " °C";
+    }
+  };
+  xhr.send();
+}, 300000); // every 5 minutes
+
 </script>
 </head>
 <body onload="getBackground(); initLocalClocks();">
@@ -257,6 +271,7 @@ function initLocalClocks() {
   <tr>
     <td>
       <iframe style="margin-top: -32px;" scrolling="no" width="334" height="158" frameborder="0" marginwidth="0" marginheight="0" src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=2&type=4&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
+      <div id="temperature"></div>
     </td>
   </tr>
   <tr>
