@@ -256,7 +256,7 @@ setInterval(function() {  // get info from other Raspberry Pi with thermostat
   xhr.onload = function(e) {
     if (this.status == 200) {
       thermostat = JSON.parse(atob(this.responseText));
-      document.getElementById("temperature").innerHTML = thermostat[7].roomtemp + " °C";
+      document.getElementById("temperature").innerHTML = parseFloat(thermostat[7].roomtemp).toFixed(1) + " °C";
     }
   };
   xhr.send();
