@@ -56,7 +56,6 @@ body {
   z-index: 10;
   box-shadow: 0 0 4px -1px black;
 }
-
 .minutes-container, .hours-container, .seconds-container {
   position: absolute;
   top: 0;
@@ -100,25 +99,6 @@ body {
   border-top-left-radius: 50%;
   border-top-right-radius: 50%;
 }
-/*
-@keyframes rotate {
-  100% {
-    transform: rotateZ(360deg);
-  }
-}
-.hours-container {
-  animation: rotate 43200s infinite linear;
-}
-.minutes-container {
-  animation: rotate 3600s infinite linear;
-}
-.seconds-container {
-  animation: rotate 60s infinite linear;
-}
-.seconds-container {
-  transition: transform 1s linear;
-}
-*/
 .h12, .h9, .h6, .h3 {
   display: inline-block;
   position: absolute;
@@ -167,11 +147,17 @@ body {
 .diallines:nth-of-type(15n+6) {
   display: none;
 }
-#date, #temperature {
+#date {
   color: white;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   text-align: center;
   width: 100%;
+}
+#temperature {
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  width: 100%;
+  font-size: 20px;
 }
 </style>
 <script src="suncalc.js"></script> 
@@ -223,31 +209,24 @@ function initLocalClocks() {
   document.getElementsByClassName('h6')[0].style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
   document.getElementsByClassName('h3')[0].style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
   document.getElementById('date').style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
-  
-  document.getElementsByClassName('seconds-container')[0].style.transition = "transform 1s linear";
-  // Then continue with a 1 second interval
-  setInterval(function() {
-    var date = new Date;
-    var seconds = date.getSeconds();
-    var secondsContainer = document.getElementsByClassName('seconds-container')[0];
-    if (seconds == 0) {
+  setTimeout(minuteInterval(), new Date().getTime() % 60000);
+}
+function minuteInterval()
+ {
+  var date = new Date;
+  var secondsContainer = document.getElementsByClassName('seconds-container')[0];
+  secondsContainer.style.transition = "";
+  setTimeout(function(){
+    secondsContainer.style.transform = 'rotateZ(0deg)';
+    setTimeout(function(){
+      document.getElementsByClassName('minutes-container')[0].style.transform = 'rotateZ('+ (date.getMinutes() * 6) +'deg)';
+      document.getElementsByClassName('hours-container')[0].style.transform = 'rotateZ('+ ((date.getHours() * 30) + (date.getMinutes() / 2)) +'deg)';
+      document.getElementById("date").innerHTML = weekday[date.getDay()] + ", " + date.getDate() + " " + month[date.getMonth()] + " " + date.getFullYear(); 
+      secondsContainer.style.transition = "transform 60s linear";
       secondsContainer.style.transform = 'rotateZ(359deg)';
-      setTimeout(function() {
-        secondsContainer.style.transition = "";
-        setTimeout(function(){
-          secondsContainer.style.transform = 'rotateZ(0deg)';
-          setTimeout(function(){
-            document.getElementsByClassName('minutes-container')[0].style.transform = 'rotateZ('+ (date.getMinutes() * 6) +'deg)';
-            document.getElementsByClassName('hours-container')[0].style.transform = 'rotateZ('+ ((date.getHours() * 30) + (date.getMinutes() / 2)) +'deg)';
-            document.getElementById("date").innerHTML = weekday[date.getDay()] + ", " + date.getDate() + " " + month[date.getMonth()] + " " + date.getFullYear(); 
-            secondsContainer.style.transition = "transform 1s linear";
-          }, 25);
-        }, 25);
-      }, 925);
-    } else {
-      secondsContainer.style.transform = 'rotateZ('+ (seconds * 6) +'deg)';
-    }
-  }, 1000);
+    }, 25);
+  }, 25);
+  setTimeout(minuteInterval, 60000 - new Date().getTime() % 60000);
 }
 
 setInterval(function() {  // get info from other Raspberry Pi with thermostat
@@ -256,7 +235,7 @@ setInterval(function() {  // get info from other Raspberry Pi with thermostat
   xhr.onload = function(e) {
     if (this.status == 200) {
       thermostat = JSON.parse(atob(this.responseText));
-      document.getElementById("temperature").innerHTML = parseFloat(thermostat[7].roomtemp).toFixed(1) + " °C";
+      document.getElementById("temperature").innerHTML = "Kamertemp.: " + parseFloat(thermostat[7].roomtemp).toFixed(1) + " °C";
     }
   };
   xhr.send();
