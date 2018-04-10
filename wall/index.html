@@ -244,29 +244,10 @@ setInterval(function() {  // get info from other Raspberry Pi with thermostat
 setInterval(function() {  // get info from remote control
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "curl.php", true);
-  xhr.onload = function(e) {
-    if (this.status == 200) {
-      document.getElementById("temperature").innerHTML = xhr.responseText;
-    }
-  };
-  xhr.send();
-
-/*
-  var url         = "https://slimhuis.pindanet.be/remote.php";
-  var request     = JSON.stringify({device:"wall"})
-  var xmlhttp     = new XMLHttpRequest();
-
-  xmlhttp.open("POST", url);
-  xmlhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
-  xmlhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
-  xmlhttp.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  xmlhttp.setRequestHeader("Access-Control-Allow-Headers", "Content-Type");
-  xmlhttp.setRequestHeader("Access-Control-Request-Headers", "X-Requested-With, accept, content-type");
-
-  xmlhttp.onreadystatechange = function() {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-      var jsondata = JSON.parse(xmlhttp.responseText);
-//      document.getElementById("temperature").innerHTML = xmlhttp.responseText;
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      var jsondata = JSON.parse(xhr.responseText);
+//      document.getElementById("temperature").innerHTML = xhr.responseText;
       switch(jsondata.command) {
         case 'Reload':
           location.reload();
@@ -274,8 +255,7 @@ setInterval(function() {  // get info from remote control
       }
     }
   };
-  xmlhttp.send(request);
-*/
+  xhr.send();
 }, 60000); // every minute
 
 </script>
