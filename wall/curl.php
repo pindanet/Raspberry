@@ -13,7 +13,14 @@ curl_setopt($curl, CURLOPT_HTTPHEADER, array(
 );
 curl_setopt($curl, CURLOPT_URL, 'https://slimhuis.pindanet.be/remote.php');
 $result = curl_exec($curl);
-$json    = json_decode($result,true);
+$json  = json_decode($result);
 curl_close($curl);
+if (! empty($json->command)) {
+  switch($json->command) {
+  case "Reboot":
+    exec("sudo /sbin/shutdown -r now");
+    break;
+  }
+}
 echo $result;
 ?>
