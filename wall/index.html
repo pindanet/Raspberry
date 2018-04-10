@@ -242,6 +242,16 @@ setInterval(function() {  // get info from other Raspberry Pi with thermostat
 }, 300000); // every 5 minutes
 
 setInterval(function() {  // get info from remote control
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "curl.php", true);
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+      document.getElementById("temperature").innerHTML = xhr.responseText;
+    }
+  };
+  xhr.send();
+
+/*
   var url         = "https://slimhuis.pindanet.be/remote.php";
   var request     = JSON.stringify({device:"wall"})
   var xmlhttp     = new XMLHttpRequest();
@@ -265,6 +275,7 @@ setInterval(function() {  // get info from remote control
     }
   };
   xmlhttp.send(request);
+*/
 }, 60000); // every minute
 
 </script>
