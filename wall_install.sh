@@ -69,7 +69,7 @@ sudo apt-get dist-upgrade -y
 sudo apt-get autoremove -y
 
 # Webserver
-sudo apt-get install apache2 php libapache2-mod-php -y
+sudo apt-get install apache2 php libapache2-mod-php php-curl -y
 #sudo a2enmod ssl
 #sudo a2ensite default-ssl
 sudo systemctl restart apache2.service
@@ -107,6 +107,7 @@ sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/nocursor.gif
 sudo wget -P /var/www/html https://raw.githubusercontent.com/mourner/suncalc/master/suncalc.js
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getjson.php
+sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/curl.php
 
 # Get new background image
 wget -P $HOME/bin https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.sh
