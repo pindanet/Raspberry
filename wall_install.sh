@@ -108,6 +108,18 @@ sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/
 sudo wget -P /var/www/html https://raw.githubusercontent.com/mourner/suncalc/master/suncalc.js
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getjson.php
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/curl.php
+sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/genkeys.php
+
+echo "www-data ALL = NOPASSWD: /sbin/shutdown -r now" | sudo tee -a /etc/sudoers
+
+read -s -p "Typ bindelings de encryptie wachtzin: " passphrase
+sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/genkeys.php
+sudo mkdir /var/www/html/data
+sudo chown -R www-data:www-data /var/www/html/data/
+cd /var/www/html
+sudo -u www-data php genkeys.php
+sudo rm /var/www/html/genkeys.php
+read -p "cp /var/www/html/data/public.key to your remote website and press Return to continue " key
 
 # Get new background image
 wget -P $HOME/bin https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.sh
