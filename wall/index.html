@@ -224,8 +224,8 @@ function minuteInterval()
       document.getElementById("date").innerHTML = weekday[date.getDay()] + ", " + date.getDate() + " " + month[date.getMonth()] + " " + date.getFullYear(); 
       secondsContainer.style.transition = "transform 60s linear";
       secondsContainer.style.transform = 'rotateZ(359deg)';
-    }, 25);
-  }, 25);
+    }, 30);
+  }, 30);
   setTimeout(minuteInterval, 60000 - new Date().getTime() % 60000);
 }
 
@@ -235,11 +235,37 @@ setInterval(function() {  // get info from other Raspberry Pi with thermostat
   xhr.onload = function(e) {
     if (this.status == 200) {
       thermostat = JSON.parse(atob(this.responseText));
-      document.getElementById("temperature").innerHTML = "Kamertemp.: " + parseFloat(thermostat[7].roomtemp).toFixed(1) + " °C";
+      document.getElementById("temperature").innerHTML = "Kamertemperatuur: " + parseFloat(thermostat[7].roomtemp).toFixed(1) + " °C";
     }
   };
   xhr.send();
 }, 300000); // every 5 minutes
+
+setInterval(function() {  // get info from remote control
+  var url         = "https://slimhuis.pindanet.be/remote.php";
+  var request     = JSON.stringify({device:"wall"})
+  var xmlhttp     = new XMLHttpRequest();
+
+  xmlhttp.open("POST", url);
+  xmlhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+  xmlhttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+  xmlhttp.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  xmlhttp.setRequestHeader("Access-Control-Allow-Headers", "Content-Type");
+  xmlhttp.setRequestHeader("Access-Control-Request-Headers", "X-Requested-With, accept, content-type");
+
+  xmlhttp.onreadystatechange = function() {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      var jsondata = JSON.parse(xmlhttp.responseText);
+//      document.getElementById("temperature").innerHTML = xmlhttp.responseText;
+      switch(jsondata.command) {
+        case 'Reload':
+          location.reload();
+          break;
+      }
+    }
+  };
+  xmlhttp.send(request);
+}, 60000); // every minute
 
 </script>
 </head>
@@ -278,8 +304,6 @@ setInterval(function() {  // get info from other Raspberry Pi with thermostat
     </td>
   </tr>
 </table> 
-<!-- https://cssanimation.rocks/nl/clocks/
-http://freefrontend.com/css-clocks/  -->
 <div>
 </div>
 <!-- http://lorempixel.com/1920/1200/nature/
