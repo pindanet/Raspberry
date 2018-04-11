@@ -69,7 +69,7 @@ sudo apt-get dist-upgrade -y
 sudo apt-get autoremove -y
 
 # Webserver
-sudo apt-get install apache2 php libapache2-mod-php php-curl -y
+sudo apt-get install apache2 php libapache2-mod-php php-curl php-mbstring -y
 #sudo a2enmod ssl
 #sudo a2ensite default-ssl
 sudo systemctl restart apache2.service
@@ -114,6 +114,7 @@ echo "www-data ALL = NOPASSWD: /sbin/shutdown -r now" | sudo tee -a /etc/sudoers
 
 read -s -p "Typ bindelings de encryptie wachtzin: " passphrase
 sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/genkeys.php
+sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/curl.php
 sudo mkdir /var/www/html/data
 sudo chown -R www-data:www-data /var/www/html/data/
 cd /var/www/html
