@@ -1,5 +1,22 @@
 <?php
 // https://www.mjhall.org/php-cross-origin-resource-sharing/
+function decrypt(string $text, string $key): string {
+  $hmac       = mb_substr($text, 0, 64, '8bit');
+  $iv         = mb_substr($text, 64, 16, '8bit');
+  $ciphertext = mb_substr($text, 80, null, '8bit');
+
+  $keys    = hash_pbkdf2('sha256', $key, $iv, 80000, 64, true);
+  $encKey  = mb_substr($keys, 0, 32, '8bit');
+  $hmacKey = mb_substr($keys, 32, null, '8bit');
+  $hmacNow = hash_hmac('sha256', $iv . $ciphertext, $hmacKey);
+  if (! hash_equals($hmac, $hmacNow)) {
+    throw new Exception('Authentication error!');
+  }
+  return openssl_decrypt($ciphertext, 'aes-256-cbc', $encKey,
+    OPENSSL_RAW_DATA, $iv
+  );
+}
+
 $req = array('device' => 'wall');
 $data = json_encode($req);
 
@@ -13,7 +30,17 @@ curl_setopt($curl, CURLOPT_HTTPHEADER, array(
 );
 curl_setopt($curl, CURLOPT_URL, 'https://slimhuis.pindanet.be/remote.php');
 $result = curl_exec($curl);
+$ciphertext = base64_decode($result);
+// Decryption
+$passphrase = 'Geheime schatkamer vol met gouden sleutels';
+$PrivKey = file_get_contents('data/private.key');
+$encKey     = mb_substr($ciphertext, 0, 512, '8bit');
+$ciphertext = mb_substr($ciphertext, 512, null, '8bit');
+$privateKey = openssl_pkey_get_private($PrivKey,$passphrase);
+openssl_private_decrypt($encKey, $key, $privateKey);
+$result = decrypt($ciphertext, $key);
 $json  = json_decode($result);
+
 curl_close($curl);
 if (! empty($json->command)) {
   switch($json->command) {
