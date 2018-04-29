@@ -19,6 +19,8 @@ function decrypt(string $text, string $key): string {
 
 $req = array('device' => 'wall');
 $data = json_encode($req);
+$user = 'gebruiker';
+$password = 'wachtwoord';
 
 $curl = curl_init();
 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
@@ -29,8 +31,12 @@ curl_setopt($curl, CURLOPT_HTTPHEADER, array(
     'Content-Length: ' . strlen($data))
 );
 curl_setopt($curl, CURLOPT_URL, 'https://slimhuis.pindanet.be/remote.php');
+curl_setopt($curl, CURLOPT_USERPWD, "$user:$password");
+curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 $result = curl_exec($curl);
 $ciphertext = base64_decode($result);
+/*
 // Decryption
 $passphrase = 'Geheime schatkamer vol met gouden sleutels';
 $PrivKey = file_get_contents('data/private.key');
@@ -40,7 +46,8 @@ $privateKey = openssl_pkey_get_private($PrivKey,$passphrase);
 openssl_private_decrypt($encKey, $key, $privateKey);
 $result = decrypt($ciphertext, $key);
 $json  = json_decode($result);
-
+*/
+$json  = json_decode($ciphertext);
 curl_close($curl);
 if (! empty($json->command)) {
   switch($json->command) {
@@ -49,5 +56,6 @@ if (! empty($json->command)) {
     break;
   }
 }
-echo $result;
+//echo $result;
+echo $ciphertext;
 ?>
