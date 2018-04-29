@@ -32,132 +32,30 @@ body {
   transition: opacity 10s ease-in-out;
 }
 
-#clock-container {
-  position: relative;
-  width: 334px;
-}
-.clock {
-  background: rgba(236,236,236,0);
-  width: 100%;
-  height: 334px;
-  position: relative;
-}
-.dot {
-  width: 5%;
-  height: 5%;
-  border-radius: 50%;
-  background: #ccc;
-  top: 0;
+#messagebar {
+  position: absolute;
   left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  position: absolute;
-  z-index: 10;
-  box-shadow: 0 0 4px -1px black;
-}
-.minutes-container, .hours-container, .seconds-container {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-.hours {
-  background: black;
-  border: 1px solid white;
-  height: 20%;
-  left: 48.75%;
-  position: absolute;
-  top: 29.2%;
-  transform-origin: 50% 100%;
-  width: 2%;
-  border-top-left-radius: 50%;
-  border-top-right-radius: 50%;
-}
-.minutes {
-  background: black;
-  border: 1px solid white;
-  height: 40%;
-  left: 48.7%;
-  position: absolute;
-  top: 9.2%;
-  transform-origin: 50% 100%;
-  width: 2%;
-  border-top-left-radius: 50%;
-  border-top-right-radius: 50%;
-}
-.seconds {
-  background: gold;
-  height: 45%;
-  left: 49.5%;
-  position: absolute;
-  top: 14%;
-  transform-origin: 50% 80%;
-  width: 1%;
-  z-index: 8;
-  border-top-left-radius: 50%;
-  border-top-right-radius: 50%;
-}
-.h12, .h9, .h6, .h3 {
-  display: inline-block;
-  position: absolute;
+  width: calc(100% - 358px);
+  bottom: 1px;
+  background-color: rgba(128, 128, 128, 0);
   color: white;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  font-weight: 700;
-  z-index: 4;
-}
-.h12 {
-  top: -1.5%;
-  left: 46.2%;
-}
-.h3 {
-  top: 46%;
-  right: 1%;
-}
-.h6 {
-  bottom: -1%;
-  left: 48.3%;
-}
-.h9 {
-  left: 1%%;
-  top: 46%;
-}
-
-.diallines {
-  position: absolute;
-  z-index: 2;
-  width: 1px;
-  height: 5%;
-  background: white;
-  border: 1px solid black;
-  left: 50%;
-  margin-left: -1px;
-}
-.diallines:nth-of-type(5n+1) {
-  position: absolute;
-  z-index: 2;
-  width: 1px;
-  height: 8.3%;
-  background: white;
-  border: 1px solid black;
-  left: 50%;
-  margin-left: -1px;
-}
-.diallines:nth-of-type(15n+6) {
-  display: none;
+  font-size: 20px;
+  border-collapse: collapse;
 }
 #date {
-  color: white;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  text-align: center;
-  width: 100%;
+  text-align: left;
+  width: 358px;
+  padding-left: 5px;
 }
 #temperature {
-  color: white;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-  width: 100%;
-  font-size: 20px;
+  text-align: center;
+}
+#weather {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  clip: rect(17px,358px,61px,0px);
 }
 </style>
 <script src="suncalc.js"></script> 
@@ -193,49 +91,32 @@ function changeBackground() {
     document.getElementById("redshift").style.opacity = 0.5;
   }
 }
-
-var weekday = ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"];
-var month = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "october", "november", "december"];
-function initLocalClocks() {
-  var dialLines = document.getElementsByClassName('diallines');
-  var clockEl = document.getElementsByClassName('clock')[0];
-  for (var i = 0; i < 60; i++) {
-    clockEl.innerHTML += "<div class='diallines'></div>";
-    dialLines[i].style.transform = "rotate(" + 6 * i + "deg)";
-    dialLines[i].style.transformOrigin = "50% " + parseInt((clockEl.clientHeight * 150) / 300) + "px";
-  }
-  document.getElementsByClassName('h12')[0].style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
-  document.getElementsByClassName('h9')[0].style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
-  document.getElementsByClassName('h6')[0].style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
-  document.getElementsByClassName('h3')[0].style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
-  document.getElementById('date').style.fontSize = parseInt((clockEl.clientHeight * 22) / 300) + "px";
-  setTimeout(minuteInterval(), new Date().getTime() % 60000);
+var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
+var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
+function toLocaleDateString(datumobj) {
+  return dayNames[datumobj.getDay()] + '&nbsp;' + datumobj.getDate() + '&nbsp;' + monthNames[datumobj.getMonth()] + '&nbsp;' + datumobj.getFullYear();
 }
-function minuteInterval()
- {
-  var date = new Date;
-  var secondsContainer = document.getElementsByClassName('seconds-container')[0];
-  secondsContainer.style.transition = "";
-  setTimeout(function(){
-    secondsContainer.style.transform = 'rotateZ(0deg)';
-    setTimeout(function(){
-      document.getElementsByClassName('minutes-container')[0].style.transform = 'rotateZ('+ (date.getMinutes() * 6) +'deg)';
-      document.getElementsByClassName('hours-container')[0].style.transform = 'rotateZ('+ ((date.getHours() * 30) + (date.getMinutes() / 2)) +'deg)';
-      document.getElementById("date").innerHTML = weekday[date.getDay()] + ", " + date.getDate() + " " + month[date.getMonth()] + " " + date.getFullYear(); 
-      secondsContainer.style.transition = "transform 60s linear";
-      secondsContainer.style.transform = 'rotateZ(359deg)';
-    }, 30);
-  }, 30);
-  setTimeout(minuteInterval, 60000 - new Date().getTime() % 60000);
+var startTimer;
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  m = checkTime(m);
+  document.getElementById('date').innerHTML = toLocaleDateString(today) + " " + h + ":" + m;
+  startTimer = setTimeout(startTime, 500);
 }
-
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+      
 setInterval(function() {  // get info from other Raspberry Pi with thermostat
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "getjson.php", true);
   xhr.onload = function(e) {
     if (this.status == 200) {
       thermostat = JSON.parse(atob(this.responseText));
-      document.getElementById("temperature").innerHTML = "Kamertemperatuur: " + parseFloat(thermostat[7].roomtemp).toFixed(1) + " °C";
+      document.getElementById("temperature").innerHTML = parseFloat(thermostat[7].roomtemp).toFixed(1) + " °C";
     }
   };
   xhr.send();
@@ -260,43 +141,16 @@ setInterval(function() {  // get info from remote control
 
 </script>
 </head>
-<body onload="getBackground(); initLocalClocks();">
+<body onload="getBackground(); startTime();">
 <div id="backgroundtransition"></div>
 <div id="redshift" style="opacity: 1;"></div>
- <table style="position: absolute;">
+<table id="messagebar">
   <tr>
-    <td>
-      <iframe style="margin-top: -32px;" scrolling="no" width="334" height="158" frameborder="0" marginwidth="0" marginheight="0" src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=2&type=4&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
-      <div id="temperature"></div>
-    </td>
+  <td id="date">Donderdag, 31 december 2018</td>
+  <td id="temperature">20 °C</td>
   </tr>
-  <tr>
-    <td id="clock-container">
-  <article class="clock">
-    <div class="dot"></div>
-    <div class="hours-container">
-      <div class="hours"></div>
-    </div>
-    <div class="minutes-container">
-      <div class="minutes"></div>
-    </div>
-    <div class="seconds-container">
-      <div class="seconds"></div>
-    </div>
-    <div>
-      <span class="h3">3</span>
-      <span class="h6">6</span>
-      <span class="h9">9</span>
-      <span class="h12">12</span>
-    </div>
-    <div class="diallines"></div>
-  </article>
-  <div id="date">Donderdag, 31 december 2018</div>
-    </td>
-  </tr>
-</table> 
-<div>
-</div>
+</table>
+<iframe id="weather" scrolling="no" width="179" height ="61" frameborder="0" marginwidth="0" marginheight="0" src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=1&type=8&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
 <!-- http://lorempixel.com/1920/1200/nature/
 https://source.unsplash.com/random/1920x1200/?nature  -->
 </body>
