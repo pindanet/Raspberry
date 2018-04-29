@@ -233,8 +233,9 @@ iface br0 inet dhcp
     make
     sudo make install
     sudo /sbin/ldconfig
--->
+
     wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-armhf-32bit-static.tar.xz
     tar -xvf ffmpeg-release-armhf-32bit-static.tar.xz
-    
-    raspivid -o - -t 0 -fps 30 -b 6000000 | ffmpeg-3.3-armhf-32bit-static/ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://a.rtmp.youtube.com/live2/<SESSIE>
+--> 
+    sudo apt-get install ffmpeg
+    raspivid -o - -t 0 -fps 30 -b 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://a.rtmp.youtube.com/live2/<SESSIE>
