@@ -466,6 +466,7 @@ loadThermostat();
             return a.time > b.time;
           });
         }
+/*
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "bash.sh", true);
 //        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -475,6 +476,17 @@ loadThermostat();
           }
         };
         xhr.send("command=saveThermostat&json=" + btoa(JSON.stringify(thermostat)));
+*/
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "system.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            getThermostatTemp();
+          }
+        };
+        xhr.send("command=saveThermostat&json=" + btoa(JSON.stringify(thermostat)));
+
       }
       function exportThermostat(event) {
         window.open("exportthermostat.sh");
