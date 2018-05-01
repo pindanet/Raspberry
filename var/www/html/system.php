@@ -53,8 +53,7 @@ case "rpiwall":
   }
   break;
 case "saveThermostat":
-  file_put_contents ("data/thermostat.json", $_POST["json"]);
-//  exec("echo " . $_POST["json"] . " > /var/www/html/data/thermostat.json");
+  file_put_contents ("data/thermostat.json", $_POST["json"] . "\n");
   break;
 
 endswitch ?>
