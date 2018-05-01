@@ -117,6 +117,11 @@ echo "www-data ALL = NOPASSWD: /sbin/shutdown -r now" | sudo tee -a /etc/sudoers
 read -s -p "Typ bindelings de encryptie wachtzin: " passphrase
 sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/genkeys.php
 sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/curl.php
+read -p  "Typ de gebruikersnaam voor de remote webpagina: " user
+sudo sed -i "s|^\(\$user =\).*$|\1 \'$user\';|" /var/www/html/curl.php
+read -s -p "Typ bindelings het wachtwoord voor de remote webpagina: " password
+sudo sed -i "s|^\(\$password =\).*$|\1 \'$password\';|" /var/www/html/curl.php
+
 sudo mkdir /var/www/html/data
 sudo chown -R www-data:www-data /var/www/html/data/
 cd /var/www/html
