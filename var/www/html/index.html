@@ -309,7 +309,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
       }
       function thermometer(event) {
         var xhrthermometer = new XMLHttpRequest();
-        xhrthermometer.open('POST', "thermometer.sh", true);
+        xhrthermometer.open('POST', "thermometer.php", true);
         xhrthermometer.onload = function(e) {
           if (this.status == 200) {
             document.getElementById("content").innerHTML = this.responseText;
