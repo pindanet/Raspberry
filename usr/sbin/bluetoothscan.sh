@@ -8,7 +8,8 @@ function sdptoolscan  {
   # echo $bluetooth
   bluetooth="94:0E:6B:F8:97:31756e54a95c34f7ccf8c211995fb35559"
   info=$(sdptool browse ${bluetooth:0:17} | sed '/Withings/,+8d' | md5sum)
-  if [ ${bluetooth:17:32} == ${info:0:32} ]; then # home
+#  if [ ${bluetooth:17:32} == ${info:0:32} ]; then # home
+  if [ $? == 0 ]; then # home
     absent="0"
   fi
 }
