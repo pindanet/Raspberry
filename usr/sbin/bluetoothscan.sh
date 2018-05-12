@@ -62,6 +62,8 @@ if [ -f /var/www/html/motion/foto_diff.txt ]; then
   rm -f /var/www/html/motion/foto_diff.txt
 fi
 
+raspistill -n -w 800 -h 480 -o /var/www/html/motion/luminance.jpg # Take photo
+
 if [ "$absent" -eq "0" ]; then # home
   if [ -f /var/www/html/motion/foto.png ]; then # Deactivate Motion detection 
     rm -f /var/www/html/motion/foto.png
@@ -73,21 +75,24 @@ if [ "$absent" -eq "0" ]; then # home
   echo 255 > /sys/class/leds/led1/brightness
   exit
 fi
-if [ "$absent" -gt "5" ]; then # not home
+
+if [ "$absent" -gt "1" ]; then # not home
   if [ -f /var/www/html/motion/foto.png ]; then # Motion detection active
     mv /var/www/html/motion/foto1.png /var/www/html/motion/foto.png
-    raspistill -n -w 800 -h 480 -o /var/www/html/motion/foto1.png
+    cp /var/www/html/motion/luminance.jpg /var/www/html/motion/foto1.png
+#    raspistill -n -w 800 -h 480 -o /var/www/html/motion/foto1.png
     compare -fuzz 50% -metric ae /var/www/html/motion/foto.png /var/www/html/motion/foto1.png /var/www/html/motion/diff.png 2> /var/www/html/motion/foto_diff.txt
     DIFF="$(cat /var/www/html/motion/foto_diff.txt)"
 # echo $DIFF
     if [ "$DIFF" -gt "20" ]; then
-      cp /var/www/html/motion/foto1.png "/var/www/html/motion/fotos/`date +"%Y %m %d %R"`.png"
+      cp /var/www/html/motion/foto1.png "/var/www/html/motion/fotos/`date +"%Y %m %d %R"`.jpg"
       # Alarm laten afgaan
       echo "Alarm op $(date)" >> /var/www/html/data/bluetoothscandebug.txt
       python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 25 4A AE 0D 01 0F 80"
     fi
   else # Activate motion detection
-    raspistill -n -w 800 -h 480 -o /var/www/html/motion/foto.png
+    cp /var/www/html/motion/luminance.jpg /var/www/html/motion/foto.png
+#    raspistill -n -w 800 -h 480 -o /var/www/html/motion/foto.png
   fi
   # deactivate touchscreen and status led's
   echo 1 > /sys/class/backlight/rpi_backlight/bl_power
