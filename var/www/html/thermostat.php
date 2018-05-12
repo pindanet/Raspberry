@@ -37,20 +37,20 @@ $thermostat[7]->{"roomtemp"} = $sensorTemp;
 $manual = $thermostat[7]->{"manual"};
 if ($manual == "Off") {
   if ($temp < $sensorTemp) {
-    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 41 53 86 01 00 00 80\" &");
+    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 01 01 25 4A AE 01 00 00 70\" &");
     $thermostat[7]->{"heating"} = "Off";
 //    echo "Verwarming afzetten\n";
   } else {
-    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 41 53 86 01 01 0F 80\" &");
+    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 25 4A AE 01 01 0F 70\" &");
     $thermostat[7]->{"heating"} = "On";
   }
 } else {
   $heating = $thermostat[7]->{"heating"};
   if ($heating == "Off") {
-    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 41 53 86 01 00 00 80\" &");
+    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 01 01 25 4A AE 01 00 00 70\" &");
     $thermostat[7]->{"heating"} = "Off";
   } else {
-    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 41 53 86 01 01 0F 80\" &");
+    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 25 4A AE 01 01 0F 70\" &");
     $thermostat[7]->{"heating"} = "On";
   }
 }
