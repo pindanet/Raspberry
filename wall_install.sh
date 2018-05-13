@@ -107,8 +107,9 @@ sudo apt install fonts-symbola
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.html
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/random_pic.php
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/nocursor.gif
-sudo wget -P /var/www/html https://raw.githubusercontent.com/mourner/suncalc/master/suncalc.js
+#sudo wget -P /var/www/html https://raw.githubusercontent.com/mourner/suncalc/master/suncalc.js
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getjson.php
+sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getluminance.php
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/curl.php
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/genkeys.php
 
