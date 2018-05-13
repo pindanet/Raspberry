@@ -35,7 +35,6 @@ body {
 #messagebar {
   position: absolute;
   left: 0;
-  width: calc(100% - 358px);
   bottom: 1px;
   background-color: rgba(128, 128, 128, 0);
   color: white;
@@ -43,13 +42,9 @@ body {
   font-size: 20px;
   border-collapse: collapse;
 }
-#date {
-  text-align: left;
-  width: 358px;
+#messagebar td {
   padding-left: 5px;
-}
-#temperature {
-  text-align: center;
+  padding-right: 5px;
 }
 #weather {
   position: absolute;
@@ -58,7 +53,7 @@ body {
   clip: rect(17px,358px,61px,0px);
 }
 </style>
-<script src="suncalc.js"></script> 
+<!--script src="suncalc.js"></script--> 
 <script>
 var changeBackgroundMinutes = 15;
 function getBackground() {
@@ -83,13 +78,26 @@ function changeBackground() {
   document.getElementById("backgroundtransition").style.opacity = 1;
   setTimeout(copyBackground, 10000);
 // adjust brightness
+/*
   var twilight = SunCalc.getTimes(new Date(), 51.2, 3.3);
   var now = new Date();
   if (twilight.sunrise < now && twilight.sunset > now) { // daylight
-    document.getElementById("redshift").style.opacity = 0;
+    document.getElementById("redshift").style.opacity = 0.1;
   } else { // dark
-    document.getElementById("redshift").style.opacity = 0.5;
+    document.getElementById("redshift").style.opacity = 0.9;
   }
+*/
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "getluminance.php", true);
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+      luminance = this.responseText;
+      opacity = ((200 - luminance) / 250) + 0.1;
+      document.getElementById("luminance").innerHTML = luminance + " " + opacity;
+      document.getElementById("redshift").style.opacity = opacity;
+    }
+  };
+  xhr.send();
 }
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
@@ -102,7 +110,8 @@ function startTime() {
   var h = today.getHours();
   var m = today.getMinutes();
   m = checkTime(m);
-  document.getElementById('date').innerHTML = toLocaleDateString(today) + " " + h + ":" + m;
+  document.getElementById('date').innerHTML = '&#x1F4C5; ' + toLocaleDateString(today);
+  document.getElementById('time').innerHTML = "&#x1F553; " + h + ":" + m;
   startTimer = setTimeout(startTime, 500);
 }
 function checkTime(i) {
@@ -116,7 +125,7 @@ setInterval(function() {  // get info from other Raspberry Pi with thermostat
   xhr.onload = function(e) {
     if (this.status == 200) {
       thermostat = JSON.parse(atob(this.responseText));
-      document.getElementById("temperature").innerHTML = parseFloat(thermostat[7].roomtemp).toFixed(1) + " °C";
+      document.getElementById("temperature").innerHTML = "&#x1f321;" + parseFloat(thermostat[7].roomtemp).toFixed(1) + " °C";
     }
   };
   xhr.send();
@@ -147,11 +156,15 @@ setInterval(function() {  // get info from remote control
 <table id="messagebar">
   <tr>
   <td id="date">Donderdag, 31 december 2018</td>
-  <td id="temperature">20 °C</td>
+  <td id="time">12:00</td>
+  <td id="temperature">&#x1f321; 20 °C</td>
+  <td id="wap">&#x1F4F6;</td>
+  <td id="luminance">-0</td>
   </tr>
 </table>
 <iframe id="weather" scrolling="no" width="179" height ="61" frameborder="0" marginwidth="0" marginheight="0" src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=1&type=8&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
 <!-- http://lorempixel.com/1920/1200/nature/
-https://source.unsplash.com/random/1920x1200/?nature  -->
+https://source.unsplash.com/random/1920x1200/?nature
+https://www.timeanddate.com/clocks/free.html  -->
 </body>
 </html> 
