@@ -92,7 +92,7 @@ function changeBackground() {
   xhr.onload = function(e) {
     if (this.status == 200) {
       luminance = this.responseText;
-      opacity = ((200 - luminance) / (200/0.8)) + 0.1;
+      opacity = ((130 - luminance) / (130/0.8)) + 0.1;
       document.getElementById("luminance").innerHTML = luminance + " " + opacity;
       document.getElementById("redshift").style.opacity = opacity;
     }
