@@ -65,9 +65,8 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo chown -R www-data:www-data /var/www/html/data/
     
 ## Autostart fullscreen browser
-    sudo apt-get install xautomation firefox-esr
     nano .config/lxsession/LXDE-pi/autostart
-      @sh /home/pi/.config/lxsession/LXDE-pi/autostart.sh
+      @chromium-browser --incognito --kiosk http://localhost/
 ## Folder with background pictures
     sudo mkdir /var/www/html/background
     sudo chown -R www-data:www-data  background
