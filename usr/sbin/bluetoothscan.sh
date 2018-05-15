@@ -63,6 +63,8 @@ if [ -f /var/www/html/motion/foto_diff.txt ]; then
 fi
 
 raspistill -n -w 800 -h 480 -o /var/www/html/motion/luminance.jpg # Take photo
+luminance="$(/usr/bin/php7.0 /var/www/html/luminance.php)"
+echo $luminance > /var/www/html/motion/luminance.txt
 
 if [ "$absent" -eq "0" ]; then # home
   if [ -f /var/www/html/motion/foto.png ]; then # Deactivate Motion detection 
