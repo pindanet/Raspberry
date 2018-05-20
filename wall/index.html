@@ -91,9 +91,12 @@ function changeBackground() {
   xhr.open('POST', "getluminance.php", true);
   xhr.onload = function(e) {
     if (this.status == 200) {
-      luminance = this.responseText;
-      opacity = ((130 - luminance) / (130/0.8)) + 0.1;
-      document.getElementById("luminance").innerHTML = luminance + " " + opacity;
+//      alert(this.responseText);
+      resp = JSON.parse(this.responseText);
+      luminance = resp.luminance;
+      range = resp.max - resp.min;
+      opacity = ((resp.max - luminance) / (range/0.8)) + 0.1;
+      document.getElementById("luminance").innerHTML = "Min: " + resp.min + " Max: " + resp.max + " Range: " + range + " Lum: " + luminance + " Opa: " + opacity;
       document.getElementById("redshift").style.opacity = opacity;
     }
   };
