@@ -25,6 +25,10 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
       Enable Camera
       Enable SSH
       I2C Enable
+## Search history with PageUp/PageDown
+    nano .bashrc
+      bind '"\e[5~": history-search-backward'
+      bind '"\e[6~": history-search-forward'
 ## Security
     passwd
     ssh-copy-id -i ~/.ssh/id_rsa.pub pi@raspberrypi.local
