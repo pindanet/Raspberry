@@ -341,7 +341,8 @@ Helderheid display automatisch regelen via lichtmeting met camera
       }
       function radioCommand(event, command, options) {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', "mpc.sh", true);
+        xhr.open('POST', "mpc.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.onload = function(e) {
           if (this.status == 200) {
             document.getElementById("radioinfo").innerHTML = this.responseText;
