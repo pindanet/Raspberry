@@ -66,7 +66,11 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     
 ## Autostart fullscreen browser
     nano .config/lxsession/LXDE-pi/autostart
-      @chromium-browser --incognito --kiosk http://localhost/
+      @chromium-browser --kiosk --disable-infobars https://localhost/
+      # Disable Screensaver
+      xset s off
+      xset -dpms
+      xset s noblank
 ## Folder with background pictures
     sudo mkdir /var/www/html/background
     sudo chown -R www-data:www-data  background
