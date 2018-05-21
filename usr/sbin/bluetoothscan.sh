@@ -91,6 +91,20 @@ if [ "$absent" -gt "1" ]; then # not home
     DIFF="$(cat /var/www/html/motion/foto_diff.txt)"
 # echo $DIFF
     if [ "$DIFF" -gt "20" ]; then
+
+      # Hou enkel de 100 recenste foto's
+      numfiles=(/var/www/html/motion/fotos/*)
+      numfiles=${#numfiles[@]}
+      while [ $((numfiles)) -gt 99 ]; do
+        unset -v oldest
+        for file in /var/www/html/motion/fotos/*; do
+          [[ -z "$oldest" || "$file" -ot "$oldest" ]] && oldest="$file"
+        done
+        rm "$oldest"
+        numfiles=(/var/www/html/motion/fotos/*)
+        numfiles=${#numfiles[@]}
+      done
+
       cp /var/www/html/motion/foto1.png "/var/www/html/motion/fotos/`date +"%Y %m %d %R"`.jpg"
       # Alarm laten afgaan
       echo "Alarm op $(date)" >> /var/www/html/data/bluetoothscandebug.txt
