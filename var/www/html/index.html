@@ -449,7 +449,7 @@ var motionPhotoPage;
       }
       function motionDetection(event) {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', "motion.sh", true);
+        xhr.open('POST', "motion.php", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
             motionPhotos = JSON.parse(this.responseText);
