@@ -60,5 +60,22 @@
         $avg_lum  = ceil($total_lum / $sample_no);
         return $avg_lum;
     }
-    echo image_avg_luminance("motion/luminance.jpg");
+    $avg_luminance = image_avg_luminance("/var/www/html/motion/luminance.jpg");
+    echo $avg_luminance;
+
+    $filename = "/var/www/html/motion/luminance.json";
+    if (file_exists($filename)) {
+      $luminance = json_decode(file_get_contents($filename));
+    } else {
+      $luminance->min = $avg_luminance;
+      $luminance->max = $avg_luminance;
+    }
+    $luminance->luminance = $avg_luminance;
+    if ($luminance->luminance > $luminance->max) {
+      $luminance->max = $avg_luminance;
+    }
+    if ($luminance->luminance < $luminance->min) {
+      $luminance->min = $avg_luminance;
+    }
+    file_put_contents($filename, json_encode($luminance));
 ?>
