@@ -30,8 +30,16 @@ foreach ($thermostat[$weekday] as $timetemp) {
 
 $thermostat[7]->{"controltemp"} = $temp;
 
-exec("python /var/www/html/bme280.py | tail -3 | head -1 | awk '{ print \$3 }'", $output, $return);
-$sensorTemp = $output[0];
+//exec("python /var/www/html/bme280.py | tail -3 | head -1 | awk '{ print \$3 }'", $output, $return);
+//$sensorTemp = $output[0];
+$filename = "/var/www/html/data/bme280.json";
+if (file_exists($filename)) {
+  $tempPresHumi = json_decode(file_get_contents($filename));
+  $sensorTemp = $tempPresHumi->temperature;
+} else {
+  $sensorTemp = 20.00;
+}
+
 $thermostat[7]->{"roomtemp"} = $sensorTemp;
 
 $manual = $thermostat[7]->{"manual"};
@@ -39,7 +47,7 @@ if ($manual == "Off") {
   if ($temp < $sensorTemp) {
     exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 01 01 25 4A AE 01 00 00 70\" &");
     $thermostat[7]->{"heating"} = "Off";
-//    echo "Verwarming afzetten\n";
+#    echo "Verwarming afzetten\n";
   } else {
     exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 25 4A AE 01 01 0F 70\" &");
     $thermostat[7]->{"heating"} = "On";
@@ -47,11 +55,13 @@ if ($manual == "Off") {
 } else {
   $heating = $thermostat[7]->{"heating"};
   if ($heating == "Off") {
-    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 01 01 25 4A AE 01 00 00 70\" &");
-    $thermostat[7]->{"heating"} = "Off";
-  } else {
-    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 25 4A AE 01 01 0F 70\" &");
-    $thermostat[7]->{"heating"} = "On";
+#    if ($temp < $sensorTemp) {
+      exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 01 01 25 4A AE 01 00 00 70\" &");
+      $thermostat[7]->{"heating"} = "Off";
+     } else {
+      exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 25 4A AE 01 01 0F 70\" &");
+      $thermostat[7]->{"heating"} = "On";
+#    }
   }
 }
 
