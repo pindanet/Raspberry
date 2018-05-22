@@ -327,7 +327,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
       function weather(event) {
         document.getElementById("content").innerHTML = '<pre class="terminalbox">Bezig met het ophalen van het weerbericht...</pre>';
         var xhrforecast = new XMLHttpRequest();
-        xhrforecast.open('POST', "forecast.sh", true);
+        xhrforecast.open('POST', "forecast.php", true);
         xhrforecast.onload = function(e) {
           if (this.status == 200) {
             document.getElementById("content").innerHTML = this.responseText;
