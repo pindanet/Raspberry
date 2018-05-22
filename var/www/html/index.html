@@ -312,10 +312,14 @@ Helderheid display automatisch regelen via lichtmeting met camera
       }
       function thermometer(event) {
         var xhrthermometer = new XMLHttpRequest();
-        xhrthermometer.open('POST', "thermometer.php", true);
+        xhrthermometer.open('POST', "data/bme280.json", true);
         xhrthermometer.onload = function(e) {
           if (this.status == 200) {
-            document.getElementById("content").innerHTML = this.responseText;
+            var jsonObj = JSON.parse(this.responseText);
+            var temp = Math.round(jsonObj.temperature * 10) / 10;
+            var pres = Math.round(jsonObj.pressure);
+            var humi = Math.round(jsonObj.humidity);
+            document.getElementById("content").innerHTML = "<span id=\"temp\">" + temp + " °C</span><br><span id=\"date\">Luchtdruk: " + pres + " hPa Vochtigheid: " + humi + " %</span>";
             centerContent();
           }
         };
