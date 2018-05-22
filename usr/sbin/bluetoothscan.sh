@@ -68,7 +68,17 @@ fi
 
 raspistill -n -w 800 -h 480 -o /var/www/html/motion/luminance.jpg # Take photo
 luminance="$(/usr/bin/php7.0 /var/www/html/luminance.php)"
-echo $luminance > /var/www/html/motion/luminance.txt
+#echo $luminance > /var/www/html/motion/luminance.txt
+
+# Get temperature, pressure and humidity
+bme=`python /var/www/html/bme280.py`
+temp=${bme#*Temperature :  }
+temp=${temp% C*}
+pres=${bme#*Pressure :  }
+pres=${pres% hPa*}
+humi=${bme#*Humidity :  }
+humi=${humi% %*}
+echo "{\"temperature\":$temp,\"pressure\":$pres,\"humidity\":$humi}" > /var/www/html/data/bme280.json
 
 if [ "$absent" -eq "0" ]; then # home
   if [ -f /var/www/html/motion/foto.png ]; then # Deactivate Motion detection 
@@ -95,7 +105,7 @@ if [ "$absent" -gt "1" ]; then # not home
       # Hou enkel de 100 recenste foto's
       numfiles=(/var/www/html/motion/fotos/*)
       numfiles=${#numfiles[@]}
-      while [ $((numfiles)) -gt 99 ]; do
+      while [ $((numfiles)) -gt 100 ]; do
         unset -v oldest
         for file in /var/www/html/motion/fotos/*; do
           [[ -z "$oldest" || "$file" -ot "$oldest" ]] && oldest="$file"
