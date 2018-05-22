@@ -35,11 +35,21 @@ for ($i = 1; $i < 8; $i++) {
   $day[$i] = strftime("%a %d/%m", mktime(0, 0, 0, date("m")  , date("d") + $i, date("Y")));
   echo $day[$i];
 }
+
+/*
 exec("python /var/www/html/bme280.py", $output, $return);
 $temp = explode(" ", $output[2]);
 $pres = explode(" ", $output[3]);
 $humi = explode(" ", $output[4]);
 $room = sprintf("Temperatuur: %.1f °C, Luchtdruk: %d hPa, Vochtigheid: %d %%", $temp[3], $pres[3], $humi[3]);
+*/
+$filename = "/var/www/html/data/bme280.json";
+if (file_exists($filename)) {
+  $tempPresHumi = json_decode(file_get_contents($filename));
+  $room = sprintf("Temperatuur: %.1f °C, Luchtdruk: %d hPa, Vochtigheid: %d %%", $tempPresHumi->temperature, $tempPresHumi->pressure, $tempPresHumi->humidity);
+} else {
+  $room = sprintf("Temperatuur: %.1f °C, Luchtdruk: %d hPa, Vochtigheid: %d %%", 20.0, 1013, 60);
+}
 
 $html = <<<EOD
 <table id="forecast">
