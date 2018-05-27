@@ -5,6 +5,8 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 ## Update
     sudo apt-get update
     sudo apt-get upgrade
+    wget https://github.com/zyedidia/micro/releases/download/v1.4.0/micro-1.4.0-linux-arm.tar.gz
+    tar -xvf micro-1.4.0-linux-arm.tar.gz
 ## Rotate LCD Screen
     sudo nano /boot/config.txt
     lcd_rotate=2
