@@ -114,6 +114,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo chmod +x /var/www/html/bme280.sh
 ## MCP23008E I2C I/O Expander
 Datasheet: https://cdn-shop.adafruit.com/datasheets/MCP23008.pdf
+
 Based on: https://www.hackster.io/4803/i2c-port-expander-sample-0a6d4f
 
     Vin > 3v3 (1) (Orange) > Reset (6), VDD (18)
