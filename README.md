@@ -114,10 +114,17 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo chmod +x /var/www/html/bme280.sh
 ## MCP23008E I2C I/O Expander
 Datasheet: https://cdn-shop.adafruit.com/datasheets/MCP23008.pdf
-    Vin > 3v3 (1) (Orange)
-    GND > Ground (6) (Brown)
-    SCK > BCM 3 (SCL) (5) (Green)
-    SDI > BCM 2 (SDA) (3) (Blue)
+Based on: https://www.hackster.io/4803/i2c-port-expander-sample-0a6d4f
+
+    Vin > 3v3 (1) (Orange) > Reset (6), VDD (18)
+    GND > Ground (6) (Brown) > VSS (9), A0 (5), A1 (4), A2 (3)
+    SCK > BCM 3 (SCL) (5) (Green) > SCL (1)
+    SDI > BCM 2 (SDA) (3) (Blue) > SDA (2)
+### 8 Relay Module BTE13-005
+    Gnd (Purple)
+    GP0, GP1, GP2, GP3, GP4, GP5, GP6, GP7 > In1, In2, In3, In4, In5, In6, In7, In8
+    Vcc (Grey) > 5V (2) Raspberry Pi
+    Vcc Jumper RVcc
     
     i2cdetect -y 1
     i2cset -y 1 0x20 0x00 0x00
