@@ -112,6 +112,16 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo mv bme280.py /var/www/html/
     sudo adduser www-data i2c
     sudo chmod +x /var/www/html/bme280.sh
+## MCP23008E I2C I/O Expander
+Datasheet: https://cdn-shop.adafruit.com/datasheets/MCP23008.pdf
+    Vin > 3v3 (1) (Orange)
+    GND > Ground (6) (Brown)
+    SCK > BCM 3 (SCL) (5) (Green)
+    SDI > BCM 2 (SDA) (3) (Blue)
+    
+    i2cdetect -y 1
+    i2cset -y 1 0x20 0x00 0x00
+    i2cset -y 1 0x20 0x00 0xff
 ## RFXtrx433E
     wget https://github.com/ssjoholm/rfxcmd_gc/archive/master.zip
     unzip master.zip
