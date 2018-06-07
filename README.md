@@ -115,6 +115,8 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 ## MCP23008E I2C I/O Expander
 Datasheet: https://cdn-shop.adafruit.com/datasheets/MCP23008.pdf
 
+I2C - GPIO Port Expander: http://raspberrypi-aa.github.io/session3/i2c.html
+
 Based on: https://www.hackster.io/4803/i2c-port-expander-sample-0a6d4f
 
     Vin > 3v3 (1) (Orange) > Reset (6), VDD (18)
@@ -130,6 +132,7 @@ Based on: https://www.hackster.io/4803/i2c-port-expander-sample-0a6d4f
     i2cdetect -y 1
     i2cset -y 1 0x20 0x00 0x00
     i2cset -y 1 0x20 0x00 0xff
+    i2cget -y 1 0x20 0x09
 ## RFXtrx433E
     wget https://github.com/ssjoholm/rfxcmd_gc/archive/master.zip
     unzip master.zip
