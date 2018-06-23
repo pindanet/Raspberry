@@ -208,6 +208,7 @@ script included in /usr/sbin/bluetooth-detection.sh
 driver=nl80211
 channel=6
 ssid=SoftAP
+ignore_broadcast_ssid=1
 hw_mode=g
 auth_algs=1
 # Wireless Multimedia Extension/Wi-Fi Multimedia needed for
