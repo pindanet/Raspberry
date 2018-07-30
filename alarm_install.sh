@@ -1,17 +1,9 @@
 #!/bin/bash
 
-KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
 NEW_HOSTNAME="rpialarm"
-
-# Change keyboard
-sudo sed -i /etc/default/keyboard -e "s/^XKBLAYOUT.*/XKBLAYOUT=\"$KEYMAP\"/"
-sudo dpkg-reconfigure -f noninteractive keyboard-configuration
-sudo invoke-rc.d keyboard-setup start
-sudo setsid sh -c 'exec setupcon -k --force <> /dev/tty1 >&0 2>&1'
-sudo udevadm trigger --subsystem-match=input --action=change
 
 # Change locale
 if ! LOCALE_LINE="$(grep "^$LOCALE " /usr/share/i18n/SUPPORTED)"; then
