@@ -1,4 +1,5 @@
 #!/bin/bash
+# wget https://raw.githubusercontent.com/pindanet/Raspberry/master/alarm_install.sh
 
 LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
@@ -60,71 +61,7 @@ sudo apt update
 sudo apt dist-upgrade -y
 sudo apt autoremove -y
 
-# Webserver
-sudo apt-get install apache2 php libapache2-mod-php php-curl php-mbstring -y
-#sudo a2enmod ssl
-#sudo a2ensite default-ssl
-sudo systemctl restart apache2.service
-
-#sudo mkdir /etc/apache2/ssl
-#sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt -subj "/C=BE/ST=West Vlaanderen/L=Brugge/O=PinDaNet/OU=Raspberry/CN=Dany Pinoy"
-#sudo chmod 600 /etc/apache2/ssl/*
-#sudo sed -i "/ServerAdmin webmaster@localhost/a\                ServerName $NEW_HOSTNAME.local:443" /etc/apache2/sites-enabled/default-ssl.conf
-#sudo sed -i "s/SSLCertificateFile\t.*$/SSLCertificateFile\t\/etc\/apache2\/ssl\/apache.crt/g" /etc/apache2/sites-enabled/default-ssl.conf
-#sudo sed -i "s/SSLCertificateKeyFile .*$/SSLCertificateKeyFile \/etc\/apache2\/ssl\/apache.key/g" /etc/apache2/sites-enabled/default-ssl.conf
-#sudo systemctl restart apache2.service
-#openssl s_client -connect 127.0.0.1:443
-#sudo sed -i "/<VirtualHost \*:80>/a\        Redirect \"\/\" \"https:\/\/$NEW_HOSTNAME.local\/\"" /etc/apache2/sites-available/000-default.conf
-#sudo systemctl restart apache2.service
-sudo mkdir /var/www/html/data
-sudo chown -R www-data:www-data /var/www/html/data/
-
-# Muiscursor verbergen
-#sudo apt-get install unclutter
-
-# Autostart
-echo "# Start fullscreen browser" >> $HOME/.config/lxsession/LXDE-pi/autostart
-echo "@chromium-browser --incognito --kiosk http://localhost/" >> $HOME/.config/lxsession/LXDE-pi/autostart
-
-echo "# Disable Screensaver" >> $HOME/.config/lxsession/LXDE-pi/autostart
-echo "xset s off" >> $HOME/.config/lxsession/LXDE-pi/autostart
-echo "xset -dpms" >> $HOME/.config/lxsession/LXDE-pi/autostart
-echo "xset s noblank" >> $HOME/.config/lxsession/LXDE-pi/autostart
-
-#echo "# Hide mousecursor" >> $HOME/.config/lxsession/LXDE-pi/autostart
-#echo "@unclutter -idle 0" >> $HOME/.config/lxsession/LXDE-pi/autostart
-
-sudo apt install fonts-symbola
-
-sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.html
-sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/random_pic.php
-sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/nocursor.gif
 #sudo wget -P /var/www/html https://raw.githubusercontent.com/mourner/suncalc/master/suncalc.js
-sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getjson.php
-sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getluminance.php
-sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/curl.php
-sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/genkeys.php
-
-echo "www-data ALL = NOPASSWD: /sbin/shutdown -r now" | sudo tee -a /etc/sudoers
-
-read -s -p "Typ bindelings de encryptie wachtzin: " passphrase
-sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/genkeys.php
-sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/curl.php
-read -p  "Typ de gebruikersnaam voor de remote webpagina: " user
-sudo sed -i "s|^\(\$user =\).*$|\1 \'$user\';|" /var/www/html/curl.php
-read -s -p "Typ bindelings het wachtwoord voor de remote webpagina: " password
-sudo sed -i "s|^\(\$password =\).*$|\1 \'$password\';|" /var/www/html/curl.php
-
-sudo mkdir /var/www/html/data
-sudo chown -R www-data:www-data /var/www/html/data/
-cd /var/www/html
-sudo -u www-data php genkeys.php
-sudo rm /var/www/html/genkeys.php
-read -p "cp /var/www/html/data/public.key to your remote website and press Return to continue " key
-
-# Get new background image
-wget -P $HOME/bin https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.sh
-echo "@bash $HOME/bin/background.sh" >> $HOME/.config/lxsession/LXDE-pi/autostart
 
 # Restart Raspberry Pi
 sudo shutdown -r now
