@@ -4,7 +4,7 @@ KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
-NEW_HOSTNAME="rpiwall"
+NEW_HOSTNAME="rpialarm"
 
 # Change keyboard
 sudo sed -i /etc/default/keyboard -e "s/^XKBLAYOUT.*/XKBLAYOUT=\"$KEYMAP\"/"
