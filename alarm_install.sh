@@ -56,9 +56,9 @@ read Keypress
 #sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
 # Upgrade
-sudo apt-get update
-sudo apt-get dist-upgrade -y
-sudo apt-get autoremove -y
+sudo apt update
+sudo apt dist-upgrade -y
+sudo apt autoremove -y
 
 # Webserver
 sudo apt-get install apache2 php libapache2-mod-php php-curl php-mbstring -y
