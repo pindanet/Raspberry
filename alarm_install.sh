@@ -26,9 +26,6 @@ if [ $HOSTNAME != $NEW_HOSTNAME ]; then
   sudo apt update
   sudo apt dist-upgrade -y
   sudo apt autoremove -y
-
-#sudo wget -P /var/www/html https://raw.githubusercontent.com/mourner/suncalc/master/suncalc.js
-
 # Restart Raspberry Pi
   sudo shutdown -r now
   sleep 1m
@@ -64,24 +61,15 @@ sudo mv PindaNetBluetoothScan.service /etc/systemd/system/
 
 sudo mkdir -p /var/PindaNet
 sudo touch /var/PindaNet/bluetoothscandebug.txt
-cat > PindaNetbluetoothscan.sh <<EOF
-#!/bin/bash
-
-absent="0"
-
-tail -999 /var/PindaNet/bluetoothscandebug.txt > /var/PindaNet/bluetoothscandebug.trunc
-mv /var/PindaNet/bluetoothscandebug.trunc /var/PindaNet/bluetoothscandebug.txt
-if [ "\$absent" -gt "0" ]; then
-  echo "Afwezig(\$absent) op \$(date)" >> /var/PindaNet/bluetoothscandebug.txt
-else
-  echo "Thuis(\$absent) op \$(date)" >> /var/PindaNet/bluetoothscandebug.txt
-fi
-EOF
-sudo mv PindaNetbluetoothscan.sh /usr/sbin/
+sudo wget --output-document=/usr/sbin/PindaNetbluetoothscan.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/alarm/PindaNetbluetoothscan.sh
 sudo chmod +x /usr/sbin/PindaNetbluetoothscan.sh
 
 sudo systemctl daemon-reload
 sudo systemctl enable PindaNetBluetoothScan.timer
 sudo systemctl start PindaNetBluetoothScan.timer
-systemctl list-timers
+#systemctl list-timers
 
+printf "\033[1;37;40mScan Bluetooth devices to disable alarm: hcitool scan\n\033[0m" # Witte letters op zwarte achtergrond
+printf "\033[1;37;40mPut Bluetooth MAC adresses in script with: sudo nano /usr/sbin/PindaNetbluetoothscan.sh\n\033[0m" # Witte letters op zwarte achtergrond
+printf "\033[1;32;40mPress key to secure ssh.\033[0m" # Groene letters op zwarte achtergrond
+read Keypress
