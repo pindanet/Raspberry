@@ -1,8 +1,10 @@
 #!/bin/bash
 
-home="1"
-
+# Array bluetooth MAC addresses
+# Scan with: hcitool scan
 bluetooth=(94:0E:6B:F8:97:31 94:0E:6B:F8:97:30)
+
+home="1"
 for i in ${bluetooth[@]}; do
   sdptool browse $i
   if [ $? == 0 ]; then # home
