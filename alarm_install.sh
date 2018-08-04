@@ -14,6 +14,10 @@ if [ $HOSTNAME != $NEW_HOSTNAME ]; then
   sudo raspi-config nonint do_change_timezone "$TIMEZONE"
 # Change WiFi country
   sudo raspi-config nonint do_wifi_country "$COUNTRY"
+# Configure WiFi
+  read -p "WiFi SSID: " SSID
+  read -p "WiFi Passphrase: " PASSPHRASE
+  sudo raspi-config nonint do_wifi_ssid_passphrase "$SSID" "$PASSPHRASE"
 # Change hostname
   sudo raspi-config nonint do_hostname "$NEW_HOSTNAME"
 # Change password
