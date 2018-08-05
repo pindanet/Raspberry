@@ -77,3 +77,37 @@ printf "\033[1;37;40mScan Bluetooth devices to disable alarm: hcitool scan\n\033
 printf "\033[1;37;40mPut Bluetooth MAC adresses in script with: sudo nano /usr/sbin/PindaNetbluetoothscan.sh\n\033[0m" # Witte letters op zwarte achtergrond
 printf "\033[1;32;40mPress key to secure ssh.\033[0m" # Groene letters op zwarte achtergrond
 read Keypress
+
+# Bluetooth OBEX Push file transfer
+sudo sed -i /etc/systemd/system/dbus-org.bluez.service -e "s/^ExecStart=\/usr\/lib\/bluetooth\/bluetoothd.*/ExecStart=\/usr\/lib\/bluetooth\/bluetoothd -C/"
+sudo systemctl daemon-reload
+sudo systemctl restart bluetooth.service
+
+cat > obexpush.service <<EOF
+[Unit]
+Description=OBEX Push service
+After=bluetooth.service
+Requires=bluetooth.service
+
+[Service]
+ExecStart=/usr/bin/obexpushd -B23 -o /bluetooth -n
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo mv obexpush.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable obexpush.service
+sudo systemctl start obexpush.service
+
+printf "\033[1;37;40mActivate Bluetooth discovery on Controller with: sudo hciconfig hci0 piscan\n\033[0m" # Witte lette$
+printf "\033[1;32;40mPress key to scan Bluetooth devices.\033[0m" # Groene letters op zwarte achtergrond
+read Keypress
+
+hcitool scan
+read -p "Controller Bluetooth MAC_address: " MAC
+(sleep 5; echo "scan on"; sleep 60; echo "pair $MAC"; sleep 1; echo "trust $MAC"; sleep 1; echo "exit") | sudo bluetoothctl
+
+printf "\033[1;37;40mDeactivate Bluetooth discovery on Controller with: sudo hciconfig hci0 noscan\n\033[0m" # Witte lette$
+printf "\033[1;32;40mPress key to continue.\033[0m" # Groene letters op zwarte achtergrond
+read Keypress
