@@ -109,5 +109,7 @@ read -p "Controller Bluetooth MAC_address: " MAC
 (sleep 5; echo "scan on"; sleep 60; echo "pair $MAC"; sleep 1; echo "trust $MAC"; sleep 1; echo "exit") | sudo bluetoothctl
 
 printf "\033[1;37;40mDeactivate Bluetooth discovery on Controller with: sudo hciconfig hci0 noscan\n\033[0m" # Witte lette$
+printf "\033[1;37;40mSend file on Controller with: sudo obexftp --nopath --noconn --uuid none --bluetooth MAC_address_pialarm --channel 23 -p /home/pi/debug.txt\n\033[0m" # Witte lette$
 printf "\033[1;32;40mPress key to continue.\033[0m" # Groene letters op zwarte achtergrond
 read Keypress
+
