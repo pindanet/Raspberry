@@ -79,6 +79,7 @@ printf "\033[1;32;40mPress key to secure ssh.\033[0m" # Groene letters op zwarte
 read Keypress
 
 # Bluetooth OBEX Push file transfer
+sudo apt install obexpushd -y
 sudo sed -i /etc/systemd/system/dbus-org.bluez.service -e "s/^ExecStart=\/usr\/lib\/bluetooth\/bluetoothd.*/ExecStart=\/usr\/lib\/bluetooth\/bluetoothd -C/"
 sudo systemctl daemon-reload
 sudo systemctl restart bluetooth.service
