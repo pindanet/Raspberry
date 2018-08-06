@@ -114,3 +114,16 @@ printf "\033[1;37;40mSend file on Controller with: sudo obexftp --nopath --nocon
 printf "\033[1;32;40mPress key to continue.\033[0m" # Groene letters op zwarte achtergrond
 read Keypress
 
+# GPIO
+# BCM 23 - 2k2 - PN2222 (B)
+#          Gnd - PN2222 (E)
+#   Buzzer (-) - PN2222 (C)
+#          +5V - Buzzer (+)
+#https://startingelectronics.org/tutorials/arduino/modules/active-buzzer/
+sudo apt install wiringpi -y
+# Test buzzer
+printf "\033[1;37;40mTest Buzzer\n\033[0m" # Witte lette$
+gpio -g mode 23 out
+gpio -g write 23 1
+sleep 1
+gpio -g write 23 0
