@@ -26,6 +26,8 @@ if [ $HOSTNAME != $NEW_HOSTNAME ]; then
   sudo raspi-config nonint do_ssh 0
 # Enable camera
   sudo raspi-config nonint do_camera 0
+# Enable i2c
+  sudo raspi-config nonint do_i2c 0
 # Upgrade
   sudo apt update
   sudo apt dist-upgrade -y
@@ -136,3 +138,13 @@ gpio -g write 23 0
 printf "\033[1;37;40mRelais Off\n\033[0m" # Witte lette$
 gpio -g mode 16 out
 gpio -g write 16 1
+
+# BME280 I2C Temperature and Pressure Sensor
+# 3v3 - Vin
+# Gnd - Gnd
+# BCM 3 (SCL) - SCK
+# BCM 2 (SDA) - SDI
+sudo apt install python-pip python-smbus -y
+sudo pip install bme280 
+printf "\033[1;37;40mTest BME280 I2C\n\033[0m" # Witte lette$
+read_bme280 --i2c-address 0x77
