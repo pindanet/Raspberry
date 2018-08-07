@@ -115,6 +115,7 @@ printf "\033[1;32;40mPress key to continue.\033[0m" # Groene letters op zwarte a
 read Keypress
 
 # GPIO
+# Buzzer
 # BCM 23 - 2k2 - PN2222 (B)
 #          Gnd - PN2222 (E)
 #   Buzzer (-) - PN2222 (C)
@@ -127,3 +128,11 @@ gpio -g mode 23 out
 gpio -g write 23 1
 sleep 1
 gpio -g write 23 0
+
+# Relais BTE13
+# BCM 16 - In1
+#     5v - Vcc
+#    Gnd - Gnd
+printf "\033[1;37;40mRelais Off\n\033[0m" # Witte lette$
+gpio -g mode 16 out
+gpio -g write 16 1
