@@ -132,7 +132,7 @@ sleep 1
 gpio -g write 23 0
 
 # Relais BTE13
-# BCM 16 - In1
+# BCM 16 - In1 (white)
 #     5v - Vcc
 #    Gnd - Gnd
 printf "\033[1;37;40mRelais Off\n\033[0m" # Witte lette$
@@ -142,9 +142,9 @@ gpio -g write 16 1
 # BME280 I2C Temperature and Pressure Sensor
 # 3v3 - Vin
 # Gnd - Gnd
-# BCM 3 (SCL) - SCK
-# BCM 2 (SDA) - SDI
+# BCM 3 (SCL) - SCK (White)
+# BCM 2 (SDA) - SDI (Brown)
 sudo apt install python-pip python-smbus -y
-sudo pip install bme280 
+sudo pip install bme280
 printf "\033[1;37;40mTest BME280 I2C\n\033[0m" # Witte lette$
 read_bme280 --i2c-address 0x77
