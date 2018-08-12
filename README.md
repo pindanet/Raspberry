@@ -297,17 +297,30 @@ iface br0 inet dhcp
     sudo systemctl start obexpush.service
 
 ### Pair Bluetooth Raspberry Pi's
-    # Check paired devices
+#### Remove previous pairings between both Raspberry Pi's.
+
     sudo bluetoothctl
     paired-devices
-Remove paired device
-
     remove MAC-address
-Make discoverable
+#### Make first Raspberry Pi discoverable
 
+    sudo bluetoothctl
     discoverable on
-Remove previous pairings between both Raspberry Pi's
-Make one Raspberry Pi discoverable.
+Do not exit bluetoothctl to follow the pairing
+#### Pair second Raspberry Pi
+
+    sudo bluetoothctl
+    scan on
+    agent on
+    default-agent
+    pair MAC-address
+    trust MAC-address
+    info MAC-address
+    exit
+#### Bluetooth Service information
+
+    sdptool browse XX:XX:XX:XX:XX:XX
+    
 
 printf "\033[1;37;40mActivate Bluetooth discovery on Controller with: sudo hciconfig hci0 piscan\n\033[0m" # Witte lette$
 printf "\033[1;32;40mPress key to scan Bluetooth devices.\033[0m" # Groene letters op zwarte achtergrond
