@@ -271,3 +271,53 @@ iface br0 inet dhcp
 --> 
     sudo apt-get install ffmpeg
     raspivid -o - -t 0 -fps 30 -b 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://a.rtmp.youtube.com/live2/<SESSIE>
+
+## Bluetooth OBEX Push file transfer
+### Bluetooth Raspberry Pi Receiver
+    sudo apt install obexpushd -y
+    sudo sed -i /etc/systemd/system/dbus-org.bluez.service -e "s/^ExecStart=\/usr\/lib\/bluetooth\/bluetoothd.*/ExecStart=\/usr\/lib\/bluetooth\/bluetoothd -C/"
+    sudo systemctl daemon-reload
+    sudo systemctl restart bluetooth.service
+
+    sudo mkdir -p /var/www/html/data/bluetooth
+
+    cat > obexpush.service <<EOF
+    [Unit]
+    Description=OBEX Push service
+    After=bluetooth.service
+    Requires=bluetooth.service
+    [Service]
+    ExecStart=/usr/bin/obexpushd -B23 -o /var/www/html/data/bluetooth -n
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+    sudo mv obexpush.service /etc/systemd/system/
+    sudo systemctl daemon-reload
+    sudo systemctl enable obexpush.service
+    sudo systemctl start obexpush.service
+
+### Pair Bluetooth Raspberry Pi's
+    # Check paired devices
+    sudo bluetoothctl
+    paired-devices
+Remove paired device
+
+    remove MAC-address
+Make discoverable
+
+    discoverable on
+Remove previous pairings between both Raspberry Pi's
+Make one Raspberry Pi discoverable.
+
+printf "\033[1;37;40mActivate Bluetooth discovery on Controller with: sudo hciconfig hci0 piscan\n\033[0m" # Witte lette$
+printf "\033[1;32;40mPress key to scan Bluetooth devices.\033[0m" # Groene letters op zwarte achtergrond
+read Keypress
+
+hcitool scan
+read -p "Controller Bluetooth MAC_address: " MAC
+(sleep 5; echo "scan on"; sleep 60; echo "pair $MAC"; sleep 1; echo "trust $MAC"; sleep 1; echo "exit") | sudo bluetoothctl
+
+printf "\033[1;37;40mDeactivate Bluetooth discovery on Controller with: sudo hciconfig hci0 noscan\n\033[0m" # Witte lette$
+printf "\033[1;37;40mSend file on Controller with: sudo obexftp --nopath --noconn --uuid none --bluetooth MAC_address_pialarm --channel 23 -p /home/pi/debug.txt\n\033[0m" # Witte lette$
+printf "\033[1;32;40mPress key to continue.\033[0m" # Groene letters op zwarte achtergrond
+read Keypress
