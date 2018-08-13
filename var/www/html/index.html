@@ -324,7 +324,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
         };
         xhrthermometer.send();
 
-        startTimer = setTimeout(thermometer, 300000); // herhaal elke 5 min
+        startTimer = setTimeout(thermometer, 60000); // herhaal elke 1 min
         event.stopPropagation();
       }
       function weather(event) {
