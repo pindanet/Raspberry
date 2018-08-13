@@ -321,5 +321,5 @@ Do not exit bluetoothctl to follow the pairing
 
     sdptool browse XX:XX:XX:XX:XX:XX
 ### Send file to Raspberry Pi Bluetooth receiver
-    sudo obexftp --nopath --noconn --uuid none --bluetooth MAC_address_pialarm --channel 23 -p /home/pi/debug.txt
+    sudo obexftp --nopath --noconn --uuid none --bluetooth MAC_address --channel 23 -p /home/pi/debug.txt
 You can not overwrite existing files.
