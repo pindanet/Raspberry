@@ -61,7 +61,7 @@ printf '\033[1;37;40mOn the domotica controller: ssh-copy-id -i ~/.ssh/id_rsa.pu
 printf '\033[1;32;40mPress key to secure ssh.\033[0m' # Groene letters op zwarte achtergrond
 read Keypress
 
-#sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
+sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
 # Upgrade
 sudo apt-get update
@@ -108,7 +108,7 @@ sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/random_pic.php
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/nocursor.gif
 #sudo wget -P /var/www/html https://raw.githubusercontent.com/mourner/suncalc/master/suncalc.js
-sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getjson.php
+sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getPresHumiTemp.php
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getluminance.php
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/curl.php
 sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/genkeys.php
