@@ -95,8 +95,9 @@ function changeBackground() {
       resp = JSON.parse(this.responseText);
       luminance = resp.luminance;
       range = resp.max - resp.min;
-      opacity = ((resp.max - luminance) / (range/0.8)) + 0.1;
-      document.getElementById("luminance").innerHTML = "Min: " + resp.min + " Max: " + resp.max + " Range: " + range + " Lum: " + luminance + " Opa: " + opacity;
+//      opacity = ((resp.max - luminance) / (range/0.8)) + 0.1;
+      opacity = 0;
+//      document.getElementById("luminance").innerHTML = "Min: " + resp.min + " Max: " + resp.max + " Range: " + range + " Lum: " + luminance + " Opa: " + opacity;
       document.getElementById("redshift").style.opacity = opacity;
     }
   };
@@ -124,15 +125,16 @@ function checkTime(i) {
       
 setInterval(function() {  // get info from other Raspberry Pi with thermostat
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', "getjson.php", true);
+  xhr.responseType = 'text';
+  xhr.open('POST', "getPresHumiTemp.php", true);
   xhr.onload = function(e) {
     if (this.status == 200) {
-      thermostat = JSON.parse(atob(this.responseText));
-      document.getElementById("temperature").innerHTML = "&#x1f321;" + parseFloat(thermostat[7].roomtemp).toFixed(1) + " °C";
+      var PresHumiTemp = this.responseText.split('\n');
+      document.getElementById("temperature").innerHTML = "&#x1f321;" + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C";
     }
   };
   xhr.send();
-}, 300000); // every 5 minutes
+}, 60000); // every 1 minute
 
 setInterval(function() {  // get info from remote control
   var xhr = new XMLHttpRequest();
@@ -161,8 +163,8 @@ setInterval(function() {  // get info from remote control
   <td id="date">Donderdag, 31 december 2018</td>
   <td id="time">12:00</td>
   <td id="temperature">&#x1f321; 20 °C</td>
-  <td id="wap">&#x1F4F6;</td>
-  <td id="luminance">-0</td>
+  <!--td id="wap">&#x1F4F6;</td-->
+  <!--td id="luminance">-0</td-->
   </tr>
 </table>
 <iframe id="weather" scrolling="no" width="179" height ="61" frameborder="0" marginwidth="0" marginheight="0" src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=1&type=8&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
