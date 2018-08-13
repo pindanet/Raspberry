@@ -318,9 +318,7 @@ Helderheid display automatisch regelen via lichtmeting met camera
         xhrthermometer.onload = function(e) {
           if (this.status == 200) {
             var PresHumiTemp = this.responseText.split('\n');
-            console.log(PresHumiTemp);
-            console.log(this.responseText);
-            document.getElementById("content").innerHTML = "<span id=\"temp\">" + parseFloat(PresHumiTemp[2]) + " °C</span><br><span id=\"date\">Luchtdruk: " + PresHumiTemp[0] + " Vochtigheid: " + PresHumiTemp[1] + "</span>";
+            document.getElementById("content").innerHTML = "<span id=\"temp\">" + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C</span><br><span id=\"date\">Luchtdruk: " + PresHumiTemp[0] + " Vochtigheid: " + PresHumiTemp[1] + "</span>";
             centerContent();
           }
         };
