@@ -147,7 +147,13 @@ Based on: https://www.hackster.io/4803/i2c-port-expander-sample-0a6d4f
 ## Weather forecast
     sudo apt-get install libxml2-utils
     sudo chmod +x /var/www/html/forecast.sh
-## Bluetooth Detection
+## Controller state
+    sudo chmod +x /usr/sbin/PindaNetState.sh
+    sudo systemctl daemon-reload
+    sudo systemctl enable PindaNetState.timer
+    sudo systemctl start PindaNetState.timer
+    systemctl list-timers
+## Bluetooth Detection (moved to Alarm Raspberry Pi)
 ### Bluetooth SmartPhone or Nokia Steel Watch
     sudo chmod +x /usr/sbin/bluetoothscan.sh
     sudo systemctl daemon-reload
