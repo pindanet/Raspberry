@@ -323,3 +323,11 @@ Do not exit bluetoothctl to follow the pairing
 ### Send file to Raspberry Pi Bluetooth receiver
     sudo obexftp --nopath --noconn --uuid none --bluetooth MAC_address --channel 23 -p /home/pi/debug.txt
 You can not overwrite existing files.
+#### Move received Bluetooth files with incron
+    sudo apt install incron
+    sudo systemctl start incron
+    sudo systemctl enable incron
+    echo root | sudo tee /etc/incron.allow
+    sudo incrontab -e
+    
+    /var/www/html/data/bluetooth IN_CLOSE_WRITE /bin/mv $@/$# /var/www/html/data/$#
