@@ -313,14 +313,14 @@ Helderheid display automatisch regelen via lichtmeting met camera
       }
       function thermometer(event) {
         var xhrthermometer = new XMLHttpRequest();
-        xhrthermometer.open('POST', "data/bme280.json", true);
+        xhrthermometer.responseType = 'text';
+        xhrthermometer.open('POST', "data/PresHumiTemp", true);
         xhrthermometer.onload = function(e) {
           if (this.status == 200) {
-            var jsonObj = JSON.parse(this.responseText);
-            var temp = Math.round(jsonObj.temperature * 10) / 10;
-            var pres = Math.round(jsonObj.pressure);
-            var humi = Math.round(jsonObj.humidity);
-            document.getElementById("content").innerHTML = "<span id=\"temp\">" + temp + " °C</span><br><span id=\"date\">Luchtdruk: " + pres + " hPa Vochtigheid: " + humi + " %</span>";
+            var PresHumiTemp = this.responseText.split('\n');
+            console.log(PresHumiTemp);
+            console.log(this.responseText);
+            document.getElementById("content").innerHTML = "<span id=\"temp\">" + parseFloat(PresHumiTemp[2]) + " °C</span><br><span id=\"date\">Luchtdruk: " + PresHumiTemp[0] + " Vochtigheid: " + PresHumiTemp[1] + "</span>";
             centerContent();
           }
         };
@@ -729,10 +729,10 @@ loadThermostat();
         event.stopPropagation();
       }
       function system(event) {
-        if (encryptedPIN == "") {
-          callback=system;
-          enterPIN(event);
-        } else {
+//        if (encryptedPIN == "") {
+//          callback=system;
+//          enterPIN(event);
+//        } else {
           var xhr = new XMLHttpRequest();
           xhr.open('POST', "system.php", true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -746,7 +746,7 @@ loadThermostat();
           document.getElementById("content").innerHTML = '<pre class="terminalbox">Even geduld...</pre>';
           centerContent();
           event.stopPropagation();
-        }
+//        }
       }
       function fotokader(event) {
         background();
