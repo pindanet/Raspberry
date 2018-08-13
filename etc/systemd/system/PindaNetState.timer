@@ -1,8 +1,8 @@
 [Unit]
-Description=Bluetooth Detection Scan
+Description=Controller state        
 [Timer]
 OnBootSec=1min
 OnUnitActiveSec=1min
-Unit=PindaNetBluetoothScan.service
+Unit=PindaNetState.service
 [Install]
 WantedBy=multi-user.target
