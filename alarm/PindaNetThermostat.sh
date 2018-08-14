@@ -11,12 +11,23 @@ heating () {
   fi
 }
 
+if [ $(cat /var/PindaNet/heating) == "on" ]; then
+  heating on "manual"
+  exit
+elif [ $(cat /var/PindaNet/heating) == "off" ]; then
+  heating off "manual"
+  exit
+fi
+
 if [ ! -f /var/PindaNet/thermostat ]; then
   cat > /var/PindaNet/thermostat <<EOF
-0;08:00;20.00 0;10:45;21.00 0;21:40;15.00 \
-1;07:00;20.00 \
-3;23:59;15.00 \
-4;07:30;20.00
+0;09:30;20.00 0;21:25;-off- \
+1;09:30;20.00 1;21:25;-off- \
+2;09:30;20.00 2;21:25;-off- \
+3;09:30;20.00 3;21:25;-off- \
+4;09:30;20.00 4;21:25;-off- \
+5;09:30;20.00 5;21:25;-off- \
+6;09:30;20.00 6;21:25;-off-
 EOF
 fi
 thermostat=`cat /var/PindaNet/thermostat`
@@ -42,10 +53,8 @@ done
 temp=$(tail -1 /var/PindaNet/PresHumiTemp)
 temp=${temp%% C*}
 
-if [ $(cat /var/PindaNet/heating) == "on" ]; then
-  heating on "manual"
-elif [ $(cat /var/PindaNet/heating) == "off" ]; then
-  heating off "manual"
+if [ "$thermostatTemp" == "-off-" ]; then
+  heating off "auto"
 else
   if [[ "$temp" < $thermostatTemp ]]; then
     heating on "auto ($temp)"
