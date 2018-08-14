@@ -35,7 +35,7 @@ weekday=$(date +%u)
 ((weekday--))
 now=$(date +%H:%M)
 
-thermostatTemp=${thermostat: -4}
+thermostatTemp=${thermostat: -5}
 
 data=${thermostat:0:13}
 thermostat=${thermostat: 14}
