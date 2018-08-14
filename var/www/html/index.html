@@ -731,6 +731,8 @@ loadThermostat();
 //          callback=system;
 //          enterPIN(event);
 //        } else {
+          document.getElementById("content").innerHTML = '<pre class="terminalbox">Even geduld...</pre>';
+          centerContent();
           var xhr = new XMLHttpRequest();
           xhr.open('POST', "system.php", true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -741,8 +743,6 @@ loadThermostat();
             }
           };
           xhr.send("encpin=" + encryptedPIN + "&command=system");
-          document.getElementById("content").innerHTML = '<pre class="terminalbox">Even geduld...</pre>';
-          centerContent();
           event.stopPropagation();
 //        }
       }
