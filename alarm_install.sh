@@ -66,7 +66,7 @@ EOF
 sudo mv PindaNetBluetoothScan.service /etc/systemd/system/
 
 sudo mkdir -p /var/PindaNet
-sudo touch /var/PindaNet/bluetoothscandebug.txt
+sudo touch /var/PindaNet/debug.txt
 sudo wget --output-document=/usr/sbin/PindaNetbluetoothscan.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/alarm/PindaNetbluetoothscan.sh
 sudo chmod +x /usr/sbin/PindaNetbluetoothscan.sh
 
@@ -86,6 +86,7 @@ sudo sed -i /etc/systemd/system/dbus-org.bluez.service -e "s/^ExecStart=\/usr\/l
 sudo systemctl daemon-reload
 sudo systemctl restart bluetooth.service
 
+sudo mkdir /bluetooth
 cat > obexpush.service <<EOF
 [Unit]
 Description=OBEX Push service
@@ -148,3 +149,33 @@ sudo apt install python-pip python-smbus -y
 sudo pip install bme280
 printf "\033[1;37;40mTest BME280 I2C\n\033[0m" # Witte lette$
 read_bme280 --i2c-address 0x77
+
+# Thermostat
+cat > PindaNetThermostat.timer <<EOF
+[Unit]
+Description=Thermostat
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+Unit=PindaNetThermostat.service
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo mv PindaNetThermostat.timer /etc/systemd/system/
+
+cat > PindaNetThermostat.service <<EOF
+[Unit]
+Description=Thermostat
+[Service]
+Type=simple
+ExecStart=/usr/sbin/PindaNetThermostat.sh
+EOF
+sudo mv PindaNetThermostat.service /etc/systemd/system/
+
+sudo wget --output-document=/usr/sbin/PindaNetThermostat.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/alarm/PindaNetThermostat.sh
+sudo chmod +x /usr/sbin/PindaNetThermostat.sh
+
+sudo systemctl daemon-reload
+sudo systemctl enable PindaNetThermostat.timer
+sudo systemctl start PindaNetThermostat.timer
+#systemctl list-timers
