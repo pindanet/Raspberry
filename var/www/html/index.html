@@ -468,11 +468,14 @@ var thermostat = "";
 loadThermostat();
       function saveThermostat() {
       // sorteer op tijd
+      thermostat.sort();
+/*
         for (var day = 0; day < 7; day++) {
           thermostat[day].sort(function(a,b) {
             return a.time > b.time;
           });
         }
+*/
 /*
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "bash.sh", true);
@@ -492,8 +495,8 @@ loadThermostat();
             getThermostatTemp();
           }
         };
-        xhr.send("command=saveThermostat&json=" + btoa(JSON.stringify(thermostat)));
-
+//        xhr.send("command=saveThermostat&json=" + btoa(JSON.stringify(thermostat)));
+        xhr.send("command=saveThermostat&json=" + btoa(thermostat));
       }
       function exportThermostat(event) {
         window.open("exportthermostat.sh");
@@ -501,6 +504,7 @@ loadThermostat();
       }
       function loadThermostat() {
         var xhr = new XMLHttpRequest();
+ /*       
         xhr.open('POST', "thermostat.php", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
@@ -509,6 +513,17 @@ loadThermostat();
             }
             if (window.location.hostname == "localhost") { // enkel lokaal
               thermostatTimer = setTimeout(loadThermostat, 300000);
+            }
+          }
+        };
+*/
+        xhr.responseType = 'text';
+        xhr.open('POST', "data/thermostat", true);
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            if (thermostat == "") {
+              var raw = this.responseText;
+              thermostat = raw.split(" ");
             }
           }
         };
@@ -587,11 +602,15 @@ loadThermostat();
       }
       function getThermostatTemp() {
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', "thermostat.php", true);
+//        xhr.open('POST', "thermostat.php", true);
+        xhr.responseType = 'text';
+        xhr.open('POST', "data/thermostat", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
-            thermostat = JSON.parse(atob(this.responseText));
-            
+//            thermostat = JSON.parse(atob(this.responseText));
+            var raw = this.responseText;
+            thermostat = raw.split(" ");
+/*
             tableel='<table style="width:790px">';
             tableel+='<tr>';
             for (var day = 0; day < 7; day++) {
@@ -645,6 +664,106 @@ loadThermostat();
               document.getElementById("offThermostat").style = "";
             }
             document.getElementById("roomTemp").innerHTML = "Kamertemp: " + thermostat[7].roomtemp + " °C";
+*/
+            tableel='<table style="width:790px">';
+            tableel+='<tr>';
+            for (var day = 0; day < 7; day++) {
+              tableel += '<th>' + dayNames[day] + '</th>';
+            }
+            tableel+='</tr>';
+            timetemp=0;
+            timetempvalues=true;
+            dayValues = [true, true, true, true, true, true, true];
+            while (timetempvalues) {
+              timetempvalues=false;
+              tableel+='<tr>';
+              for (var day = 0; day < 7; day++) {
+                var occurred = 0;
+                for (var item = 0; item <= thermostat.length; item++) {
+                  if (typeof thermostat[item] === 'undefined') {
+                    if (dayValues[day] && day == 6) {
+                      tableel += '<td><button onclick="addTimeTemp(event,-1);">++:++ ++°C</button></td>';
+                    }
+                    dayValues[day] = false;
+                    break;
+                  } else if (thermostat[item].substring(0,1) == day) {
+                    if (occurred == timetemp) {
+                      tableel+='<td><button onclick="setThermostat(event,' + item + ');">' + thermostat[item].substring(2,7) + ' ' + thermostat[item].substring(8,13) + ' °C</button></td>';
+                      timetempvalues=true;
+                      break;
+                    }
+                    occurred++;
+                  } else if (thermostat[item].substring(0,1) > day) {
+                    if (dayValues[day]) {
+                      tableel += '<td><button onclick="addTimeTemp(event,-1);">++:++ ++°C</button></td>';
+                    }
+                    dayValues[day] = false;
+                    break;
+                  }
+                }
+              }
+              tableel+='</tr>';
+              timetemp++;
+            }
+/*
+            timetemp=0;
+            timetempvalues=true;
+            while (timetempvalues) {
+              timetempvalues=false;
+              tableel+='<tr>';
+            for (var day = 0; day < 7; day++) {
+                if (typeof thermostat[day][timetemp] !== 'undefined') {
+                  tableel += '<td><button onclick="setThermostat(event,' + day + ',' + timetemp + ');">' + thermostat[day][timetemp].time + ' ' + thermostat[day][timetemp].temp + '°C</button></td>';
+                  timetempvalues=true;
+                } else if (typeof thermostat[day][timetemp - 1] !== 'undefined' || timetemp == 0) {
+                    tableel += '<td><button onclick="addTimeTemp(event,' + day + ',' + timetemp + ');">++:++ ++°C</button></td>';
+                } else {
+                  tableel += '<td></td>';
+                }
+              }
+              tableel+='<tr>';
+              timetemp++;
+            }
+*/
+            tableel+='<tr><td colspan="7">';
+            tableel+=' <button id="onThermostat" onclick="onThermostat(event);">Aan</button>';
+            tableel+=' <button id="offThermostat" onclick="offThermostat(event);">Uit</button>';
+            tableel+=' <button id="autoThermostat" onclick="autoThermostat(event);">Auto</button>';
+            tableel+=' <span class="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
+            tableel+=' <span class="terminalbox"><span id="roomTemp">Kamertemp: 5 °C</span></span>';
+            tableel+=' <button id="resetThermostat" onclick="resetThermostat(event);">Reset</button>';
+            tableel+=' <button title="Opslaan" onclick="exportThermostat(event);">&DownArrowBar;</button>';
+            tableel+=' <button title="Laden" onclick="importThermostat(event);">&UpArrowBar;</button>';
+            tableel+='</td></tr>';
+            tableel+='</table>';
+            document.getElementById("content").innerHTML = tableel;
+            centerContent();
+            var xhrHeating = new XMLHttpRequest();
+            xhrHeating.responseType = 'text';
+            xhrHeating.open('POST', "data/heating", true);
+            xhrHeating.onload = function(e) {
+              if (this.status == 200) {
+                var heating = this.responseText.slice(0, -1);
+                if (heating == "off") {
+                  document.getElementById("autoThermostat").style = "color: black;";
+                  document.getElementById("onThermostat").style = "color: black;";
+                  document.getElementById("offThermostat").style = "";
+                  document.getElementById("thermostatTemp").innerHTML = "Regeltemp: -- °C";
+                } else if (heating == "on") {
+                  document.getElementById("autoThermostat").style = "color: black;";
+                  document.getElementById("onThermostat").style = "";
+                  document.getElementById("offThermostat").style = "color: black;";
+                  document.getElementById("thermostatTemp").innerHTML = "Regeltemp: -- °C";
+                } else {
+                  document.getElementById("autoThermostat").style = "";
+                  document.getElementById("onThermostat").style = "color: black;";
+                  document.getElementById("offThermostat").style = "color: black;";
+//                  document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + thermostat[7].controltemp + " °C";
+                }
+    //                document.getElementById("roomTemp").innerHTML = "Kamertemp: " + thermostat[7].roomtemp + " °C";
+              }
+            };
+            xhrHeating.send();
           }
         };
         xhr.send();
