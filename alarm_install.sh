@@ -117,6 +117,13 @@ printf "\033[1;37;40mSend file on Controller with: sudo obexftp --nopath --nocon
 printf "\033[1;32;40mPress key to continue.\033[0m" # Groene letters op zwarte achtergrond
 read Keypress
 
+# Move received Bluetooth files with incron
+sudo apt install incron -y
+echo root | sudo tee /etc/incron.allow
+echo '/bluetooth IN_CLOSE_WRITE /bin/mv $@/$# /var/PindaNet/$#' | sudo tee /var/spool/incron/root
+sudo systemctl start incron
+sudo systemctl enable incron
+
 # GPIO
 # Buzzer
 # BCM 23 - 2k2 - PN2222 (B)
