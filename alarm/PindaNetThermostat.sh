@@ -20,15 +20,16 @@ elif [ $(cat /var/PindaNet/heating) == "off" ]; then
 fi
 
 if [ ! -f /var/PindaNet/thermostat ]; then
-  cat > /var/PindaNet/thermostat <<EOF
-0;09:30;20.00 0;21:25;-off- \
-1;09:30;20.00 1;21:25;-off- \
-2;09:30;20.00 2;21:25;-off- \
-3;09:30;20.00 3;21:25;-off- \
-4;09:30;20.00 4;21:25;-off- \
-5;09:30;20.00 5;21:25;-off- \
-6;09:30;20.00 6;21:25;-off-
-EOF
+#  cat > /var/PindaNet/thermostat <<EOF
+#0;09:30;20.00 0;21:25;-off- \
+#1;09:30;20.00 1;21:25;-off- \
+#2;09:30;20.00 2;21:25;-off- \
+#3;09:30;20.00 3;21:25;-off- \
+#4;09:30;20.00 4;21:25;-off- \
+#5;09:30;20.00 5;21:25;-off- \
+#6;09:30;20.00 6;21:25;-off-
+#EOF
+echo -n "0;09:30;20.00 0;21:25;-off- 1;09:30;20.00 1;21:25;-off- 2;09:30;20.00 2;21:25;-off- 3;09:30;20.00 3;21:25;-off- 4;09:30;20.00 4;21:25;-off- 5;09:30;20.00 5;21:25;-off- 6;09:30;20.00 6;21:25;-off-" > /var/PindaNet/thermostat
 fi
 thermostat=`cat /var/PindaNet/thermostat`
 weekday=$(date +%u)
