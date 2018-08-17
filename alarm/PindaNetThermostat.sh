@@ -4,7 +4,7 @@ heating () {
     gpio -g mode 16 out
     gpio -g write 16 0
     echo "$(date): Heating $2 on" >> /var/PindaNet/debug.txt
-  elif [ $(gpio -g read 16) -eq 0 ]; then
+  elif [ $1 == "off" ] && [ $(gpio -g read 16) -eq 0 ]; then
     gpio -g mode 16 out
     gpio -g write 16 1
     echo "$(date): Heating $2 off" >> /var/PindaNet/debug.txt
