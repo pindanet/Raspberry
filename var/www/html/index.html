@@ -600,6 +600,57 @@ loadThermostat();
         thermostat[day].splice(timetemp, 1);
         weeklyThermostat(event);
       }
+      function displayHeatingThermostat() {
+        var xhrHeating = new XMLHttpRequest();
+        xhrHeating.responseType = 'text';
+        xhrHeating.open('POST', "data/heating", true);
+        xhrHeating.onload = function(e) {
+          if (this.status == 200) {
+            var heating = this.responseText.slice(0, -1);
+            if (heating == "off") {
+              document.getElementById("autoThermostat").style = "color: black;";
+              document.getElementById("onThermostat").style = "color: black;";
+              document.getElementById("offThermostat").style = "";
+              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: -- °C";
+            } else if (heating == "on") {
+              document.getElementById("autoThermostat").style = "color: black;";
+              document.getElementById("onThermostat").style = "";
+              document.getElementById("offThermostat").style = "color: black;";
+              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: -- °C";
+            } else {
+              document.getElementById("autoThermostat").style = "";
+              document.getElementById("onThermostat").style = "color: black;";
+              document.getElementById("offThermostat").style = "color: black;";
+
+              var d = new Date();
+              var weekday = d.getDay();
+              var now = d.toLocaleTimeString().substring(0,5);
+              var thermostatTemp = thermostat[thermostat.length - 1].slice(-5);
+              for (var i in thermostat) {
+                if (thermostat[i].substr(0,1) > weekday) {
+                  break;
+                }
+                if (thermostat[i].substr(2,5) < now) {
+                  thermostatTemp = thermostat[i].slice(-5);
+                }
+              }
+              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + thermostatTemp.substr(0,4) + " °C";
+            }
+            var xhrthermometer = new XMLHttpRequest();
+            xhrthermometer.responseType = 'text';
+            xhrthermometer.open('POST', "data/PresHumiTemp", true);
+            xhrthermometer.onload = function(e) {
+              if (this.status == 200) {
+                var PresHumiTemp = this.responseText.split('\n');
+                document.getElementById("roomTemp").innerHTML = "Kamertemp: " + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C";
+                centerContent();
+              }
+            };
+            xhrthermometer.send();
+          }
+        };
+        xhrHeating.send();
+      }
       function getThermostatTemp() {
         var xhr = new XMLHttpRequest();
 //        xhr.open('POST', "thermostat.php", true);
@@ -607,64 +658,8 @@ loadThermostat();
         xhr.open('POST', "data/thermostat", true);
         xhr.onload = function(e) {
           if (this.status == 200) {
-//            thermostat = JSON.parse(atob(this.responseText));
             var raw = this.responseText;
             thermostat = raw.split(" ");
-/*
-            tableel='<table style="width:790px">';
-            tableel+='<tr>';
-            for (var day = 0; day < 7; day++) {
-              tableel += '<th>' + dayNames[day] + '</th>';
-            }
-            tableel+='</tr>';
-            timetemp=0;
-            timetempvalues=true;
-            while (timetempvalues) {
-              timetempvalues=false;
-              tableel+='<tr>';
-            for (var day = 0; day < 7; day++) {
-                if (typeof thermostat[day][timetemp] !== 'undefined') {
-                  tableel += '<td><button onclick="setThermostat(event,' + day + ',' + timetemp + ');">' + thermostat[day][timetemp].time + ' ' + thermostat[day][timetemp].temp + '°C</button></td>';
-                  timetempvalues=true;
-                } else if (typeof thermostat[day][timetemp - 1] !== 'undefined' || timetemp == 0) {
-                    tableel += '<td><button onclick="addTimeTemp(event,' + day + ',' + timetemp + ');">++:++ ++°C</button></td>';
-                } else {
-                  tableel += '<td></td>';
-                }
-              }
-              tableel+='<tr>';
-              timetemp++;
-            }
-            tableel+='<tr><td colspan="7">';
-            tableel+=' <button id="onThermostat" onclick="onThermostat(event);">Aan</button>';
-            tableel+=' <button id="offThermostat" onclick="offThermostat(event);">Uit</button>';
-            tableel+=' <button id="autoThermostat" onclick="autoThermostat(event);">Auto</button>';
-            tableel+=' <span class="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
-            tableel+=' <span class="terminalbox"><span id="roomTemp">Kamertemp: 5 °C</span></span>';
-            tableel+=' <button id="resetThermostat" onclick="resetThermostat(event);">Reset</button>';
-            tableel+=' <button title="Opslaan" onclick="exportThermostat(event);">&DownArrowBar;</button>';
-            tableel+=' <button title="Laden" onclick="importThermostat(event);">&UpArrowBar;</button>';
-            tableel+='</td></tr>';
-            tableel+='</table>';
-            document.getElementById("content").innerHTML = tableel;
-            centerContent();
-
-            if (thermostat[7].manual == "Off") {
-              document.getElementById("autoThermostat").style = "color: black;";
-              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + thermostat[7].controltemp + " °C";
-            } else {
-              document.getElementById("autoThermostat").style = "";
-              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: -- °C";
-            }
-            if (thermostat[7].heating == "Off") {
-              document.getElementById("offThermostat").style = "color: black;";
-              document.getElementById("onThermostat").style = "";
-            } else {
-              document.getElementById("onThermostat").style = "color: black;";
-              document.getElementById("offThermostat").style = "";
-            }
-            document.getElementById("roomTemp").innerHTML = "Kamertemp: " + thermostat[7].roomtemp + " °C";
-*/
             tableel='<table style="width:790px">';
             tableel+='<tr>';
             for (var day = 0; day < 7; day++) {
@@ -688,7 +683,11 @@ loadThermostat();
                     break;
                   } else if (thermostat[item].substring(0,1) == day) {
                     if (occurred == timetemp) {
-                      tableel+='<td><button onclick="setThermostat(event,' + item + ');">' + thermostat[item].substring(2,7) + ' ' + thermostat[item].substring(8,13) + ' °C</button></td>';
+                      var timeTemp = thermostat[item].substring(8,12) + ' °C';
+                      if (thermostat[item].substring(8,13) == "-off-") {
+                        timeTemp = "Uit";
+                      }
+                      tableel+='<td><button onclick="setThermostat(event,' + item + ');">' + thermostat[item].substring(2,7) + ' ' + timeTemp + '</button></td>';
                       timetempvalues=true;
                       break;
                     }
@@ -738,61 +737,47 @@ loadThermostat();
             tableel+='</table>';
             document.getElementById("content").innerHTML = tableel;
             centerContent();
-            var xhrHeating = new XMLHttpRequest();
-            xhrHeating.responseType = 'text';
-            xhrHeating.open('POST', "data/heating", true);
-            xhrHeating.onload = function(e) {
-              if (this.status == 200) {
-                var heating = this.responseText.slice(0, -1);
-                if (heating == "off") {
-                  document.getElementById("autoThermostat").style = "color: black;";
-                  document.getElementById("onThermostat").style = "color: black;";
-                  document.getElementById("offThermostat").style = "";
-                  document.getElementById("thermostatTemp").innerHTML = "Regeltemp: -- °C";
-                } else if (heating == "on") {
-                  document.getElementById("autoThermostat").style = "color: black;";
-                  document.getElementById("onThermostat").style = "";
-                  document.getElementById("offThermostat").style = "color: black;";
-                  document.getElementById("thermostatTemp").innerHTML = "Regeltemp: -- °C";
-                } else {
-                  document.getElementById("autoThermostat").style = "";
-                  document.getElementById("onThermostat").style = "color: black;";
-                  document.getElementById("offThermostat").style = "color: black;";
-//                  document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + thermostat[7].controltemp + " °C";
-                }
-                var xhrthermometer = new XMLHttpRequest();
-                xhrthermometer.responseType = 'text';
-                xhrthermometer.open('POST', "data/PresHumiTemp", true);
-                xhrthermometer.onload = function(e) {
-                  if (this.status == 200) {
-                    var PresHumiTemp = this.responseText.split('\n');
-                    document.getElementById("roomTemp").innerHTML = "Kamertemp: " + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C";
-                    centerContent();
-                  }
-                };
-                xhrthermometer.send();
-              }
-            };
-            xhrHeating.send();
+            displayHeatingThermostat();
           }
         };
         xhr.send();
       }
       function autoThermostat(event) {
-        thermostat[7].manual="Off";
-        saveThermostat();
+        sendBT("heating","auto", function(e) {
+          if (this.status == 200) {
+            displayHeatingThermostat();
+            centerContent();
+            event.stopPropagation();
+          }
+        });
         event.stopPropagation();
       }
+      function sendBT(filename, value, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        xhr.open('POST', "sendBT.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = callback;
+        xhr.send("file=" + filename + "&value=" + value);
+      }
       function onThermostat(event) {
-        thermostat[7].manual="On";
-        thermostat[7].heating="On";
-        saveThermostat();
+        sendBT("heating","on", function(e) {
+          if (this.status == 200) {
+            displayHeatingThermostat();
+            centerContent();
+            event.stopPropagation();
+          }
+        });
         event.stopPropagation();
       }
       function offThermostat(event) {
-        thermostat[7].manual="On";
-        thermostat[7].heating="Off";
-        saveThermostat();
+        sendBT("heating","off", function(e) {
+          if (this.status == 200) {
+            displayHeatingThermostat();
+            centerContent();
+            event.stopPropagation();
+          }
+        });
         event.stopPropagation();
       }
       function resetThermostat(event) {
