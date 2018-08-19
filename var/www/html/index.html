@@ -760,7 +760,17 @@ loadThermostat();
                   document.getElementById("offThermostat").style = "color: black;";
 //                  document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + thermostat[7].controltemp + " °C";
                 }
-    //                document.getElementById("roomTemp").innerHTML = "Kamertemp: " + thermostat[7].roomtemp + " °C";
+                var xhrthermometer = new XMLHttpRequest();
+                xhrthermometer.responseType = 'text';
+                xhrthermometer.open('POST', "data/PresHumiTemp", true);
+                xhrthermometer.onload = function(e) {
+                  if (this.status == 200) {
+                    var PresHumiTemp = this.responseText.split('\n');
+                    document.getElementById("roomTemp").innerHTML = "Kamertemp: " + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C";
+                    centerContent();
+                  }
+                };
+                xhrthermometer.send();
               }
             };
             xhrHeating.send();
