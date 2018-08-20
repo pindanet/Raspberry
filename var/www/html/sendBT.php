@@ -8,7 +8,9 @@ $file = htmlspecialchars($_POST["file"]);
 //var_dump($command);
 //file_put_contents('data/debug', ob_get_flush());
 
-file_put_contents("/var/www/html/data/" . $file, $value . "\n");
+if( "$value" != "-1") {
+  file_put_contents("/var/www/html/data/" . $file, $value . "\n");
+}
 
 exec("/usr/bin/obexftp --bluetooth " . $BTController . " --channel 23 -p /var/www/html/data/" . $file, $output, $return);
 //foreach ($output as $line) {
