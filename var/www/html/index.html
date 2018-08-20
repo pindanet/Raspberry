@@ -598,7 +598,7 @@ loadThermostat();
           <input type="text" size="5" id="settemp" onchange="outputUpdate(event,value,'settemp',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + temp + `"> °C
           <input class="inline" type="range" orient="vertical" min="0" max="24" step=".05" oninput="outputUpdate(event,value,'settemp',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + temp + `">
 
-          <button onclick="delTimeTemp(event,` + day + `,` + item + `);">&mdash;</button></div>`;
+          <button onclick="delTimeTemp(event,` + item + `);">&mdash;</button></div>`;
           event.stopPropagation();
       }
       function addTimeTemp(event, day) {
@@ -606,8 +606,8 @@ loadThermostat();
         weeklyThermostat(event);
         event.stopPropagation();
       }
-      function delTimeTemp(event,day, timetemp) {
-        thermostat[day].splice(timetemp, 1);
+      function delTimeTemp(event, item) {
+        thermostat.splice(item, 1);
         weeklyThermostat(event);
       }
       function displayHeatingThermostat() {
@@ -639,8 +639,9 @@ loadThermostat();
               for (var i in thermostat) {
                 if (thermostat[i].substr(0,1) > weekday) {
                   break;
-                }
-                if (thermostat[i].substr(2,5) < now) {
+                } else if (thermostat[i].substr(0,1) < weekday) {
+                  thermostatTemp = thermostat[i].slice(-5);
+                } else if (thermostat[i].substr(2,5) < now) {
                   thermostatTemp = thermostat[i].slice(-5);
                 }
               }
@@ -736,7 +737,7 @@ loadThermostat();
             tableel+=' <button id="resetThermostat" onclick="resetThermostat(event);">Reset</button>';
             tableel+=' <button title="Opslaan" onclick="exportThermostat(event);">&DownArrowBar;</button>';
             tableel+=' <button title="Laden" onclick="importThermostat(event);">&UpArrowBar;</button>';
-            tableel+=' <button title="Naar thermostaat sturen" onclick="sendThermostat(event);">Send</button>';
+            tableel+=' <button title="Naar thermostaat sturen" onclick="sendThermostat(event,this);">Send</button>';
             tableel+='</td></tr>';
             tableel+='</table>';
             document.getElementById("content").innerHTML = tableel;
@@ -754,9 +755,11 @@ loadThermostat();
         xhr.onload = callback;
         xhr.send("file=" + filename + "&value=" + value);
       }
-      function sendThermostat(event) {
+      function sendThermostat(event, element) {
+        element.style = "color: black;";
         sendBT("thermostat","-1", function(e) {
           if (this.status == 200) {
+            element.style = "";
             event.stopPropagation();
           }
         });
