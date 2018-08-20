@@ -496,10 +496,10 @@ loadThermostat();
           }
         };
 //        xhr.send("command=saveThermostat&json=" + btoa(JSON.stringify(thermostat)));
-        xhr.send("command=saveThermostat&json=" + btoa(thermostat));
+        xhr.send("command=saveThermostat&json=" + btoa(thermostat.join(" ")));
       }
       function exportThermostat(event) {
-        window.open("exportthermostat.sh");
+        window.open("exportthermostat.php");
         event.stopPropagation();
       }
       function loadThermostat() {
@@ -566,7 +566,7 @@ loadThermostat();
       }
       function receivedText(e) {
         lines = e.target.result;
-        thermostat = JSON.parse(lines);
+        thermostat = lines.split(" ");
         weeklyThermostat(e);
       }
 
@@ -591,8 +591,8 @@ loadThermostat();
           <button onclick="delTimeTemp(event,` + day + `,` + timetemp + `);">&mdash;</button></div>`;
           event.stopPropagation();
       }
-      function addTimeTemp(event, day, timetemp) {
-        thermostat[day].push({"time": "23:59", "temp":"15"});
+      function addTimeTemp(event, day) {
+        thermostat.push(day + ";23:59;15.00");
         weeklyThermostat(event);
         event.stopPropagation();
       }
@@ -653,7 +653,6 @@ loadThermostat();
       }
       function getThermostatTemp() {
         var xhr = new XMLHttpRequest();
-//        xhr.open('POST', "thermostat.php", true);
         xhr.responseType = 'text';
         xhr.open('POST', "data/thermostat", true);
         xhr.onload = function(e) {
@@ -671,33 +670,40 @@ loadThermostat();
             dayValues = [true, true, true, true, true, true, true];
             while (timetempvalues) {
               timetempvalues=false;
+              var column = 0;
               tableel+='<tr>';
               for (var day = 0; day < 7; day++) {
                 var occurred = 0;
                 for (var item = 0; item <= thermostat.length; item++) {
                   if (typeof thermostat[item] === 'undefined') {
                     if (dayValues[day] && day == 6) {
-                      tableel += '<td><button onclick="addTimeTemp(event,-1);">++:++ ++°C</button></td>';
+                      tableel += '<td><button onclick="addTimeTemp(event,' + day + ');">++:++ ++°C</button></td>';
+                      column++;
                     }
                     dayValues[day] = false;
                     break;
                   } else if (thermostat[item].substring(0,1) == day) {
                     if (occurred == timetemp) {
-                      var timeTemp = thermostat[item].substring(8,12) + ' °C';
+                      var timeTempValue = thermostat[item].substring(8,12) + ' °C';
                       if (thermostat[item].substring(8,13) == "-off-") {
-                        timeTemp = "Uit";
+                        timeTempValue = "Uit";
                       }
-                      tableel+='<td><button onclick="setThermostat(event,' + item + ');">' + thermostat[item].substring(2,7) + ' ' + timeTemp + '</button></td>';
+                      tableel+='<td><button onclick="setThermostat(event,' + item + ');">' + thermostat[item].substring(2,7) + ' ' + timeTempValue + '</button></td>';
                       timetempvalues=true;
+                      column++;
                       break;
                     }
                     occurred++;
                   } else if (thermostat[item].substring(0,1) > day) {
                     if (dayValues[day]) {
-                      tableel += '<td><button onclick="addTimeTemp(event,-1);">++:++ ++°C</button></td>';
+                      tableel += '<td><button onclick="addTimeTemp(event,' + day + ');">++:++ ++°C</button></td>';
+                      column++;
                     }
                     dayValues[day] = false;
                     break;
+                  } else if (column < day) {
+                    tableel += '<td></td>';
+                    column++;
                   }
                 }
               }
@@ -742,6 +748,14 @@ loadThermostat();
         };
         xhr.send();
       }
+      function sendBT(filename, value, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        xhr.open('POST', "sendBT.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = callback;
+        xhr.send("file=" + filename + "&value=" + value);
+      }
       function autoThermostat(event) {
         sendBT("heating","auto", function(e) {
           if (this.status == 200) {
@@ -751,14 +765,6 @@ loadThermostat();
           }
         });
         event.stopPropagation();
-      }
-      function sendBT(filename, value, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.responseType = 'text';
-        xhr.open('POST', "sendBT.php", true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.onload = callback;
-        xhr.send("file=" + filename + "&value=" + value);
       }
       function onThermostat(event) {
         sendBT("heating","on", function(e) {
@@ -782,37 +788,8 @@ loadThermostat();
       }
       function resetThermostat(event) {
         event.stopPropagation();
-        thermostat = [
-        [
-            {"time":"07:00", "temp":"20"},
-            {"time":"21:40", "temp":"15"},
-        ],
-        [
-            {"time":"07:00", "temp":"20"},
-            {"time":"21:40", "temp":"15"},
-        ],
-        [
-            {"time":"07:00", "temp":"20"},
-            {"time":"21:40", "temp":"15"},
-        ],
-        [
-            {"time":"07:00", "temp":"20"},
-            {"time":"21:40", "temp":"15"},
-        ],
-        [
-            {"time":"07:00", "temp":"20"},
-            {"time":"21:40", "temp":"15"},
-        ],
-        [
-            {"time":"07:00", "temp":"20"},
-            {"time":"21:40", "temp":"15"},
-        ],
-        [
-            {"time":"07:00", "temp":"20"},
-            {"time":"21:40", "temp":"15"},
-        ],
-            {"manual":"Off", "heating":"Off", "controltemp":"5", "roomtemp":"15"}
-        ];
+        var raw = "0;09:30;20.00 0;21:25;-off- 1;09:30;20.00 1;21:25;-off- 2;09:30;20.00 2;21:25;-off- 3;09:30;20.00 3;21:25;-off- 4;09:30;20.00 4;21:25;-off- 5;09:30;20.00 5;21:25;-off- 6;09:30;20.00 6;21:25;-off-";
+        thermostat = raw.split(" ");
         weeklyThermostat(event);
       }
       function weeklyThermostat(event) {
