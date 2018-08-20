@@ -692,7 +692,7 @@ loadThermostat();
                 for (var item = 0; item <= thermostat.length; item++) {
                   if (typeof thermostat[item] === 'undefined') {
                     if (dayValues[day] && day == 6) {
-                      tableel += '<td><button onclick="addTimeTemp(event,' + day + ');">++:++ ++°C</button></td>';
+                      tableel += '<td><button onclick="addTimeTemp(event,' + day + ');">&nbsp;+++++&nbsp;</button></td>';
                       column++;
                     }
                     dayValues[day] = false;
@@ -713,7 +713,7 @@ loadThermostat();
                     occurred++;
                   } else if (thermostat[item].substring(0,1) > day) {
                     if (dayValues[day]) {
-                      tableel += '<td><button onclick="addTimeTemp(event,' + day + ');">++:++ ++°C</button></td>';
+                      tableel += '<td><button onclick="addTimeTemp(event,' + day + ');">&nbsp;+++++&nbsp;</button></td>';
                       column++;
                     }
                     dayValues[day] = false;
@@ -727,26 +727,6 @@ loadThermostat();
               tableel+='</tr>';
               timetemp++;
             }
-/*
-            timetemp=0;
-            timetempvalues=true;
-            while (timetempvalues) {
-              timetempvalues=false;
-              tableel+='<tr>';
-            for (var day = 0; day < 7; day++) {
-                if (typeof thermostat[day][timetemp] !== 'undefined') {
-                  tableel += '<td><button onclick="setThermostat(event,' + day + ',' + timetemp + ');">' + thermostat[day][timetemp].time + ' ' + thermostat[day][timetemp].temp + '°C</button></td>';
-                  timetempvalues=true;
-                } else if (typeof thermostat[day][timetemp - 1] !== 'undefined' || timetemp == 0) {
-                    tableel += '<td><button onclick="addTimeTemp(event,' + day + ',' + timetemp + ');">++:++ ++°C</button></td>';
-                } else {
-                  tableel += '<td></td>';
-                }
-              }
-              tableel+='<tr>';
-              timetemp++;
-            }
-*/
             tableel+='<tr><td colspan="7">';
             tableel+=' <button id="onThermostat" onclick="onThermostat(event);">Aan</button>';
             tableel+=' <button id="offThermostat" onclick="offThermostat(event);">Uit</button>';
@@ -756,6 +736,7 @@ loadThermostat();
             tableel+=' <button id="resetThermostat" onclick="resetThermostat(event);">Reset</button>';
             tableel+=' <button title="Opslaan" onclick="exportThermostat(event);">&DownArrowBar;</button>';
             tableel+=' <button title="Laden" onclick="importThermostat(event);">&UpArrowBar;</button>';
+            tableel+=' <button title="Naar thermostaat sturen" onclick="sendThermostat(event);">Send</button>';
             tableel+='</td></tr>';
             tableel+='</table>';
             document.getElementById("content").innerHTML = tableel;
@@ -772,6 +753,14 @@ loadThermostat();
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.onload = callback;
         xhr.send("file=" + filename + "&value=" + value);
+      }
+      function sendThermostat(event) {
+        sendBT("thermostat","-1", function(e) {
+          if (this.status == 200) {
+            event.stopPropagation();
+          }
+        });
+        event.stopPropagation();
       }
       function autoThermostat(event) {
         sendBT("heating","auto", function(e) {
