@@ -570,25 +570,35 @@ loadThermostat();
         weeklyThermostat(e);
       }
 
-      function outputUpdate(event, value, elmid, day, timetemp) {
-        document.getElementById(elmid).value = ("0" + value).slice(-2);
-        thermostat[day][timetemp].time = document.getElementById("sethour").value + ":" + document.getElementById("setmin").value;
-        thermostat[day][timetemp].temp = document.getElementById("settemp").value;
+      function outputUpdate(event, value, elmid, day, item) {
+        if (elmid == "settemp") {
+          var temp = Math.round(value * 2) / 2;
+          temp = temp.toFixed(2);
+          document.getElementById(elmid).value = temp;
+        } else {
+          document.getElementById(elmid).value = ("0" + value).slice(-2);
+        }
+        thermostat[item] = thermostat[item].substring(0, 2) + document.getElementById("sethour").value + ":" + document.getElementById("setmin").value + ";" + ("0" + document.getElementById("settemp").value).slice(-5);
         event.stopPropagation();
       }
-      function setThermostat(event, day, timetemp) {
+      function setThermostat(event, item) {
+          var day = thermostat[item].substr(0,1);
+          var hour = thermostat[item].substr(2,2);
+          var min = thermostat[item].substr(5,2);
+          var temp = thermostat[item].substr(8,5);
+
           document.getElementById("content").innerHTML = `<div class="dayname">
           <button onclick="weeklyThermostat(event);">&#x25C0;</button> ` +
-          dayNames[day] + ` <input type="text" size="2" id="sethour" onchange="outputUpdate(event,value,'sethour',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(0, 2) + `">
-          <input class="inline" type="range" orient="vertical" min="0" max="23" oninput="outputUpdate(event,value,'sethour',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(0, 2) + `">
+          dayNames[day] + ` <input type="text" size="2" id="sethour" onchange="outputUpdate(event,value,'sethour',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + hour + `">
+          <input class="inline" type="range" orient="vertical" min="0" max="23" oninput="outputUpdate(event,value,'sethour',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + hour + `">
 
-          <input type="text" size="2" id="setmin" onchange="outputUpdate(event,value,'setmin',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].time.substring(3, 5) + `">
-          <input class="inline" type="range" orient="vertical" min="0" max="59" oninput="outputUpdate(event,value,'setmin',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value ="` + thermostat[day][timetemp].time.substring(3, 5) + `">
+          <input type="text" size="2" id="setmin" onchange="outputUpdate(event,value,'setmin',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + min + `">
+          <input class="inline" type="range" orient="vertical" min="0" max="59" oninput="outputUpdate(event,value,'setmin',` + day + `,` + item + `)" onclick="event.stopPropagation();" value ="` + min + `">
 
-          <input type="text" size="2" id="settemp" onchange="outputUpdate(event,value,'settemp',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].temp + `"> °C
-          <input class="inline" type="range" orient="vertical" min="0" max="24" oninput="outputUpdate(event,value,'settemp',` + day + `,` + timetemp + `)" onclick="event.stopPropagation();" value="` + thermostat[day][timetemp].temp + `">
+          <input type="text" size="5" id="settemp" onchange="outputUpdate(event,value,'settemp',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + temp + `"> °C
+          <input class="inline" type="range" orient="vertical" min="0" max="24" step=".05" oninput="outputUpdate(event,value,'settemp',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + temp + `">
 
-          <button onclick="delTimeTemp(event,` + day + `,` + timetemp + `);">&mdash;</button></div>`;
+          <button onclick="delTimeTemp(event,` + day + `,` + item + `);">&mdash;</button></div>`;
           event.stopPropagation();
       }
       function addTimeTemp(event, day) {
@@ -634,7 +644,12 @@ loadThermostat();
                   thermostatTemp = thermostat[i].slice(-5);
                 }
               }
-              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + thermostatTemp.substr(0,4) + " °C";
+              if (thermostatTemp == "-off-") {
+                thermostatTemp = "Uit";
+              } else {
+                thermostatTemp = parseFloat(thermostatTemp.substr(0,4)).toFixed(1) + " °C";
+              }
+              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + thermostatTemp;
             }
             var xhrthermometer = new XMLHttpRequest();
             xhrthermometer.responseType = 'text';
@@ -684,9 +699,11 @@ loadThermostat();
                     break;
                   } else if (thermostat[item].substring(0,1) == day) {
                     if (occurred == timetemp) {
-                      var timeTempValue = thermostat[item].substring(8,12) + ' °C';
-                      if (thermostat[item].substring(8,13) == "-off-") {
+                      var timeTempValue = thermostat[item].substring(8,13);
+                      if (timeTempValue == "-off-") {
                         timeTempValue = "Uit";
+                      } else {
+                        timeTempValue = parseFloat(timeTempValue.substr(0,4)).toFixed(1) + ' °C';
                       }
                       tableel+='<td><button onclick="setThermostat(event,' + item + ');">' + thermostat[item].substring(2,7) + ' ' + timeTempValue + '</button></td>';
                       timetempvalues=true;
