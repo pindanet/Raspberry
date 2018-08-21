@@ -467,26 +467,8 @@ var motionPhotoPage;
 var thermostat = "";
 loadThermostat();
       function saveThermostat() {
-      // sorteer op tijd
-      thermostat.sort();
-/*
-        for (var day = 0; day < 7; day++) {
-          thermostat[day].sort(function(a,b) {
-            return a.time > b.time;
-          });
-        }
-*/
-/*
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', "bash.sh", true);
-//        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.onload = function(e) {
-          if (this.status == 200) {
-            getThermostatTemp();
-          }
-        };
-        xhr.send("command=saveThermostat&json=" + btoa(JSON.stringify(thermostat)));
-*/
+        // sorteer op tijd
+        thermostat.sort();
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "system.php", true);
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -495,7 +477,6 @@ loadThermostat();
             getThermostatTemp();
           }
         };
-//        xhr.send("command=saveThermostat&json=" + btoa(JSON.stringify(thermostat)));
         xhr.send("command=saveThermostat&json=" + btoa(thermostat.join(" ")));
       }
       function exportThermostat(event) {
@@ -570,11 +551,15 @@ loadThermostat();
         weeklyThermostat(e);
       }
 
-      function outputUpdate(event, value, elmid, day, item) {
+      function outputUpdate(event, value, elmid, item) {
         if (elmid == "settemp") {
-          var temp = Math.round(value * 2) / 2;
-          temp = temp.toFixed(2);
-          document.getElementById(elmid).value = temp;
+          if (isNaN(value)) {
+            document.getElementById(elmid).value = "-off-"
+          } else {
+            var temp = Math.round(value * 2) / 2;
+            temp = temp.toFixed(2);
+            document.getElementById(elmid).value = temp;
+          }
         } else {
           document.getElementById(elmid).value = ("0" + value).slice(-2);
         }
@@ -589,14 +574,15 @@ loadThermostat();
 
           document.getElementById("content").innerHTML = `<div class="dayname">
           <button onclick="weeklyThermostat(event);">&#x25C0;</button> ` +
-          dayNames[day] + ` <input type="text" size="2" id="sethour" onchange="outputUpdate(event,value,'sethour',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + hour + `">
-          <input class="inline" type="range" orient="vertical" min="0" max="23" oninput="outputUpdate(event,value,'sethour',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + hour + `">
+          dayNames[day] + ` <input type="text" size="2" id="sethour" onchange="outputUpdate(event,value,'sethour',` + item + `)" onclick="event.stopPropagation();" value="` + hour + `">
+          <input class="inline" type="range" orient="vertical" min="0" max="23" oninput="outputUpdate(event,value,'sethour',` + item + `)" onclick="event.stopPropagation();" value="` + hour + `">
 
-          <input type="text" size="2" id="setmin" onchange="outputUpdate(event,value,'setmin',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + min + `">
-          <input class="inline" type="range" orient="vertical" min="0" max="59" oninput="outputUpdate(event,value,'setmin',` + day + `,` + item + `)" onclick="event.stopPropagation();" value ="` + min + `">
+          <input type="text" size="2" id="setmin" onchange="outputUpdate(event,value,'setmin',` + item + `)" onclick="event.stopPropagation();" value="` + min + `">
+          <input class="inline" type="range" orient="vertical" min="0" max="59" oninput="outputUpdate(event,value,'setmin',` + item + `)" onclick="event.stopPropagation();" value ="` + min + `">
 
-          <input type="text" size="5" id="settemp" onchange="outputUpdate(event,value,'settemp',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + temp + `"> °C
-          <input class="inline" type="range" orient="vertical" min="0" max="24" step=".05" oninput="outputUpdate(event,value,'settemp',` + day + `,` + item + `)" onclick="event.stopPropagation();" value="` + temp + `">
+          <input type="text" size="5" id="settemp" onchange="outputUpdate(event,value,'settemp',` + item + `)" onclick="event.stopPropagation();" value="` + temp + `"> °C
+          <input class="inline" type="range" orient="vertical" min="0" max="24" step=".05" oninput="outputUpdate(event,value,'settemp',` + item + `)" onclick="event.stopPropagation();" value="` + temp + `">
+          <button onclick="outputUpdate(event,'-off-','settemp',` + item + `);">Uit</button>
 
           <button onclick="delTimeTemp(event,` + item + `);">&mdash;</button></div>`;
           event.stopPropagation();
