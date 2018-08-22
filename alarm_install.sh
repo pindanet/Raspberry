@@ -94,6 +94,7 @@ After=bluetooth.service
 Requires=bluetooth.service
 
 [Service]
+ExecStartPre=/bin/sleep 30
 ExecStart=/usr/bin/obexpushd -B23 -o /bluetooth -n
 
 [Install]
