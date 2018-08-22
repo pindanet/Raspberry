@@ -62,6 +62,14 @@ Fullscreen HTML API
         padding: 0px;
         font-size: 27px;
       }
+      #menuclock {
+        color: white;
+        font-size: 75px;
+        text-shadow: 0 0 2px black;
+        display: inline-block;
+        position: relative;
+        top: -22px;
+      }
       #clock {
         color: white;
         font-size: 300px;
@@ -839,18 +847,20 @@ loadThermostat();
       }
       function menu() {
         clearTimeout(startTimer);
-        document.getElementById("content").innerHTML = `<p style="width: 800px; text-align: center;"><img style="width: 100px;" onclick="location.reload();" src="emoji/framed_picture.svg">
-        <img style="width: 100px;" onclick="startTime(event);" src="emoji/mantelpiece_clock.svg">
-        <img style="width: 100px;" onclick="thermometer(event);" src="emoji/thermometer.svg">
-        <img style="width: 100px;" onclick="hourly=60;weather(event);" src="emoji/weather.svg">
-        <img style="width: 100px;" onclick="weeklyThermostat(event);" src="emoji/thermostat.svg">
-        <img style="width: 100px;" onclick="motionDetection(event);" src="emoji/detective.svg">
-        <img style="width: 100px;" onclick="radio(event);" src="emoji/radio.svg">
-        <img style="width: 100px;" onclick="remoteCommand(event,'softap');" src="emoji/network-wireless.svg">
-        <img style="width: 100px;" onclick="remoteCommand(event,'reboot');" src="emoji/system-reboot.svg">
-        <img style="width: 100px;" onclick="remoteCommand(event,'halt');" src="emoji/system-shutdown.svg">
-        <img style="width: 100px;" onclick="remoteCommand(event,'rpiwall');" src="emoji/video-display.svg" onload="centerContent();">
-        </p>`;
+        document.getElementById("content").innerHTML = `<div style="width: 800px; text-align: center;">
+        <img style="height: 100px;" onclick="location.reload();" src="emoji/framed_picture.svg">
+        <img style="height: 100px;" onclick="thermometer(event);" src="emoji/thermometer.svg">
+        <div id="menuclock" onclick="startTime(event);"></div>
+        <img style="height: 100px;" onclick="hourly=60;weather(event);" src="emoji/weather.svg">
+        <img style="height: 100px;" onclick="weeklyThermostat(event);" src="emoji/thermostat.svg">
+        <img style="height: 100px;" onclick="motionDetection(event);" src="emoji/surveillance-camera.svg">
+        <img style="height: 100px;" onclick="radio(event);" src="emoji/radio.svg">
+        <img style="height: 100px;" onclick="remoteCommand(event,'softap');" src="emoji/network-wireless.svg">
+        <img style="height: 100px;" onclick="remoteCommand(event,'reboot');" src="emoji/reboot.svg">
+        <img style="height: 100px;" onclick="remoteCommand(event,'halt');" src="emoji/shutdown.svg">
+        <img style="height: 100px;" onclick="remoteCommand(event,'rpiwall');" src="emoji/monitor.svg" onload="centerContent(); startMenuTime();">
+        </div>`;
+//        <img style="height: 100px;" onclick="startTime(event);" src="emoji/clock.svg">
 //        document.getElementById("content").innerHTML = `<p style="width: 800px; text-align: center;"><button onclick="fotokader(event);">Fotokader</button><button onclick="startTime(event);">Klok</button><button onclick="thermometer(event);">Thermometer</button><button onclick="hourly=60;weather(event);">Weerbericht</button><button onclick="weeklyThermostat(event);">Thermostaat</button><button onclick="motionDetection(event);">Beweging</button><button onclick="radio(event);">Radio</button><button onclick="system(event);">Systeem</button></p>`;
         centerContent();
       }
@@ -874,6 +884,15 @@ loadThermostat();
         centerContent();
         startTimer = setTimeout(startTime, 500);
         event.stopPropagation();
+      }
+      function startMenuTime() {
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        m = checkTime(m);
+        document.getElementById('menuclock').innerHTML = h + ":" + m;
+//        centerContent();
+        startTimer = setTimeout(startMenuTime, 500);
       }
       function checkTime(i) {
         if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
