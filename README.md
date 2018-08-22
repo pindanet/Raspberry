@@ -293,6 +293,7 @@ iface br0 inet dhcp
     After=bluetooth.service
     Requires=bluetooth.service
     [Service]
+    ExecStartPre=/bin/sleep 30
     ExecStart=/usr/bin/obexpushd -B23 -o /var/www/html/data/bluetooth -n
     [Install]
     WantedBy=multi-user.target
