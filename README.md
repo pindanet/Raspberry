@@ -120,7 +120,7 @@ I2C - GPIO Port Expander: http://raspberrypi-aa.github.io/session3/i2c.html
 Based on: https://www.hackster.io/4803/i2c-port-expander-sample-0a6d4f
 
     Vin > 3v3 (1) (Orange) > Reset (6), VDD (18)
-    GND > Ground (6) (Brown) > VSS (9), A0 (5), A1 (4), A2 (3)
+    GND > Ground (6) (Yellow) > VSS (9), A0 (5), A1 (4), A2 (3)
     SCK > BCM 3 (SCL) (5) (Green) > SCL (1)
     SDI > BCM 2 (SDA) (3) (Blue) > SDA (2)
 ### 8 Relay Module BTE13-005
