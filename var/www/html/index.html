@@ -848,7 +848,7 @@ loadThermostat();
       function menu() {
         clearTimeout(startTimer);
         document.getElementById("content").innerHTML = `<div style="width: 800px; text-align: center;">
-        <img style="height: 100px;" onclick="location.reload();" src="emoji/framed_picture.svg">
+        <img style="height: 100px;" onclick="fotokader(event);" src="emoji/framed_picture.svg">
         <img style="height: 100px;" onclick="thermometer(event);" src="emoji/thermometer.svg">
         <div id="menuclock" onclick="startTime(event);"></div>
         <img style="height: 100px;" onclick="hourly=60;weather(event);" src="emoji/weather.svg">
@@ -856,6 +856,7 @@ loadThermostat();
         <img style="height: 100px;" onclick="motionDetection(event);" src="emoji/surveillance-camera.svg">
         <img style="height: 100px;" onclick="radio(event);" src="emoji/radio.svg">
         <img style="height: 100px;" onclick="remoteCommand(event,'softap');" src="emoji/network-wireless.svg">
+        <img style="height: 100px;" onclick="location.reload();" src="emoji/refresh.svg">
         <img style="height: 100px;" onclick="remoteCommand(event,'reboot');" src="emoji/reboot.svg">
         <img style="height: 100px;" onclick="remoteCommand(event,'halt');" src="emoji/shutdown.svg">
         <img style="height: 100px;" onclick="remoteCommand(event,'rpiwall');" src="emoji/monitor.svg" onload="centerContent(); startMenuTime();">
@@ -898,9 +899,27 @@ loadThermostat();
         if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
         return i;
       }
+/* View in fullscreen */
+function fullscreen() {
+  document.getElementById("content").innerHTML = "<button id=\"fullscreen\" onclick=\"openFullscreen(event);\";>Schermvullend</button>";
+}
+function openFullscreen(event) {
+  var elem = document.documentElement;
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) { /* Firefox */
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    elem.msRequestFullscreen();
+  }
+  document.getElementById("content").innerHTML = "";
+  event.stopPropagation();
+}
     </script>
   </head>
-  <body onload="background();setcursor();">
+  <body onload="background();setcursor();fullscreen();">
 <svg id="symbolDefs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="0" width="0" style="position:absolute;">
 
   <symbol id="cloud">
