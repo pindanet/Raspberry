@@ -3,7 +3,7 @@
 @xscreensaver -no-splash
 @point-rpi
 # Start browser
-@chromium-browser http://localhost/
+@chromium-browser --incognito http://localhost/
 
 # Disable Screensaver
 xset s off
