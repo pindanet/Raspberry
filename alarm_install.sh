@@ -151,7 +151,7 @@ gpio -g write 16 1
 # Reedsensor MS3133 / Magnet MSM313
 # BCM 26
 # Gnd
-printf "\033[1;37;40mReed sensor\n\033[0m" # Witte letters
+printf "\033[1;37;40mStatus Reed sensor\n\033[0m" # Witte letters
 gpio -g mode 26 in
 gpio -g read 26
 
