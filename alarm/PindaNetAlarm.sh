@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # ToDo
-# Reed Sensor Interrupt
-# gpio -g wfi 26 rising
+# awake/sleep
 
 buzzer_gpio="23"
+reed_gpio="26"
 
 #Kills the sub process quietly
 function killsub() 
@@ -22,19 +22,22 @@ buzzer() { # Activate Buzzer
   done
 }
 
-buzzer &
-buzzer_pid=$!
+while [ 1 ]; do
+  gpio -g wfi $reed_gpio rising
+  buzzer &
+  buzzer_pid=$!
 
-#Add a trap incase of unexpected interruptions
-trap 'killsub ${buzzer_pid}; exit' INT TERM EXIT
+  #Add a trap incase of unexpected interruptions
+  trap 'killsub ${buzzer_pid}; exit' INT TERM EXIT
 
-sleep 4
+  sleep 2
 
-#Kill buzzer after finished
-killsub ${buzzer_pid}
+  #Kill buzzer after finished
+  killsub ${buzzer_pid}
 
-#Reset trap
-trap - INT TERM EXIT
+  #Reset trap
+  trap - INT TERM EXIT
 
-# Buzzer off
-gpio -g write $buzzer_gpio 0
+  # Buzzer off
+ gpio -g write $buzzer_gpio 0
+done
