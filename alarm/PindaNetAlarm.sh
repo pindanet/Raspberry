@@ -23,7 +23,9 @@ buzzer() { # Activate Buzzer
 }
 
 while [ 1 ]; do
+  # Wait for reed sensor interrupt
   gpio -g wfi $reed_gpio rising
+  # Activate buzzer
   buzzer &
   buzzer_pid=$!
 
