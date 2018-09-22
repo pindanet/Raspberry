@@ -140,6 +140,16 @@ gpio -g write 23 1
 sleep 1
 gpio -g write 23 0
 
+# Reedsensor MS3133 / Magnet MSM313
+# BCM 26
+# Gnd
+printf "\033[1;37;40mStatus Reed sensor\n\033[0m" # Witte letters
+gpio -g mode 26 in
+gpio -g read 26
+
+sudo wget --output-document=/usr/sbin/PindaNetAlarm.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/alarm/PindaNetAlarm.sh
+sudo chmod +x /usr/sbin/PindaNetAlarm.sh
+
 # Relais BTE13
 # BCM 16 - In1 (white)
 #     5v - Vcc
@@ -147,13 +157,6 @@ gpio -g write 23 0
 printf "\033[1;37;40mRelais Off\n\033[0m" # Witte lette$
 gpio -g mode 16 out
 gpio -g write 16 1
-
-# Reedsensor MS3133 / Magnet MSM313
-# BCM 26
-# Gnd
-printf "\033[1;37;40mStatus Reed sensor\n\033[0m" # Witte letters
-gpio -g mode 26 in
-gpio -g read 26
 
 # BME280 I2C Temperature and Pressure Sensor
 # 3v3 - Vin
