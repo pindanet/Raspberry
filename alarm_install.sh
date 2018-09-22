@@ -148,6 +148,13 @@ printf "\033[1;37;40mRelais Off\n\033[0m" # Witte lette$
 gpio -g mode 16 out
 gpio -g write 16 1
 
+# Reedsensor MS3133 / Magnet MSM313
+# BCM 26
+# Gnd
+printf "\033[1;37;40mReed sensor\n\033[0m" # Witte letters
+gpio -g mode 26 in
+gpio -g read 26
+
 # BME280 I2C Temperature and Pressure Sensor
 # 3v3 - Vin
 # Gnd - Gnd
