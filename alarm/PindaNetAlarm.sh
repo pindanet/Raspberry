@@ -1,12 +1,11 @@
 #!/bin/bash
 
 # ToDo
-# awake/sleep
+# log
+# extend alarm
 
 buzzer_gpio="23"
 reed_gpio="26"
-# Array bluetooth MAC addresses, scan with: hcitool scan
-bluetooth=(94:0E:6B:F8:97:31 6C:24:83:B8:98:7B)
 
 #Kills the sub process quietly
 function killsub() 
