@@ -187,7 +187,7 @@ script included in /usr/sbin/bluetooth-detection.sh
 #       mixer_control   "PCM"           # optional
 #       mixer_index     "0"             # optional
 }</pre>
-For paired Bluetooth speaker DEV=MA:C-:ad:dr:es:s0
+For paired Bluetooth speaker DEV=MAC-address
 <pre>audio_output {
         type            "alsa"
         name            "My ALSA Device"
