@@ -187,6 +187,17 @@ script included in /usr/sbin/bluetooth-detection.sh
 #       mixer_control   "PCM"           # optional
 #       mixer_index     "0"             # optional
 }</pre>
+For paired Bluetooth speaker DEV=MA:C-:ad:dr:es:s0
+<pre>audio_output {
+        type            "alsa"
+        name            "My ALSA Device"
+        device          "bluealsa:HCI=hci0,DEV=F8:DF:15:A5:CD:CC,PROFILE=a2dp"
+#       device          "hw:0,0"        # optional
+        mixer_type      "software"      # optional
+#       mixer_device    "default"       # optional
+#       mixer_control   "PCM"           # optional
+#       mixer_index     "0"             # optional
+}</pre>
     sudo systemctl restart mpd.service
     mpc add http://icecast.vrtcdn.be/radio1-high.mp3
     mpc add http://icecast.vrtcdn.be/ra2wvl-high.mp3
