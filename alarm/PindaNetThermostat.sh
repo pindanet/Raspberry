@@ -48,6 +48,8 @@ temp=${temp%% C*}
 if [ "$thermostatTemp" == "-off-" ]; then
   heating off "auto"
 else
+  # remove leading whitespace characters
+  temp="${temp#"${temp%%[![:space:]]*}"}"
   # normalise floats to compare them
   while [[ ${#temp} < ${#thermostatTemp} ]]; do
     temp="0$temp"
@@ -55,7 +57,7 @@ else
   while [[ ${#thermostatTemp} < ${#temp} ]]; do
     thermostatTemp="0$thermostatTemp"
   done
-  if [[ "$temp" < $thermostatTemp ]]; then
+  if [[ "$temp" < "$thermostatTemp" ]]; then
     heating on "auto ($temp)"
   else
     heating off "auto ($temp)"
