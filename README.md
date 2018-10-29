@@ -221,7 +221,7 @@ For paired Bluetooth speaker DEV=MAC-address
 ## Software Access Point
     sudo apt-get install hostapd bridge-utils
     sudo nano /etc/hostapd.conf
-<pre># 802.11n 802.11n
+<pre># 802.11n Access Point
 interface=wlan0
 driver=nl80211
 channel=6
