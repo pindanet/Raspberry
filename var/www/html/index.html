@@ -813,12 +813,15 @@ loadThermostat();
           if (this.status == 200) {
 //            document.getElementById("content").innerHTML = '<pre class="terminalbox">' + this.responseText + "</pre>";
             document.getElementById("content").innerHTML = '';
-            if (this.responseText == "WiFi AP actief") {
-              document.getElementById("statuswireless").innerHTML = `<img style="height: 1em;" src="emoji/network-wireless.svg">`;
-            } else {
-              document.getElementById("statuswireless").innerHTML = ``;
-            }
             centerContent();
+            switch (this.responseText) {
+              case "WiFi AP actief":
+                document.getElementById("statuswireless").innerHTML = `<img style="height: 1em;" src="emoji/network-wireless.svg">`;
+                break;
+              case "WiFi AP uitgeschakeld":
+                document.getElementById("statuswireless").innerHTML = ``;
+                break;              
+            }
           }
         };
         xhr.send("encpin=" + encryptedPIN + "&command=" + command);
