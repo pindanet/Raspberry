@@ -221,11 +221,12 @@ For paired Bluetooth speaker DEV=MAC-address
 ## Software Access Point
     sudo apt-get install hostapd bridge-utils
     sudo nano /etc/hostapd.conf
-<pre>interface=wlan0
+<pre># 802.11n 802.11n
+interface=wlan0
 driver=nl80211
 channel=6
 ssid=SoftAP
-ignore_broadcast_ssid=1
+#ignore_broadcast_ssid=1
 hw_mode=g
 auth_algs=1
 # Wireless Multimedia Extension/Wi-Fi Multimedia needed for
@@ -245,8 +246,46 @@ wpa_pairwise=TKIP CCMP
 rsn_pairwise=CCMP
 
 bridge=br0</pre>
+
+<pre># 802.11ac Access Point
+interface=wlan0
+#ctrl_interface=/var/run/hostapd
+#ctrl_interface_group=0
+driver=nl80211
+channel=36
+
+#macaddr_acl=0
+
+#deny_mac_file=/etc/hostapd/hostapd.deny
+
+wmm_enabled=1         # QoS support
+obss_interval=300
+
+ht_capab=[HT40+][SHORT-GI-20][DSSS_CCK-40]
+
+ieee80211ac=1         # 802.11ac support
+vht_oper_chwidth=0
+vht_capab=[SHORT-GI-80][SU-BEAMFORMEE]
+
+beacon_int=50
+dtim_period=20
+
+basic_rates=180 240 360 480 540
+
+disassoc_low_ack=0
+
+ssid=SoftAP-5.0
+bridge=br0
+hw_mode=a
+auth_algs=1
+#ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=snt+-456
+wpa_key_mgmt=WPA-PSK
+rsn_pairwise=CCMP</pre>
     sudo nano /etc/default/hostapd
 <pre>DAEMON_CONF="/etc/hostapd.conf"</pre>
+
     sudo nano /etc/network/interfaces
 <pre># interfaces(5) file used by ifup(8) and ifdown(8)
 
