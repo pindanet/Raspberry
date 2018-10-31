@@ -20,6 +20,7 @@ done
 
 tail -999 /var/PindaNet/debug.txt > /var/PindaNet/debug.trunc
 mv /var/PindaNet/debug.trunc /var/PindaNet/debug.txt
+
 if [ "$home" -gt "0" ]; then
   # Disable Pi Zero ACT LED
   echo none > /sys/class/leds/led0/trigger
@@ -33,8 +34,9 @@ else
   # Activate Pi Zero ACT LED
   echo mmc0 > /sys/class/leds/led0/trigger
   echo 0 > /sys/class/leds/led0/brightness
-  read_bme280 --i2c-address 0x77 > /var/PindaNet/PresHumiTemp
+  # send pressure, humidity and temperature to Domotica controller
   sendFile /var/PindaNet/PresHumiTemp
+
   # Awake state
   if [ $(cat /var/PindaNet/state) == "sleep" ]; then
     echo "awake" > /var/PindaNet/state
