@@ -11,6 +11,9 @@ heating () {
   fi
 }
 
+# read pressure, humididy and temperature from sensor
+read_bme280 --i2c-address 0x77 > /var/PindaNet/PresHumiTemp
+
 if [ $(cat /var/PindaNet/heating) == "on" ]; then
   heating on "manual"
   exit
@@ -44,10 +47,6 @@ done
 
 temp=$(tail -1 /var/PindaNet/PresHumiTemp)
 temp=${temp%% C*}
-
-if [ "$thermostatTemp" == "-off-" ]; then
-  heating off "auto"
-else
   # remove leading whitespace characters
   temp="${temp#"${temp%%[![:space:]]*}"}"
   # normalise floats to compare them
@@ -57,6 +56,12 @@ else
   while [[ ${#thermostatTemp} < ${#temp} ]]; do
     thermostatTemp="0$thermostatTemp"
   done
+
+echo "$(date): weekday=$weekday now=$now temp=$temp thermostatTemp=$thermostatTemp" >> /var/PindaNet/debug.txt
+
+if [ "$thermostatTemp" == "-off-" ]; then
+  heating off "auto"
+else
   if [[ "$temp" < "$thermostatTemp" ]]; then
     heating on "auto ($temp)"
   else
