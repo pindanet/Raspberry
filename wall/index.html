@@ -96,7 +96,7 @@ function changeBackground() {
       luminance = resp.luminance;
       range = resp.max - resp.min;
 //      opacity = ((resp.max - luminance) / (range/0.8)) + 0.1;
-      opacity = 0;
+      opacity = 0.5;
 //      document.getElementById("luminance").innerHTML = "Min: " + resp.min + " Max: " + resp.max + " Range: " + range + " Lum: " + luminance + " Opa: " + opacity;
       document.getElementById("redshift").style.opacity = opacity;
     }
@@ -155,9 +155,9 @@ setInterval(function() {  // get info from remote control
 
 </script>
 </head>
-<body onload="getBackground(); startTime();">
+<body onload="getBackground(); startTime(); setTimeout(function(){ document.getElementById('weather').contentWindow.location.reload(); }, 1000);">
 <div id="backgroundtransition"></div>
-<div id="redshift" style="opacity: 1;"></div>
+<div id="redshift" style="opacity: 0.5;"></div>
 <table id="messagebar">
   <tr>
   <td id="date">Donderdag, 31 december 2018</td>
