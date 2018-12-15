@@ -8,7 +8,7 @@ heating () {
     echo "on" > /tmp/PindaNetHeating
     echo "$(date): Heating $2 on" >> /tmp/PindaNetDebug.txt
   elif [ $1 == "off" ] && [ $(cat /tmp/PindaNetHeating) == "on" ]; then
-    python rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 01 01 41 53 86 01 00 00 80"
+    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 01 01 41 53 86 01 00 00 80"
     echo "off" > /tmp/PindaNetHeating
     echo "$(date): Heating $2 off" >> /tmp/PindaNetDebug.txt
   fi
