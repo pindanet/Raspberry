@@ -122,6 +122,11 @@ function checkTime(i) {
   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
   return i;
 }
+function bodyLoad() {
+  getBackground();
+  startTime();
+  setTimeout(function(){ document.getElementById('weather').src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=1&type=8&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"; }, 1000);
+}
       
 setInterval(function() {  // get info from other Raspberry Pi with thermostat
   var xhr = new XMLHttpRequest();
@@ -155,7 +160,7 @@ setInterval(function() {  // get info from remote control
 
 </script>
 </head>
-<body onload="getBackground(); startTime(); setTimeout(function(){ document.getElementById('weather').contentWindow.location.reload(); }, 1000);">
+<body onload="bodyLoad();">
 <div id="backgroundtransition"></div>
 <div id="redshift" style="opacity: 0.5;"></div>
 <table id="messagebar">
@@ -167,7 +172,7 @@ setInterval(function() {  // get info from remote control
   <!--td id="luminance">-0</td-->
   </tr>
 </table>
-<iframe id="weather" scrolling="no" width="179" height ="61" frameborder="0" marginwidth="0" marginheight="0" src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=1&type=8&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"></iframe>
+<iframe id="weather" scrolling="no" width="179" height ="61" frameborder="0" marginwidth="0" marginheight="0"></iframe>
 <!-- http://lorempixel.com/1920/1200/nature/
 https://source.unsplash.com/random/1920x1200/?nature
 https://www.timeanddate.com/clocks/free.html  -->
