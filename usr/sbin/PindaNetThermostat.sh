@@ -60,13 +60,12 @@ temp=${temp%% C*}
     thermostatTemp="0$thermostatTemp"
   done
 
-thermostatTemp=$(php -r "echo number_format($thermostatTemp - 2, 2);")
-#thermostatTemp=$((thermostatTemp - 2))
-echo "$(date): weekday=$weekday now=$now temp=$temp thermostatTemp=$thermostatTemp" >> /tmp/PindaNetDebug.txt
+#echo "$(date): weekday=$weekday now=$now temp=$temp thermostatTemp=$thermostatTemp" >> /tmp/PindaNetDebug.txt
 
 if [ "$thermostatTemp" == "-off-" ]; then
   heating off "auto"
 else
+  thermostatTemp=$(php -r "echo number_format($thermostatTemp - 2, 2);")
   if [[ "$temp" < "$thermostatTemp" ]]; then
     heating on "auto ($temp)"
   else
