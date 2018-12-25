@@ -66,6 +66,10 @@ if [ "$thermostatTemp" == "-off-" ]; then
   heating off "auto"
 else
   thermostatTemp=$(php -r "echo number_format($thermostatTemp - 2, 2);")
+  # normalise floats to compare them
+  while [[ ${#thermostatTemp} < ${#temp} ]]; do
+    thermostatTemp="0$thermostatTemp"
+  done
   if [[ "$temp" < "$thermostatTemp" ]]; then
     heating on "auto ($temp)"
   else
