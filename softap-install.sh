@@ -6,6 +6,8 @@ TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
 NEW_HOSTNAME="snt-guest"
 
+# ToDo Change Keyboard
+
 # Change locale
 sudo raspi-config nonint do_change_locale "$LOCALE"
 
@@ -41,6 +43,7 @@ echo "# Bridge setup" | sudo tee -a /etc/network/interfaces
 echo "auto br0" | sudo tee -a /etc/network/interfaces
 echo "iface br0 inet manual" | sudo tee -a /etc/network/interfaces
 echo "bridge_ports eth0 wlan0" | sudo tee -a /etc/network/interfaces
+
 
 
 sudo sed -i '/^#.*net\.ipv4\.ip_forward=/s/^#//' /etc/sysctl.conf
