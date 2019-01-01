@@ -49,6 +49,7 @@ interface=wlan0
 bridge=br0
 #driver=nl80211
 ssid=snt-guest
+country_code=BE
 hw_mode=g
 channel=7
 wmm_enabled=0
