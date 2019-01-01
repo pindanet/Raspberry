@@ -81,6 +81,8 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 sudo mv hostapd.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable hostapd
 
 sudo sed -i 's/^#DAEMON_OPTS=""/DAEMON_OPTS="\/etc\/hostapd\/hostapd.conf"/' /etc/default/hostapd
 
