@@ -64,6 +64,24 @@ rsn_pairwise=CCMP
 EOF
 sudo mv hostapd.conf /etc/hostapd/hostapd.conf
 
+sudo systemctl disable hostapd
+cat > hostapd.service <<EOF
+[Unit]
+Description=Advanced IEEE 802.11 AP and IEEE 802.1X/WPA/WPA2/EAP Authenticator
+After=network.target
+BindsTo=sys-subsystem-net-devices-wlan0.device
+
+[Service]
+EnvironmentFile=/etc/default/hostapd
+ExecStart=/usr/sbin/hostapd $DAEMON_OPTS
+Restart=on-failure
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target sys-subsystem-net-devices-%i.device
+EOF
+sudo mv hostapd.service /etc/systemd/system/
+
 sudo sed -i 's/^#DAEMON_OPTS=""/DAEMON_OPTS="\/etc\/hostapd\/hostapd.conf"/' /etc/default/hostapd
 
 #sudo sed -i '/^#.*net\.ipv4\.ip_forward=/s/^#//' /etc/sysctl.conf
