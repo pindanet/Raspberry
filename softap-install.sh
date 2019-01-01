@@ -44,10 +44,29 @@ echo "auto br0" | sudo tee -a /etc/network/interfaces
 echo "iface br0 inet manual" | sudo tee -a /etc/network/interfaces
 echo "bridge_ports eth0 wlan0" | sudo tee -a /etc/network/interfaces
 
+cat > hostapd.conf <<EOF
+interface=wlan0
+bridge=br0
+#driver=nl80211
+ssid=snt-guest
+hw_mode=g
+channel=7
+wmm_enabled=0
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=snt-guest
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+EOF
+sudo mv hostapd.conf /etc/hostapd/hostapd.conf
 
+sudo sed -i 's/^#DAEMON_OPTS=""/DAEMON_OPTS="\/etc\/hostapd\/hostapd.conf"/' /etc/default/hostapd
 
-sudo sed -i '/^#.*net\.ipv4\.ip_forward=/s/^#//' /etc/sysctl.conf
-sudo sed -i '/^#.*net\.ipv6\.conf\.all\.forwarding=/s/^#//' /etc/sysctl.conf
+#sudo sed -i '/^#.*net\.ipv4\.ip_forward=/s/^#//' /etc/sysctl.conf
+#sudo sed -i '/^#.*net\.ipv6\.conf\.all\.forwarding=/s/^#//' /etc/sysctl.conf
 
 # Webserver
 sudo apt install apache2 php libapache2-mod-php -y
