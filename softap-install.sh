@@ -67,18 +67,18 @@ sudo mv hostapd.conf /etc/hostapd/hostapd.conf
 sudo systemctl disable hostapd
 cat > hostapd.service <<EOF
 [Unit]
-Description=Advanced IEEE 802.11 AP and IEEE 802.1X/WPA/WPA2/EAP Authenticator
-After=network.target
-BindsTo=sys-subsystem-net-devices-wlan0.device
+Description=advanced IEEE 802.11 management
+Wants=network-online.target
+After=network.target network-online.target
 
 [Service]
-EnvironmentFile=/etc/default/hostapd
-ExecStart=/usr/sbin/hostapd $DAEMON_OPTS
+ExecStart=/usr/sbin/hostapd  /etc/hostapd/hostapd.conf
+PIDFile=/run/hostapd.pid
+RestartSec=5
 Restart=on-failure
-RestartSec=1
 
 [Install]
-WantedBy=multi-user.target sys-subsystem-net-devices-%i.device
+WantedBy=multi-user.target
 EOF
 sudo mv hostapd.service /etc/systemd/system/
 
