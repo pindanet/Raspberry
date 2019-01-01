@@ -1,12 +1,14 @@
 #!/bin/bash
 # wget https://raw.githubusercontent.com/pindanet/Raspberry/master/softap-install.sh
 
+KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
 NEW_HOSTNAME="snt-guest"
 
-# ToDo Change Keyboard
+# Change Keyboard
+sudo raspi-config nonint do_configure_keyboard "$KEYMAP"
 
 # Change locale
 sudo raspi-config nonint do_change_locale "$LOCALE"
