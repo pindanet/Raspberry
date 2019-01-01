@@ -30,6 +30,19 @@ sudo apt dist-upgrade -y
 sudo apt autoremove -y
 
 # SoftAP
+sudo apt install hostapd bridge-utils -y
+sudo systemctl stop hostapd
+
+echo "denyinterfaces wlan0" | sudo tee -a /etc/dhcpcd.conf
+echo "denyinterfaces eth0" | sudo tee -a /etc/dhcpcd.conf
+sudo brctl addbr br0
+sudo brctl addif br0 eth0
+echo "# Bridge setup" | sudo tee -a /etc/network/interfaces
+echo "auto br0" | sudo tee -a /etc/network/interfaces
+echo "iface br0 inet manual" | sudo tee -a /etc/network/interfaces
+echo "bridge_ports eth0 wlan0" | sudo tee -a /etc/network/interfaces
+
+
 sudo sed -i '/^#.*net\.ipv4\.ip_forward=/s/^#//' /etc/sysctl.conf
 sudo sed -i '/^#.*net\.ipv6\.conf\.all\.forwarding=/s/^#//' /etc/sysctl.conf
 
