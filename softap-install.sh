@@ -82,7 +82,12 @@ ssid=snt-guest
 country_code=BE
 hw_mode=g
 channel=7
-wmm_enabled=0
+# Wireless Multimedia Extension/Wi-Fi Multimedia needed for
+# IEEE 802.11n (HT)
+wmm_enabled=1
+# 1 to enable 802.11n
+ieee80211n=1
+ht_capab=[HT20][SHORT-GI-20][DSSS_CK-HT40]
 macaddr_acl=0
 auth_algs=1
 ignore_broadcast_ssid=0
