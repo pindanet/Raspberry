@@ -84,9 +84,9 @@ WantedBy=multi-user.target
 EOF
 sudo mv hostapd.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable hostapd
+sudo systemctl enable hostapd.service
 
-sudo sed -i 's/^#DAEMON_OPTS=""/DAEMON_OPTS="\/etc\/hostapd\/hostapd.conf"/' /etc/default/hostapd
+#sudo sed -i 's/^#DAEMON_OPTS=""/DAEMON_OPTS="\/etc\/hostapd\/hostapd.conf"/' /etc/default/hostapd
 
 #sudo sed -i '/^#.*net\.ipv4\.ip_forward=/s/^#//' /etc/sysctl.conf
 #sudo sed -i '/^#.*net\.ipv6\.conf\.all\.forwarding=/s/^#//' /etc/sysctl.conf
