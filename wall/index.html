@@ -49,14 +49,28 @@ body {
 #weather {
   position: absolute;
   bottom: 0px;
-  right: 0px;
-  clip: rect(17px,358px,61px,0px);
+  right: 5px;
+/*  clip: rect(17px,358px,61px,0px); */
+  bottom: 1px;
+  background-color: rgba(128, 128, 128, 0);
+  color: white;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  font-size: 20px;
 }
 </style>
 <!--script src="suncalc.js"></script--> 
 <script>
 var changeBackgroundMinutes = 15;
 function getBackground() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "getWeather.php", true);
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+      document.getElementById("weather").innerHTML = this.responseText;
+    }
+  };
+  xhr.send();
+
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "random_pic.php", true);
   xhr.onload = function(e) {
@@ -125,7 +139,7 @@ function checkTime(i) {
 function bodyLoad() {
   getBackground();
   startTime();
-  setTimeout(function(){ document.getElementById('weather').src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=1&type=8&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"; }, 7000);
+//  setTimeout(function(){ document.getElementById('weather').src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=1&type=8&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"; }, 7000);
 }
       
 setInterval(function() {  // get info from other Raspberry Pi with thermostat
@@ -172,7 +186,9 @@ setInterval(function() {  // get info from remote control
   <!--td id="luminance">-0</td-->
   </tr>
 </table>
-<iframe id="weather" scrolling="no" width="179" height ="61" frameborder="0" marginwidth="0" marginheight="0"></iframe>
+<div id="weather"></div>
+<!--iframe id="weather" scrolling="no" width="179" height ="61" frameborder="0" marginwidth="0" marginheight="0"></iframe-->
+
 <!-- http://lorempixel.com/1920/1200/nature/
 https://source.unsplash.com/random/1920x1200/?nature
 https://www.timeanddate.com/clocks/free.html  -->
