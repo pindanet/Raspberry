@@ -14,8 +14,13 @@ heating () {
   fi
 }
 
+# BME280 I2C Temperature and Pressure Sensor
+# 3v3 - Vin
+# Gnd - Gnd
+# BCM 3 (SCL) - SCK (White)
+# BCM 2 (SDA) - SDI (Brown)
 # read pressure, humididy and temperature from sensor
-#read_bme280 --i2c-address 0x77 > /var/PindaNet/PresHumiTemp
+read_bme280 --i2c-address 0x77 > /var/www/html/data/PresHumiTemp
 
 #if [ $(cat /var/PindaNet/heating) == "on" ]; then
 #  heating on "manual"
