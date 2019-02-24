@@ -6,10 +6,17 @@
 # Cleanup missed received bluetooth files
 #find /var/www/html/data/bluetooth -mmin +5 -type f -delete
 
+if [ ! -d /var/www/html/motion/day ]; then
+  mkdir -p /var/www/html/motion/day;
+fi
+now=$(date +%H:%M)
+raspistill -vf -hf -n -w 800 -h 480 -o /var/www/html/motion/day/$now.jpg
+find /var/www/html/motion/day/*.jpg -mtime +0 -type f -delete
+
 BTController="B8:27:EB:49:17:03"
 # Array bluetooth MAC addresses
 # Scan with: hcitool scan
-bluetooth=(94:0E:6B:F8:97:31 6C:24:83:B8:98:7B)
+bluetooth=(94:0E:6B:F8:97:31 7C:67:A2:C1:F8:F8)
 
 home="1"
 for i in ${bluetooth[@]}; do
