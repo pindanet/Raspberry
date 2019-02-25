@@ -26,9 +26,8 @@ Fullscreen HTML API
         transition: background 1.5s linear;
         opacity: 1.0;
       }
-      .daylySlide {
-        -moz-transition: background 0.1s linear;
-        transition: background 0.1s linear;
+      .daylySlideText {
+        text-shadow: 0 0 1px black;
       }
       th, .dayname {
         color: white;
@@ -464,18 +463,38 @@ var motionPhotoPage;
         event.stopPropagation();
       }
       var daylyMotionPhotos;
-      var sliderItem = 250;
+      var sliderItem = 0;
+      var sliderTimeout;
+      function daylySlideLoaded() {
+        document.getElementById("daylySlideText").innerHTML = daylyMotionPhotos[sliderItem].substring(0, 5);
+        document.getElementById("daylySlidetransition").src = document.getElementById("daylySlide").src;
+        sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+      }
+      function daylySlideError() {
+        sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+console.log("The image " + daylyMotionPhotos[sliderItem] + " could not be loaded.");
+      }
       function daylymotionPlayer() {
 	sliderItem += 1;
         if(sliderItem >= daylyMotionPhotos.length) {
           sliderItem = 0;
         }
-        document.getElementById("daylySlidetransition").style.backgroundImage = document.getElementById("daylySlide").style.backgroundImage;
-        document.getElementById("daylySlide").style.backgroundImage = "url(motion/day/" + daylyMotionPhotos[sliderItem] + ")";
-        document.getElementById("daylySlideText").style.right = "8px";
-	document.getElementById("daylySlideText").style.top = "8px";
-        document.getElementById("daylySlideText").innerHTML = daylyMotionPhotos[sliderItem].substring(0, 5);
-        setTimeout(function(){ daylymotionPlayer() }, 100);
+        document.getElementById("daylySlide").src = "motion/day/" + daylyMotionPhotos[sliderItem];
+      }
+      function daylySlideCommand(event, command) {
+        switch(command) {
+          case "play":
+            if (document.getElementById("daylySlidePlayPause").innerHTML == "&gt;") {
+              sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+              document.getElementById("daylySlidePlayPause").innerHTML = "||";
+            } else {
+              clearTimeout(sliderTimeout);
+              document.getElementById("daylySlidePlayPause").innerHTML = "&gt;";
+            }
+            console.log(document.getElementById("daylySlidePlayPause").innerHTML);
+            break;
+        }
+        event.stopPropagation();
       }
       function motionDetection(event) {
         var xhr = new XMLHttpRequest();
@@ -483,23 +502,22 @@ var motionPhotoPage;
         xhr.onload = function(e) {
           if (this.status == 200) {
             daylyMotionPhotos = Object.values(JSON.parse(this.responseText));
-            document.getElementById("content").innerHTML =  '<div id="daylySlide" style="position: absolute; height: 480px; width: 800px; left: 0; top: 0;"></div>';
-            document.getElementById("content").innerHTML += '<div id="daylySlidetransition" style="position: absolute; height: 480px; width: 800px; left: 0; top: 0;"></div>';
-            document.getElementById("daylySlidetransition").innerHTML += '<div id="daylySlideText" style="position: absolute; color: white;">Tekst</div>';
+            document.getElementById("content").innerHTML =  '<div style="position: absolute; height: 480px; width: 800px; left: 0; top: 0;"><img id="daylySlide" onload="daylySlideLoaded();" onerror="daylySlideError();"></div>';
+            document.getElementById("content").innerHTML += '<div id="daylySlideToplayer" style="position: absolute; height: 480px; width: 800px; left: 0; top: 0;"><img id="daylySlidetransition"></div>';
+            document.getElementById("daylySlideToplayer").innerHTML += '<div id="daylySlideText" style="position: absolute; color: white;">Tekst</div>';
+            document.getElementById("daylySlideText").style.right = "8px";
+            document.getElementById("daylySlideText").style.top = "8px";
+            document.getElementById("daylySlideToplayer").innerHTML += '<div id="daylySlideCommand" style="position: absolute; color: white;"><button id="daylySlidePlayPause" onclick="daylySlideCommand(event, \'play\');">||</button></div>';
+            document.getElementById("daylySlideCommand").style.left = "8px";
+            document.getElementById("daylySlideCommand").style.top = "8px";
             document.getElementById("content").style.top = "0"; 
             document.getElementById("content").style.left = "0";
             event.stopPropagation();
-            setTimeout(function(){ daylymotionPlayer() }, 100);
+            sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
           }
         };
         xhr.send();
 
-/*
-        document.getElementById("content").innerHTML =  '<iframe src="daymotion.php" width="800px" height="480px"  onclick="menu()"></iframe>';
-        document.getElementById("content").style.top = "0";
-        document.getElementById("content").style.left = "0";
-        event.stopPropagation();
-*/
 /*
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "motion.php", true);
