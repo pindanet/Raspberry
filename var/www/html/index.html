@@ -465,33 +465,48 @@ var motionPhotoPage;
       var daylyMotionPhotos;
       var sliderItem = 0;
       var sliderTimeout;
+      var sliderTimeoutActive = true;
+      var sliderItemVar = 1;
       function daylySlideLoaded() {
         document.getElementById("daylySlideText").innerHTML = daylyMotionPhotos[sliderItem].substring(0, 5);
         document.getElementById("daylySlidetransition").src = document.getElementById("daylySlide").src;
-        sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+	if (sliderTimeoutActive) {
+          sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+	}
       }
       function daylySlideError() {
         sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
 console.log("The image " + daylyMotionPhotos[sliderItem] + " could not be loaded.");
       }
       function daylymotionPlayer() {
-	sliderItem += 1;
+	sliderItem += sliderItemVar;
         if(sliderItem >= daylyMotionPhotos.length) {
           sliderItem = 0;
+        } else if (sliderItem < 0) {
+          sliderItem = sliderItem + daylyMotionPhotos.length;
         }
         document.getElementById("daylySlide").src = "motion/day/" + daylyMotionPhotos[sliderItem];
       }
       function daylySlideCommand(event, command) {
         switch(command) {
           case "play":
-            if (document.getElementById("daylySlidePlayPause").innerHTML == "&gt;") {
+            if (document.getElementById("daylySlidePlayPause").innerHTML == "&lt;&gt;") {
+              sliderTimeoutActive = true;
               sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
               document.getElementById("daylySlidePlayPause").innerHTML = "||";
             } else {
               clearTimeout(sliderTimeout);
-              document.getElementById("daylySlidePlayPause").innerHTML = "&gt;";
+              sliderTimeoutActive = false;
+              document.getElementById("daylySlidePlayPause").innerHTML = "&lt;&gt;";
             }
-            console.log(document.getElementById("daylySlidePlayPause").innerHTML);
+            break;
+          case "backward":
+            sliderItemVar = -1;
+            sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+            break;
+          case "forward":
+            sliderItemVar = 1;
+            sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
             break;
         }
         event.stopPropagation();
@@ -502,12 +517,19 @@ console.log("The image " + daylyMotionPhotos[sliderItem] + " could not be loaded
         xhr.onload = function(e) {
           if (this.status == 200) {
             daylyMotionPhotos = Object.values(JSON.parse(this.responseText));
-            document.getElementById("content").innerHTML =  '<div style="position: absolute; height: 480px; width: 800px; left: 0; top: 0;"><img id="daylySlide" onload="daylySlideLoaded();" onerror="daylySlideError();"></div>';
-            document.getElementById("content").innerHTML += '<div id="daylySlideToplayer" style="position: absolute; height: 480px; width: 800px; left: 0; top: 0;"><img id="daylySlidetransition"></div>';
-            document.getElementById("daylySlideToplayer").innerHTML += '<div id="daylySlideText" style="position: absolute; color: white;">Tekst</div>';
+            var innerHTML =  '<div style="position: absolute; height: 480px; width: 800px; left: 0; top: 0;"><img id="daylySlide" onload="daylySlideLoaded();" onerror="daylySlideError();"></div>';
+            innerHTML += '<div id="daylySlideToplayer" style="position: absolute; height: 480px; width: 800px; left: 0; top: 0;"><img id="daylySlidetransition">';
+            innerHTML += '<div id="daylySlideText" style="position: absolute; color: white;">Tekst</div>';
+            innerHTML += '<div id="daylySlideCommand" style="position: absolute; color: white;">';
+            innerHTML += '<button id="daylySlideSlowMotion" onclick="daylySlideCommand(event, \'backward\');">||&lt;</button>';
+            innerHTML += '<button id="daylySlidePlayPause" onclick="daylySlideCommand(event, \'play\');">||</button>';
+            innerHTML += '<button id="daylySlideSlowMotion" onclick="daylySlideCommand(event, \'forward\');">&gt;||</button>';
+            innerHTML += '</div>';
+            innerHTML += '</div>';
+            document.getElementById("content").innerHTML = innerHTML;
+
             document.getElementById("daylySlideText").style.right = "8px";
             document.getElementById("daylySlideText").style.top = "8px";
-            document.getElementById("daylySlideToplayer").innerHTML += '<div id="daylySlideCommand" style="position: absolute; color: white;"><button id="daylySlidePlayPause" onclick="daylySlideCommand(event, \'play\');">||</button></div>';
             document.getElementById("daylySlideCommand").style.left = "8px";
             document.getElementById("daylySlideCommand").style.top = "8px";
             document.getElementById("content").style.top = "0"; 
