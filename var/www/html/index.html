@@ -10,6 +10,10 @@ Fullscreen HTML API
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>PindaNet Raspberry Pi</title>
+    <link href='fullcalendar/packages/core/main.css' rel='stylesheet' />
+    <link href='fullcalendar/packages/daygrid/main.css' rel='stylesheet' />
+    <link href='fullcalendar/packages/timegrid/main.css' rel='stylesheet' />
+    <link href='fullcalendar/packages/list/main.css' rel='stylesheet' />
     <style type="text/css">
       html {
         height: 100%;
@@ -247,7 +251,42 @@ Fullscreen HTML API
         color: #fff;
       }
       /* End PinPad */
+      .fc-toolbar.fc-header-toolbar {
+        margin-bottom: 0;
+      }
+      #calendar {
+        background: rgba(255,255,255,0.9);
+      }
+      #calendar .fc-dayGrid-view .fc-week-number, .fc-dayGrid-view .fc-day-number {
+        padding: 0 2px;
+      }
+      #calendar th {
+        color: black;
+        text-shadow: none;
+        text-align: center;
+        text-decoration: none;
+        font-size: 1em;
+        font-weight: bold;
+      }
+      #calendar .fc-event {
+        font-size: 1em;
+        font-weight: bold;
+        background-color: black;
+        border: none;
+      }
+      #calendar tr:first-child > td > .fc-day-grid-event {
+        margin-top: 0;
+      }
     </style>
+    <script src='fullcalendar/vendor/rrule.js'></script>
+    <script src='fullcalendar/packages/core/main.js'></script>
+    <script src='fullcalendar/packages/interaction/main.js'></script>
+    <script src='fullcalendar/packages/daygrid/main.js'></script>
+    <script src='fullcalendar/packages/timegrid/main.js'></script>
+    <script src='fullcalendar/packages/list/main.js'></script>
+    <script src='fullcalendar/packages/rrule/main.js'></script>
+    <script src='fullcalendar/packages/core/locales/nl.js'></script>
+    <script src='fullcalendar/ical.min.js'></script>
     <!--script src="sha.js"></script-->
     <script src="jsencrypt.js"></script>
     <script type="text/javascript">
@@ -930,6 +969,97 @@ loadThermostat();
           event.stopPropagation();
 //        }
       }
+      function parseICS(iCalendarData) {
+        var jcalData = ICAL.parse(iCalendarData);
+        var comp = new ICAL.Component(jcalData);
+        var eventComps = comp.getAllSubcomponents("vevent");
+        for (var key in eventComps) {
+          // skip loop if the property is from prototype
+          if (!eventComps.hasOwnProperty(key)) continue;
+          var obj = eventComps[key];
+          for (var prop in obj) {
+            // skip loop if the property is from prototype
+            if(!obj.hasOwnProperty(prop)) continue;
+            if (prop === "parent") continue;
+            var vevent;
+            var icsevent = {};
+            for (vevent in obj[prop][1]) {
+              switch(obj[prop][1][vevent][0]) {
+                case "summary":
+                  icsevent["title"] = obj[prop][1][vevent][3];
+                  break;
+                case "dtstart":
+                  icsevent["start"] = obj[prop][1][vevent][3];
+                  break;
+                case "dtend":
+                  icsevent["end"] = obj[prop][1][vevent][3];
+                  break;
+                case "location":
+                  icsevent["location"] = obj[prop][1][vevent][3];
+                  break;
+                case "rrule": // https://fullcalendar.io/docs/v4/rrule-plugin
+                  var rrule = {};
+                  rrule["freq"] = obj[prop][1][vevent][3]["freq"];
+                  rrule["interval"] = obj[prop][1][vevent][3]["interval"];
+                  rrule["byweekday"] = obj[prop][1][vevent][3]["byday"];
+                  rrule["until"] = obj[prop][1][vevent][3]["until"];
+                  rrule["count"] = obj[prop][1][vevent][3]["count"];
+                  icsevent["rrule"] = rrule;
+                  break;
+              }
+            }
+            if(icsevent.hasOwnProperty("rrule")){
+              icsevent["rrule"]["dtstart"] = icsevent["start"];
+              var dtstart = new Date(icsevent["start"]);
+              var dtend = new Date(icsevent["end"]);
+              icsevent["duration"] = dtend - dtstart;
+            }
+            icsevents.push(icsevent);
+          }
+        };
+      }
+      function getICS() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            parseICS(this.responseText);
+            ICSfiles.shift();
+            if (ICSfiles.length > 0) {
+              getICS();
+            } else {
+              var calendarEl = document.getElementById('calendar');
+              var calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: [ 'interaction', 'dayGrid', 'rrule' ],
+                header: {
+                  left: '',
+                  center: 'title',
+                  right: ''
+                },
+                height: 480,
+                locale: 'nl',
+                editable: true,
+                eventLimit: true, // allow "more" link when too many events
+                events: icsevents
+              });
+              calendar.render();
+            };
+          };
+        };
+        xhttp.overrideMimeType('text/plain');
+        xhttp.open("GET", ICSfiles[0], true);
+        xhttp.send();
+      }
+      var icsevents = new Array();
+      var ICSfiles = ["fullcalendar/snt.ics", "fullcalendar/basic.ics"];
+      function calendar(event) {
+	clearTimeout(startTimer);
+        document.getElementById("content").innerHTML = '<div id="calendar"></div>';
+        document.getElementById("content").style.top = "0";
+        icsevents =[];
+        ICSfiles = ["fullcalendar/snt.ics", "fullcalendar/basic.ics"];
+        getICS();
+        event.stopPropagation();
+      }
       function fotokader(event) {
         background();
         document.getElementById("content").innerHTML = "";
@@ -940,6 +1070,7 @@ loadThermostat();
         document.getElementById("content").innerHTML = `<div style="width: 800px; text-align: center;">
         <img style="height: 100px;" onclick="fotokader(event);" src="emoji/framed_picture.svg">
         <img style="height: 100px;" onclick="thermometer(event);" src="emoji/thermometer.svg">
+        <div style="overflow: hidden; display: inline-block; margin-bottom: -4px;" onclick="calendar(event);"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div>
         <div id="menuclock" onclick="startTime(event);"></div>
         <img style="height: 100px;" onclick="hourly=60;weather(event);" src="emoji/weather.svg">
         <img style="height: 100px;" onclick="weeklyThermostat(event);" src="emoji/thermostat.svg">
