@@ -861,6 +861,7 @@ loadThermostat();
         };
         xhr.send();
       }
+/*
       function sendBT(filename, value, callback) {
         var xhr = new XMLHttpRequest();
         xhr.responseType = 'text';
@@ -869,17 +870,21 @@ loadThermostat();
         xhr.onload = callback;
         xhr.send("file=" + filename + "&value=" + value);
       }
+*/
       function sendThermostat(event, element) {
         element.style = "color: black;";
+/*
         sendBT("thermostat","-1", function(e) {
           if (this.status == 200) {
             element.style = "";
             event.stopPropagation();
           }
         });
+*/
         event.stopPropagation();
       }
       function autoThermostat(event) {
+/*
         sendBT("heating","auto", function(e) {
           if (this.status == 200) {
             displayHeatingThermostat();
@@ -887,9 +892,11 @@ loadThermostat();
             event.stopPropagation();
           }
         });
+*/
         event.stopPropagation();
       }
       function onThermostat(event) {
+/*
         sendBT("heating","on", function(e) {
           if (this.status == 200) {
             displayHeatingThermostat();
@@ -897,9 +904,11 @@ loadThermostat();
             event.stopPropagation();
           }
         });
+*/
         event.stopPropagation();
       }
       function offThermostat(event) {
+/*
         sendBT("heating","off", function(e) {
           if (this.status == 200) {
             displayHeatingThermostat();
@@ -907,6 +916,7 @@ loadThermostat();
             event.stopPropagation();
           }
         });
+*/
         event.stopPropagation();
       }
       function resetThermostat(event) {
@@ -985,6 +995,9 @@ loadThermostat();
             var icsevent = {};
             for (vevent in obj[prop][1]) {
               switch(obj[prop][1][vevent][0]) {
+		case "exdate":
+		  console.log(obj[prop][1][vevent]);
+		  break;
                 case "summary":
                   icsevent["title"] = obj[prop][1][vevent][3];
                   break;
@@ -1065,7 +1078,24 @@ loadThermostat();
         document.getElementById("content").innerHTML = "";
         event.stopPropagation();
       }
+      function state(state) {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        xhr.open('POST', "state.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+console.log(this.responseText);
+          }
+        };
+        xhr.send("state=" + state);
+        if (state == "sleep") {
+          document.getElementById("content").innerHTML = "";
+        }
+      }
+
       function menu() {
+        state("awake");
         clearTimeout(startTimer);
         document.getElementById("content").innerHTML = `<div style="width: 800px; text-align: center;">
         <img style="height: 100px;" onclick="fotokader(event);" src="emoji/framed_picture.svg">
@@ -1082,6 +1112,7 @@ loadThermostat();
         <img style="height: 100px;" onclick="remoteCommand(event,'reboot');" src="emoji/reboot.svg">
         <img style="height: 100px;" onclick="remoteCommand(event,'halt');" src="emoji/shutdown.svg">
         <img style="height: 100px;" onclick="remoteCommand(event,'rpiwall');" src="emoji/monitor.svg" onload="centerContent(); startMenuTime();">
+        <img style="height: 100px;" onclick="state('sleep'); event.stopPropagation();" src="emoji/logout.svg">
         </div>`;
 //        <img style="height: 100px;" onclick="startTime(event);" src="emoji/clock.svg">
 //        document.getElementById("content").innerHTML = `<p style="width: 800px; text-align: center;"><button onclick="fotokader(event);">Fotokader</button><button onclick="startTime(event);">Klok</button><button onclick="thermometer(event);">Thermometer</button><button onclick="hourly=60;weather(event);">Weerbericht</button><button onclick="weeklyThermostat(event);">Thermostaat</button><button onclick="motionDetection(event);">Beweging</button><button onclick="radio(event);">Radio</button><button onclick="system(event);">Systeem</button></p>`;
