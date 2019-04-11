@@ -80,12 +80,20 @@ Fullscreen HTML API
       #clock {
         color: white;
         font-size: 300px;
-        text-shadow: 0 0 2px black;
+/*        text-shadow: 0 0 4px black; */
+        -moz-text-stroke-color: black;
+        -moz-text-stroke-width: 2px;
+        -webkit-text-stroke-color: black;
+        -webkit-text-stroke-width: 2px;
       }
       #date {
         color: white;
-        font-size: 60px;
-        text-shadow: 0 0 2px black;
+        font-size: 70px;
+/*        text-shadow: 0 0 4px black; */
+        -moz-text-stroke-color: black;  
+        -moz-text-stroke-width: 1px;    
+        -webkit-text-stroke-color: black;
+        -webkit-text-stroke-width: 1px;
       }
       #temp {
         color: white;
@@ -319,7 +327,9 @@ Fullscreen HTML API
       function enterPIN(event) {
         document.getElementById("content").innerHTML = '<pre class="terminalbox">Even geduld...</pre>';
         centerContent();
-        event.stopPropagation();
+	if (typeof event !== 'undefined') {
+          event.stopPropagation();
+        }
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "bash.sh", true);
         xhr.onload = function(e) {
@@ -1083,11 +1093,20 @@ loadThermostat();
         xhr.responseType = 'text';
         xhr.open('POST', "state.php", true);
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+/*
         xhr.onload = function(e) {
           if (this.status == 200) {
-console.log(this.responseText);
+            if (encryptedPIN == "" && state == "awake") {
+              document.getElementById("content").innerHTML = `<form action="" method="" name="PINform" id="PINform" autocomplete="off"><input id="PINbox" value="" name="PINbox" disabled="" type="password"><br><input class="PINbutton" name="1" value="1" id="1" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="2" value="2" id="2" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="3" value="3" id="3" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="4" value="4" id="4" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="5" value="5" id="5" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="6" value="6" id="6" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="7" value="7" id="7" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="8" value="8" id="8" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="9" value="9" id="9" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton clear" name="-" value="clear" id="-" onclick="clearForm(event);" type="button"><input class="PINbutton" name="0" value="0" id="0" onclick="addNumber(event,this);" type="button"><input class="PINbutton enter" name="+" value="enter" id="+" onclick="encryptedPIN = document.getElementById('PINbox').value;" type="button"></form>`;
+              centerContent();
+              event.stopPropagation();
+            } else {
+              encryptedPIN = "";
+            }
+console.log(event);
           }
         };
+*/
         xhr.send("state=" + state);
         if (state == "sleep") {
           document.getElementById("content").innerHTML = "";
