@@ -17,8 +17,9 @@ find /var/www/html/motion/day/*.jpg -mtime +0 -type f -delete
 brightness=$(convert /var/www/html/motion/day/$now.jpg -colorspace gray -format "%[fx:100*mean]" info:)
 echo $brightness > /var/www/html/data/brightness
 backlight=$(echo $brightness 1.27 | awk '{printf "%.0f\n",$1*$2}')
+backlight=$(( $backlight > 24 ? $backlight : 24 ))
+#echo $backlight | sudo tee /sys/class/backlight/rpi_backlight/brightness
 echo $backlight > /sys/class/backlight/rpi_backlight/brightness
-
 # deactivate status led's
 echo 0 > /sys/class/leds/led0/brightness
 echo 0 > /sys/class/leds/led1/brightness
