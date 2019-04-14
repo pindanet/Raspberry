@@ -64,7 +64,8 @@ body {
 <!--script src="suncalc.js"></script--> 
 <script>
 var changeBackgroundMinutes = 15;
-function getBackground() {
+/*
+function getWeather() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "getWeather.php", true);
   xhr.onload = function(e) {
@@ -73,7 +74,10 @@ function getBackground() {
     }
   };
   xhr.send();
-
+}
+*/
+function getBackground() {
+//  getWeather();
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "random_pic.php", true);
   xhr.onload = function(e) {
@@ -105,15 +109,19 @@ function changeBackground() {
   }
 */
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', "getluminance.php", true);
+//  xhr.open('POST', "getluminance.php", true);
+  xhr.open('POST', "getBrightness.php", true);
   xhr.onload = function(e) {
     if (this.status == 200) {
-//      alert(this.responseText);
-      resp = JSON.parse(this.responseText);
-      luminance = resp.luminance;
-      range = resp.max - resp.min;
+//      resp = JSON.parse(this.responseText);
+//      luminance = resp.luminance;
+//      range = resp.max - resp.min;
 //      opacity = ((resp.max - luminance) / (range/0.8)) + 0.1;
-      opacity = 0.5;
+
+      var brightness = this.responseText;
+      opacity = Math.max(0, 0.5 - (brightness / 100));
+//console.log(opacity);
+//      opacity = 0.5;
 //      document.getElementById("luminance").innerHTML = "Min: " + resp.min + " Max: " + resp.max + " Range: " + range + " Lum: " + luminance + " Opa: " + opacity;
       document.getElementById("redshift").style.opacity = opacity;
     }
@@ -141,10 +149,10 @@ function checkTime(i) {
 }
 function bodyLoad() {
   getBackground();
-  startTime();
+//  startTime();
 //  setTimeout(function(){ document.getElementById('weather').src="https://www.meteo.be/services/widget/.?postcode=8000&nbDay=1&type=8&lang=nl&bgImageId=0&bgColor=transparent&scrolChoice=0&colorTempMax=A5D6FF&colorTempMin=ffffff"; }, 7000);
 }
-      
+/*      
 setInterval(function() {  // get info from other Raspberry Pi with thermostat
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'text';
@@ -157,7 +165,7 @@ setInterval(function() {  // get info from other Raspberry Pi with thermostat
   };
   xhr.send();
 }, 60000); // every 1 minute
-
+*/
 setInterval(function() {  // get info from remote control
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "curl.php", true);
@@ -182,9 +190,9 @@ setInterval(function() {  // get info from remote control
 <div id="redshift" style="opacity: 0.5;"></div>
 <table id="messagebar">
   <tr>
-  <td id="date">Donderdag, 31 december 2018</td>
-  <td id="time">12:00</td>
-  <td id="temperature">&#x1f321; 20 °C</td>
+  <!--td id="date">Donderdag, 31 december 2018</td-->
+  <!--td id="time">12:00</td-->
+  <!--td id="temperature">&#x1f321; 20 °C</td-->
   <!--td id="wap">&#x1F4F6;</td-->
   <!--td id="luminance">-0</td-->
   </tr>
