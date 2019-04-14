@@ -1,4 +1,9 @@
 <?php
+//$user = 'gebruiker';
+//$password = 'wachtwoord';
+$user = 'gebruiker';
+$password = 'wachtwoord';
+$passphrase = 'Geheime schatkamer vol met gouden sleutels';
 // https://www.mjhall.org/php-cross-origin-resource-sharing/
 function decrypt(string $text, string $key): string {
   $hmac       = mb_substr($text, 0, 64, '8bit');
@@ -19,8 +24,7 @@ function decrypt(string $text, string $key): string {
 
 $req = array('device' => 'wall');
 $data = json_encode($req);
-$user = 'gebruiker';
-$password = 'wachtwoord';
+
 
 $curl = curl_init();
 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
@@ -38,7 +42,6 @@ $result = curl_exec($curl);
 $ciphertext = base64_decode($result);
 /*
 // Decryption
-$passphrase = 'Geheime schatkamer vol met gouden sleutels';
 $PrivKey = file_get_contents('data/private.key');
 $encKey     = mb_substr($ciphertext, 0, 512, '8bit');
 $ciphertext = mb_substr($ciphertext, 512, null, '8bit');
