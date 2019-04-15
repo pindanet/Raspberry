@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <!--
 TODO
+Sleep/Wakeup in backgroud(
 encrypt (scrypt, aes), TLS (https://github.com/digitalbazaar/forge)
-Helderheid display automatisch regelen via lichtmeting met camera
 Fullscreen HTML API
 -->
 <html>
@@ -351,22 +351,39 @@ Fullscreen HTML API
           document.body.style.cursor = "default";
         }
       }
+var backgroundtimeinterval = 15; // change background every 15 minutes
+      var backgroundtimecounter = backgroundtimeinterval;
       function background() {
         if (encryptedPIN != "") {
           encryptedPIN="";
           document.getElementById("content").innerHTML = "";
         }
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', "background.sh", true);
-        xhr.onload = function(e) {
-          if (this.status == 200) {
-            var lines = this.responseText.split("\n");
-            var imageFileName = lines[0];
-            document.body.style.backgroundImage = 'url(' + imageFileName + ')';
-            startBackgroundTimer = setTimeout(background, 864000);
+// check sleep/wakeup
+        var d = new Date();
+        var n = d.getDay();
+        for (var i = 0; i < thermostat.length; i++) {
+          if (thermostat[i].charAt(0) == n) {
+console.log(thermostat[i]);
           }
-        };
-        xhr.send();
+        }
+        backgroundtimecounter++;
+        if (backgroundtimecounter >= backgroundtimeinterval) {
+          backgroundtimecounter = 0;
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', "background.sh", true);
+          xhr.onload = function(e) {
+            if (this.status == 200) {
+              var lines = this.responseText.split("\n");
+              var imageFileName = lines[0];
+              document.body.style.backgroundImage = 'url(' + imageFileName + ')';
+//              startBackgroundTimer = setTimeout(background, 864000);
+              startBackgroundTimer = setTimeout(background, 60000); // elke minuut
+            }
+          };
+          xhr.send();
+        } else {
+          startBackgroundTimer = setTimeout(background, 60000); // elke minuut
+        }
       }
       function centerContent() {
         document.getElementById("content").style.top = (window.innerHeight - document.getElementById("content").offsetHeight)/2 - 8 + "px";
@@ -1146,6 +1163,7 @@ console.log(event);
       }
       var startTimer;
       function startTime(event) {
+        clearTimeout(startTimer);
         var today = new Date();
         var h = today.getHours();
         var m = today.getMinutes();
@@ -1155,8 +1173,11 @@ console.log(event);
 //        document.getElementById('content').innerHTML = '<span id="clock">' + h + ":" + m + ":" + s + '</span><br><span id="date">'+ toLocaleDateString(today) + '</span>';
         document.getElementById('content').innerHTML = '<span id="clock">' + h + ":" + m + '</span><br><span id="date">'+ toLocaleDateString(today) + '</span>';
         centerContent();
-        startTimer = setTimeout(startTime, 500);
-        event.stopPropagation();
+//        startTimer = setTimeout(startTime, 500);
+        startTimer = setTimeout(startTime, 1000); // elke seconde
+        if (typeof event !== 'undefined') {
+          event.stopPropagation();
+        }
       }
       function startMenuTime() {
         var today = new Date();
@@ -1165,7 +1186,8 @@ console.log(event);
         m = checkTime(m);
         document.getElementById('menuclock').innerHTML = h + ":" + m;
 //        centerContent();
-        startTimer = setTimeout(startMenuTime, 500);
+//        startTimer = setTimeout(startMenuTime, 500);
+        startTimer = setTimeout(startMenuTime, 1000); // elke seconde
       }
       function checkTime(i) {
         if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
