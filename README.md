@@ -72,8 +72,12 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     
 ## Autostart fullscreen browser
     nano .config/lxsession/LXDE-pi/autostart
+      @lxpanel --profile LXDE
+      @pcmanfm --desktop --profile LXDE
+      
       # Start fullscreen browser
-      @chromium-browser --kiosk --disable-infobars https://localhost/
+      @chromium-browser --kiosk --disable-infobars --incognito http://localhost/
+      
       # Disable Screensaver
       xset s off
       xset -dpms
