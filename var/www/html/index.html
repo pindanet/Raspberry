@@ -1172,6 +1172,7 @@ console.log(event);
         return i;
       }
 /* View in fullscreen */
+/*
 function fullscreen() {
   document.getElementById("content").innerHTML = "<button id=\"fullscreen\" onclick=\"openFullscreen(event);\";>Schermvullend</button>";
 }
@@ -1179,19 +1180,20 @@ function openFullscreen(event) {
   var elem = document.documentElement;
   if (elem.requestFullscreen) {
     elem.requestFullscreen();
-  } else if (elem.mozRequestFullScreen) { /* Firefox */
+  } else if (elem.mozRequestFullScreen) { // Firefox
     elem.mozRequestFullScreen();
-  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+  } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
     elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+  } else if (elem.msRequestFullscreen) { // IE/Edge
     elem.msRequestFullscreen();
   }
   document.getElementById("content").innerHTML = "";
   event.stopPropagation();
 }
+*/
     </script>
   </head>
-  <body onload="background();setcursor();fullscreen();">
+  <body onload="background();setcursor();startTime(event);">
 <svg id="symbolDefs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="0" width="0" style="position:absolute;">
 
   <symbol id="cloud">
