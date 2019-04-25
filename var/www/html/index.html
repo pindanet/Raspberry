@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!--
 TODO
-Sleep/Wakeup in backgroud(
 encrypt (scrypt, aes), TLS (https://github.com/digitalbazaar/forge)
 Fullscreen HTML API
 -->
@@ -363,7 +362,25 @@ var backgroundtimeinterval = 15; // change background every 15 minutes
         var n = d.getDay();
         for (var i = 0; i < thermostat.length; i++) {
           if (thermostat[i].charAt(0) == n) {
-console.log(thermostat[i]);
+	    var hour = parseInt(thermostat[i].substring(2, 4));
+	    var min = parseInt(thermostat[i].substring(5, 7));
+            var statedate = new Date();
+            statedate.setHours(hour, min, 0, 0);
+	    if (thermostat[i].substring(8) == "-off-") {
+
+              var xhr = new XMLHttpRequest();
+              xhr.open('POST', "getstate.php", true);
+              xhr.onload = function(e) {
+                if (this.status == 200) {
+console.log(this.responseText);
+                }
+              };
+              xhr.send();
+
+console.log(thermostat[i], new Date(statedate.getTime() + (5*60*1000)), thermostat[i].substring(8));
+            } else {
+console.log(thermostat[i], new Date(statedate.getTime() + (5*60*1000)), thermostat[i].substring(8));
+            }
           }
         }
         backgroundtimecounter++;
@@ -977,6 +994,11 @@ loadThermostat();
                 break;
               case "WiFi AP uitgeschakeld":
                 document.getElementById("statuswireless").innerHTML = ``;
+                break;              
+              case "Stroomtoevoer naar Wall ingeschakeld.":
+              case "Wall afgesloten en stroomtoevoer uitgeschakeld.":
+console.log(this.responseText);
+                startTime();
                 break;              
             }
           }
