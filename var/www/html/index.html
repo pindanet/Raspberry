@@ -350,36 +350,49 @@ Fullscreen HTML API
           document.body.style.cursor = "default";
         }
       }
-var backgroundtimeinterval = 15; // change background every 15 minutes
+      var backgroundtimeinterval = 15; // change background every 15 minutes
       var backgroundtimecounter = backgroundtimeinterval;
+      function setstate(state) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "setstate.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+console.log(state, this.responseText);
+          }
+        };
+        xhr.send("state=" + state);
+      }
       function background() {
         if (encryptedPIN != "") {
           encryptedPIN="";
           document.getElementById("content").innerHTML = "";
         }
 // check sleep/wakeup
-        var d = new Date();
-        var n = d.getDay();
+        var nowdate = new Date(); // Works in Chrome, Chromium, not in Firefox
+        var n = nowdate.getDay();
         for (var i = 0; i < thermostat.length; i++) {
           if (thermostat[i].charAt(0) == n) {
 	    var hour = parseInt(thermostat[i].substring(2, 4));
 	    var min = parseInt(thermostat[i].substring(5, 7));
             var statedate = new Date();
             statedate.setHours(hour, min, 0, 0);
+            var thermostatIndex = i;
+// Chrome uses local time, Firefox universal time (adapt use with Firefox)
+            var startinterval = statedate.getTime() - (1*60*1000); // 1 minute interval
+            var endinterval = statedate.getTime() + (1*60*1000); // 1 minute interval
 	    if (thermostat[i].substring(8) == "-off-") {
-
-              var xhr = new XMLHttpRequest();
-              xhr.open('POST', "getstate.php", true);
-              xhr.onload = function(e) {
-                if (this.status == 200) {
-console.log(this.responseText);
+              if (nowdate.getTime() > startinterval) {
+                if(nowdate.getTime() < endinterval) {
+                  setstate("sleep");
                 }
-              };
-              xhr.send();
-
-console.log(thermostat[i], new Date(statedate.getTime() + (5*60*1000)), thermostat[i].substring(8));
+              }
             } else {
-console.log(thermostat[i], new Date(statedate.getTime() + (5*60*1000)), thermostat[i].substring(8));
+              if (nowdate.getTime() > startinterval) {
+                if(nowdate.getTime() < endinterval) {
+                  setstate("awake");
+                }
+              }
             }
           }
         }
@@ -965,7 +978,7 @@ loadThermostat();
       }
       function resetThermostat(event) {
         event.stopPropagation();
-        var raw = "0;09:30;20.00 0;21:25;-off- 1;09:30;20.00 1;21:25;-off- 2;09:30;20.00 2;21:25;-off- 3;09:30;20.00 3;21:25;-off- 4;09:30;20.00 4;21:25;-off- 5;09:30;20.00 5;21:25;-off- 6;09:30;20.00 6;21:25;-off-";
+        var raw = "0;07:45;20.00 0;22:25;-off- 1;07:45;20.00 1;22:25;-off- 2;07:45;20.00 2;22:25;-off- 3;07:45;20.00 3;22:25;-off- 4;07:45;20.00 4;22:25;-off- 5;07:45;20.00 5;22:25;-off- 6;07:45;20.00 6;22:25;-off-";
         thermostat = raw.split(" ");
         weeklyThermostat(event);
       }
@@ -997,7 +1010,6 @@ loadThermostat();
                 break;              
               case "Stroomtoevoer naar Wall ingeschakeld.":
               case "Wall afgesloten en stroomtoevoer uitgeschakeld.":
-console.log(this.responseText);
                 startTime();
                 break;              
             }
