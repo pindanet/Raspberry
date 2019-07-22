@@ -38,6 +38,7 @@ sudo apt autoremove -y
 
 # Change user
 sudo adduser --disabled-password --gecos "" "$NEW_USER"
+sudo passwd dany
 
 echo "Login as $NEW_USER"
 read -p "Press Return to Restart " key
