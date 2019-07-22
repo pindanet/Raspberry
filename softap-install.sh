@@ -7,6 +7,7 @@ LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
 NEW_HOSTNAME="snt-guest"
+NEW_USER="dany"
 
 # Change Keyboard
 sudo raspi-config nonint do_configure_keyboard "$KEYMAP"
@@ -33,6 +34,9 @@ sudo raspi-config nonint do_ssh 0
 sudo apt update
 sudo apt dist-upgrade -y
 sudo apt autoremove -y
+
+# Change user
+sudo adduser --disabled-password --gecos "" "$NEW_USER"
 
 # Webserver
 sudo apt install apache2 php libapache2-mod-php -y
