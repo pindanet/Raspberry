@@ -9,6 +9,7 @@ COUNTRY="BE"
 NEW_HOSTNAME="snt-guest"
 NEW_USER="dany"
 
+if [ $USER == "pi" ]; then
 # Change Keyboard
 sudo raspi-config nonint do_configure_keyboard "$KEYMAP"
 
@@ -38,6 +39,10 @@ sudo apt autoremove -y
 # Change user
 sudo adduser --disabled-password --gecos "" "$NEW_USER"
 
+echo "Login as $NEW_USER"
+read -p "Press Return to Restart " key
+
+else
 # Webserver
 sudo apt install apache2 php libapache2-mod-php -y
 sudo systemctl restart apache2.service
@@ -130,6 +135,6 @@ sudo systemctl enable hostapd.service
 
 #sudo sed -i '/^#.*net\.ipv4\.ip_forward=/s/^#//' /etc/sysctl.conf
 #sudo sed -i '/^#.*net\.ipv6\.conf\.all\.forwarding=/s/^#//' /etc/sysctl.conf
-
+fi
 # Restart Raspberry Pi
 sudo shutdown -r now
