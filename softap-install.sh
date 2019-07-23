@@ -74,6 +74,18 @@ echo "  path = /media" | sudo tee -a /etc/samba/smb.conf
 echo "  public = yes" | sudo tee -a /etc/samba/smb.conf
 echo "  force user = pi" | sudo tee -a /etc/samba/smb.conf
 sudo systemctl restart smbd.service
+# Patch for Windows Web Service Discovery
+wget https://raw.githubusercontent.com/christgau/wsdd/master/src/wsdd.py
+sudo mv wsdd.py /usr/bin/wsdd
+sudo chmod +x /usr/bin/wsdd
+wget https://raw.githubusercontent.com/christgau/wsdd/master/etc/systemd/wsdd.service
+sudo mv wsdd.service /etc/systemd/system/
+sudo sed -i.ori "s/User=nobody/User=$USER/g" /etc/systemd/system/wsdd.service
+UserGroup=$(id -gn)
+sudo sed -i "s/Group=nobody/Group=$UserGroup/g" /etc/systemd/system/wsdd.service
+sudo systemctl daemon-reload
+sudo systemctl start wsdd.service
+sudo systemctl enable wsdd.service
 
 # SoftAP
 sudo apt install hostapd bridge-utils -y
