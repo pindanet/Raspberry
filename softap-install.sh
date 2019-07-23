@@ -2,6 +2,10 @@
 # For Raspbian Stretch Lite
 # wget https://raw.githubusercontent.com/pindanet/Raspberry/master/softap-install.sh
 
+# ToDo
+# Continue once after reboot
+# Ask for Hostname, New User and Password
+
 KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
