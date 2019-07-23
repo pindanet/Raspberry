@@ -72,7 +72,7 @@ echo "[Media]" | sudo tee -a /etc/samba/smb.conf
 echo "  comment = SoftAP-Network-Attached Storage" | sudo tee -a /etc/samba/smb.conf
 echo "  path = /media" | sudo tee -a /etc/samba/smb.conf
 echo "  public = yes" | sudo tee -a /etc/samba/smb.conf
-echo "  force user = pi" | sudo tee -a /etc/samba/smb.conf
+echo "  force user = $USER" | sudo tee -a /etc/samba/smb.conf
 sudo systemctl restart smbd.service
 # Patch for Windows Web Service Discovery
 wget https://raw.githubusercontent.com/christgau/wsdd/master/src/wsdd.py
