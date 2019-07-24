@@ -1,5 +1,5 @@
 #!/bin/bash
-# For Raspbian Stretch Lite
+# For Raspbian Buster Lite
 # wget https://raw.githubusercontent.com/pindanet/Raspberry/master/softap-install.sh
 
 # ToDo
