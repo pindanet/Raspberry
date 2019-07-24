@@ -102,6 +102,14 @@ else
   sudo systemctl enable wsdd.service
 
   # SoftAP
+  while true; do
+    read -s -p "WiFi Access Point Password: " password
+    echo
+    read -s -p "WiFi Access Point Password (again): " password2
+    echo
+    [ "$password" = "$password2" ] && break
+    echo "Please try again"
+  done
   sudo apt install hostapd bridge-utils -y
   sudo systemctl stop hostapd
 
@@ -113,15 +121,6 @@ else
   echo "auto br0" | sudo tee -a /etc/network/interfaces
   echo "iface br0 inet manual" | sudo tee -a /etc/network/interfaces
   echo "bridge_ports eth0 wlan0" | sudo tee -a /etc/network/interfaces
-
-  while true; do
-    read -s -p "WiFi Access Point Password: " password
-    echo
-    read -s -p "WiFi Access Point Password (again): " password2
-    echo
-    [ "$password" = "$password2" ] && break
-    echo "Please try again"
-  done
 
   cat > hostapd.conf <<EOF
 interface=wlan0
