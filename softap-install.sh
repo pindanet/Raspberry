@@ -3,7 +3,6 @@
 # wget https://raw.githubusercontent.com/pindanet/Raspberry/master/softap-install.sh
 
 # ToDo
-# Continue once after reboot
 
 KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
@@ -58,6 +57,10 @@ if [ $USER == "pi" ]; then
 else
   # Disable Continue after reboot
   sed -i '/^bash softap-install.sh/d' .bashrc
+  
+  # Remove pi user
+  sudo userdel -r pi
+  
   # Webserver
   sudo apt install apache2 php libapache2-mod-php -y
   sudo systemctl restart apache2.service
