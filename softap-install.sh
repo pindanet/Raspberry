@@ -8,7 +8,7 @@
 # Test if executed with Bash
 case "$BASH_VERSION" in
   "") echo "usage: bash softap-install.sh"
-      exit
+      exit;;
 esac
 
 KEYMAP="be"
