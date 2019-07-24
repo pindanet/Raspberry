@@ -50,7 +50,7 @@ if [ $USER == "pi" ]; then
   sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio "$NEW_USER"
   
   # Continue after reboot
-  sudo echo "bash softap-install.sh" >> /home/$NEW_USER/.bashrc
+  echo "bash softap-install.sh" | sudo tee -a /home/$NEW_USER/.bashrc
 
   echo "Login as $NEW_USER"
   read -p "Press Return to Restart " key
