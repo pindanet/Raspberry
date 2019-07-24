@@ -10,10 +10,6 @@ TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
 
 if [ $USER == "pi" ]; then
-
-  read -p "Enter the new hostname [snt-guest]: " NEW_HOSTNAME
-  NEW_HOSTNAME=${NEW_HOSTNAME:-snt-guest}
-
   # Change Keyboard
   sudo raspi-config nonint do_configure_keyboard "$KEYMAP"
 
@@ -27,6 +23,8 @@ if [ $USER == "pi" ]; then
   sudo raspi-config nonint do_wifi_country "$COUNTRY"
 
   # Change hostname
+  read -p "Enter the new hostname [snt-guest]: " NEW_HOSTNAME
+  NEW_HOSTNAME=${NEW_HOSTNAME:-snt-guest}
   sudo raspi-config nonint do_hostname "$NEW_HOSTNAME"
 
   # Change password
