@@ -5,7 +5,7 @@
 
 # ToDo
 
-if [ "$BASH_VERSION" = '' ]; then
+if [ "$BASH_VERSION" == '' ]; then
   echo "usage: bash softap-install.sh"
   exit
 fi
@@ -15,7 +15,7 @@ LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
 
-if [ $USER = "pi" ]; then
+if [ $USER == "pi" ]; then
   # Change Keyboard
   sudo raspi-config nonint do_configure_keyboard "$KEYMAP"
 
