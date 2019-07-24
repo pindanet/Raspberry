@@ -4,111 +4,124 @@
 
 # ToDo
 # Continue once after reboot
-# Ask for Hostname, New User and Password
 
 KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
-NEW_HOSTNAME="snt-guest"
-NEW_USER="dany"
 
 if [ $USER == "pi" ]; then
-# Change Keyboard
-sudo raspi-config nonint do_configure_keyboard "$KEYMAP"
 
-# Change locale
-sudo raspi-config nonint do_change_locale "$LOCALE"
+  read -p "Enter the new hostname [snt-guest]: " NEW_HOSTNAME
+  NEW_HOSTNAME=${NEW_HOSTNAME:-snt-guest}
 
-# Change timezone
-sudo raspi-config nonint do_change_timezone "$TIMEZONE"
+  read -p "Enter the new user [dany]: " NEW_USER
+  NEW_USER=${NEW_USER:-dany}
 
-# Change WiFi country
-sudo raspi-config nonint do_wifi_country "$COUNTRY"
+  # Change Keyboard
+  sudo raspi-config nonint do_configure_keyboard "$KEYMAP"
 
-# Change hostname
-sudo raspi-config nonint do_hostname "$NEW_HOSTNAME"
+  # Change locale
+  sudo raspi-config nonint do_change_locale "$LOCALE"
 
-# Change password
-sudo raspi-config nonint do_change_pass
+  # Change timezone
+  sudo raspi-config nonint do_change_timezone "$TIMEZONE"
 
-# enable ssh
-sudo raspi-config nonint do_ssh 0
+  # Change WiFi country
+  sudo raspi-config nonint do_wifi_country "$COUNTRY"
 
-# Upgrade
-sudo apt update
-sudo apt dist-upgrade -y
-sudo apt autoremove -y
+  # Change hostname
+  sudo raspi-config nonint do_hostname "$NEW_HOSTNAME"
 
-# Change user
-sudo adduser --disabled-password --gecos "" "$NEW_USER"
-sudo passwd "$NEW_USER"
-sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio "$NEW_USER"
+  # Change password
+  sudo raspi-config nonint do_change_pass
 
-echo "Login as $NEW_USER"
-read -p "Press Return to Restart " key
+  # enable ssh
+  sudo raspi-config nonint do_ssh 0
+
+  # Upgrade
+  sudo apt update
+  sudo apt dist-upgrade -y
+  sudo apt autoremove -y
+
+  # Change user
+  sudo adduser --disabled-password --gecos "" "$NEW_USER"
+  sudo passwd "$NEW_USER"
+  sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio "$NEW_USER"
+
+  echo "Login as $NEW_USER"
+  read -p "Press Return to Restart " key
 
 else
-# Webserver
-sudo apt install apache2 php libapache2-mod-php -y
-sudo systemctl restart apache2.service
+  # Webserver
+  sudo apt install apache2 php libapache2-mod-php -y
+  sudo systemctl restart apache2.service
 
-sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/index.html
-sudo wget -O /var/www/html/pinda.png https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/pinda.png
-sudo wget -O /var/www/html/koffer.png https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/koffer.png
-sudo wget -O /var/www/html/brugge.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/brugge.svg
-sudo wget -O /var/www/html/fileshare.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/fileshare.svg
-sudo wget -O /var/www/html/guest_wifi.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/guest_wifi.svg
-sudo wget -O /var/www/html/system.php https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/system.php
+  sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/index.html
+  sudo wget -O /var/www/html/pinda.png https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/pinda.png
+  sudo wget -O /var/www/html/koffer.png https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/koffer.png
+  sudo wget -O /var/www/html/brugge.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/brugge.svg
+  sudo wget -O /var/www/html/fileshare.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/fileshare.svg
+  sudo wget -O /var/www/html/guest_wifi.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/guest_wifi.svg
+  sudo wget -O /var/www/html/system.php https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/system.php
 
-echo "www-data ALL = NOPASSWD: /sbin/shutdown -h now" | sudo tee -a /etc/sudoers
+  echo "www-data ALL = NOPASSWD: /sbin/shutdown -h now" | sudo tee -a /etc/sudoers
 
-# Automount
-echo 'ACTION=="add", KERNEL=="sd*", TAG+="systemd", ENV{SYSTEMD_WANTS}="usbstick-handler@%k"' | sudo tee /etc/udev/rules.d/usbstick.rules
-sudo wget -O /lib/systemd/system/usbstick-handler@.service https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/usbstick-handler
-sudo wget -O /usr/local/bin/automount https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/automount
-sudo chmod +x /usr/local/bin/automount
-sudo apt install exfat-fuse -y
+  # Automount
+  echo 'ACTION=="add", KERNEL=="sd*", TAG+="systemd", ENV{SYSTEMD_WANTS}="usbstick-handler@%k"' | sudo tee /etc/udev/rules.d/usbstick.rules
+  sudo wget -O /lib/systemd/system/usbstick-handler@.service https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/usbstick-handler
+  sudo wget -O /usr/local/bin/automount https://raw.githubusercontent.com/pindanet/Raspberry/master/softap/automount
+  sudo chmod +x /usr/local/bin/automount
+  sudo apt install exfat-fuse -y
 
-# Share automounted USB-sticks
-sudo apt install samba samba-common-bin -y
-echo "[Media]" | sudo tee -a /etc/samba/smb.conf
-echo "  comment = SoftAP-Network-Attached Storage" | sudo tee -a /etc/samba/smb.conf
-echo "  path = /media" | sudo tee -a /etc/samba/smb.conf
-echo "  public = yes" | sudo tee -a /etc/samba/smb.conf
-echo "  force user = $USER" | sudo tee -a /etc/samba/smb.conf
-sudo systemctl restart smbd.service
-# Patch for Windows Web Service Discovery
-wget https://raw.githubusercontent.com/christgau/wsdd/master/src/wsdd.py
-sudo mv wsdd.py /usr/bin/wsdd
-sudo chmod +x /usr/bin/wsdd
-wget https://raw.githubusercontent.com/christgau/wsdd/master/etc/systemd/wsdd.service
-sudo mv wsdd.service /etc/systemd/system/
-sudo sed -i.ori "s/User=nobody/User=$USER/g" /etc/systemd/system/wsdd.service
-UserGroup=$(id -gn)
-sudo sed -i "s/Group=nobody/Group=$UserGroup/g" /etc/systemd/system/wsdd.service
-sudo systemctl daemon-reload
-sudo systemctl start wsdd.service
-sudo systemctl enable wsdd.service
+  # Share automounted USB-sticks
+  sudo apt install samba samba-common-bin -y
+  echo "[Media]" | sudo tee -a /etc/samba/smb.conf
+  echo "  comment = SoftAP-Network-Attached Storage" | sudo tee -a /etc/samba/smb.conf
+  echo "  path = /media" | sudo tee -a /etc/samba/smb.conf
+  echo "  public = yes" | sudo tee -a /etc/samba/smb.conf
+  echo "  force user = $USER" | sudo tee -a /etc/samba/smb.conf
+  sudo systemctl restart smbd.service
+  # Patch for Windows Web Service Discovery
+  wget https://raw.githubusercontent.com/christgau/wsdd/master/src/wsdd.py
+  sudo mv wsdd.py /usr/bin/wsdd
+  sudo chmod +x /usr/bin/wsdd
+  wget https://raw.githubusercontent.com/christgau/wsdd/master/etc/systemd/wsdd.service
+  sudo mv wsdd.service /etc/systemd/system/
+  sudo sed -i.ori "s/User=nobody/User=$USER/g" /etc/systemd/system/wsdd.service
+  UserGroup=$(id -gn)
+  sudo sed -i "s/Group=nobody/Group=$UserGroup/g" /etc/systemd/system/wsdd.service
+  sudo systemctl daemon-reload
+  sudo systemctl start wsdd.service
+  sudo systemctl enable wsdd.service
 
-# SoftAP
-sudo apt install hostapd bridge-utils -y
-sudo systemctl stop hostapd
+  # SoftAP
+  sudo apt install hostapd bridge-utils -y
+  sudo systemctl stop hostapd
 
-echo "denyinterfaces wlan0" | sudo tee -a /etc/dhcpcd.conf
-echo "denyinterfaces eth0" | sudo tee -a /etc/dhcpcd.conf
-sudo brctl addbr br0
-sudo brctl addif br0 eth0
-echo "# Bridge setup" | sudo tee -a /etc/network/interfaces
-echo "auto br0" | sudo tee -a /etc/network/interfaces
-echo "iface br0 inet manual" | sudo tee -a /etc/network/interfaces
-echo "bridge_ports eth0 wlan0" | sudo tee -a /etc/network/interfaces
+  echo "denyinterfaces wlan0" | sudo tee -a /etc/dhcpcd.conf
+  echo "denyinterfaces eth0" | sudo tee -a /etc/dhcpcd.conf
+  sudo brctl addbr br0
+  sudo brctl addif br0 eth0
+  echo "# Bridge setup" | sudo tee -a /etc/network/interfaces
+  echo "auto br0" | sudo tee -a /etc/network/interfaces
+  echo "iface br0 inet manual" | sudo tee -a /etc/network/interfaces
+  echo "bridge_ports eth0 wlan0" | sudo tee -a /etc/network/interfaces
 
-cat > hostapd.conf <<EOF
+  while true; do
+    read -s -p "WiFi Access Point Password: " password
+    echo
+    read -s -p "WiFi Access Point Password (again): " password2
+    echo
+    [ "$password" = "$password2" ] && break
+    echo "Please try again"
+  done
+
+  cat > hostapd.conf <<EOF
 interface=wlan0
 bridge=br0
 #driver=nl80211
-ssid=snt-guest
+ssid=$HOSTNAME
 country_code=BE
 hw_mode=g
 channel=7
@@ -122,15 +135,15 @@ macaddr_acl=0
 auth_algs=1
 ignore_broadcast_ssid=0
 wpa=2
-wpa_passphrase=snt-guest
+wpa_passphrase=$password
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP
 rsn_pairwise=CCMP
 EOF
-sudo mv hostapd.conf /etc/hostapd/hostapd.conf
+  sudo mv hostapd.conf /etc/hostapd/hostapd.conf
 
-sudo systemctl disable hostapd
-cat > hostapd.service <<EOF
+  sudo systemctl disable hostapd
+  cat > hostapd.service <<EOF
 [Unit]
 Description=advanced IEEE 802.11 management
 Wants=network-online.target
@@ -145,14 +158,10 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-sudo mv hostapd.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable hostapd.service
+  sudo mv hostapd.service /etc/systemd/system/
+  sudo systemctl daemon-reload
+  sudo systemctl enable hostapd.service
 
-#sudo sed -i 's/^#DAEMON_OPTS=""/DAEMON_OPTS="\/etc\/hostapd\/hostapd.conf"/' /etc/default/hostapd
-
-#sudo sed -i '/^#.*net\.ipv4\.ip_forward=/s/^#//' /etc/sysctl.conf
-#sudo sed -i '/^#.*net\.ipv6\.conf\.all\.forwarding=/s/^#//' /etc/sysctl.conf
 fi
 # Restart Raspberry Pi
 sudo shutdown -r now
