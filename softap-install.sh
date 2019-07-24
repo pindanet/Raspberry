@@ -34,9 +34,6 @@ if [ $USER == "pi" ]; then
   NEW_HOSTNAME=${NEW_HOSTNAME:-snt-guest}
   sudo raspi-config nonint do_hostname "$NEW_HOSTNAME"
 
-  # Change password
-  sudo raspi-config nonint do_change_pass
-
   # enable ssh
   sudo raspi-config nonint do_ssh 0
 
