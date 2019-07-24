@@ -48,11 +48,16 @@ if [ $USER == "pi" ]; then
   sudo adduser --disabled-password --gecos "" "$NEW_USER"
   sudo passwd "$NEW_USER"
   sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio "$NEW_USER"
+  
+  # Continue after reboot
+  sudo echo "bash softap-install.sh" >> /home/$NEW_USER/.bashrc
 
   echo "Login as $NEW_USER"
   read -p "Press Return to Restart " key
 
 else
+  # Disable Continue after reboot
+  sed -i '/^bash softap-install.sh/d' .bashrc
   # Webserver
   sudo apt install apache2 php libapache2-mod-php -y
   sudo systemctl restart apache2.service
