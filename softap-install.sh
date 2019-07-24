@@ -5,10 +5,11 @@
 
 # ToDo
 
-if [ "$BASH_VERSION" == '' ]; then
-  echo "usage: bash softap-install.sh"
-  exit
-fi
+# Test if executed with Bash
+case "$BASH_VERSION" in
+  "") echo "usage: bash softap-install.sh"
+      exit
+esac
 
 KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
