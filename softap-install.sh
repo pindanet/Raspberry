@@ -5,6 +5,11 @@
 
 # ToDo
 
+if [ "$BASH_VERSION" == '' ]; then
+  echo "usage: bash softap-install.sh"
+  exit
+fi
+
 KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
