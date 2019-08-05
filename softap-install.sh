@@ -46,7 +46,10 @@ if [ $USER == "pi" ]; then
   read -p "Enter the new user [dany]: " NEW_USER
   NEW_USER=${NEW_USER:-dany}
   sudo adduser --disabled-password --gecos "" "$NEW_USER"
-  sudo passwd "$NEW_USER"
+  while : ; do
+    sudo passwd "$NEW_USER"
+    [ $? = 0 ] && break
+  done
   sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio "$NEW_USER"
   
   # Continue after reboot
