@@ -10,7 +10,7 @@ if [ ! -d /var/www/html/motion/day ]; then
   mkdir -p /var/www/html/motion/day;
 fi
 now=$(date +%H:%M)
-raspistill -vf -hf -n -w 800 -h 480 -o /var/www/html/motion/day/$now.jpg
+raspistill -n -w 800 -h 480 -o /var/www/html/motion/day/$now.jpg
 find /var/www/html/motion/day/*.jpg -mtime +0 -type f -delete
 
 # Calculate brightness for screen backlight adjustment
