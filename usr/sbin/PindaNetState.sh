@@ -13,6 +13,13 @@ now=$(date +%H:%M)
 raspistill -n -w 800 -h 480 -o /var/www/html/motion/day/$now.jpg
 find /var/www/html/motion/day/*.jpg -mtime +0 -type f -delete
 
+# Calculate lux
+FNumber=$(identify -verbose /var/www/html/motion/day/$now.jpg | grep FNumber | awk '{print $2}')
+ExposureTime=$(identify -verbose /var/www/html/motion/day/$now.jpg | grep ExposureTime | awk '{print $2}')
+ISOSpeedRatings=$(identify -verbose /var/www/html/motion/day/$now.jpg | grep ISOSpeedRatings | awk '{print $2}')
+lux=$(awk "BEGIN {printf \"%.2f\", ($FNumber * $FNumber) / ($ISOSpeedRatings * $ExposureTime)}")
+echo $lux  > /var/www/html/data/lux
+
 # Calculate brightness for screen backlight adjustment
 brightness=$(convert /var/www/html/motion/day/$now.jpg -colorspace gray -format "%[fx:100*mean]" info:)
 echo $brightness > /var/www/html/data/brightness
