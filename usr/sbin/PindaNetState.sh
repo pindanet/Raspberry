@@ -20,14 +20,46 @@ ExposureTime=$(grep ExposureTime <<< "$jpginfo" | awk '{print $2}')
 ISOSpeedRatings=$(grep ISOSpeedRatings <<< "$jpginfo" | awk '{print $2}')
 lux=$(awk "BEGIN {printf \"%.2f\", ($FNumber * $FNumber) / ($ISOSpeedRatings * $ExposureTime)}")
 echo $lux  > /var/www/html/data/lux
+if [ ! -f /var/www/html/data/luxmax ]; then
+  echo 0 > /var/www/html/data/luxmax
+fi
+luxmax=$(cat /var/www/html/data/luxmax)
+if [ ! -f /var/www/html/data/luxmin ]; then
+  echo 1000000 > /var/www/html/data/luxmin
+fi
+luxmin=$(cat /var/www/html/data/luxmin)
+if [ ${lux%.*} -eq ${luxmax%.*} ] && [ ${lux#*.} \> ${luxmax#*.} ] || [ ${lux%.*} -gt ${luxmax%.*} ]; then
+  luxmax=$lux
+fi
+if [ ${lux%.*} -eq ${luxmin%.*} ] && [ ${lux#*.} \< ${luxmin#*.} ] || [ ${lux%.*} -lt ${luxmin%.*} ]; then
+  luxmin=$lux
+fi
+echo $luxmax > /var/www/html/data/luxmax 
+echo $luxmin > /var/www/html/data/luxmin
+
+# Kalibrate for screen backlight
+luxrange=$(awk "BEGIN {printf \"%.2f\", $luxmax - $luxmin}")
+luxrel=$(awk "BEGIN {printf \"%.2f\", ($lux - $luxmin) / $luxrange}")
+backlight=$(awk "BEGIN {printf \"%.0f\", 25 + $luxrel * 230}")
+current=$(cat /sys/class/backlight/rpi_backlight/brightness)
+
+# Smooth backlight adjustment
+if [ $current -lt $backlight ]; then
+  for i in $(seq $current $backlight); do
+    echo $i > /sys/class/backlight/rpi_backlight/brightness
+  done
+else
+  for i in $(seq $current -1 $backlight); do
+    echo $i > /sys/class/backlight/rpi_backlight/brightness
+  done
+fi
 
 # Calculate brightness for screen backlight adjustment
 brightness=$(convert /var/www/html/motion/day/$now.jpg -colorspace gray -format "%[fx:100*mean]" info:)
 echo $brightness > /var/www/html/data/brightness
-backlight=$(echo $brightness 1.27 | awk '{printf "%.0f\n",$1*$2}')
-backlight=$(( $backlight > 24 ? $backlight : 24 ))
-#echo $backlight | sudo tee /sys/class/backlight/rpi_backlight/brightness
-echo $backlight > /sys/class/backlight/rpi_backlight/brightness
+#backlight=$(echo $brightness 1.27 | awk '{printf "%.0f\n",$1*$2}')
+#backlight=$(( $backlight > 24 ? $backlight : 24 ))
+#echo $backlight > /sys/class/backlight/rpi_backlight/brightness
 # deactivate status led's
 echo 0 > /sys/class/leds/led0/brightness
 echo 0 > /sys/class/leds/led1/brightness
