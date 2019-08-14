@@ -113,7 +113,6 @@ function changeBackground() {
   xhr.open('POST', "getLux.php", true);
   xhr.onload = function(e) {
     if (this.status == 200) {
-      // https://stackoverflow.com/questions/17101972/how-to-make-an-array-from-a-string-by-newline-in-jav$
       var response = this.responseText.split("\n");
       var lux = response[0];
       var luxmin = response[1];
