@@ -110,23 +110,33 @@ function changeBackground() {
 */
   var xhr = new XMLHttpRequest();
 //  xhr.open('POST', "getluminance.php", true);
-  xhr.open('POST', "getBrightness.php", true);
+  xhr.open('POST', "getLux.php", true);
   xhr.onload = function(e) {
     if (this.status == 200) {
-//      resp = JSON.parse(this.responseText);
-//      luminance = resp.luminance;
-//      range = resp.max - resp.min;
-//      opacity = ((resp.max - luminance) / (range/0.8)) + 0.1;
-
-      var brightness = this.responseText;
-      opacity = Math.max(0, 0.5 - (brightness / 100));
-//console.log(opacity);
-//      opacity = 0.5;
-//      document.getElementById("luminance").innerHTML = "Min: " + resp.min + " Max: " + resp.max + " Range: " + range + " Lum: " + luminance + " Opa: " + opacity;
+      // https://stackoverflow.com/questions/17101972/how-to-make-an-array-from-a-string-by-newline-in-jav$
+      var response = this.responseText.split("\n");
+      var lux = response[0];
+      var luxmin = response[1];
+      var luxmax = response[2];
+      var luxrange = luxmax - luxmin;
+      var luxrel = (lux - luxmin) / luxrange;
+      opacity = 0.5 - (luxrel * 0.5);
+// console.log(lux, luxmin, luxmax, luxrange, luxrel, opacity);
+//      opacity = 1;
       document.getElementById("redshift").style.opacity = opacity;
     }
   };
   xhr.send();
+
+//  xhr.open('POST', "getBrightness.php", true);
+//  xhr.onload = function(e) {
+//    if (this.status == 200) {
+//      var brightness = this.responseText;
+//      opacity = Math.max(0, 0.5 - (brightness / 100));
+//      document.getElementById("redshift").style.opacity = opacity;
+//    }
+//  };
+//  xhr.send();
 }
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
@@ -171,6 +181,7 @@ setInterval(function() {  // get info from remote control
   xhr.open('POST', "curl.php", true);
   xhr.onreadystatechange = function() {
     if (xhr.readyState == 4 && xhr.status == 200) {
+console.log(xhr.responseText);
       var jsondata = JSON.parse(xhr.responseText);
 //      document.getElementById("temperature").innerHTML = xhr.responseText;
       switch(jsondata.command) {
