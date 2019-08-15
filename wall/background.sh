@@ -4,18 +4,18 @@ sleep 60
 
 backgroundDir="/var/www/html/background"
 if [ ! -f ${backgroundDir}/latest.txt ]; then
-  sudo mkdir ${backgroundDir}
-  sudo touch -d "1 days ago" ${backgroundDir}/latest.txt
+  mkdir ${backgroundDir}
+  touch -d "2 days ago" ${backgroundDir}/latest.txt
 fi
 
 if [[ `date -r ${backgroundDir}/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]; then
-  sudo touch ${backgroundDir}/latest.txt
+  touch ${backgroundDir}/latest.txt
 
   # Keep the 300 latest wallpapers
   numfiles=`ls ${backgroundDir} | wc -l`
   while [ $((numfiles)) -gt 299 ]; do
     oldest=`ls -t ${backgroundDir}/* | tail -1`
-    sudo rm $oldest
+    rm $oldest
     numfiles=`ls ${backgroundDir}/ | wc -l`
   done
 
@@ -27,14 +27,24 @@ if [[ `date -r ${backgroundDir}/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]
   # check if InterfaceLift is reachable
   if curl -s --head  --request GET https://$SITE ; then
     # extract wallpaper of the day url
-    WOTD=`wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0" -qO - $PAGE | grep "click here to download" | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d '>' -f 1`
+    WOTD=`wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0" -qO - $PAGE | grep "click here to download" | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d '>' -f 1`
 
-    sudo wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0"  --output-document=${backgroundDir}/$(basename $WOTD) https://$SITE$WOTD
+    wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0"  --output-document=${backgroundDir}/$(basename $WOTD) https://$SITE$WOTD
+    IMGFROM="InterfaceLift: $(basename $WOTD)"
+    achtergrond=${backgroundDir}/$(basename $WOTD)
   else
     PICPAGEURL=`wget -qO - http://wallpaperswide.com/latest_wallpapers.html | awk '/mini-hud/{getline; print}' | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
     PICURL=`wget -qO - http://wallpaperswide.com$PICPAGEURL | grep 1920x1200.jpg | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
-    sudo wget -O ${backgroundDir}/${PICURL:10} http://wallpaperswide.com$PICURL
+    wget -O ${backgroundDir}/${PICURL:10} http://wallpaperswide.com$PICURL
+    IMGFROM="WallpapersWide: $(basename $PICURL)"
+    achtergrond=${backgroundDir}/${PICURL:10}
 #    mogrify -crop 800x480+0+60 /var/www/html/background/${PICURL:10}
+  fi
+  if file "$achtergrond" | grep 'JPEG image data' ; then
+    echo "Nieuwe ${IMGFROM} achtergrond opgehaald."
+  else
+    rm "$achtergrond"
+    echo "De ${IMGFROM} opgehaalde achtergrond was geen JPEG afbeelding." 5
   fi
 fi
 # make backup (opgenomen in globaal backup-script)
