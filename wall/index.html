@@ -119,7 +119,7 @@ function changeBackground() {
       var luxmax = response[2];
       var luxrange = luxmax - luxmin;
       var luxrel = (lux - luxmin) / luxrange;
-      opacity = 0.5 - (luxrel * 0.5);
+      opacity = 0.5 - (Math.sqrt(luxrel) * 0.5);
 // console.log(lux, luxmin, luxmax, luxrange, luxrel, opacity);
 //      opacity = 1;
       document.getElementById("redshift").style.opacity = opacity;
@@ -180,7 +180,6 @@ setInterval(function() {  // get info from remote control
   xhr.open('POST', "curl.php", true);
   xhr.onreadystatechange = function() {
     if (xhr.readyState == 4 && xhr.status == 200) {
-console.log(xhr.responseText);
       var jsondata = JSON.parse(xhr.responseText);
 //      document.getElementById("temperature").innerHTML = xhr.responseText;
       switch(jsondata.command) {
