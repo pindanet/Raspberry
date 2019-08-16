@@ -1,6 +1,6 @@
 #!/bin/bash
 # For Raspbian Buster Lite
-# wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall-install.sh
+# wget https://github.com/pindanet/Raspberry/raw/master/wall_install.sh
 # bash wall-install.sh
 
 # ToDo
