@@ -90,7 +90,7 @@ else
 
   # Autostart Chromium browser
   sudo apt-get install chromium-browser lightdm openbox xterm fonts-symbola -y
-  sudo raspi-config nonint do_boot_behaviour "B3"
+  sudo raspi-config nonint do_boot_behaviour "B4"
   mkdir -p $HOME/.config/openbox
   echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
   echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
