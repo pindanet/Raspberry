@@ -134,6 +134,10 @@ else
     echo "Please try again"
   done
   sudo sed -i "s|^\(\$password =\).*$|\1 \'$password\';|" /var/www/html/curl.php
+  
+# Remote LAN commands
+  sudo mkdir /var/www/html/remote
+  sudo chown -R www-data:www-data /var/www/html/remote
 
 # tar cvzf - background | split -b 20m - background.tar.gz
   wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzaa
