@@ -1,5 +1,8 @@
 <?php
-// Post data als argumenten bij php cli
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
+//Post data als argumenten bij php cli
 //if (!isset($_SERVER["HTTP_HOST"])) {
 //  parse_str($argv[1], $_GET);
 //  parse_str($argv[1], $_POST);
