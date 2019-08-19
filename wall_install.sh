@@ -138,14 +138,14 @@ else
 # Remote LAN commands
   sudo mkdir /var/www/html/remote
   sudo chown -R www-data:www-data /var/www/html/remote
+  sudo wget -O /var/www/html/remote.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/remote.php
+  sudo wget -O /var/www/html/remote.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/remote.sh
   sudo apt install incron -y
   echo root | sudo tee /etc/incron.allow
   echo '/var/www/html/remote    IN_CLOSE_WRITE  /bin/bash /var/www/html/remote.sh "$@/$#"' | sudo tee /var/spool/incron/root
   sudo chmod go-rwx /var/spool/incron/root # enkel rw user blijft over
   sudo systemctl start incron
   sudo systemctl enable incron
-  sudo wget -O /var/www/html/remote.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/remote.php
-  sudo wget -O /var/www/html/remote.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/remote.sh
 
 # tar cvzf - background | split -b 20m - background.tar.gz
   wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzaa
