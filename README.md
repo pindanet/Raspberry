@@ -46,7 +46,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo rsync -aAXv --delete --exclude="/dev/" --exclude="/proc/" --exclude="/sys/" --exclude="/tmp/" --exclude="/run/" --exclude="/mnt/" --exclude="/media/" --exclude="/lost+found/" / backup.local::backup/raspberrypi
 
 ## Webserver
-    sudo apt-get install apache2 php libapache2-mod-php php-ssh2 php-gd php-xml
+    sudo apt-get install apache2 php libapache2-mod-php php-ssh2 php-gd php-xml php-curl
     sudo a2enmod ssl
     sudo a2ensite default-ssl
     sudo systemctl restart apache2.service
