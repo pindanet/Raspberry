@@ -86,12 +86,14 @@ else
   sudo chown -R www-data:www-data /var/www/html/data/
 
   # Muiscursor verbergen
-  #sudo apt-get install unclutter
+  sudo apt-get install unclutter -y
 
   # Autostart Chromium browser
   sudo apt-get install chromium-browser lightdm openbox xterm fonts-symbola -y
   sudo raspi-config nonint do_boot_behaviour "B4"
   mkdir -p $HOME/.config/openbox
+  echo "# Hide mouse when not moving the mouse" >> $HOME/.config/openbox/autostart
+  echo "unclutter -idle 0.1 &" >> $HOME/.config/openbox/autostart
   echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
   echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
 
