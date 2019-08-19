@@ -144,6 +144,8 @@ else
   sudo chmod go-rwx /var/spool/incron/root # enkel rw user blijft over
   sudo systemctl start incron
   sudo systemctl enable incron
+  sudo wget -O /var/www/html/remote.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/remote.php
+  sudo wget -O /var/www/html/remote.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/remote.sh
 
 # tar cvzf - background | split -b 20m - background.tar.gz
   wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzaa
