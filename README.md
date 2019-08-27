@@ -182,6 +182,9 @@ script included in /usr/sbin/bluetooth-detection.sh
     alsamixer # set volume
     sudo apt-get install mpd mpc
     sudo nano /etc/mpd.conf
+    
+    restore_paused "yes"
+
 <pre>audio_output {
         type            "alsa"
         name            "My ALSA Device"
