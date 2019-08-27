@@ -178,6 +178,21 @@ Based on: https://www.hackster.io/4803/i2c-port-expander-sample-0a6d4f
 ## Motion Detection
     sudo mkdir -p /var/www/html/motion/fotos
 script included in /usr/sbin/bluetooth-detection.sh
+## Bluetooth speakers
+    nano .asoundrc
+    
+    pcm.!default {
+        type plug
+        slave.pcm {
+                type bluealsa
+                device "F8:DF:15:A5:CD:CC"
+                profile "a2dp"
+        }
+    }
+
+    ctl.!default {
+        type bluealsa
+    }
 ## Radio
     alsamixer # set volume
     sudo apt-get install mpd mpc
