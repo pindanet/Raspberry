@@ -94,13 +94,14 @@ else
   mkdir -p $HOME/.config/openbox
   echo "# Hide mouse when not moving the mouse" >> $HOME/.config/openbox/autostart
   echo "unclutter -idle 0.1 &" >> $HOME/.config/openbox/autostart
-  echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
-  echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
 
   echo "# Disable Screensaver" >> $HOME/.config/openbox/autostart
-  echo "xset s off &" >> $HOME/.config/openbox/autostart
-  echo "xset -dpms &" >> $HOME/.config/openbox/autostart
-  echo "xset s noblank &" >> $HOME/.config/openbox/autostart
+  echo "xset s off" >> $HOME/.config/openbox/autostart
+  echo "xset -dpms" >> $HOME/.config/openbox/autostart
+  echo "xset s noblank" >> $HOME/.config/openbox/autostart
+
+  echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
+  echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
 
   sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.html
   sudo wget -O /var/www/html/random_pic.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/random_pic.php
