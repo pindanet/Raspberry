@@ -105,6 +105,34 @@ else
 
   sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.html
 
+# Fetch background images
+  sudo apt-get install imagemagick -y
+# tar cvzf - background | split -b 20m - background.tar.gz
+  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/background.tar.gzaa
+  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/background.tar.gzab
+  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/background.tar.gzac
+  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/background.tar.gzad
+  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/background.tar.gzae
+  cat background.tar.* | sudo tar xzvf - -C /var/www/html
+  rm background.tar.*
+
+  cat > background.service <<EOF
+[Unit]
+Description=Get background image
+Wants=network-online.target
+After=network.target network-online.target
+[Service]
+ExecStart=/usr/sbin/background.sh
+[Install]
+WantedBy=multi-user.target
+EOF
+  sudo mv background.service /etc/systemd/system/
+  sudo systemctl daemon-reload
+  sudo systemctl enable background.service
+
+  sudo wget -O /usr/sbin/background.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/usr/sbin/background.sh
+  sudo chmod +x /usr/sbin/background.sh
+
 exit
 
   echo "www-data ALL = NOPASSWD: /sbin/shutdown -r now" | sudo tee -a /etc/sudoers
@@ -142,38 +170,6 @@ exit
   sudo chmod go-rwx /var/spool/incron/root # enkel rw user blijft over
   sudo systemctl start incron
   sudo systemctl enable incron
-
-# tar cvzf - background | split -b 20m - background.tar.gz
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzaa
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzab
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzac
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzad
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzae
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzaf
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzag
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzah
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzai
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzaj
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzak
-  cat background.tar.* | sudo tar xzvf - -C /var/www/html
-  rm background.tar.*
-
-  cat > background.service <<EOF
-[Unit]
-Description=Get background image
-Wants=network-online.target
-After=network.target network-online.target
-[Service]
-ExecStart=/usr/sbin/background.sh
-[Install]
-WantedBy=multi-user.target
-EOF
-  sudo mv background.service /etc/systemd/system/
-  sudo systemctl daemon-reload
-  sudo systemctl enable background.service
-
-  sudo wget -O /usr/sbin/background.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.sh
-  sudo chmod +x /usr/sbin/background.sh
 
   printf '\033[1;37;40mOn the main computer: ssh-copy-id -i ~/.ssh/id_rsa.pub rpiwall.local\n\033[0m' # Witte letters op zwarte achtergrond
   printf '\033[1;37;40mOn the domotica controller: ssh-copy-id -i ~/.ssh/id_rsa.pub rpiwall.local\n\033[0m' # Witte letters op zwarte achtergrond
