@@ -66,10 +66,8 @@ else
   # Remove pi user
   sudo userdel -r pi
 
-exit
-
   # Webserver
-  sudo apt-get install apache2 php libapache2-mod-php php-curl php-mbstring -y
+  sudo apt-get install apache2 php libapache2-mod-php php-ssh2 php-gd php-xml php-curl php-mbstring -y
   #sudo a2enmod ssl
   #sudo a2ensite default-ssl
   sudo systemctl restart apache2.service
@@ -105,16 +103,9 @@ exit
   echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
   echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
 
-  sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.html
-  sudo wget -O /var/www/html/random_pic.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/random_pic.php
-  sudo wget -O /var/www/html/nocursor.gif https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/nocursor.gif
-#sudo wget -P /var/www/html https://raw.githubusercontent.com/mourner/suncalc/master/suncalc.js
-  sudo wget -O /var/www/html/getPresHumiTemp.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getPresHumiTemp.php
-#sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getBrightness.php
-  sudo wget -O /var/www/html/getLux.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getLux.php
-#sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getWeather.php
-  sudo wget -O /var/www/html/curl.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/curl.php
-#sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/genkeys.php
+  sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.html
+
+exit
 
   echo "www-data ALL = NOPASSWD: /sbin/shutdown -r now" | sudo tee -a /etc/sudoers
 
