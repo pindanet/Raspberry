@@ -7,7 +7,7 @@
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
-  "") echo "usage: bash wall-install.sh"
+  "") echo "usage: bash wall_install.sh"
       exit;;
 esac
 
