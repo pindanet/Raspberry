@@ -1,21 +1,25 @@
 #!/bin/bash
-echo -e "Content-type: text/html\n"
-ls background/*.jpg | sort -R | tail -1
+#echo -e "Content-type: text/html\n"
+#ls background/*.jpg | sort -R | tail -1
 
-if [ ! -f background/latest.txt ]; then
-  mkdir background
-  touch -d "1 days ago" background/latest.txt
+# Wait until network is up
+sleep 60
+
+backgroundDir="/var/www/html/background"
+if [ ! -f ${backgroundDir}/latest.txt ]; then
+  mkdir -p ${backgroundDir}
+  touch -d "2 days ago" ${backgroundDir}/latest.txt
 fi
 
-if [[ `date -r background/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]; then
-  touch background/latest.txt
+if [[ `date -r ${backgroundDir}/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]; then
+  touch ${backgroundDir}/latest.txt
 
-  # Keep the 300 latest wallpapers
-  numfiles=`ls /var/www/html/background | wc -l`
-  while [ $((numfiles)) -gt 299 ]; do
-    oldest=`ls -t /var/www/html/background/* | tail -1`
+  # Keep the 400 latest wallpapers
+  numfiles=`ls ${backgroundDir} | wc -l`
+  while [ $((numfiles)) -gt 399 ]; do
+    oldest=`ls -t ${backgroundDir}/* | tail -1`
     rm $oldest
-    numfiles=`ls /var/www/html/background | wc -l`
+    numfiles=`ls ${backgroundDir} | wc -l`
   done
 
   # Nieuwe achtergrond instellen
@@ -26,13 +30,23 @@ if [[ `date -r background/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]; then
   # check if InterfaceLift is reachable
   if curl -s --head  --request GET https://$SITE ; then
     # extract wallpaper of the day url
-    WOTD=`wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0" -qO - $PAGE | grep "click here to download" | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d '>' -f 1`
+    WOTD=`wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0" -qO - $PAGE | grep "click here to download" | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d '>' -f 1`
 
-    wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:49.0) Gecko/20100101 Firefox/49.0"  --output-document=/var/www/html/background/$(basename $WOTD) https://$SITE$WOTD
+    wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0"  --output-document=${backgroundDir}/$(basename $WOTD) https://$SITE$WOTD
+    IMGFROM="InterfaceLift: $(basename $WOTD)"
+    achtergrond=${backgroundDir}/$(basename $WOTD)
   else
     PICPAGEURL=`wget -qO - http://wallpaperswide.com/latest_wallpapers.html | awk '/mini-hud/{getline; print}' | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
     PICURL=`wget -qO - http://wallpaperswide.com$PICPAGEURL | grep 800x600.jpg | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
-    wget -O /var/www/html/background/${PICURL:10} http://wallpaperswide.com$PICURL
-    mogrify -crop 800x480+0+60 /var/www/html/background/${PICURL:10}
+    wget -O ${backgroundDir}/background/${PICURL:10} http://wallpaperswide.com$PICURL
+    IMGFROM="WallpapersWide: $(basename $PICURL)"
+    achtergrond=${backgroundDir}/${PICURL:10}
+    mogrify -crop 800x480+0+60 ${achtergrond}
+  fi
+  if file "$achtergrond" | grep 'JPEG image data' ; then
+    echo "New backgroundimage from ${IMGFROM}."
+  else
+    rm "$achtergrond"
+    echo "The image from ${IMGFROM} was no JPEG image." 5
   fi
 fi
