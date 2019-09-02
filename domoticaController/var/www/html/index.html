@@ -400,7 +400,7 @@ console.log(state, this.responseText);
         if (backgroundtimecounter >= backgroundtimeinterval) {
           backgroundtimecounter = 0;
           var xhr = new XMLHttpRequest();
-          xhr.open('POST', "background.sh", true);
+          xhr.open('POST', "random_pic.php", true);
           xhr.onload = function(e) {
             if (this.status == 200) {
               var lines = this.responseText.split("\n");
