@@ -121,6 +121,12 @@ else
   sudo wget -O /var/www/html/emoji/timelapse.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/timelapse.svg
   sudo wget -O /var/www/html/emoji/weather.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/weather.svg
 
+  cat > PresHumiTemp <<EOF
+1012.77 hPa
+  56.93 %
+  22.03 CEOF
+  sudo mv PresHumiTemp /var/www/html/data/
+  
 # Fetch background images
   sudo apt-get install imagemagick -y
 # tar cvzf - background | split -b 20m - background.tar.gz
