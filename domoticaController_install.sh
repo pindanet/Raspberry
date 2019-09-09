@@ -124,7 +124,8 @@ else
   cat > PresHumiTemp <<EOF
 1012.77 hPa
   56.93 %
-  22.03 CEOF
+  22.03 C
+EOF
   sudo mv PresHumiTemp /var/www/html/data/
   
 # Fetch background images
