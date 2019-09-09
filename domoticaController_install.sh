@@ -105,7 +105,21 @@ else
 
   sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.html
   sudo wget -O /var/www/html/random_pic.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/random_pic.php
+  sudo mkdir /var/www/html/emoji
   sudo wget -O /var/www/html/emoji/calendar.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/calendar.svg
+  sudo wget -O /var/www/html/emoji/framed_picture.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/framed_picture.svg
+  sudo wget -O /var/www/html/emoji/logout.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/logout.svg
+  sudo wget -O /var/www/html/emoji/monitor.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/monitor.svg
+  sudo wget -O /var/www/html/emoji/network-wireless.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/network-wireless.svg
+  sudo wget -O /var/www/html/emoji/radio.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/radio.svg
+  sudo wget -O /var/www/html/emoji/reboot.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/reboot.svg
+  sudo wget -O /var/www/html/emoji/refresh.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/refresh.svg
+  sudo wget -O /var/www/html/emoji/shutdown.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/shutdown.svg
+  sudo wget -O /var/www/html/emoji/surveillance-camera.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/surveillance-camera.svg
+  sudo wget -O /var/www/html/emoji/thermometer.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/thermometer.svg
+  sudo wget -O /var/www/html/emoji/thermostat.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/thermostat.svg
+  sudo wget -O /var/www/html/emoji/timelapse.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/timelapse.svg
+  sudo wget -O /var/www/html/emoji/weather.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/weather.svg
 
 # Fetch background images
   sudo apt-get install imagemagick -y
