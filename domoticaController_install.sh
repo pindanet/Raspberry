@@ -131,6 +131,8 @@ EOF
   wget https://github.com/fullcalendar/fullcalendar/releases/download/v4.3.1/fullcalendar-4.3.1.zip
   sudo mkdir /var/www/html/fullcalendar
   sudo unzip fullcalendar-4.3.1.zip -d /var/www/html/fullcalendar/
+  rm fullcalendar-4.3.1.zip
+  sudo wget -O /var/www/html/fullcalendar/ical.min.js https://raw.githubusercontent.com/mozilla-comm/ical.js/master/build/ical.min.js
   
 # Fetch background images
   sudo apt-get install imagemagick -y
