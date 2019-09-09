@@ -128,6 +128,10 @@ else
 EOF
   sudo mv PresHumiTemp /var/www/html/data/
   
+  wget https://github.com/fullcalendar/fullcalendar/releases/download/v4.3.1/fullcalendar-4.3.1.zip
+  sudo mkdir /var/www/html/fullcalendar
+  sudo unzip fullcalendar-4.3.1.zip -d /var/www/html/fullcalendar/
+  
 # Fetch background images
   sudo apt-get install imagemagick -y
 # tar cvzf - background | split -b 20m - background.tar.gz
