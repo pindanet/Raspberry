@@ -85,14 +85,27 @@ Fullscreen HTML API
         -webkit-text-stroke-color: black;
         -webkit-text-stroke-width: 2px;
       }
-      #date {
+      #clockdate, #clockday {
+        position: absolute;
         color: white;
-        font-size: 70px;
+        text-align: center;
+        font-size: 80px;
+        font-family: sans-serif;
 /*        text-shadow: 0 0 4px black; */
-        -moz-text-stroke-color: black;  
-        -moz-text-stroke-width: 1px;    
+        -moz-text-stroke-color: black;
+        -moz-text-stroke-width: 2px;
         -webkit-text-stroke-color: black;
-        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-width: 2px;
+      }
+      #clockday {
+        top: -50px;
+        left: 0;
+        right: 0;
+      }
+      #clockdate {
+        bottom: -40px;
+        left: 0;
+        right: 0;
       }
       #temp {
         color: white;
@@ -1192,20 +1205,16 @@ console.log(event);
 
       var dayNames = new Array("zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag");
       var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
-      function toLocaleDateString(datumobj) {
-        return dayNames[datumobj.getDay()] + '&nbsp;' + datumobj.getDate() + '&nbsp;' + monthNames[datumobj.getMonth()] + '&nbsp;' + datumobj.getFullYear();
-      }
       var startTimer;
       function startTime(event) {
         clearTimeout(startTimer);
         var today = new Date();
         var h = today.getHours();
         var m = today.getMinutes();
-//        var s = today.getSeconds();
         m = checkTime(m);
-//        s = checkTime(s);
-//        document.getElementById('content').innerHTML = '<span id="clock">' + h + ":" + m + ":" + s + '</span><br><span id="date">'+ toLocaleDateString(today) + '</span>';
-        document.getElementById('content').innerHTML = '<span id="clock">' + h + ":" + m + '</span><br><span id="date">'+ toLocaleDateString(today) + '</span>';
+        document.getElementById('content').innerHTML = '<div id="clockday">' + dayNames[today.getDay()] + '</div>';
+        document.getElementById('content').innerHTML += '<div id="clock">' + h + ":" + m + '</div>';
+        document.getElementById('content').innerHTML += '<div id="clockdate">' + today.getDate() + '&nbsp;' + monthNames[today.getMo$
         centerContent();
 //        startTimer = setTimeout(startTime, 500);
         startTimer = setTimeout(startTime, 1000); // elke seconde
