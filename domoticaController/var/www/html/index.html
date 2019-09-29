@@ -1212,6 +1212,7 @@ console.log(event);
         var h = today.getHours();
         var m = today.getMinutes();
         m = checkTime(m);
+	document.getElementById('content').style.width = '100%';
         document.getElementById('content').innerHTML = '<div id="clockday">' + dayNames[today.getDay()] + '</div>';
         document.getElementById('content').innerHTML += '<div id="clock">' + h + ":" + m + '</div>';
         document.getElementById('content').innerHTML += '<div id="clockdate">' + today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear() + '</div>';
