@@ -134,7 +134,7 @@ EOF
   rm fullcalendar-4.3.1.zip
   sudo wget -O /var/www/html/fullcalendar/ical.min.js https://raw.githubusercontent.com/mozilla-comm/ical.js/master/build/ical.min.js
   sudo wget -O /var/www/html/fullcalendar/basic.ics https://www.google.com/calendar/ical/feestdagenbelgie%40gmail.com/public/basic.ics
-  sudo wget -O /var/www/html/fullcalendar/snt.ics https://www.google.com/calendar/render?cid=webcal://www.voetbalkrant.com/soccer/calendar/team/team_7_nl.ics
+  sudo wget -O /var/www/html/fullcalendar/snt.ics https://calendar.google.com/calendar/ical/phvkufc0v823qkio9ml4mdtpug%40group.calendar.google.com/public/basic.ics
   
 # Fetch background images
   sudo apt-get install imagemagick -y
