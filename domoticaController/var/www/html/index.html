@@ -112,6 +112,11 @@ Fullscreen HTML API
         font-size: 200px;
         text-shadow: 0 0 2px black;
       }
+      #preshumi {
+        color: white;
+        font-size: 70px;
+        text-shadow: 0 0 1px black;
+      }
       #forecast {
         width: 100%;
         border-collapse:collapse;
@@ -439,7 +444,7 @@ console.log(state, this.responseText);
         xhrthermometer.onload = function(e) {
           if (this.status == 200) {
             var PresHumiTemp = this.responseText.split('\n');
-            document.getElementById("content").innerHTML = "<span id=\"temp\">" + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C</span><br><span id=\"date\">Luchtdruk: " + PresHumiTemp[0] + " Vochtigheid: " + PresHumiTemp[1] + "</span>";
+            document.getElementById("content").innerHTML = "<span id=\"temp\">" + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C</span><br><span id=\"preshumi\">Luchtdruk: " + PresHumiTemp[0] + " Vochtigheid: " + PresHumiTemp[1] + "</span>";
             centerContent();
           }
         };
