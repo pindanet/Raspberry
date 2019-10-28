@@ -65,6 +65,19 @@ else
   
   # Remove pi user
   sudo userdel -r pi
+  
+  # Add SSH root Access
+#  while : ; do
+#    sudo passwd root
+#    [ $? = 0 ] && break
+#  done
+#  sudo sed -i "s/^.*PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+#  sudo systemctl restart sshd.service
+
+## On remote computer
+# mkdir raspberry
+# sshfs root@rpihostname:/ raspberry
+# fusermount -u raspberry
 
   # Webserver
   sudo apt-get install apache2 php libapache2-mod-php php-ssh2 php-gd php-xml php-curl php-mbstring -y
