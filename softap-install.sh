@@ -123,12 +123,12 @@ else
 
   echo "denyinterfaces wlan0" | sudo tee -a /etc/dhcpcd.conf
   echo "denyinterfaces eth0" | sudo tee -a /etc/dhcpcd.conf
-  sudo brctl addbr br0
-  sudo brctl addif br0 eth0
+#  sudo brctl addbr br0
+#  sudo brctl addif br0 eth0
   echo "# Bridge setup" | sudo tee -a /etc/network/interfaces
   echo "auto br0" | sudo tee -a /etc/network/interfaces
-  echo "iface br0 inet manual" | sudo tee -a /etc/network/interfaces
-  echo "bridge_ports eth0 wlan0" | sudo tee -a /etc/network/interfaces
+  echo "iface br0 inet dhcp" | sudo tee -a /etc/network/interfaces
+  echo "bridge_ports eth0" | sudo tee -a /etc/network/interfaces
 
   cat > hostapd.conf <<EOF
 interface=wlan0
