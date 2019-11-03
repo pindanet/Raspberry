@@ -117,6 +117,18 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo mv bme280.py /var/www/html/
     sudo adduser www-data i2c
     sudo chmod +x /var/www/html/bme280.sh
+## TLS2591 I2C High Dynamic Range Digital Light Sensor
+    Vin > 3v3 (1) (Red)
+    GND > Ground (6) (Black)
+    SCK > BCM 3 (SCL) (5) (White)
+    SDI > BCM 2 (SDA) (3) (Brown)
+    
+    sudo apt-get install i2c-tools python3-smbus
+    wget https://raw.githubusercontent.com/maxlklaxl/python-tsl2591/master/tsl2591/read_tsl.py
+    cp read_tsl.py read_tsl_3.py
+    2to3-2.7 -w read_tsl_3.py
+    i2cdetect -y 1
+    python3 read_tsl_3.py
 ## MCP23008E I2C I/O Expander
 Datasheet: https://cdn-shop.adafruit.com/datasheets/MCP23008.pdf
 
