@@ -118,10 +118,10 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
     sudo adduser www-data i2c
     sudo chmod +x /var/www/html/bme280.sh
 ## TLS2591 I2C High Dynamic Range Digital Light Sensor
-    Vin > 3v3 (1) (Red)
-    GND > Ground (6) (Black)
+    Vin > 3v3 (1) (Blue)
+    GND > Ground (6) (Bordeau)
     SCK > BCM 3 (SCL) (5) (White)
-    SDI > BCM 2 (SDA) (3) (Brown)
+    SDI > BCM 2 (SDA) (3) (Gray)
     
     sudo apt-get install i2c-tools python3-smbus
     wget https://raw.githubusercontent.com/maxlklaxl/python-tsl2591/master/tsl2591/read_tsl.py
