@@ -34,7 +34,7 @@ if [[ `date -r ${backgroundDir}/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]
     achtergrond=${backgroundDir}/$(basename $WOTD)
   else
     PICPAGEURL=`wget -qO - http://wallpaperswide.com/latest_wallpapers.html | awk '/mini-hud/{getline; print}' | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
-    PICURL=`wget -qO - http://wallpaperswide.com$PICPAGEURL | grep 1920x1200.jpg | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
+    PICURL=`wget -qO - http://wallpaperswide.com$PICPAGEURL | grep 1600x1200.jpg | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
     wget -O ${backgroundDir}/${PICURL:10} http://wallpaperswide.com$PICURL
     IMGFROM="WallpapersWide: $(basename $PICURL)"
     achtergrond=${backgroundDir}/${PICURL:10}
