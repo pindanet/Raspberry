@@ -22,7 +22,7 @@ if [[ `date -r ${backgroundDir}/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]
   # Nieuwe achtergrond instellen
   # Set InterfaceLift specifics
   SITE=interfacelift.com
-  PAGE=https://$SITE/wallpaper/downloads/random/wide_16:10/1920x1200/index.html
+  PAGE=https://$SITE/wallpaper/downloads/random/4:3/1600x1200/index.html
 
   # check if InterfaceLift is reachable
   if curl -s --head  --request GET https://$SITE ; then
