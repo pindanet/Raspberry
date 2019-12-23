@@ -32,12 +32,12 @@ if [[ `date -r ${backgroundDir}/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]
     wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0"  --output-document=${backgroundDir}/$(basename $WOTD) https://$SITE$WOTD
     IMGFROM="InterfaceLift: $(basename $WOTD)"
     achtergrond=${backgroundDir}/$(basename $WOTD)
-  else
-    PICPAGEURL=`wget -qO - http://wallpaperswide.com/latest_wallpapers.html | awk '/mini-hud/{getline; print}' | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
-    PICURL=`wget -qO - http://wallpaperswide.com$PICPAGEURL | grep 1600x1200.jpg | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
-    wget -O ${backgroundDir}/${PICURL:10} http://wallpaperswide.com$PICURL
-    IMGFROM="WallpapersWide: $(basename $PICURL)"
-    achtergrond=${backgroundDir}/${PICURL:10}
+#  else
+#    PICPAGEURL=`wget -qO - http://wallpaperswide.com/latest_wallpapers.html | awk '/mini-hud/{getline; print}' | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
+#    PICURL=`wget -qO - http://wallpaperswide.com$PICPAGEURL | grep 1600x1200.jpg | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
+#    wget -O ${backgroundDir}/${PICURL:10} http://wallpaperswide.com$PICURL
+#    IMGFROM="WallpapersWide: $(basename $PICURL)"
+#    achtergrond=${backgroundDir}/${PICURL:10}
 #    mogrify -crop 800x480+0+60 /var/www/html/background/${PICURL:10}
   fi
   if file "$achtergrond" | grep 'JPEG image data' ; then
