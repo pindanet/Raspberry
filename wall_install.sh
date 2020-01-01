@@ -105,9 +105,12 @@ else
 
   echo "# Start fullscreen video" >> $HOME/.config/openbox/autostart
   echo "#omxplayer --loop --no-osd ~/video.mp4" >> $HOME/.config/openbox/autostart
+  
   echo "# Start fullscreen video with Pimoroni Speaker pHAT" >> $HOME/.config/openbox/autostart
+  echo "#amixer sset 'Master' 50%" >> $HOME/.config/openbox/autostart
   echo "#omxplayer -o alsa --loop --no-osd ~/video.mp4" >> $HOME/.config/openbox/autostart
-  sudo apt-get install omxplayer
+  #sudo apt-get install omxplayer
+  #curl -sS https://get.pimoroni.com/speakerphat | bash
 
   sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.html
   sudo wget -O /var/www/html/random_pic.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/random_pic.php
