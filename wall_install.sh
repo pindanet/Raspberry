@@ -111,6 +111,7 @@ else
   echo "#omxplayer -o alsa --loop --no-osd ~/video.mp4" >> $HOME/.config/openbox/autostart
   #sudo apt-get install omxplayer
   #curl -sS https://get.pimoroni.com/speakerphat | bash
+  #sudo nano /etc/asound.conf
 
   sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.html
   sudo wget -O /var/www/html/random_pic.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/random_pic.php
