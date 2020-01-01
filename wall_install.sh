@@ -161,20 +161,9 @@ else
   sudo systemctl start incron
   sudo systemctl enable incron
 
-# tar cvzf - background | split -b 20m - background.tar.gz
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzaa
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzab
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzac
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzad
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzae
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzaf
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzag
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzah
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzai
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzaj
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gzak
-  cat background.tar.* | sudo tar xzvf - -C /var/www/html
-  rm background.tar.*
+  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gz
+  sudo tar xzvf background.tar.gz -C /var/www/html
+  rm background.tar.gz
 
   cat > background.service <<EOF
 [Unit]
