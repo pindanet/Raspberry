@@ -162,7 +162,7 @@ Based on: https://www.hackster.io/4803/i2c-port-expander-sample-0a6d4f
     sudo chmod +x /var/www/html/exportthermostat.sh
     sudo chown www-data:www-data /var/www/html/data/thermostat.json
 ## Weather forecast
-    sudo apt-get install libxml2-utils
+    sudo apt-get install libxml2-utils inkscape
     sudo chmod +x /var/www/html/forecast.sh
 ## Controller state
     sudo chmod +x /usr/sbin/PindaNetState.sh
