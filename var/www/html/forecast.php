@@ -8,6 +8,7 @@ function getForecast() {
   global $forecastURL, $forecastXML, $forecastSVG;
   file_put_contents($forecastXML, file_get_contents($forecastURL . "forecast.xml"));
   file_put_contents($forecastSVG, file_get_contents($forecastURL . "avansert_meteogram.svg"));
+  exec("inkscape -z -e $forecastPNG -w 800 $forecastSVG");
 }
 
 if (file_exists($forecastSVG)) {
@@ -48,7 +49,7 @@ if (file_exists($filename)) {
 $html = <<<EOD
 <table id="forecast">
   <tr><th colspan="9"><a href="{$creditURL}" target="_blank">{$credit}</a></td></th>
-  <tr><td colspan="9"><img src="{$forecastSVG}" alt="Weerbericht Brugge" width="800"></td></tr>
+  <tr><td colspan="9"><img src="{$forecastPNG}" alt="Weerbericht Brugge" width="800"></td></tr>
   <tr>
     <td></td>
     <td>vandaag</td>
