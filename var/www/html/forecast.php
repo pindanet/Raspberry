@@ -3,9 +3,12 @@ setlocale(LC_ALL, "nl_BE.UTF8");
 $forecastURL = "https://www.yr.no/place/Belgium/Flanders/Bruges/";
 $forecastXML = "data/forecast.xml";
 $forecastSVG = "data/avansert_meteogram.svg";
+$forecastPNG = "data/avansert_meteogram.png";
+$date = new DateTime();
+$forecastIMG = $forecastPNG . "?time=" . $date->getTimestamp(); 
 
 function getForecast() {
-  global $forecastURL, $forecastXML, $forecastSVG;
+  global $forecastURL, $forecastXML, $forecastSVG, $forecastPNG;
   file_put_contents($forecastXML, file_get_contents($forecastURL . "forecast.xml"));
   file_put_contents($forecastSVG, file_get_contents($forecastURL . "avansert_meteogram.svg"));
   exec("inkscape -z -e $forecastPNG -w 800 $forecastSVG");
@@ -49,7 +52,7 @@ if (file_exists($filename)) {
 $html = <<<EOD
 <table id="forecast">
   <tr><th colspan="9"><a href="{$creditURL}" target="_blank">{$credit}</a></td></th>
-  <tr><td colspan="9"><img src="{$forecastPNG}" alt="Weerbericht Brugge" width="800"></td></tr>
+  <tr><td colspan="9"><img src="{$forecastIMG}" alt="Weerbericht Brugge" width="800"></td></tr>
   <tr>
     <td></td>
     <td>vandaag</td>
