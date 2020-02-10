@@ -15,7 +15,27 @@ if [ ! -f /var/www/html/data/mpc.txt ]; then
   raspistill -n -w 800 -h 480 -o /var/www/html/motion/day/$now.jpg
   find /var/www/html/motion/day/*.jpg -mtime +0 -type f -delete
 
-# Calculate lux
+# Calculate lux tls2591
+  lux=$(python3 /var/www/html/tls2591.py | awk '{print $1}')
+  echo $lux  > /var/www/html/data/luxtls
+  if [ ! -f /var/www/html/data/luxmaxtls ]; then
+    echo 0 > /var/www/html/data/luxmaxtls
+  fi
+  luxmax=$(cat /var/www/html/data/luxmaxtls)
+  if [ ! -f /var/www/html/data/luxmintls ]; then
+    echo 1000000 > /var/www/html/data/luxmintls
+  fi
+  luxmin=$(cat /var/www/html/data/luxmintls)
+  if [ ${lux%.*} -eq ${luxmax%.*} ] && [ ${lux#*.} \> ${luxmax#*.} ] || [ ${lux%.*} -gt ${luxmax%.*} ]; then
+    luxmax=$lux
+  fi
+  if [ ${lux%.*} -eq ${luxmin%.*} ] && [ ${lux#*.} \< ${luxmin#*.} ] || [ ${lux%.*} -lt ${luxmin%.*} ]; then
+    luxmin=$lux
+  fi
+  echo $luxmax > /var/www/html/data/luxmaxtls
+  echo $luxmin > /var/www/html/data/luxmintls
+
+# Calculate lux photo
   jpginfo=$(identify -verbose /var/www/html/motion/day/$now.jpg)
   FNumber=$(grep FNumber <<< "$jpginfo" | awk '{print $2}')
   ExposureTime=$(grep ExposureTime <<< "$jpginfo" | awk '{print $2}')
