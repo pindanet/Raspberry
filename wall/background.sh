@@ -1,4 +1,8 @@
 #!/bin/bash
+# Disable ACT and  PWR led
+echo none > /sys/class/leds/led0/trigger
+echo 0 > /sys/class/leds/led1/brightness
+
 # Wait until network is up
 sleep 60
 
