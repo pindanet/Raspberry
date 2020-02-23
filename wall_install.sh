@@ -66,6 +66,10 @@ else
   # Remove pi user
   sudo userdel -r pi
 
+  # PgUp, PgDn Bash History
+  echo '"\e[5~": history-search-backward' > .inputrc
+  echo '"\e[6~": history-search-forward' >> .inputrc
+  
   # Webserver
   sudo apt-get install apache2 php libapache2-mod-php php-curl php-mbstring -y
   #sudo a2enmod ssl
