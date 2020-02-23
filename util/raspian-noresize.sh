@@ -64,3 +64,6 @@ EOF
 e2fsck -f $1p2
 # Maak de extra 1 GB schijfruimte beschikbaar
 resize2fs $1p2
+# Bereken de dd count optie
+COUNT=$((PART_END + 1))
+echo De nieuwe count optie voor dd is $((COUNT * 512 / 4 / 1024 / 1024))
