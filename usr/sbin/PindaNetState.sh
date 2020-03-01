@@ -11,29 +11,10 @@ if [ ! -d /var/www/html/motion/day ]; then
 fi
 now=$(date +%H:%M)
 # Raspistill disturbs playing audio stream
-if [ ! -f /var/www/html/data/mpc.txt ]; then
+if false; then # Disable  commented condition
+#if [ ! -f /var/www/html/data/mpc.txt ]; then
   raspistill -n -w 800 -h 480 -o /var/www/html/motion/day/$now.jpg
   find /var/www/html/motion/day/*.jpg -mtime +0 -type f -delete
-
-# Calculate lux tls2591
-  lux=$(python3 /var/www/html/tls2591.py | awk '{print $1}')
-  echo $lux  > /var/www/html/data/luxtls
-  if [ ! -f /var/www/html/data/luxmaxtls ]; then
-    echo 0 > /var/www/html/data/luxmaxtls
-  fi
-  luxmax=$(cat /var/www/html/data/luxmaxtls)
-  if [ ! -f /var/www/html/data/luxmintls ]; then
-    echo 1000000 > /var/www/html/data/luxmintls
-  fi
-  luxmin=$(cat /var/www/html/data/luxmintls)
-  if [ ${lux%.*} -eq ${luxmax%.*} ] && [ ${lux#*.} \> ${luxmax#*.} ] || [ ${lux%.*} -gt ${luxmax%.*} ]; then
-    luxmax=$lux
-  fi
-  if [ ${lux%.*} -eq ${luxmin%.*} ] && [ ${lux#*.} \< ${luxmin#*.} ] || [ ${lux%.*} -lt ${luxmin%.*} ]; then
-    luxmin=$lux
-  fi
-  echo $luxmax > /var/www/html/data/luxmaxtls
-  echo $luxmin > /var/www/html/data/luxmintls
 
 # Calculate lux photo
   jpginfo=$(identify -verbose /var/www/html/motion/day/$now.jpg)
@@ -82,11 +63,53 @@ if [ ! -f /var/www/html/data/mpc.txt ]; then
 #backlight=$(echo $brightness 1.27 | awk '{printf "%.0f\n",$1*$2}')
 #backlight=$(( $backlight > 24 ? $backlight : 24 ))
 #echo $backlight > /sys/class/backlight/rpi_backlight/brightness
+fi # End Photo Brightness 
+
+# Calculate lux tls2591
+lux=$(python3 /var/www/html/tls2591.py | awk '{print $1}')
+echo $lux  > /var/www/html/data/luxtls
+if [ ! -f /var/www/html/data/luxmaxtls ]; then
+  echo 0 > /var/www/html/data/luxmaxtls
 fi
+luxmax=$(cat /var/www/html/data/luxmaxtls)
+if [ ! -f /var/www/html/data/luxmintls ]; then
+  echo 1000000 > /var/www/html/data/luxmintls
+fi
+luxmin=$(cat /var/www/html/data/luxmintls)
+if [ ${lux%.*} -eq ${luxmax%.*} ] && [ ${lux#*.} \> ${luxmax#*.} ] || [ ${lux%.*} -gt ${luxmax%.*} ]; then
+  luxmax=$lux
+fi
+if [ ${lux%.*} -eq ${luxmin%.*} ] && [ ${lux#*.} \< ${luxmin#*.} ] || [ ${lux%.*} -lt ${luxmin%.*} ]; then
+  luxmin=$lux
+fi
+echo $luxmax > /var/www/html/data/luxmaxtls
+echo $luxmin > /var/www/html/data/luxmintls
+
+#echo "Omgevingslicht: $lux"
+#echo Maximaal gemeten omgevingslicht: $luxmax
+#echo Minimaal gemeten omgevingslicht: $luxmin
+rangelux=$(awk "BEGIN {printf \"%.2f\", $luxmax - $luxmin}")
+#echo Bereik gemeten omgevingslicht: $rangelux
+rellux=$(awk "BEGIN {printf \"%.2f\", ($lux - $luxmin) / $rangelux}")
+#rellux=$(awk "BEGIN {printf sqrt($rellux)}")
+#echo Relatief omgevingslicht: $rellux
+backlight=$(awk "BEGIN {printf \"%.0f\", 25 + $rellux * 230}")
+current=$(cat /sys/class/backlight/rpi_backlight/brightness)
+# Smooth backlight adjustment
+echo "Brightness from $current to $backlight"
+if [ $current -lt $backlight ]; then
+  for i in $(seq $current $backlight); do
+    echo $i > /sys/class/backlight/rpi_backlight/brightness
+  done
+else
+  for i in $(seq $current -1 $backlight); do
+    echo $i > /sys/class/backlight/rpi_backlight/brightness
+  done
+fi
+ 
 # deactivate status led's
 echo 0 > /sys/class/leds/led0/brightness
 echo 0 > /sys/class/leds/led1/brightness
-
 
 #BTController="B8:27:EB:49:17:03"
 # Array bluetooth MAC addresses
