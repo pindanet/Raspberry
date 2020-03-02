@@ -18,5 +18,9 @@ while True:
   now = time.time()
   logme("Motion! " + time.asctime( time.localtime(now)))
   logme (str(round(now - previous)) + "s between previous detected movement " + str(count))
+  
+  for entry in os.scandir("/var/www/html/motion/fotos/"):
+    print(entry.name, entry.stat().st_ctime)
+  
   pir.wait_for_no_motion()
   logme("No Motion!")
