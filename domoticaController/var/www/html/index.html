@@ -98,14 +98,13 @@ Fullscreen HTML API
       }
       #clockdate {
         bottom: -40px;
-        left: 0;
+        left: 0; 
         right: 0;
       }
       #temp {
         color: white;
         font-size: 250px;
-/*        text-shadow: 0 0 2px black; */
-	-webkit-text-stroke: 2px black;
+        -webkit-text-stroke: 2px black;
       }
       #pres {
         top: -60px;
@@ -418,7 +417,7 @@ console.log(state, this.responseText);
         if (backgroundtimecounter >= backgroundtimeinterval) {
           backgroundtimecounter = 0;
           var xhr = new XMLHttpRequest();
-          xhr.open('POST', "random_pic.php", true);
+          xhr.open('POST', "background.php", true);
           xhr.onload = function(e) {
             if (this.status == 200) {
               var lines = this.responseText.split("\n");
@@ -444,10 +443,18 @@ console.log(state, this.responseText);
         xhrthermometer.onload = function(e) {
           if (this.status == 200) {
             var PresHumiTemp = this.responseText.split('\n');
+/*
+            document.getElementById("content").innerHTML = "<span id=\"temp\">" + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C</span><br><span id=\"preshumi\">Luchtdruk: " + parseFloat(PresHumiTemp[0]).toFixed(0) + " hPa Vochtigheid: " + parseFloat(PresHumiTemp[1]).toFixed(0) + " % </span>";
+            
+            document.getElementById("content").innerHTML = "<span id=\"preshumi\">Luchtdruk: " + parseFloat(PresHumiTemp[0]).toFixed(0) + " hPa</span><br>";
+            document.getElementById("content").innerHTML += "<span id=\"temp\">" + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C</span><br>";
+            document.getElementById("content").innerHTML += "<span id=\"preshumi\">Vochtigheid: " + parseFloat(PresHumiTemp[1]).toFixed(0) + " %</span>";
+*/          
             var w = window.innerWidth;
             document.getElementById('content').innerHTML = '<div id="pres">Luchtdruk: ' + parseFloat(PresHumiTemp[0]).toFixed(0) + ' hPa</div>';
             document.getElementById('content').innerHTML += '<div id="temp" style="width: ' + w + 'px;">' + parseFloat(PresHumiTemp[2]).toFixed(1) + ' °C</div>';
             document.getElementById('content').innerHTML += '<div id="humi">Vochtigheid: ' + parseFloat(PresHumiTemp[1]).toFixed(0) + ' %</div>';
+
             centerContent();
           }
         };
@@ -585,7 +592,7 @@ var motionPhotoPage;
       var sliderTimeoutActive = true;
       var sliderItemVar = 1;
       function daylySlideLoaded() {
-        document.getElementById("daylySlideText").innerHTML = daylyMotionPhotos[sliderItem].substring(0, 5);
+        document.getElementById("daylySlideText").innerHTML = daylyMotionPhotos[sliderItem].split('\\').pop().split('/').pop().split('.').slice(0, -1).join('.');
         document.getElementById("daylySlidetransition").src = document.getElementById("daylySlide").src;
 	if (sliderTimeoutActive) {
           sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
@@ -602,7 +609,7 @@ console.log("The image " + daylyMotionPhotos[sliderItem] + " could not be loaded
         } else if (sliderItem < 0) {
           sliderItem = sliderItem + daylyMotionPhotos.length;
         }
-        document.getElementById("daylySlide").src = "motion/day/" + daylyMotionPhotos[sliderItem];
+        document.getElementById("daylySlide").src = daylyMotionPhotos[sliderItem];
       }
       function daylySlideCommand(event, command) {
         switch(command) {
@@ -649,10 +656,8 @@ console.log("The image " + daylyMotionPhotos[sliderItem] + " could not be loaded
             document.getElementById("daylySlideText").style.top = "8px";
             document.getElementById("daylySlideCommand").style.left = "8px";
             document.getElementById("daylySlideCommand").style.top = "8px";
-            document.getElementById("content").style.top = "0"; 
-            document.getElementById("content").style.left = "0";
             event.stopPropagation();
-            sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+            sliderTimeout = setTimeout(function(){ document.getElementById("content").style.top = "0"; document.getElementById("content").style.left = "0"; daylymotionPlayer() }, 100);
           }
         };
         xhr.send();
@@ -1213,18 +1218,25 @@ console.log(event);
 
       var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
       var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
+//      function toLocaleDateString(datumobj) {
+//        return dayNames[datumobj.getDay()] + '&nbsp;' + datumobj.getDate() + '&nbsp;' + monthNames[datumobj.getMonth()] + '&nbsp;' + datumobj.getFullYear();
+//      }
       var startTimer;
       function startTime(event) {
         clearTimeout(startTimer);
         var today = new Date();
         var h = today.getHours();
         var m = today.getMinutes();
+//        var s = today.getSeconds();
         m = checkTime(m);
+//        s = checkTime(s);
+//        document.getElementById('content').innerHTML = '<span id="clock">' + h + ":" + m + ":" + s + '</span><br><span id="date">'+ toLocaleDateString(today) + '</span>';
+//        document.getElementById('content').innerHTML = '<span id="clock">' + h + ":" + m + '</span><br><span id="date">'+ toLocaleDateString(today) + '</span>';
 //	document.getElementById('content').style.width = '100%';
 	var w = window.innerWidth;
-        document.getElementById('content').innerHTML = '<div id="clockday">' + dayNames[today.getDay()] + '</div>';
-        document.getElementById('content').innerHTML += '<div id="clock" style="width: ' + w + 'px;">' + h + ":" + m + '</div>';
-        document.getElementById('content').innerHTML += '<div id="clockdate">' + today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear() + '</div>';
+	document.getElementById('content').innerHTML = '<div id="clockday">' + dayNames[today.getDay()] + '</div>';
+	document.getElementById('content').innerHTML += '<div id="clock" style="width: ' + w + 'px;">' + h + ":" + m + '</div>';
+	document.getElementById('content').innerHTML += '<div id="clockdate">' + today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear() + '</div>';
         centerContent();
 //        startTimer = setTimeout(startTime, 500);
         startTimer = setTimeout(startTime, 1000); // elke seconde
@@ -1875,6 +1887,8 @@ function openFullscreen(event) {
     </g>
     <use xlink:href="#s34" x="0" y="0" width="100" height="100"></use>
   </symbol>
+  <g style="clip-path: url(#temperature-clip-blue-PunktUtlandet:2800931); -webkit-clip-path: url(#temperature-clip-blue-PunktUtlandet:2800931);">
+  <g style="clip-path: url(#temperature-clip-red-PunktUtlandet:2800931); -webkit-clip-path: url(#temperature-clip-red-PunktUtlandet:2800931);">
 </svg>
 <div id="status"><span id="statuswireless"></span></div>
 <div id="content"></div>
