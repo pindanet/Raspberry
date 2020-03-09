@@ -657,7 +657,11 @@ console.log("The image " + daylyMotionPhotos[sliderItem] + " could not be loaded
             document.getElementById("daylySlideCommand").style.left = "8px";
             document.getElementById("daylySlideCommand").style.top = "8px";
             event.stopPropagation();
-            sliderTimeout = setTimeout(function(){ document.getElementById("content").style.top = "0"; document.getElementById("content").style.left = "0"; daylymotionPlayer() }, 100);
+            sliderTimeout = setTimeout(function(){
+              document.getElementById("content").style.top = "0";
+              document.getElementById("content").style.left = "0";
+              daylymotionPlayer()
+            }, 100);
           }
         };
         xhr.send();
