@@ -8,6 +8,7 @@ pir = MotionSensor(4)
 camera = PiCamera()
 camera.rotation = 180
 motionfolder = "/var/www/html/motion/fotos/"
+keep = 60 * 60 * 24
 
 count = 0
 now = 0
@@ -25,17 +26,11 @@ while True:
   logme("Motion! " + time.asctime( time.localtime(now)))
   logme (str(round(now - previous)) + "s between previous detected movement " + str(count))
 
-  files = []
   for entry in os.scandir(motionfolder):
-    "print(entry.name, entry.stat().st_ctime)"
-    files.append(entry.name)
-
-  if len(files) > 100:
-    print(len(files))
-    files.sort()
-    oldest = motionfolder + files[0]
-    os.remove(oldest)
-    print (oldest + " removed")
+    if (now - entry.stat().st_ctime) > keep:
+      fileToDelete = motionfolder + entry.name
+      os.remove(fileToDelete)
+      print(fileToDelete + " removed.")
 
   filename = motionfolder + time.strftime("%Y %m %d %H:%M:%S") + ".jpg"
   print(filename)
