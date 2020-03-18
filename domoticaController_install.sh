@@ -62,22 +62,13 @@ if [ $USER == "pi" ]; then
 else
   # Disable Continue after reboot
   sed -i '/^bash domoticaController_install.sh/d' .bashrc
+
+  # Enable PgUp, PgDn search in bash history
+  echo "bind '\"\e[5~\": history-search-backward'" >> .bashrc
+  echo "bind '\"\e[6~\": history-search-forward'" >> .bashrc
   
   # Remove pi user
   sudo userdel -r pi
-  
-  # Add SSH root Access
-#  while : ; do
-#    sudo passwd root
-#    [ $? = 0 ] && break
-#  done
-#  sudo sed -i "s/^.*PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
-#  sudo systemctl restart sshd.service
-
-## On remote computer
-# mkdir raspberry
-# sshfs root@rpihostname:/ raspberry
-# fusermount -u raspberry
 
   # Webserver
   sudo apt-get install apache2 php libapache2-mod-php php-ssh2 php-gd php-xml php-curl php-mbstring -y
@@ -117,38 +108,8 @@ else
   echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
 
   sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.html
-  sudo wget -O /var/www/html/random_pic.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/random_pic.php
-  sudo mkdir /var/www/html/emoji
-  sudo wget -O /var/www/html/emoji/calendar.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/calendar.svg
-  sudo wget -O /var/www/html/emoji/framed_picture.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/framed_picture.svg
-  sudo wget -O /var/www/html/emoji/logout.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/logout.svg
-  sudo wget -O /var/www/html/emoji/monitor.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/monitor.svg
-  sudo wget -O /var/www/html/emoji/network-wireless.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/network-wireless.svg
-  sudo wget -O /var/www/html/emoji/radio.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/radio.svg
-  sudo wget -O /var/www/html/emoji/reboot.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/reboot.svg
-  sudo wget -O /var/www/html/emoji/refresh.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/refresh.svg
-  sudo wget -O /var/www/html/emoji/shutdown.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/shutdown.svg
-  sudo wget -O /var/www/html/emoji/surveillance-camera.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/surveillance-camera.svg
-  sudo wget -O /var/www/html/emoji/thermometer.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/thermometer.svg
-  sudo wget -O /var/www/html/emoji/thermostat.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/thermostat.svg
-  sudo wget -O /var/www/html/emoji/timelapse.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/timelapse.svg
-  sudo wget -O /var/www/html/emoji/weather.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/weather.svg
+  sudo wget -O /var/www/html/background.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/background.php
 
-  cat > PresHumiTemp <<EOF
-1012.77 hPa
-  56.93 %
-  22.03 C
-EOF
-  sudo mv PresHumiTemp /var/www/html/data/
-  
-  wget https://github.com/fullcalendar/fullcalendar/releases/download/v4.3.1/fullcalendar-4.3.1.zip
-  sudo mkdir /var/www/html/fullcalendar
-  sudo unzip fullcalendar-4.3.1.zip -d /var/www/html/fullcalendar/
-  rm fullcalendar-4.3.1.zip
-  sudo wget -O /var/www/html/fullcalendar/ical.min.js https://raw.githubusercontent.com/mozilla-comm/ical.js/master/build/ical.min.js
-  sudo wget -O /var/www/html/fullcalendar/basic.ics https://www.google.com/calendar/ical/feestdagenbelgie%40gmail.com/public/basic.ics
-  sudo wget -O /var/www/html/fullcalendar/snt.ics https://calendar.google.com/calendar/ical/phvkufc0v823qkio9ml4mdtpug%40group.calendar.google.com/public/basic.ics
-  
 # Fetch background images
   sudo apt-get install imagemagick -y
 # tar cvzf - background | split -b 20m - background.tar.gz
@@ -177,9 +138,15 @@ EOF
   sudo wget -O /usr/sbin/background.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/usr/sbin/background.sh
   sudo chmod +x /usr/sbin/background.sh
 
-exit
-
   echo "www-data ALL = NOPASSWD: /sbin/shutdown -r now" | sudo tee -a /etc/sudoers
+  echo "www-data ALL = NOPASSWD: /sbin/shutdown -h now" | sudo tee -a /etc/sudoers
+  echo "www-data ALL = NOPASSWD: /bin/systemctl start hostapd.service" | sudo tee -a /etc/sudoers
+  echo "www-data ALL = NOPASSWD: /bin/systemctl stop hostapd.service" | sudo tee -a /etc/sudoers
+  echo "www-data ALL = NOPASSWD: /usr/bin/tee /sys/class/backlight/rpi_backlight/bl_power" | sudo tee -a /etc/sudoers
+
+  sudo wget -O /var/www/html/system.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/system.php
+
+exit
 
 #  read -s -p "Typ bindelings de encryptie wachtzin: " passphrase
 #  sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/genkeys.php
