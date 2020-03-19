@@ -37,7 +37,6 @@ $creditURL = (string) $xml->{'credit'}->{'link'}->attributes()->{'url'};
 $credit = (string) $xml->{'credit'}->{'link'}->attributes()->{'text'};
 for ($i = 1; $i < 8; $i++) {
   $day[$i] = strftime("%a %d/%m", mktime(0, 0, 0, date("m")  , date("d") + $i, date("Y")));
-  echo $day[$i];
 }
 
 $filename = "data/PresHumiTemp";
