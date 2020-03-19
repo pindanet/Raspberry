@@ -15,6 +15,7 @@ KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
+FULLCALENDAR="4.4.0"
 
 if [ $USER == "pi" ]; then
   # Change keyboard
@@ -145,6 +146,20 @@ EOF
   echo "www-data ALL = NOPASSWD: /usr/bin/tee /sys/class/backlight/rpi_backlight/bl_power" | sudo tee -a /etc/sudoers
 
   sudo wget -O /var/www/html/system.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/system.php
+  
+  wget https://github.com/fullcalendar/fullcalendar/releases/download/v$FULLCALENDAR/fullcalendar-$FULLCALENDAR.zip
+  unzip -l fullcalendar-$FULLCALENDAR.zip
+  sudo mkdir /var/www/html/fullcalendar
+  sudo unzip fullcalendar-$FULLCALENDAR.zip -d /var/www/html/fullcalendar/
+  rm fullcalendar-$FULLCALENDAR.zip
+  
+  sudo wget -O /var/www/html/fullcalendar/ical.min.js https://raw.githubusercontent.com/peterbraden/ical.js/master/ical.js
+  sudo wget -O /var/www/html/fullcalendar/basics.ics https://www.google.com/calendar/ical/feestdagenbelgie%40gmail.com/public/basic.ics
+  sudo wget -O /var/www/html/fullcalendar/snt.ics https://www.google.com/calendar/ical/feestdagenbelgie%40gmail.com/public/basic.ics
+
+  sudo wget -O /var/www/html/state.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/state.php
+  sudo wget -O /var/www/html/forecast.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/forecast.php
+  sudo apt-get install inkscape
 
 exit
 
