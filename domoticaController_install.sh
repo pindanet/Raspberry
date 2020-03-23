@@ -160,6 +160,9 @@ EOF
   sudo wget -O /var/www/html/state.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/state.php
   sudo wget -O /var/www/html/forecast.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/forecast.php
   sudo apt-get install inkscape
+  
+  sudo apt-get install python-pip
+  sudo pip install bme280
 
 exit
 
