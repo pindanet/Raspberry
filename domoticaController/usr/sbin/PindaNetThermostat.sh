@@ -22,7 +22,7 @@ heating () {
 # read pressure, humididy and temperature from sensor
 read_bme280 --i2c-address 0x77 > /var/www/html/data/PresHumiTemp
 if [ $? -ne 0 ]; then
-  echo "1017.58 hPa\n  50.55 ％\n  19.03 ℃" > /var/www/html/data/PresHumiTemp
+  echo -e "1017.58 hPa\n  50.55 ％\n  19.03 ℃" > /var/www/html/data/PresHumiTemp
 fi
 
 #if [ $(cat /var/PindaNet/heating) == "on" ]; then
