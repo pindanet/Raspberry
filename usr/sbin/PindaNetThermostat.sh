@@ -20,11 +20,10 @@ heating () {
 # BCM 3 (SCL) - SCK (White)
 # BCM 2 (SDA) - SDI (Brown)
 # read pressure, humididy and temperature from sensor
-#if test -f "/usr/bin/read_bme280"; then
-  read_bme280 --i2c-address 0x77 > /var/www/html/data/PresHumiTemp
-#else
-#  echo "1017.58 hPa\n  50.55 ％\n  19.03 ℃" > /var/www/html/data/PresHumiTemp
-#fi
+read_bme280 --i2c-address 0x77 > /var/www/html/data/PresHumiTemp
+if [ $? -ne 0 ]; then
+  echo "1017.58 hPa\n  50.55 ％\n  19.03 ℃" > /var/www/html/data/PresHumiTemp
+fi
 
 #if [ $(cat /var/PindaNet/heating) == "on" ]; then
 #  heating on "manual"
@@ -34,9 +33,9 @@ heating () {
 #  exit
 #fi
 
-#if [ ! -f /var/PindaNet/thermostat ]; then
-#  echo -n "0;09:30;20.00 0;21:25;-off- 1;09:30;20.00 1;21:25;-off- 2;09:30;20.00 2;21:25;-off- 3;09:30;20.00 3;21:25;-off- 4;09:30;20.00 4;21:25;-off- 5;09:30;20.00 5;21:25;-off- 6;09:30;20.00 6;21:25;-off-" > /var/PindaNet/thermostat
-#fi
+if [ ! -f /var/PindaNet/thermostat ]; then
+  echo -n "0;07:20;19.00 0;22:30;-off- 1;07:20;19.00 1;22:30;-off- 2;07:20;19.00 2;22:30;-off- 3;07:20;19.00 3;22:30;-off- 4;07:20;19.00 4;22:30;-off- 5;07:20;19.00 5;22:30;-off- 6;07:20;19.00 6;22:30;-off-" > /var/PindaNet/thermostat
+fi
 thermostat=`cat /var/www/html/data/thermostat`
 weekday=$(date +%w)
 now=$(date +%H:%M)
