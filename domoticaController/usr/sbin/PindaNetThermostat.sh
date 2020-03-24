@@ -2,6 +2,7 @@
 heating () {
   if [ ! -f /var/www/html/data/heating ]; then
     echo "off" > /var/www/html/data/heating
+    chown www-data:www-data /var/www/html/data/heating
   fi
   if [ $1 == "on" ] && [ $(cat /var/www/html/data/heating) == "off" ]; then
 #    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 02 01 25 4A AE 0E 01 0F 80"
