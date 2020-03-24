@@ -1,15 +1,15 @@
 #!/bin/bash
 heating () {
-  if [ ! -f /tmp/PindaNetHeating ]; then
-    echo "off" > /tmp/PindaNetHeating
+  if [ ! -f /var/www/html/data/heating ]; then
+    echo "off" > /var/www/html/data/heating
   fi
-  if [ $1 == "on" ] && [ $(cat /tmp/PindaNetHeating) == "off" ]; then
+  if [ $1 == "on" ] && [ $(cat /var/www/html/data/heating) == "off" ]; then
 #    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 02 01 25 4A AE 0E 01 0F 80"
-    echo "on" > /tmp/PindaNetHeating
+    echo "on" > /var/www/html/data/heating
     echo "$(date): Heating $2 on" >> /tmp/PindaNetDebug.txt
-  elif [ $1 == "off" ] && [ $(cat /tmp/PindaNetHeating) == "on" ]; then
+  elif [ $1 == "off" ] && [ $(cat /var/www/html/data/heating) == "on" ]; then
 #    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 01 01 41 53 86 01 00 00 80"
-    echo "off" > /tmp/PindaNetHeating
+    echo "off" > /var/www/html/data/heating
     echo "$(date): Heating $2 off" >> /tmp/PindaNetDebug.txt
   fi
 }
@@ -25,10 +25,10 @@ if [ $? -ne 0 ]; then
   echo -e "1017.58 hPa\n  50.55 ％\n  19.03 ℃" > /var/www/html/data/PresHumiTemp
 fi
 
-#if [ $(cat /var/PindaNet/heating) == "on" ]; then
+#if [ $(cat /var/www/html/data/heating) == "on" ]; then
 #  heating on "manual"
 #  exit
-#elif [ $(cat /var/PindaNet/heating) == "off" ]; then
+#elif [ $(cat /var/www/html/data/heating) == "off" ]; then
 #  heating off "manual"
 #  exit
 #fi
