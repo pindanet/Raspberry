@@ -20,7 +20,11 @@ heating () {
 # BCM 3 (SCL) - SCK (White)
 # BCM 2 (SDA) - SDI (Brown)
 # read pressure, humididy and temperature from sensor
-read_bme280 --i2c-address 0x77 > /var/www/html/data/PresHumiTemp
+#if test -f "/usr/bin/read_bme280"; then
+  read_bme280 --i2c-address 0x77 > /var/www/html/data/PresHumiTemp
+#else
+#  echo "1017.58 hPa\n  50.55 ％\n  19.03 ℃" > /var/www/html/data/PresHumiTemp
+#fi
 
 #if [ $(cat /var/PindaNet/heating) == "on" ]; then
 #  heating on "manual"
