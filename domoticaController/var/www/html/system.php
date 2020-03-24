@@ -71,4 +71,7 @@ case "saveThermostat":
 //  file_put_contents ("data/thermostat.json", $_POST["json"] . "\n");
   file_put_contents ("data/thermostat", base64_decode($_POST["json"]));
   break;
+case "saveHeating":
+  file_put_contents ("data/heating", base64_decode($_POST["heating"]));
+  break;
 endswitch ?>
