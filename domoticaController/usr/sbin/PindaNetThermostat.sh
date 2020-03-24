@@ -35,7 +35,7 @@ fi
 
 thermostat=`cat /var/www/html/data/thermostat`
 if [ $? -ne 0 ]; then
-  echo -n "0;07:20;19.00 0;22:30;-off- 1;07:20;19.00 1;22:30;-off- 2;07:20;19.00 2;22:30;-off- 3;07:20;19.00 3;22:30;-off- 4;07:20;19.00 4;22:30;-off- 5;07:20;19.00 5;22:30;-off- 6;07:20;19.00 6;22:30;-off-" > /var/PindaNet/thermostat
+  echo -n "0;07:20;19.00 0;22:30;-off- 1;07:20;19.00 1;22:30;-off- 2;07:20;19.00 2;22:30;-off- 3;07:20;19.00 3;22:30;-off- 4;07:20;19.00 4;22:30;-off- 5;07:20;19.00 5;22:30;-off- 6;07:20;19.00 6;22:30;-off-" > /var/www/html/data/thermostat
   thermostat=`cat /var/www/html/data/thermostat`
 fi
 weekday=$(date +%w)
