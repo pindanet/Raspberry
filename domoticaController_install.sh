@@ -163,6 +163,31 @@ EOF
   
   sudo apt-get install python-pip
   sudo pip install bme280
+  sudo wget -O /usr/sbin/PindaNetThermostat.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetThermostat.sh
+  sudo chmod +x /usr/sbin/PindaNetThermostat.sh
+  cat > PindaNetThermostat.service <<EOF
+[Unit]
+Description=Thermostat
+[Service]
+Type=simple
+ExecStart=/usr/sbin/PindaNetThermostat.sh
+EOF
+  sudo mv PindaNetThermostat.service /etc/systemd/system/
+  cat > PindaNetThermostat.timer <<EOF
+[Unit]
+Description=Thermostat
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+Unit=PindaNetThermostat.service
+[Install]
+WantedBy=multi-user.target
+EOF
+  sudo mv PindaNetThermostat.timer /etc/systemd/system/
+
+  sudo systemctl daemon-reload
+  sudo systemctl enable PindaNetThermostat.timer
+
 
 exit
 
