@@ -817,7 +817,7 @@ loadThermostat();
         xhrHeating.open('POST', "data/heating", true);
         xhrHeating.onload = function(e) {
           if (this.status == 200) {
-            var heating = this.responseText.slice(0, -1);
+            var heating = this.responseText;
             if (heating == "off") {
               document.getElementById("autoThermostat").style = "color: black;";
               document.getElementById("onThermostat").style = "color: black;";
@@ -970,7 +970,21 @@ loadThermostat();
 */
         event.stopPropagation();
       }
+      function saveHeating(status) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "system.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+//            displayHeatingThermostat();
+//            weeklyThermostat(event);
+            getThermostatTemp();
+          }
+        };
+        xhr.send("command=saveHeating&heating=" + btoa(status));
+      }
       function autoThermostat(event) {
+	saveHeating("auto");
 /*
         sendBT("heating","auto", function(e) {
           if (this.status == 200) {
@@ -983,6 +997,7 @@ loadThermostat();
         event.stopPropagation();
       }
       function onThermostat(event) {
+	saveHeating("on");
 /*
         sendBT("heating","on", function(e) {
           if (this.status == 200) {
@@ -995,6 +1010,7 @@ loadThermostat();
         event.stopPropagation();
       }
       function offThermostat(event) {
+	saveHeating("off");
 /*
         sendBT("heating","off", function(e) {
           if (this.status == 200) {
