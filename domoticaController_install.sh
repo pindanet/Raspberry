@@ -161,6 +161,7 @@ EOF
   sudo wget -O /var/www/html/forecast.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/forecast.php
   sudo apt-get install inkscape
   
+  sudo wget -O /var/www/html/exportthermostat.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/exportthermostat.php
   sudo apt-get install python-pip
   sudo pip install bme280
   sudo wget -O /usr/sbin/PindaNetThermostat.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetThermostat.sh
@@ -188,6 +189,7 @@ EOF
   sudo systemctl daemon-reload
   sudo systemctl enable PindaNetThermostat.timer
 
+  sudo wget -O /var/www/html/daylymotion.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/daylymotion.php
 
 exit
 
