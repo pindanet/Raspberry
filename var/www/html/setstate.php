@@ -51,6 +51,6 @@ if ($output[0] == 0 && $state == "sleep") {
 }
 if ($output[0] == 1 && $state == "awake") {
   exec("echo 0 | sudo /usr/bin/tee /sys/class/backlight/rpi_backlight/bl_power");
-  wakeupWall();
+//  wakeupWall();
 }
 ?>
