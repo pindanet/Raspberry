@@ -48,9 +48,13 @@ fclose($myfile);
 if ($output[0] == 0 && $state == "sleep") {
   exec("echo 1 | sudo /usr/bin/tee /sys/class/backlight/rpi_backlight/bl_power");
   sleepWall();
+  # IR paneel uitschakelen
+  exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 01 01 41 53 86 02 00 00 80\"");
 }
 if ($output[0] == 1 && $state == "awake") {
   exec("echo 0 | sudo /usr/bin/tee /sys/class/backlight/rpi_backlight/bl_power");
 //  wakeupWall();
+  # IR paneel inschakelen
+  exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 41 53 86 02 01 0F 80\"");
 }
 ?>
