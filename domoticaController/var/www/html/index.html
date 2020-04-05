@@ -1242,6 +1242,24 @@ console.log(event);
 //      function toLocaleDateString(datumobj) {
 //        return dayNames[datumobj.getDay()] + '&nbsp;' + datumobj.getDate() + '&nbsp;' + monthNames[datumobj.getMonth()] + '&nbsp;' + datumobj.getFullYear();
 //      }
+      var roomTemp="20,0 °C";
+      function getPresHumiTemp() {
+        var xhrthermometer = new XMLHttpRequest();
+        xhrthermometer.responseType = 'text';
+        xhrthermometer.open('POST', "data/PresHumiTemp", true);
+        xhrthermometer.onload = function(e) {
+          if (this.status == 200) {
+            var PresHumiTemp = this.responseText.split('\n');
+            var Luchtdruk = parseFloat(PresHumiTemp[0]).toFixed(0) + ' hPa';
+            roomTemp = parseFloat(PresHumiTemp[2]).toFixed(1) + ' °C';
+            var Vochtigheid = parseFloat(PresHumiTemp[1]).toFixed(0) + ' %';
+            getPresHumiTempTimer = setTimeout(getPresHumiTemp, 1000 * 60); // elke minuut
+          }
+        };
+        xhrthermometer.send();
+      }
+      getPresHumiTemp();
+
       var startTimer;
       function startTime(event) {
         clearTimeout(startTimer);
@@ -1255,7 +1273,7 @@ console.log(event);
 //        document.getElementById('content').innerHTML = '<span id="clock">' + h + ":" + m + '</span><br><span id="date">'+ toLocaleDateString(today) + '</span>';
 //	document.getElementById('content').style.width = '100%';
 	var w = window.innerWidth;
-	document.getElementById('content').innerHTML = '<div id="clockday">' + dayNames[today.getDay()] + '</div>';
+	document.getElementById('content').innerHTML = '<div id="clockday">' + dayNames[today.getDay()] + ' ' + roomTemp + '</div>';
 	document.getElementById('content').innerHTML += '<div id="clock" style="width: ' + w + 'px;">' + h + ":" + m + '</div>';
 	document.getElementById('content').innerHTML += '<div id="clockdate">' + today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear() + '</div>';
         centerContent();
