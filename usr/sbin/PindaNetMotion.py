@@ -36,7 +36,12 @@ while True:
 
   filename = motionfolder + time.strftime("%Y %m %d %H:%M:%S") + ".jpg"
   print(filename)
-  camera.capture(filename)
+  # Taking picture disturbs sound
+  if os.path.exists("/var/www/html/data/mpc.txt"):
+    print("Music playing")
+  else:
+    print("No music playing")
+    camera.capture(filename)
 
   pir.wait_for_no_motion()
   logme("No Motion!")
