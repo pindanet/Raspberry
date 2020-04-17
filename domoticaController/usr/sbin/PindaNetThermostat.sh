@@ -84,7 +84,7 @@ if [ "$thermostatTemp" == "-off-" ]; then
 else
   if [[ "$temp" < "$thermostatTemp" ]]; then
     heating on "auto ($temp)"
-  else
+  elif [[ "$temp" > "$thermostatTemp" ]]; then
     heating off "auto ($temp)"
   fi
 fi
