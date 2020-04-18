@@ -67,24 +67,15 @@ done
 
 temp=$(tail -1 /var/www/html/data/PresHumiTemp)
 temp=${temp%% C*}
-  # remove leading whitespace characters
-  temp="${temp#"${temp%%[![:space:]]*}"}"
-  # normalise floats to compare them
-  while [[ ${#temp} < ${#thermostatTemp} ]]; do
-    temp="0$temp"
-  done
-  while [[ ${#thermostatTemp} < ${#temp} ]]; do
-    thermostatTemp="0$thermostatTemp"
-  done
+# remove leading whitespace characters
+temp="${temp#"${temp%%[![:space:]]*}"}"
 
-#echo "$(date): weekday=$weekday now=$now temp=$temp thermostatTemp=$thermostatTemp" >> /tmp/PindaNetDebug.txt
-
-if [ "$thermostatTemp" == "-off-" ]; then
-  heating off "auto"
-else
-  if [[ "$temp" < "$thermostatTemp" ]]; then
-    heating on "auto ($temp)"
-  elif [[ "$temp" > "$thermostatTemp" ]]; then
-    heating off "auto ($temp)"
-  fi
+#echo "temp=$temp thermostatTemp=$thermostatTemp" >> /tmp/PindaNetDebug.txt
+hysteresis="0.1"
+if (( $(awk "BEGIN {print ($temp < $thermostatTemp - $hysteresis)}") )); then
+#  echo "temp=$temp thermostatTemp=$thermostatTemp Verwarming aan" #>> /tmp/PindaNetDebug.txt 
+  heating on "auto ($temp)"
+elif (( $(awk "BEGIN {print ($temp > $thermostatTemp + $hysteresis)}") )); then
+#  echo "temp=$temp thermostatTemp=$thermostatTemp Verwarming uit" #>> /tmp/PindaNetDebug.txt 
+  heating off "auto ($temp)"
 fi
