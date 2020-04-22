@@ -1,4 +1,17 @@
 #!/bin/bash
+LivingZuidOn="0B 11 00 01 01 41 53 86 01 01 0F 80"
+LivingZuidOff="0B 11 00 00 01 41 53 86 01 00 00 80"
+LivingNoordOn="0B 11 00 00 01 41 53 86 02 01 0F 80"
+LivingNoordOff="0B 11 00 01 01 41 53 86 02 00 00 80"
+sendRF () {
+  if [ ! -f /var/www/html/data/mpc.txt ]; then
+    touch /var/www/html/data/mpc.txt
+  fi
+  python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "$1"
+  if [ -s /var/www/html/data/mpc.txt ]; then
+    rm /var/www/html/data/mpc.txt
+  fi
+}
 heating () {
   if [ ! -f /var/www/html/data/heating ]; then
     echo "off" > /var/www/html/data/heating
@@ -8,13 +21,22 @@ heating () {
     echo "auto" > /var/www/html/data/thermostatmode
     chown www-data:www-data /var/www/html/data/thermostatmode
   fi
+#echo "on/off=$1 heating=$(cat /var/www/html/data/heating) mode=$(cat /var/www/html/data/thermostatmode)" >> /tmp/PindaNetDebug.txt
   if [ $(cat /var/www/html/data/thermostatmode) == "auto" ]; then
     if [ $1 == "on" ] && [ $(cat /var/www/html/data/heating) == "off" ]; then
-      python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 01 01 41 53 86 01 01 0F 80"
+#      sendRF "0B 11 00 01 01 41 53 86 01 01 0F 80" # Living Zuid
+#      sendRF "0B 11 00 00 01 41 53 86 02 01 0F 80" # Living Noord
+      sendRF "$LivingZuidOn"
+      sendRF "$LivingNoordOn"
+#      python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 01 01 41 53 86 01 01 0F 80"
       echo "on" > /var/www/html/data/heating
       echo "$(date): Heating $2 on" >> /tmp/PindaNetDebug.txt
     elif [ $1 == "off" ] && [ $(cat /var/www/html/data/heating) == "on" ]; then
-      python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 41 53 86 01 00 00 80"
+#      sendRF "0B 11 00 00 01 41 53 86 01 00 00 80" # LivingZuidOff
+#      sendRF "0B 11 00 01 01 41 53 86 02 00 00 80" # LivingNoordOff
+      sendRF "$LivingZuidOff"
+      sendRF "$LivingNoordOff"
+#      python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 41 53 86 01 00 00 80"
       echo "off" > /var/www/html/data/heating
       echo "$(date): Heating $2 off" >> /tmp/PindaNetDebug.txt
     fi
@@ -28,24 +50,19 @@ heating () {
 # BCM 2 (SDA) - SDI (Brown)
 # read pressure, humididy and temperature from sensor
 read_bme280 --i2c-address 0x77 > /var/www/html/data/PresHumiTemp
-if [ $? -ne 0 ]; then
-  echo -e "1017.58 hPa\n  50.55 ％\n  19.03 ℃" > /var/www/html/data/PresHumiTemp
-fi
 
-#if [ $(cat /var/www/html/data/heating) == "on" ]; then
+#if [ $(cat /var/PindaNet/heating) == "on" ]; then
 #  heating on "manual"
 #  exit
-#elif [ $(cat /var/www/html/data/heating) == "off" ]; then
+#elif [ $(cat /var/PindaNet/heating) == "off" ]; then
 #  heating off "manual"
 #  exit
 #fi
 
+#if [ ! -f /var/PindaNet/thermostat ]; then
+#  echo -n "0;09:30;20.00 0;21:25;-off- 1;09:30;20.00 1;21:25;-off- 2;09:30;20.00 2;21:25;-off- 3;09:30;20.00 3;21:25;-off- 4;09:30;20.00 4;21:25;-off- 5;09:30;20.00 5;21:25;-off- 6;09:30;20.00 6;21:25;-off-" > /var/PindaNet/thermostat
+#fi
 thermostat=`cat /var/www/html/data/thermostat`
-if [ $? -ne 0 ]; then
-  echo -n "0;07:20;19.00 0;22:30;-off- 1;07:20;19.00 1;22:30;-off- 2;07:20;19.00 2;22:30;-off- 3;07:20;19.00 3;22:30;-off- 4;07:20;19.00 4;22:30;-off- 5;07:20;19.00 5;22:30;-off- 6;07:20;19.00 6;22:30;-off-" > /var/www/html/data/thermostat
-  chown www-data:www-data /var/www/html/data/thermostat
-  thermostat=`cat /var/www/html/data/thermostat`
-fi
 weekday=$(date +%w)
 now=$(date +%H:%M)
 
@@ -67,8 +84,8 @@ done
 
 temp=$(tail -1 /var/www/html/data/PresHumiTemp)
 temp=${temp%% C*}
-# remove leading whitespace characters
-temp="${temp#"${temp%%[![:space:]]*}"}"
+  # remove leading whitespace characters
+  temp="${temp#"${temp%%[![:space:]]*}"}"
 
 #echo "temp=$temp thermostatTemp=$thermostatTemp" >> /tmp/PindaNetDebug.txt
 hysteresis="0.1"
@@ -78,4 +95,31 @@ if (( $(awk "BEGIN {print ($temp < $thermostatTemp - $hysteresis)}") )); then
 elif (( $(awk "BEGIN {print ($temp > $thermostatTemp + $hysteresis)}") )); then
 #  echo "temp=$temp thermostatTemp=$thermostatTemp Verwarming uit" #>> /tmp/PindaNetDebug.txt 
   heating off "auto ($temp)"
+fi
+exit
+
+  # normalise floats to compare them
+  while [[ ${#temp} < ${#thermostatTemp} ]]; do
+    temp="0$temp"
+  done
+  while [[ ${#thermostatTemp} < ${#temp} ]]; do
+    thermostatTemp="0$thermostatTemp"
+  done
+
+#echo "$(date): weekday=$weekday now=$now temp=$temp thermostatTemp=$thermostatTemp" >> /tmp/PindaNetDebug.txt
+
+if [ "$thermostatTemp" == "-off-" ]; then
+  heating off "auto"
+else
+#  thermostatTemp=$(php -r "echo number_format($thermostatTemp - 2, 2);")
+  # normalise floats to compare them
+#  while [[ ${#thermostatTemp} < ${#temp} ]]; do
+#    thermostatTemp="0$thermostatTemp"
+#  done
+#echo "temp=$temp thermostatTemp=$thermostatTemp" >> /tmp/PindaNetDebug.txt
+  if [[ "$temp" < "$thermostatTemp" ]]; then
+    heating on "auto ($temp)"
+  elif [[ "$temp" > "$thermostatTemp" ]]; then
+    heating off "auto ($temp)"
+  fi
 fi
