@@ -424,3 +424,6 @@ You can not overwrite existing files.
     
     /var/www/html/data/bluetooth IN_CLOSE_WRITE /bin/mv $@/$# /var/www/html/data/$#
 ## Flash Tasmota on Sonoff Basic
+    Based on https://tasmota.github.io/docs/Flash-Sonoff-using-Raspberry-Pi/
+    Open Sonoff Basic and solder connections (see: https://www.sigmdel.ca/michel/ha/sonoff/flashing_sonoff_en.html with PSU)
+    
