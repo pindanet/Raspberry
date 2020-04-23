@@ -423,3 +423,4 @@ You can not overwrite existing files.
     sudo incrontab -e
     
     /var/www/html/data/bluetooth IN_CLOSE_WRITE /bin/mv $@/$# /var/www/html/data/$#
+## Flash Tasmota on Sonoff Basic
