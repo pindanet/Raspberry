@@ -436,7 +436,7 @@ You can not overwrite existing files.
     Add enable_uart=1
     Add dtoverlay=pi3-miniuart-bt
     Add dtoverlay=pi3-disable-bt
-    Power off Raspberry Pi
+    Shutdown and Power off Raspberry Pi
     
     Open Sonoff Basic and solder connections (see: https://www.sigmdel.ca/michel/ha/sonoff/flashing_sonoff_en.html with PSU)
     
@@ -449,3 +449,13 @@ You can not overwrite existing files.
     esptool.py --port /dev/ttyAMA0 erase_flash
     Start Sonoff while holding the button for 10 seconds to start in flashing mode
     esptool.py --port /dev/ttyAMA0 write_flash -fm dout 0x0 tasmota.bin
+    
+    Shutdown and Power off Raspberry Pi
+    Power off Sonoff
+    Connect Sonoff to 220 V AC
+    
+    Scan for tasmota_XXXXXX-XXXX Wifi Acces Point
+    Connect to tasmota_C699B5-6581
+    Surf to http://192.168.4.1
+    Configure Sonoff Wifi
+    Save configuration, Sonoff will reboot and connect to your home AP
