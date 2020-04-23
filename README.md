@@ -425,9 +425,24 @@ You can not overwrite existing files.
     /var/www/html/data/bluetooth IN_CLOSE_WRITE /bin/mv $@/$# /var/www/html/data/$#
 ## Flash Tasmota on Sonoff Basic
     Based on https://tasmota.github.io/docs/Flash-Sonoff-using-Raspberry-Pi/
+    Start Raspberry Pi
+    sudo pip install esptool
+    sudo systemctl stop serial-getty@ttyS0.service
+    sudo systemctl disable serial-getty@ttyS0.service
+    sudo cp /boot/cmdline.txt /boot/cmdline.bak
+    sudo nano /boot/cmdline.txt
+    Remove "console=serial0,115200"
+    sudo nano /boot/config.txt
+    Add enable_uart=1
+    Add dtoverlay=pi3-miniuart-bt
+    Add dtoverlay=pi3-disable-bt
+    Power off Raspberry Pi
+    
     Open Sonoff Basic and solder connections (see: https://www.sigmdel.ca/michel/ha/sonoff/flashing_sonoff_en.html with PSU)
+    
     Start Raspberry Pi
     wget https://github.com/arendst/Tasmota/releases/download/v8.2.0/tasmota.bin
+    
     Start Sonoff while holding the button for 10 seconds to start in flashing mode
     esptool.py --port /dev/ttyAMA0 read_flash 0x00000 0x100000 Sonoff_backup_01.bin
     Restart Sonoff while holding the button for 10 seconds to start in flashing mode
