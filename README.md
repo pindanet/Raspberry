@@ -455,7 +455,7 @@ You can not overwrite existing files.
     Connect Sonoff to 220 V AC
     
     Scan for tasmota_XXXXXX-XXXX Wifi Acces Point
-    Connect to tasmota_C699B5-6581
+    Connect to tasmota_XXXXXX-XXXX
     Surf to http://192.168.4.1
     Configure Sonoff Wifi
     Save configuration, Sonoff will reboot and connect to your home AP
