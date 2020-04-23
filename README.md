@@ -426,4 +426,11 @@ You can not overwrite existing files.
 ## Flash Tasmota on Sonoff Basic
     Based on https://tasmota.github.io/docs/Flash-Sonoff-using-Raspberry-Pi/
     Open Sonoff Basic and solder connections (see: https://www.sigmdel.ca/michel/ha/sonoff/flashing_sonoff_en.html with PSU)
-    
+    Start Raspberry Pi
+    wget https://github.com/arendst/Tasmota/releases/download/v8.2.0/tasmota.bin
+    Start Sonoff while holding the button for 10 seconds to start in flashing mode
+    esptool.py --port /dev/ttyAMA0 read_flash 0x00000 0x100000 Sonoff_backup_01.bin
+    Restart Sonoff while holding the button for 10 seconds to start in flashing mode
+    esptool.py --port /dev/ttyAMA0 erase_flash
+    Start Sonoff while holding the button for 10 seconds to start in flashing mode
+    esptool.py --port /dev/ttyAMA0 write_flash -fm dout 0x0 tasmota.bin
