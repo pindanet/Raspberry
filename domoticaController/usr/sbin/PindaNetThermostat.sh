@@ -1,10 +1,23 @@
 #!/bin/bash
 # ToDo
-# sleep verwarming uitschakelen
+# Reset
+# Manueel
+
+# Timer default array
+timerdefault[0]="0 07:20 22:45"
+timerdefault[1]="2 07:20 22:45"
+timerdefault[2]="4 07:20 22:45"
+timerdefault[3]="6 07:20 22:45"
+timerdefault[4]="1 07:20 22:45"
+timerdefault[5]="3 07:20 22:45"
+timerdefault[6]="5 07:20 22:45"
+# timerdefault[7]="0 16:30 17:00"
+# timerdefault[8]="0 17:30 22:45"
+
 thermostatkitchendefault[0]="07:20 08:30 22.00"
 thermostatkitchendefault[2]="11:00 13:30 22.20"
 thermostatkitchendefault[1]="22:15 22:45 22.20"
-thermostatkitchendefault[3]="16:45 17:15 22.20"
+thermostatkitchendefault[3]="16:45 17:30 22.20"
 
 thermostatlivingdefault[0]="08:10 11:15 22.00"
 thermostatlivingdefault[2]="13:15 17:00 22.00"
@@ -21,20 +34,17 @@ rm $timerfile
 rm $thermostatkitchenfile
 rm $thermostatlivingfile
 
-TestOn="tasmota_8be4af-1199 on"
-TestOff="tasmota_8be4af-1199 off"
-
-LivingZuidOn="0B1100010141538601010F80 on"
-LivingZuidOff="0B1100000141538601000080 off"
-LivingNoordOn="0B1100000141538602010F80 on"
-LivingNoordOff="0B1100010141538602000080 off"
-KeukenZuidOn="tasmota_a943fa-1018 on"
-KeukenZuidOff="tasmota_a943fa-1018 off"
+declare -A heater
+heater[LivingZuidOn]="0B1100010141538601010F80 on"
+heater[LivingZuidOff]="0B1100000141538601000080 off"
+heater[LivingNoordOn]="0B1100000141538602010F80 on"
+heater[LivingNoordOff]="0B1100010141538602000080 off"
+heater[KeukenZuidOn]="tasmota_a943fa-1018 on"
+heater[KeukenZuidOff]="tasmota_a943fa-1018 off"
 
 hysteresis="0.1"
 
 sendRF () {
-#  echo $1 $2
   if [ ! -f /var/www/html/data/mpc.txt ]; then
     touch /var/www/html/data/mpc.txt
   fi
@@ -46,13 +56,15 @@ sendRF () {
       echo 'off' > "$tempfile"
     fi
   fi
-echo $tempfile $(cat "$tempfile") $2
+#echo $tempfile $(cat "$tempfile") $2
   if [ $(cat "$tempfile") == "off" ] && [ "$2" == "on" ]; then
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "$1"
     echo 'on' > "$tempfile"
+    echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
   elif [ $(cat "$tempfile") == "on" ] && [ "$2" == "off" ]; then
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "$1"
     echo 'off' > "$tempfile"
+    echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
   fi
   if [ -s /var/www/html/data/mpc.txt ]; then
     rm /var/www/html/data/mpc.txt
@@ -66,12 +78,24 @@ tasmota () {
   if [ $2 == "on" ] && [ $(cat /tmp/$1) == '{"POWER":"OFF"}' ]; then
     wget -q http://$1/cm?cmnd=Power%20On
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-    echo "$(date): $1 on" >> /tmp/PindaNetTimerDebug.txt
+    echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
   elif [ $2 == "off" ] && [ $(cat /tmp/$1) == '{"POWER":"ON"}' ]; then
     wget -q http://$1/cm?cmnd=Power%20Off
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-    echo "$(date): $1 off" >> /tmp/PindaNetTimerDebug.txt
+    echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
   fi
+}
+function thermostatOff {
+  for switch in "${!heater[@]}"
+  do
+   if [[ "$switch" == *Off ]]; then
+     if [[ "${heater[$switch]}" == tasmota* ]]; then
+       tasmota ${heater[$switch]}
+     else
+       sendRF ${heater[$switch]}
+     fi
+   fi
+  done
 }
 
 function thermostat {
@@ -87,7 +111,7 @@ function thermostat {
 
   IFS=$'\n' thermostatkitchen=($(sort <<<"${raw[*]}"))
   unset IFS
-#  unset raw
+  unset raw
 
 #  printf "%s\n" "${thermostatkitchen[@]}"
 #  echo $now
@@ -103,14 +127,14 @@ function thermostat {
   if [ "$heating" == "on" ]; then
     if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
       echo "Keukenverwarming inschakelen"
-      tasmota $KeukenZuidOn
+      tasmota ${heater[KeukenZuidOn]}
     elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
       echo "Keukenverwarming uitschakelen"
-      tasmota $KeukenZuidOff
+      tasmota ${heater[KeukenZuidOff]}
     fi
   else
     echo "Keuken niet verwarmen"
-    tasmota $KeukenZuidOff
+    tasmota ${heater[KeukenZuidOff]}
   fi
 
   if [ ! -f $thermostatlivingfile ]; then # default
@@ -121,7 +145,7 @@ function thermostat {
 
   IFS=$'\n' thermostatliving=($(sort <<<"${raw[*]}"))
   unset IFS
-#  unset raw
+  unset raw
 
 #  printf "%s\n" "${thermostatliving[@]}"
   echo $now
@@ -143,23 +167,23 @@ echo "Noord uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis - $hystere
 echo "Zuid uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis)}") "°C."
     if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
       echo "Livingverwarming Zuid inschakelen"
-      sendRF $LivingZuidOn
+      sendRF ${heater[LivingZuidOn]}
       if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 2)}") )); then
         echo "Livingverwarming Noord inschakelen"
-        sendRF $LivingNoordOn
+        sendRF ${heater[LivingNoordOn]}
       fi
     elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 2)}") )); then
       echo "Livingverwarming Noord uitschakelen"
-      sendRF $LivingNoordOff
+      sendRF ${heater[LivingNoordOff]}
       if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
         echo "Livingverwarming Zuid uitschakelen"
-        sendRF $LivingZuidOff
+        sendRF ${heater[LivingZuidOff]}
       fi
     fi
   else
     echo "Living niet verwarmen"
-    sendRF $LivingZuidOff
-    sendRF $LivingNoordOff
+    sendRF ${heater[LivingZuidOff]}
+    sendRF ${heater[LivingNoordOff]}
   fi
 }
 
@@ -257,16 +281,7 @@ else
 fi
 
 if [ ! -f $timerfile ]; then # default
-  raw[0]="0 07:20 12:00"
-  raw[1]="2 07:20 22:45"
-  raw[2]="4 07:20 22:45"
-  raw[3]="6 07:20 22:45"
-  raw[4]="1 07:20 22:45"
-  raw[5]="3 07:20 22:45"
-  raw[6]="5 07:20 22:45"
-#  raw[7]="0 16:30 17:00"
-  raw[8]="0 17:30 22:45"
-  printf "%s\n" "${raw[@]}" > $timerfile
+  printf "%s\n" "${timerdefault[@]}" > $timerfile
   chown www-data:www-data $timerfile
 fi
 mapfile -t raw < $timerfile
@@ -293,6 +308,7 @@ if [ $state == "awake" ]; then
   echo 0 > /sys/class/backlight/rpi_backlight/bl_power
 #  echo 255 > /sys/class/leds/led0/brightness
 #  echo 255 > /sys/class/leds/led1/brightness
+  thermostat
 else
   # deactivate backlight touchscreen
   echo 1 > /sys/class/backlight/rpi_backlight/bl_power
@@ -306,5 +322,5 @@ else
     # Power off RPIWall
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 25 4A AE 0D 00 00 80"
   fi
+  thermostatOff
 fi
-thermostat
