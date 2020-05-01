@@ -29,11 +29,6 @@ thermostatkitchenfile="/var/www/html/data/thermostatkitchen"
 thermostatlivingfile="/var/www/html/data/thermostatliving"
 PresHumiTempfile="/var/www/html/data/PresHumiTemp"
 
-# force default
-rm $timerfile
-rm $thermostatkitchenfile
-rm $thermostatlivingfile
-
 declare -A heater
 heater[LivingZuidOn]="0B1100010141538601010F80 on"
 heater[LivingZuidOff]="0B1100000141538601000080 off"
@@ -41,13 +36,38 @@ heater[LivingNoordOn]="0B1100000141538602010F80 on"
 heater[LivingNoordOff]="0B1100010141538602000080 off"
 heater[KeukenZuidOn]="tasmota_a943fa-1018 on"
 heater[KeukenZuidOff]="tasmota_a943fa-1018 off"
+#heater[KeukenZuidOn]="tasmota_8be4af-1199 on"
+#heater[KeukenZuidOff]="tasmota_8be4af-1199 off"
 
 hysteresis="0.1"
 
+if [ -f /var/www/html/data/thermostatDefault ]; then
+  echo "Restoring default thermostat"
+  rm $timerfile
+  rm $thermostatkitchenfile
+  rm $thermostatlivingfile
+  rm /var/www/html/data/thermostatDefault
+fi
+
+if [ -f /var/www/html/data/thermostatReset ]; then
+  echo "Resetting thermostat"
+  for switch in "${!heater[@]}"
+  do
+   if [[ "$switch" == *Off ]]; then
+     heateritem=${heater[$switch]}
+     if [[ "$heateritem" == tasmota* ]]; then
+        tempfile="/tmp/${heateritem:0:19}"
+     else
+        tempfile="/tmp/${heateritem:0:6}${heateritem:8:10}${heateritem:22:2}"
+     fi
+     rm $tempfile
+   fi
+  done
+  rm /var/www/html/data/thermostatManual
+  rm /var/www/html/data/thermostatReset
+fi
+
 sendRF () {
-  if [ ! -f /var/www/html/data/mpc.txt ]; then
-    touch /var/www/html/data/mpc.txt
-  fi
   tempfile="/tmp/${1:0:6}${1:8:10}${1:22:2}"
   if [ ! -f "$tempfile" ]; then # initialize
     if [ "$2" == "off" ]; then
@@ -58,16 +78,24 @@ sendRF () {
   fi
 #echo $tempfile $(cat "$tempfile") $2
   if [ $(cat "$tempfile") == "off" ] && [ "$2" == "on" ]; then
+    if [ ! -f /var/www/html/data/mpc.txt ]; then # disable motion photo's
+      touch /var/www/html/data/mpc.txt
+    fi
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "$1"
     echo 'on' > "$tempfile"
     echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
   elif [ $(cat "$tempfile") == "on" ] && [ "$2" == "off" ]; then
+    if [ ! -f /var/www/html/data/mpc.txt ]; then # disable motion photo's
+      touch /var/www/html/data/mpc.txt
+    fi
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "$1"
     echo 'off' > "$tempfile"
     echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
   fi
-  if [ -s /var/www/html/data/mpc.txt ]; then
-    rm /var/www/html/data/mpc.txt
+  if [ -f /var/www/html/data/mpc.txt ]; then
+    if [ ! -s /var/www/html/data/mpc.txt ]; then
+      rm /var/www/html/data/mpc.txt
+    fi
   fi
 }
 tasmota () {
@@ -103,6 +131,7 @@ function thermostat {
   temp=${temp%% C*}
   # remove leading whitespace characters
   temp="${temp#"${temp%%[![:space:]]*}"}"
+
   if [ ! -f $thermostatkitchenfile ]; then # default
     printf "%s\n" "${thermostatkitchendefault[@]}" > $thermostatkitchenfile
     chown www-data:www-data $thermostatkitchenfile
@@ -124,6 +153,18 @@ function thermostat {
       break
     fi
   done
+  if [ -f /var/www/html/data/thermostatManual ]; then
+    mapfile -t manual < /var/www/html/data/thermostatManual
+    for manualitem in "${manual[@]}"; do
+      roomtemp=(${manualitem})
+       if [ "${roomtemp[0]}" == "kitchen" ]; then
+         daytime[2]=${roomtemp[1]}
+         echo "Manual temp kichen: ${daytime[2]} °C"
+         heating="on"
+        break
+      fi
+    done
+  fi
   if [ "$heating" == "on" ]; then
     if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
       echo "Keukenverwarming inschakelen"
