@@ -4,19 +4,19 @@
 # Manueel
 
 # Timer default array
-timerdefault[0]="0 07:20 22:45"
-timerdefault[1]="2 07:20 22:45"
-timerdefault[2]="4 07:20 22:45"
-timerdefault[3]="6 07:20 22:45"
-timerdefault[4]="1 07:20 22:45"
-timerdefault[5]="3 07:20 22:45"
-timerdefault[6]="5 07:20 22:45"
+timerdefault[0]="0 07:20 22:50"
+timerdefault[1]="2 07:20 22:50"
+timerdefault[2]="4 07:20 22:50"
+timerdefault[3]="6 07:20 22:50"
+timerdefault[4]="1 07:20 22:50"
+timerdefault[5]="3 07:20 22:50"
+timerdefault[6]="5 07:20 22:50"
 # timerdefault[7]="0 16:30 17:00"
 # timerdefault[8]="0 17:30 22:45"
 
 thermostatkitchendefault[0]="07:20 08:30 22.00"
 thermostatkitchendefault[2]="11:00 13:30 22.20"
-thermostatkitchendefault[1]="22:15 22:45 22.20"
+thermostatkitchendefault[1]="22:00 22:50 22.20"
 thermostatkitchendefault[3]="16:45 17:30 22.20"
 
 thermostatlivingdefault[0]="08:10 11:15 22.00"
@@ -41,33 +41,15 @@ heater[KeukenZuidOff]="tasmota_a943fa-1018 off"
 
 hysteresis="0.1"
 
-if [ -f /var/www/html/data/thermostatDefault ]; then
-  echo "Restoring default thermostat"
-  rm $timerfile
-  rm $thermostatkitchenfile
-  rm $thermostatlivingfile
-  rm /var/www/html/data/thermostatDefault
-fi
-
-if [ -f /var/www/html/data/thermostatReset ]; then
-  echo "Resetting thermostat"
-  for switch in "${!heater[@]}"
-  do
-   if [[ "$switch" == *Off ]]; then
-     heateritem=${heater[$switch]}
-     if [[ "$heateritem" == tasmota* ]]; then
-        tempfile="/tmp/${heateritem:0:19}"
-     else
-        tempfile="/tmp/${heateritem:0:6}${heateritem:8:10}${heateritem:22:2}"
-     fi
-     rm $tempfile
-   fi
-  done
-  rm /var/www/html/data/thermostatManual
-  rm /var/www/html/data/thermostatReset
-fi
-
-sendRF () {
+function thermostatManualReset () {
+  if [ -f /var/www/html/data/thermostatManualkitchen ]; then
+    rm /var/www/html/data/thermostatManualkitchen
+  fi
+  if [ -f /var/www/html/data/thermostatManualliving ]; then
+    rm /var/www/html/data/thermostatManualliving
+  fi
+}
+function sendRF () {
   tempfile="/tmp/${1:0:6}${1:8:10}${1:22:2}"
   if [ ! -f "$tempfile" ]; then # initialize
     if [ "$2" == "off" ]; then
@@ -98,7 +80,7 @@ sendRF () {
     fi
   fi
 }
-tasmota () {
+function tasmota () {
   if [ ! -f /tmp/$1 ]; then # initialize
     wget -q http://$1/cm?cmnd=Power%20Off
     echo '{"POWER":"OFF"}' > /tmp/$1
@@ -111,6 +93,10 @@ tasmota () {
     wget -q http://$1/cm?cmnd=Power%20Off
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
+  elif [ $(cat /tmp/$1) != '{"POWER":"OFF"}' ] && [ $(cat /tmp/$1) != '{"POWER":"ON"}' ]; then
+    wget -q http://$1/cm?cmnd=Power%20Off
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+    echo "$(date): Communication error. Heating $1 off" >> /tmp/PindaNetDebug.txt
   fi
 }
 function thermostatOff {
@@ -153,17 +139,20 @@ function thermostat {
       break
     fi
   done
-  if [ -f /var/www/html/data/thermostatManual ]; then
-    mapfile -t manual < /var/www/html/data/thermostatManual
-    for manualitem in "${manual[@]}"; do
-      roomtemp=(${manualitem})
-       if [ "${roomtemp[0]}" == "kitchen" ]; then
-         daytime[2]=${roomtemp[1]}
+  if [ -f /var/www/html/data/thermostatManualkitchen ]; then
+#    read manualitem < /var/www/html/data/thermostatManualkitchen
+#    mapfile -t manual < /var/www/html/data/thermostatManualkitchen
+#    for manualitem in "${manual[@]}"; do
+#      roomtemp=(${manualitem})
+      read roomtemp < /var/www/html/data/thermostatManualkitchen
+#       if [ "${roomtemp[0]}" == "kitchen" ]; then
+#         daytime[2]=${roomtemp[1]}
+         daytime[2]=$roomtemp
          echo "Manual temp kichen: ${daytime[2]} °C"
          heating="on"
-        break
-      fi
-    done
+#        break
+#      fi
+#    done
   fi
   if [ "$heating" == "on" ]; then
     if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
@@ -227,6 +216,40 @@ echo "Zuid uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis)}") "°C."
     sendRF ${heater[LivingNoordOff]}
   fi
 }
+
+if [ -f /var/www/html/data/thermostatDefault ]; then
+  echo "Restoring default thermostat"
+  if [ -f $timerfile ]; then
+    rm $timerfile
+  fi
+  if [ -f $thermostatkitchenfile ]; then
+    rm $thermostatkitchenfile
+  fi
+  if [ -f $thermostatlivingfile ]; then
+    rm $thermostatlivingfile
+  fi
+  rm /var/www/html/data/thermostatDefault
+fi
+
+if [ -f /var/www/html/data/thermostatReset ]; then
+  echo "Resetting thermostat"
+  for switch in "${!heater[@]}"
+  do
+   if [[ "$switch" == *Off ]]; then
+     heateritem=${heater[$switch]}
+     if [[ "$heateritem" == tasmota* ]]; then
+        tempfile="/tmp/${heateritem:0:19}"
+     else
+        tempfile="/tmp/${heateritem:0:6}${heateritem:8:10}${heateritem:22:2}"
+     fi
+     if [ -f $tempfile ]; then
+       rm $tempfile
+     fi
+   fi
+  done
+  thermostatManualReset
+  rm /var/www/html/data/thermostatReset
+fi
 
 # Collect sensordata
 # BME280 I2C Temperature and Pressure Sensor
@@ -364,4 +387,5 @@ else
     python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 25 4A AE 0D 00 00 80"
   fi
   thermostatOff
+  thermostatManualReset
 fi
