@@ -140,19 +140,10 @@ function thermostat {
     fi
   done
   if [ -f /var/www/html/data/thermostatManualkitchen ]; then
-#    read manualitem < /var/www/html/data/thermostatManualkitchen
-#    mapfile -t manual < /var/www/html/data/thermostatManualkitchen
-#    for manualitem in "${manual[@]}"; do
-#      roomtemp=(${manualitem})
-      read roomtemp < /var/www/html/data/thermostatManualkitchen
-#       if [ "${roomtemp[0]}" == "kitchen" ]; then
-#         daytime[2]=${roomtemp[1]}
-         daytime[2]=$roomtemp
-         echo "Manual temp kichen: ${daytime[2]} °C"
-         heating="on"
-#        break
-#      fi
-#    done
+    read roomtemp < /var/www/html/data/thermostatManualkitchen
+    daytime[2]=$roomtemp
+    echo "Manual temp kichen: ${daytime[2]} °C"
+    heating="on"
   fi
   if [ "$heating" == "on" ]; then
     if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
@@ -188,6 +179,12 @@ function thermostat {
       break
     fi
   done
+  if [ -f /var/www/html/data/thermostatManualliving ]; then
+    read roomtemp < /var/www/html/data/thermostatManualliving
+    daytime[2]=$roomtemp
+    echo "Manual temp living: ${daytime[2]} °C"
+    heating="on"
+  fi
   if [ "$heating" == "on" ]; then
 echo "Kamertemp: $temp °C"
 echo "Thermostaat temp: ${daytime[2]}"
@@ -228,6 +225,7 @@ if [ -f /var/www/html/data/thermostatDefault ]; then
   if [ -f $thermostatlivingfile ]; then
     rm $thermostatlivingfile
   fi
+  thermostatManualReset
   rm /var/www/html/data/thermostatDefault
 fi
 
