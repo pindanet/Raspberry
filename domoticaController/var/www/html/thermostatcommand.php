@@ -1,4 +1,10 @@
 <?php
+/*
+if (!isset($_SERVER["HTTP_HOST"])) {
+  parse_str($argv[1], $_GET);
+  parse_str($argv[1], $_POST);
+}
+*/
 $command = htmlspecialchars($_POST["command"]);
 
 //ob_flush();
@@ -9,14 +15,22 @@ $command = htmlspecialchars($_POST["command"]);
 switch ($command) {
   case "Reset":
   case "Default":
-    touch("data/thermostat" . $command);
+    $filename = "data/thermostat" . $command;
+    touch($filename);
+    while ( file_exists($filename) ) {
+      sleep(1);
+    }
     break;
   case "Manual":
   case "Auto":
     $temp = htmlspecialchars($_POST["temp"]);
     $room = htmlspecialchars($_POST["room"]);
     if ( $temp == "auto" ) {
-      unlink("data/thermostatManual" . $room);
+      $filename = "data/thermostatManual" . $room;
+      unlink($filename);
+      while ( file_exists($filename) ) {
+        sleep(1);
+      }
     } else {
       $myfile = fopen("data/thermostatManual" . $room, "w") or die("Unable to open file!");
 //      fwrite($myfile, $room . " " . $temp);
