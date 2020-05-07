@@ -14,14 +14,14 @@ timerdefault[6]="5 07:20 22:50"
 # timerdefault[7]="0 16:30 17:00"
 # timerdefault[8]="0 17:30 22:45"
 
-thermostatkitchendefault[0]="07:20 08:30 22.00"
-thermostatkitchendefault[2]="11:00 13:30 22.20"
-thermostatkitchendefault[1]="22:00 22:50 22.20"
-thermostatkitchendefault[3]="16:45 17:30 22.20"
+thermostatkitchendefault[0]="07:30 08:30 22.00"
+thermostatkitchendefault[1]="11:00 13:30 22.20"
+thermostatkitchendefault[2]="16:45 17:30 22.20"
+thermostatkitchendefault[3]="22:09 22:45 22.20"
 
-thermostatlivingdefault[0]="08:10 11:15 22.00"
-thermostatlivingdefault[2]="13:15 17:00 22.00"
-thermostatlivingdefault[1]="17:15 22:45 22.00"
+thermostatlivingdefault[0]="08:15 11:15 22.00"
+thermostatlivingdefault[1]="13:15 17:00 22.00"
+thermostatlivingdefault[2]="17:15 22:45 22.00"
 # thermostatlivingdefault[3]="16:45 17:15 22.00"
 
 timerfile="/var/www/html/data/timer"
@@ -32,12 +32,12 @@ PresHumiTempfile="/var/www/html/data/PresHumiTemp"
 declare -A heater
 heater[LivingZuidOn]="0B1100010141538601010F80 on"
 heater[LivingZuidOff]="0B1100000141538601000080 off"
-heater[LivingNoordOn]="0B1100000141538602010F80 on"
-heater[LivingNoordOff]="0B1100010141538602000080 off"
+heater[LivingNoordOn]="tasmota_8be4af-1199 on"
+heater[LivingNoordOff]="tasmota_8be4af-1199 off"
 heater[KeukenZuidOn]="tasmota_a943fa-1018 on"
 heater[KeukenZuidOff]="tasmota_a943fa-1018 off"
-#heater[KeukenZuidOn]="tasmota_8be4af-1199 on"
-#heater[KeukenZuidOff]="tasmota_8be4af-1199 off"
+heater[KeukenNoordOn]="tasmota_c699b5-6581 on"
+heater[KeukenNoordOff]="tasmota_c699b5-6581 off"
 
 hysteresis="0.1"
 
@@ -86,15 +86,15 @@ function tasmota () {
     echo '{"POWER":"OFF"}' > /tmp/$1
   fi
   if [ $2 == "on" ] && [ $(cat /tmp/$1) == '{"POWER":"OFF"}' ]; then
-    wget -q http://$1/cm?cmnd=Power%20On
+    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
   elif [ $2 == "off" ] && [ $(cat /tmp/$1) == '{"POWER":"ON"}' ]; then
-    wget -q http://$1/cm?cmnd=Power%20Off
+    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
   elif [ $(cat /tmp/$1) != '{"POWER":"OFF"}' ] && [ $(cat /tmp/$1) != '{"POWER":"ON"}' ]; then
-    wget -q http://$1/cm?cmnd=Power%20Off
+    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date): Communication error. Heating $1 off" >> /tmp/PindaNetDebug.txt
   fi
@@ -149,13 +149,16 @@ function thermostat {
     if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
       echo "Keukenverwarming inschakelen"
       tasmota ${heater[KeukenZuidOn]}
+      tasmota ${heater[KeukenNoordOn]}
     elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
       echo "Keukenverwarming uitschakelen"
       tasmota ${heater[KeukenZuidOff]}
+      tasmota ${heater[KeukenNoordOff]}
     fi
   else
     echo "Keuken niet verwarmen"
     tasmota ${heater[KeukenZuidOff]}
+    tasmota ${heater[KeukenNoordOff]}
   fi
 
   if [ ! -f $thermostatlivingfile ]; then # default
@@ -197,11 +200,11 @@ echo "Zuid uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis)}") "°C."
       sendRF ${heater[LivingZuidOn]}
       if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 2)}") )); then
         echo "Livingverwarming Noord inschakelen"
-        sendRF ${heater[LivingNoordOn]}
+        tasmota ${heater[LivingNoordOn]}
       fi
     elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 2)}") )); then
       echo "Livingverwarming Noord uitschakelen"
-      sendRF ${heater[LivingNoordOff]}
+      tasmota ${heater[LivingNoordOff]}
       if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
         echo "Livingverwarming Zuid uitschakelen"
         sendRF ${heater[LivingZuidOff]}
@@ -210,7 +213,7 @@ echo "Zuid uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis)}") "°C."
   else
     echo "Living niet verwarmen"
     sendRF ${heater[LivingZuidOff]}
-    sendRF ${heater[LivingNoordOff]}
+    tasmota ${heater[LivingNoordOff]}
   fi
 }
 
