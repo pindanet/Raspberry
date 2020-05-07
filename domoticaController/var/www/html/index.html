@@ -337,6 +337,14 @@ Fullscreen HTML API
       #thermostatUI .room button {
         font-size: 30px;
       }
+      .blink {
+        animation: blinker 1s linear infinite;
+      }
+      @keyframes blinker {
+        50% {
+          opacity: 0;
+        }
+      }
     </style>
     <script src='fullcalendar/vendor/rrule.js'></script>
     <script src='fullcalendar/packages/core/main.js'></script>
@@ -1067,24 +1075,25 @@ loadThermostat();
         }
         saveThermostat();
       }
-      function thermostatIfFileExistCallback(id, color) {
-        document.getElementById(id).style.color = color;
-      }
-      function thermostatIfFileExist(url, id, color) {
+      function thermostatIfFileExist(url, id) {
         var xhr = new XMLHttpRequest();
         xhr.responseType = 'text';
-        xhr.open('HEAD', url)
-        xhr.onreadystatechange = function() {
+        xhr.open('POST', url)
+        xhr.onload = function() {
           if (this.readyState === 4) {
             if (this.status === 404) {
-document.getElementById(id).style.color = color;
-
-//thermostatIfFileExistCallback(id, "red");
-console.log("Bestand bestaat niet", xhr.status, this, id);
-//            callback()
+              document.getElementById(id+"Auto").style.color = "black";
             } else {
-thermostatIfFileExistCallback(id, "green");
-console.log("Bestand bestaat", xhr.status, this, id);
+              if (this.responseText == 10.00) {
+                document.getElementById(id+"Off").style.color = "black";
+                if (document.getElementById("kitchenOff").style.color == "black" && document.getElementById("livingOff").style.color == "black") {
+                  document.getElementById("thermostatOff").style.color = "black";
+                } else {
+                  document.getElementById("thermostatOff").style.color = "";
+                }
+              } else {
+                document.getElementById(id+"Manual").style.color = "black";
+              }
             }
           }
         }
@@ -1092,13 +1101,19 @@ console.log("Bestand bestaat", xhr.status, this, id);
       }
       function thermostatUI (event, command, id) {
 console.log(command);
-        event.stopPropagation();
         switch (command) {
           case "Reset":
           case "Default":
             var xhr = new XMLHttpRequest();
             xhr.open('POST', "thermostatcommand.php", true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+              if (this.readyState === 4) {
+                document.getElementById("thermostat" + command).classList.remove('blink');
+                timerThermostat (event);
+              }
+            };
+            document.getElementById("thermostat" + command).classList.add('blink');
             xhr.send("command=" + command);
             break;
           case "Incr":
@@ -1118,6 +1133,11 @@ console.log(command);
             var xhr = new XMLHttpRequest();
             xhr.open('POST', "thermostatcommand.php", true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+              if (this.readyState === 4) {
+                timerThermostat (event);
+              }
+            };
             var temp = document.getElementById(id).innerHTML;
             if (command == "Off") {
               temp = "10.00";
@@ -1133,6 +1153,11 @@ console.log(command);
             var xhr = new XMLHttpRequest();
             xhr.open('POST', "thermostatcommand.php", true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+              if (this.readyState === 4) {
+                timerThermostat (event);
+              }
+            };
             if (id == "kitchentemp") {
               xhr.send("command=" + command + "&room=kitchen&temp=auto");
             } else {
@@ -1140,39 +1165,39 @@ console.log(command);
             }
             break;
         }
+        event.stopPropagation();
       }
       function timerThermostat (event) {
         clearTimeout(startTimer);
         document.getElementById("content").innerHTML = `<div id="thermostatUI">
         <div id="title">Timer - Thermostaat</div>
-        <button onclick="thermostatUI(event, 'Reset');">Reset</button>
-        <button onclick="thermostatUI(event, 'Off', 'kitchentemp'); thermostatUI(event, 'Uit', 'livingtemp'); ">Uit</button>
-        <button onclick="thermostatUI(event, 'Default');">Standaard</button>
+        <button id="thermostatReset" onclick="thermostatUI(event, 'Reset');">Reset</button>
+        <button id="thermostatOff" onclick="thermostatUI(event, 'Off', 'kitchentemp'); thermostatUI(event, 'Off', 'livingtemp'); ">Uit</button>
+        <button id="thermostatDefault" onclick="thermostatUI(event, 'Default');">Standaard</button>
         <button onclick="thermostatUI(event, 'Configure');">Instellen</button>
         <br>
         <div class="room">
         <span>Keuken:</span>
-        <button onclick="thermostatUI(event, 'Auto', 'kitchentemp');">Auto</button>
+        <button id="kitchenAuto" onclick="thermostatUI(event, 'Auto', 'kitchentemp');">Auto</button>
         <button id="kitchenOff" onclick="thermostatUI(event, 'Off', 'kitchentemp');">Uit</button>
-        <button onclick="thermostatUI(event, 'Manual', 'kitchentemp');">Manueel op <span id="kitchentemp">22.20</span> °C</button>
+        <button id="kitchenManual"onclick="thermostatUI(event, 'Manual', 'kitchentemp');">Manueel op <span id="kitchentemp">22.20</span> °C</button>
         <button onclick="thermostatUI(event, 'Incr', 'kitchentemp');">+</button>
         <button onclick="thermostatUI(event, 'Decr', 'kitchentemp');">-</button>
         </div>
         <div class="room">
         <!--hr-->
         <span style="width: 110px; display: inline-block;">Living:</span>
-        <button onclick="thermostatUI(event, 'Auto', 'livingtemp');">Auto</button>
+        <button id="livingAuto" onclick="thermostatUI(event, 'Auto', 'livingtemp');">Auto</button>
         <button id="livingOff" onclick="thermostatUI(event, 'Off', 'livingtemp');">Uit</button>
-        <button onclick="thermostatUI(event, 'Manual', 'livingtemp');">Manueel op <span id="livingtemp">22.00</span> °C</button>
+        <button id="livingManual" onclick="thermostatUI(event, 'Manual', 'livingtemp');">Manueel op <span id="livingtemp">22.00</span> °C</button>
         <button onclick="thermostatUI(event, 'Incr', 'livingtemp');">+</button>
         <button onclick="thermostatUI(event, 'Decr', 'livingtemp');">-</button>
         </div>
 
         </div>`
         centerContent();
-        thermostatIfFileExist("data/thermostatManualkitchen", "kitchenOff", "white");
-        thermostatIfFileExist("data/thermostatManualliving", "livingOff", "black");
-
+        thermostatIfFileExist("data/thermostatManualkitchen", "kitchen");
+        thermostatIfFileExist("data/thermostatManualliving", "living");
         event.stopPropagation();
       }
       function remoteCommand(event, command) {
