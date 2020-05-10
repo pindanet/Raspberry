@@ -1093,6 +1093,7 @@ loadThermostat();
                 }
               } else {
                 document.getElementById(id+"Manual").style.color = "black";
+                document.getElementById("kitchentemp").innerHTML = this.responseText;
               }
             }
           }
