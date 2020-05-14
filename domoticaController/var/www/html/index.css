@@ -1,0 +1,331 @@
+      html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-size: cover;
+        min-height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        -moz-transition: background 1.5s linear;
+        transition: background 1.5s linear;
+        opacity: 1.0;
+      }
+      .daylySlideText {
+        text-shadow: 0 0 1px black;
+      }
+      th, .dayname {
+        color: white;
+        text-shadow: 0 0 2px black;
+        text-align: center;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .inline {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      #content {
+        position: absolute;
+        transition: 1s;
+        text-align: center;
+      }
+      button {
+        background-color: rgba(128,128,128,0.5);
+        border: 1px solid rgb(128,128,128);
+        color: white;
+        padding: 15px;
+        margin-bottom: 5px;
+        margin-right: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 30px;
+        font-weight: bold;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+      }
+      td button {
+        padding: 0px;
+        font-size: 27px;
+      }
+      #menuclock {
+        color: white;
+        font-size: 75px;
+        text-shadow: 0 0 2px black;
+        display: inline-block;
+        position: relative;
+        top: -22px;
+      }
+      #clock {
+        color: white;
+        font-size: 300px;
+/*        text-shadow: 0 0 4px black; */
+        -webkit-text-stroke: 2px black;
+      }
+      #clockdate, #clockday, #pres, #humi {
+        position: absolute;
+        color: white;
+        text-align: center;
+        font-size: 80px;
+        font-family: sans-serif;
+/*        text-shadow: 0 0 4px black; */
+        -webkit-text-stroke: 1px black;
+      }
+      #clockday {
+        top: -40px;
+        left: 0;
+        right: 0;
+      }
+      #clockdate {
+        bottom: -40px;
+        left: 0; 
+        right: 0;
+      }
+      #temp {
+        color: white;
+        font-size: 250px;
+        -webkit-text-stroke: 2px black;
+      }
+      #pres {
+        top: -60px;
+        left: 0;
+        right: 0;
+      }
+      #humi {
+        bottom: -60px;
+        left: 0; 
+        right: 0;
+      }
+      #forecast {
+        width: 100%;
+        border-collapse:collapse;
+        top: 0;
+        left: 0;
+        position: fixed;
+      }
+      #forecast th {
+        background-color: rgba(0,0,0,0.5);
+        text-shadow: 0 0 1px black;
+        font-size: 1em;
+      }
+      #forecast .bme280 {
+        font-size: 28px;
+        padding-top: 0px;
+      }
+      #forecast th a {
+        color: white;
+      }
+      #forecast td {
+        background-color: white;
+      }
+      #forecast svg {
+        height: 20px;
+        width: 20px;
+        vertical-align: middle;
+      }
+      .cloud0-primitive {
+        color: #c6c6c6;
+        fill: #efefef;
+      }
+      .cloud1-primitive {
+        color: #aaa;
+        fill: #e5e5e5;
+      }
+      .cloud2-primitive {
+        color: #828282;
+        fill: #cccccc;
+      }
+      .cloud3-primitive {
+        color: #696969;
+        fill: #b2b2b2;
+      }
+      .cloud4-primitive {
+        color: #424242;
+        fill: #999999;
+      }
+      .fog-primitive {
+        color: #999999;
+        fill: #e5e5e5;
+      }
+
+      .sun-primitive {
+        color: #ffee8a;
+        fill: #ffaf22;
+        stroke: #ffaf22;
+      }
+      .sunWinter-primitive {
+        color: #ffee8a;
+        fill: #fbbe40;
+        stroke: #f5b93f;
+      }
+
+      .moon-primitive {
+        fill: #354246;
+      }
+
+      .raindrop-primitive {
+        fill: #0062bf;
+      }
+
+      .snowflake-primitive {
+        fill: #47c0e3;
+      }
+
+      .lightning-primitive {
+        fill: #ffdd15;
+      }
+
+      .terminalbox {
+        background-color: rgba(0,0,0,0.5);
+        border: 1px solid rgb(128,128,128);
+        border-radius: 12px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+/*         margin: 3.5%; */
+        width: 92%;
+        padding: 1em;
+        text-align: left;
+        color: #fff;
+        text-shadow: 0 0 2px black;
+      }
+      /* PinPad */
+      #PINform input:focus,
+      #PINform select:focus,
+      #PINform textarea:focus,
+      #PINform button:focus {
+        outline: none;
+      }
+      #PINform {
+        position: absolute;
+        width: 300px; height: 400px;
+        left: 50%;
+        margin-left: -180px;
+        top: 50%;
+        margin-top: -215px;
+        padding: 30px;
+      }
+      #PINbox {
+        background-color: rgba(128,128,128,0.5);
+        border: 1px solid rgb(128,128,128);
+        border-radius: 12px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        margin: 3.5%;
+        width: 92%;
+        font-size: 3em;
+        text-align: center;
+        color: #fff;
+        text-shadow: 0 0 2px black;
+      }
+      .PINbutton {
+        background-color: rgba(128,128,128,0.5);
+        border: 1px solid rgb(128,128,128);
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        color: #fff;
+        text-shadow: 0 0 2px black;
+        font-weight: bold;
+        border-radius: 50%;
+        font-size: 1.5em;
+        text-align: center;
+        width: 60px;
+        height: 60px;
+        margin: 7px 20px;
+        padding: 0;
+      }
+      .clear, .enter {
+        font-size: 1em;
+      }
+      .PINbutton:hover {
+        box-shadow: #506CE8 0 0 1px 1px;
+      }
+      .PINbutton:active {
+        background: rgba(80,108,232,0.5);
+        color: #fff;
+      }
+      .clear:hover {
+        box-shadow: #ff3c41 0 0 1px 1px;
+      }
+      .clear:active {
+        background: rgba(255,60,65,0.5);
+        color: #fff;
+      }
+      .enter:hover {
+        box-shadow: #47cf73 0 0 1px 1px;
+      }
+      .enter:active {
+        background: rgba(71,207,115,0.5);
+        color: #fff;
+      }
+      /* End PinPad */
+      .fc-toolbar.fc-header-toolbar {
+        margin-bottom: 0;
+      }
+      #calendar {
+        background: rgba(255,255,255,0.9);
+      }
+      #calendar .fc-dayGrid-view .fc-week-number, .fc-dayGrid-view .fc-day-number {
+        padding: 0 2px;
+      }
+      #calendar th {
+        color: black;
+        text-shadow: none;
+        text-align: center;
+        text-decoration: none;
+        font-size: 1em;
+        font-weight: bold;
+      }
+      #calendar .fc-event {
+        font-size: 1em;
+        font-weight: bold;
+        background-color: black;
+        border: none;
+      }
+      #calendar tr:first-child > td > .fc-day-grid-event {
+        margin-top: 0;
+      }
+      #thermostatUI {
+        color: white;
+        textshadow: 0 0 2px black;
+        font-size: 30px;
+        font-weight: bold;
+      }
+      #thermostatUI #title {
+        background-color: rgba(0,0,0,0.5);
+        border: 1px solid rgb(128,128,128);
+        border-radius: 12px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        padding: 0.5em 1em;
+        text-align: center;
+        color: #fff;
+        text-shadow: 0 0 2px black;
+        font-size: 35px;
+        display: table;
+        margin: auto;
+        margin-bottom: 5px;
+      }
+      #thermostatUI .room {
+        background-color: rgba(0,0,0,0.5);
+        border: 1px solid rgb(128,128,128);
+        border-radius: 12px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        padding: 0.5em 1em;
+        text-align: left;
+        color: #fff;
+        text-shadow: 0 0 2px black;
+        display: inline-block;
+        display: table;
+        margin: auto;
+      }
+      #thermostatUI .room button {
+        font-size: 30px;
+      }
+      .blink {
+        animation: blinker 1s linear infinite;
+      }
+      @keyframes blinker {
+        50% {
+          opacity: 0;
+        }
+      }
