@@ -9,11 +9,13 @@ Fullscreen HTML API
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>PindaNet Raspberry Pi</title>
+    <link rel="icon" href="data:;base64,iVBORwOKGO=" />
     <link href='fullcalendar/packages/core/main.css' rel='stylesheet' />
     <link href='fullcalendar/packages/daygrid/main.css' rel='stylesheet' />
     <link href='fullcalendar/packages/timegrid/main.css' rel='stylesheet' />
     <link href='fullcalendar/packages/list/main.css' rel='stylesheet' />
-    <style type="text/css">
+    <link href='index.css' rel='stylesheet' />
+    <!--style type="text/css">
       html {
         height: 100%;
         margin: 0;
@@ -345,7 +347,7 @@ Fullscreen HTML API
           opacity: 0;
         }
       }
-    </style>
+    </style-->
     <script src='fullcalendar/vendor/rrule.js'></script>
     <script src='fullcalendar/packages/core/main.js'></script>
     <script src='fullcalendar/packages/interaction/main.js'></script>
@@ -354,9 +356,9 @@ Fullscreen HTML API
     <script src='fullcalendar/packages/list/main.js'></script>
     <script src='fullcalendar/packages/rrule/main.js'></script>
     <script src='fullcalendar/packages/core/locales/nl.js'></script>
-    <script src='fullcalendar/ical.min.js'></script>
+    <script src='fullcalendar/ical.js'></script>
     <!--script src="sha.js"></script-->
-    <script src="jsencrypt.js"></script>
+    <!--script src="jsencrypt.js"></script-->
     <script type="text/javascript">
     // PinPad
       function addNumber(event, element){
@@ -1116,6 +1118,24 @@ console.log(command);
             };
             document.getElementById("thermostat" + command).classList.add('blink');
             xhr.send("command=" + command);
+            break;
+          case "Configure":
+            document.getElementById("content").innerHTML = `<div id="thermostatUI">
+            <div id="title">Timer instellen</div>
+            <button id="thermostatReset" onclick="thermostatUI(event, 'Kitchen');">Keuken</button>
+            <button id="thermostatReset" onclick="thermostatUI(event, 'Living');">Living</button>
+            <div class="day" style="text-align: left;">
+            Zondag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Maandag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Dinsdag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Woensdag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Donderdag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Vrijdag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Zaterdag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            </div>
+            </div>`
+            centerContent();
+            event.stopPropagation();
             break;
           case "Incr":
             var temp = parseFloat(document.getElementById(id).innerHTML);
