@@ -4,22 +4,22 @@
 # Manueel
 
 # Timer default array
-timerdefault[0]="0 07:20 22:50"
-timerdefault[1]="2 07:20 22:50"
-timerdefault[2]="4 07:20 22:50"
-timerdefault[3]="6 07:20 22:50"
-timerdefault[4]="1 07:20 22:50"
-timerdefault[5]="3 07:20 22:50"
-timerdefault[6]="5 07:20 22:50"
+timerdefault[0]="0 07:30 22:50"
+timerdefault[1]="1 07:30 22:50"
+timerdefault[2]="2 07:30 22:50"
+timerdefault[3]="3 07:30 22:50"
+timerdefault[4]="4 07:30 22:50"
+timerdefault[5]="5 07:30 22:50"
+timerdefault[6]="6 07:30 22:50"
 # timerdefault[7]="0 16:30 17:00"
 # timerdefault[8]="0 17:30 22:45"
 
-thermostatkitchendefault[0]="07:30 08:30 22.00"
+thermostatkitchendefault[0]="07:00 08:00 22.00"
 thermostatkitchendefault[1]="11:00 13:30 22.20"
 thermostatkitchendefault[2]="16:45 17:30 22.20"
 thermostatkitchendefault[3]="22:09 22:45 22.20"
 
-thermostatlivingdefault[0]="08:15 11:15 22.00"
+thermostatlivingdefault[0]="07:45 11:15 22.00"
 thermostatlivingdefault[1]="13:15 17:00 22.00"
 thermostatlivingdefault[2]="17:15 22:45 22.00"
 # thermostatlivingdefault[3]="16:45 17:15 22.00"
@@ -82,8 +82,7 @@ function sendRF () {
 }
 function tasmota () {
   if [ ! -f /tmp/$1 ]; then # initialize
-    wget -q http://$1/cm?cmnd=Power%20Off
-    echo '{"POWER":"OFF"}' > /tmp/$1
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
   fi
   if [ $2 == "on" ] && [ $(cat /tmp/$1) == '{"POWER":"OFF"}' ]; then
     dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
@@ -94,9 +93,8 @@ function tasmota () {
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
   elif [ $(cat /tmp/$1) != '{"POWER":"OFF"}' ] && [ $(cat /tmp/$1) != '{"POWER":"ON"}' ]; then
-    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-    echo "$(date): Communication error. Heating $1 off" >> /tmp/PindaNetDebug.txt
+    echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
   fi
 }
 function thermostatOff {
@@ -147,13 +145,19 @@ function thermostat {
   fi
   if [ "$heating" == "on" ]; then
     if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
-      echo "Keukenverwarming inschakelen"
-      tasmota ${heater[KeukenZuidOn]}
+      echo "Keukenverwarming Noord inschakelen"
       tasmota ${heater[KeukenNoordOn]}
-    elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
-      echo "Keukenverwarming uitschakelen"
+      if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 2)}") )); then
+        echo "Keukenverwarming Zuid inschakelen"
+        tasmota ${heater[KeukenZuidOn]}
+      fi
+    elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 2)}") )); then
+      echo "Keukenverwarming Zuid uitschakelen"
       tasmota ${heater[KeukenZuidOff]}
-      tasmota ${heater[KeukenNoordOff]}
+      if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
+        tasmota ${heater[KeukenNoordOff]}
+        echo "Keukenverwarming Noord uitschakelen"
+      fi
     fi
   else
     echo "Keuken niet verwarmen"
