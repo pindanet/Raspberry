@@ -166,9 +166,19 @@ EOF
   sudo apt-get install inkscape
   
   sudo wget -O /var/www/html/exportthermostat.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/exportthermostat.php
-  sudo apt-get install python-pip
+  sudo apt-get -y install python-pip
   sudo pip install bme280
+  
   sudo wget -O /var/www/html/tls2591.py https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/tls2591.py
+  
+  wget https://github.com/ssjoholm/rfxcmd_gc/archive/master.zip
+  unzip master.zip
+  sudo apt-get -y install python-serial
+  
+  # ToDo
+  # sudo raspi-config
+  # enable serial hardware
+  
   sudo wget -O /usr/sbin/PindaNetThermostat.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetThermostat.sh
   sudo chmod +x /usr/sbin/PindaNetThermostat.sh
   cat > PindaNetThermostat.service <<EOF
