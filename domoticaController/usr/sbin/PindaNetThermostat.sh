@@ -1,7 +1,7 @@
 #!/bin/bash
 # ToDo
-# Reset
-# Manueel
+# Activate Serial hardware
+# /home/pi/, /home/dany
 
 # Timer default array
 timerdefault[0]="0 07:30 22:50"
@@ -63,14 +63,14 @@ function sendRF () {
     if [ ! -f /var/www/html/data/mpc.txt ]; then # disable motion photo's
       touch /var/www/html/data/mpc.txt
     fi
-    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "$1"
+    python /home/dany/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "$1"
     echo 'on' > "$tempfile"
     echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
   elif [ $(cat "$tempfile") == "on" ] && [ "$2" == "off" ]; then
     if [ ! -f /var/www/html/data/mpc.txt ]; then # disable motion photo's
       touch /var/www/html/data/mpc.txt
     fi
-    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "$1"
+    python /home/dany/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "$1"
     echo 'off' > "$tempfile"
     echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
   fi
@@ -389,7 +389,7 @@ else
     wget --post-data="command=halt" --quiet http://rpiwall/remote.php
     sleep 30
     # Power off RPIWall
-    python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 25 4A AE 0D 00 00 80"
+    python /home/dany/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 25 4A AE 0D 00 00 80"
   fi
   thermostatOff
   thermostatManualReset
