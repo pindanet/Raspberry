@@ -4,6 +4,8 @@
 # bash domoticaController_install.sh
 
 # ToDo
+# Emoji's
+# Activate Serial Hardware
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
