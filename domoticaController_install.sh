@@ -112,6 +112,7 @@ else
   echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
 
   sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.html
+  sudo wget -O /var/www/html/index.css https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.css
   sudo wget -O /var/www/html/background.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/background.php
 
 # Fetch background images
