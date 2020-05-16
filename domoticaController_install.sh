@@ -182,6 +182,7 @@ EOF
   sudo apt-get install inkscape
   
   sudo wget -O /var/www/html/exportthermostat.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/exportthermostat.php
+  sudo wget -O /var/www/html/thermostatcommand.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/thermostatcommand.php
   sudo apt-get -y install python-pip
   sudo pip install bme280
   
