@@ -40,6 +40,12 @@ case "reboot":
 case "halt": 
   exec("sudo /sbin/shutdown -h now");
   break;
+case "update": 
+  exec("sudo /bin/bash remote.sh update");
+  break;
+case "clean": 
+  exec("sudo /bin/bash remote.sh clean");
+  break;
 case "rpiwall": 
   if (checkWall()) {
 //    $connection = ssh2_connect("rpiwall.local", 22,  array('hostkey'=>'ssh-rsa'));
