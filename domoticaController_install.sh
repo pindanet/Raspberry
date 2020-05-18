@@ -226,6 +226,8 @@ EOF
   sudo systemctl enable PindaNetThermostat.timer
 
   sudo wget -O /var/www/html/daylymotion.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/daylymotion.php
+  
+  sudo apt install -y python3-gpiozero
 
 exit
 
