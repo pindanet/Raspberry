@@ -159,6 +159,9 @@ EOF
   sudo wget -O /usr/sbin/background.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/usr/sbin/background.sh
   sudo chmod +x /usr/sbin/background.sh
 
+  echo "www-data ALL = NOPASSWD: /bin/bash remote.sh clean" | sudo tee -a /etc/sudoers
+  echo "www-data ALL = NOPASSWD: /bin/bash remote.sh update" | sudo tee -a /etc/sudoers
+
   echo "www-data ALL = NOPASSWD: /sbin/shutdown -r now" | sudo tee -a /etc/sudoers
   echo "www-data ALL = NOPASSWD: /sbin/shutdown -h now" | sudo tee -a /etc/sudoers
   echo "www-data ALL = NOPASSWD: /bin/systemctl start hostapd.service" | sudo tee -a /etc/sudoers
@@ -166,6 +169,7 @@ EOF
   echo "www-data ALL = NOPASSWD: /usr/bin/tee /sys/class/backlight/rpi_backlight/bl_power" | sudo tee -a /etc/sudoers
 
   sudo wget -O /var/www/html/system.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/system.php
+  sudo wget -O /var/www/html/remote.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/remote.sh
   
   wget https://github.com/fullcalendar/fullcalendar/releases/download/v$FULLCALENDAR/fullcalendar-$FULLCALENDAR.zip
   unzip -l fullcalendar-$FULLCALENDAR.zip
