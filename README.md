@@ -459,3 +459,7 @@ You can not overwrite existing files.
     Surf to http://192.168.4.1
     Configure Sonoff Wifi
     Save configuration, Sonoff will reboot and connect to your home AP
+    
+### Get latest version
+    curl -s https://api.github.com/repos/arendst/Tasmota/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")' | cut -d$'v' -f 2
+    wget -qO- http://tasmota_8be4af-1199/cm?cmnd=Status%202 | python -c 'import sys, json; print(json.load(sys.stdin)["StatusFWR"]["Version"])' | cut -d$'(' -f 1
