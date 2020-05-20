@@ -170,6 +170,7 @@ EOF
 
   sudo wget -O /var/www/html/system.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/system.php
   sudo wget -O /var/www/html/remote.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/remote.sh
+  sudo wget -O /var/www/html/upload.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/upload.php
   
   wget https://github.com/fullcalendar/fullcalendar/releases/download/v$FULLCALENDAR/fullcalendar-$FULLCALENDAR.zip
   unzip -l fullcalendar-$FULLCALENDAR.zip
