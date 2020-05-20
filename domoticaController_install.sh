@@ -179,7 +179,9 @@ EOF
   
   sudo wget -O /var/www/html/fullcalendar/ical.js https://github.com/mozilla-comm/ical.js/releases/download/v1.3.0/ical.js
   sudo wget -O /var/www/html/fullcalendar/basic.ics https://www.google.com/calendar/ical/feestdagenbelgie%40gmail.com/public/basic.ics
+  sudo chown www-data:www-data /var/www/html/fullcalendar/basic.ics
   sudo wget -O /var/www/html/fullcalendar/snt.ics https://www.google.com/calendar/ical/feestdagenbelgie%40gmail.com/public/basic.ics
+  sudo chown www-data:www-data /var/www/html/fullcalendar/snt.ics
 
   sudo wget -O /var/www/html/state.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/state.php
   sudo wget -O /var/www/html/forecast.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/forecast.php
