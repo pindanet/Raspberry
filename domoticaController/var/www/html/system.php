@@ -36,6 +36,7 @@ case "softap":
   break;
 case "reboot": 
   exec("sudo /sbin/shutdown -r now");
+  echo "Domoticacontroller herstart."
   break;
 case "halt": 
   exec("sudo /sbin/shutdown -h now");
