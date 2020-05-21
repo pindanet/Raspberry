@@ -9,4 +9,5 @@ if($imageFileType != "ics") {
   exit();
 }
 file_put_contents($target_file, $filedata);
+echo basename($_POST["url"]) . " ontvangen."
 ?>
