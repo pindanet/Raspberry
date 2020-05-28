@@ -3,10 +3,13 @@
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
 //Post data als argumenten bij php cli
-//if (!isset($_SERVER["HTTP_HOST"])) {
-//  parse_str($argv[1], $_GET);
-//  parse_str($argv[1], $_POST);
-//}
+/*
+// php system.php command=update
+if (!isset($_SERVER["HTTP_HOST"])) {
+  parse_str($argv[1], $_GET);
+  parse_str($argv[1], $_POST);
+}
+*/
 function checkWall() {
   $fp = fsockopen("udp://rpiwall.local", 22, $errno, $errstr);
   if (!$fp) {
@@ -35,8 +38,8 @@ case "softap":
   }
   break;
 case "reboot": 
+  echo "Domoticacontroller herstart.\n";
   exec("sudo /sbin/shutdown -r now");
-  echo "Domoticacontroller herstart.";
   break;
 case "halt": 
   exec("sudo /sbin/shutdown -h now");
