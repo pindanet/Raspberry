@@ -1,7 +1,8 @@
 #!/bin/bash
 # ToDo
-# Activate Serial hardware
-# /home/pi/, /home/dany
+# thermostatOff, thermostatReset
+# Activate Serial Hardware
+# /home/pi, /home/dany
 
 # Timer default array
 timerdefault[0]="0 07:30 22:50"
@@ -14,15 +15,15 @@ timerdefault[6]="6 07:30 22:50"
 # timerdefault[7]="0 16:30 17:00"
 # timerdefault[8]="0 17:30 22:45"
 
-thermostatkitchendefault[0]="07:30 08:30 22.00"
-thermostatkitchendefault[1]="11:00 13:30 22.20"
-thermostatkitchendefault[2]="16:45 17:30 22.20"
-thermostatkitchendefault[3]="22:09 22:45 22.20"
+thermostatkitchendefault[0]="07:30 08:30 21.70"
+thermostatkitchendefault[1]="11:00 13:30 21.70"
+thermostatkitchendefault[2]="16:45 17:30 21.70"
+thermostatkitchendefault[3]="22:09 22:45 21.70"
 
-thermostatlivingdefault[0]="08:15 11:15 22.00"
-thermostatlivingdefault[1]="13:15 17:00 22.00"
-thermostatlivingdefault[2]="17:15 22:45 22.00"
-# thermostatlivingdefault[3]="16:45 17:15 22.00"
+thermostatlivingdefault[0]="08:15 11:15 21.50"
+thermostatlivingdefault[1]="13:15 17:00 21.50"
+thermostatlivingdefault[2]="17:15 22:45 21.50"
+# thermostatlivingdefault[3]="16:45 17:15 21.50"
 
 timerfile="/var/www/html/data/timer"
 thermostatkitchenfile="/var/www/html/data/thermostatkitchen"
@@ -30,14 +31,21 @@ thermostatlivingfile="/var/www/html/data/thermostatliving"
 PresHumiTempfile="/var/www/html/data/PresHumiTemp"
 
 declare -A heater
-heater[LivingZuidOn]="0B1100010141538601010F80 on"
-heater[LivingZuidOff]="0B1100000141538601000080 off"
-heater[LivingNoordOn]="tasmota_8be4af-1199 on"
-heater[LivingNoordOff]="tasmota_8be4af-1199 off"
-heater[KeukenZuidOn]="tasmota_a943fa-1018 on"
-heater[KeukenZuidOff]="tasmota_a943fa-1018 off"
-heater[KeukenNoordOn]="tasmota_c699b5-6581 on"
-heater[KeukenNoordOff]="tasmota_c699b5-6581 off"
+mapfile -t heaters < /var/www/html/data/heaters
+#printf '%s\n' "${heaters[@]}"
+for heateritem in "${heaters[@]}"; do
+  line=(${heateritem})
+  heater[${line[0]}]=${line[1]}
+done
+#printf '%s\n' "${heater[@]}"
+#printf '%s\n' "${!heater[@]}"
+
+#unset heater
+#declare -A heater
+#heater[LivingZuid]="tasmota_8bbe4d-7757"
+#heater[LivingNoord]="tasmota_8be4af-1199"
+#heater[KeukenZuid]="tasmota_a943fa-1018"
+#heater[KeukenNoord]="tasmota_c699b5-6581"
 
 hysteresis="0.1"
 
@@ -49,6 +57,13 @@ function thermostatManualReset () {
     rm /var/www/html/data/thermostatManualliving
   fi
 }
+#function tasmotaRF () {
+#  if [[ "$1" == tasmota* ]]; then
+#    tasmota $1 $2
+#  else
+#    sendRF $1 $2
+#  fi
+#}
 function sendRF () {
   tempfile="/tmp/${1:0:6}${1:8:10}${1:22:2}"
   if [ ! -f "$tempfile" ]; then # initialize
@@ -100,13 +115,14 @@ function tasmota () {
 function thermostatOff {
   for switch in "${!heater[@]}"
   do
-   if [[ "$switch" == *Off ]]; then
-     if [[ "${heater[$switch]}" == tasmota* ]]; then
-       tasmota ${heater[$switch]}
-     else
-       sendRF ${heater[$switch]}
-     fi
-   fi
+#   if [[ "$switch" == *Off ]]; then
+     tasmota ${heater[$switch]} "off"
+#     if [[ "${heater[$switch]}" == tasmota* ]]; then
+#       tasmota ${heater[$switch]}
+#     else
+#       sendRF ${heater[$switch]}
+#     fi
+#   fi
   done
 }
 
@@ -146,23 +162,23 @@ function thermostat {
   if [ "$heating" == "on" ]; then
     if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
       echo "Keukenverwarming Noord inschakelen"
-      tasmota ${heater[KeukenNoordOn]}
+      tasmota ${heater[KeukenNoord]} on
       if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 2)}") )); then
         echo "Keukenverwarming Zuid inschakelen"
-        tasmota ${heater[KeukenZuidOn]}
+        tasmota ${heater[KeukenZuid]} on
       fi
     elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 2)}") )); then
       echo "Keukenverwarming Zuid uitschakelen"
-      tasmota ${heater[KeukenZuidOff]}
+      tasmota ${heater[KeukenZuid]} off
       if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
-        tasmota ${heater[KeukenNoordOff]}
+        tasmota ${heater[KeukenNoord]} off
         echo "Keukenverwarming Noord uitschakelen"
       fi
     fi
   else
     echo "Keuken niet verwarmen"
-    tasmota ${heater[KeukenZuidOff]}
-    tasmota ${heater[KeukenNoordOff]}
+    tasmota ${heater[KeukenZuid]} off
+    tasmota ${heater[KeukenNoord]} off
   fi
 
   if [ ! -f $thermostatlivingfile ]; then # default
@@ -201,23 +217,23 @@ echo "Noord uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis - $hystere
 echo "Zuid uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis)}") "°C."
     if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
       echo "Livingverwarming Zuid inschakelen"
-      sendRF ${heater[LivingZuidOn]}
+      tasmota ${heater[LivingZuid]} on
       if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 2)}") )); then
         echo "Livingverwarming Noord inschakelen"
-        tasmota ${heater[LivingNoordOn]}
+        tasmota ${heater[LivingNoord]} on
       fi
     elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 2)}") )); then
       echo "Livingverwarming Noord uitschakelen"
-      tasmota ${heater[LivingNoordOff]}
+      tasmota ${heater[LivingNoord]} off
       if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
         echo "Livingverwarming Zuid uitschakelen"
-        sendRF ${heater[LivingZuidOff]}
+        tasmota ${heater[LivingZuid]} off
       fi
     fi
   else
     echo "Living niet verwarmen"
-    sendRF ${heater[LivingZuidOff]}
-    tasmota ${heater[LivingNoordOff]}
+    tasmota ${heater[LivingZuid]} off
+    tasmota ${heater[LivingNoord]} off
   fi
 }
 
@@ -240,7 +256,7 @@ if [ -f /var/www/html/data/thermostatReset ]; then
   echo "Resetting thermostat"
   for switch in "${!heater[@]}"
   do
-   if [[ "$switch" == *Off ]]; then
+#   if [[ "$switch" == *Off ]]; then
      heateritem=${heater[$switch]}
      if [[ "$heateritem" == tasmota* ]]; then
         tempfile="/tmp/${heateritem:0:19}"
@@ -250,7 +266,7 @@ if [ -f /var/www/html/data/thermostatReset ]; then
      if [ -f $tempfile ]; then
        rm $tempfile
      fi
-   fi
+#   fi
   done
   thermostatManualReset
   rm /var/www/html/data/thermostatReset
