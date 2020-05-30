@@ -200,6 +200,7 @@ EOF
   sudo mv rfxcmd_gc-master /var/www/html/
   rm master.zip
   sudo apt-get -y install python-serial
+  sudo usermod -a -G dialout www-data
   
   # ToDo
   # sudo raspi-config
