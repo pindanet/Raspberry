@@ -197,6 +197,8 @@ EOF
   
   wget https://github.com/ssjoholm/rfxcmd_gc/archive/master.zip
   unzip master.zip
+  sudo mv rfxcmd_gc-master /var/www/html/
+  rm master.zip
   sudo apt-get -y install python-serial
   
   # ToDo
