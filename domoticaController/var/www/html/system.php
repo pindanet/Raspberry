@@ -70,10 +70,10 @@ case "rpiwall":
     $result = curl_exec($curl);
 
     sleep(60); // wait 1 minute
-    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 25 4A AE 0D 00 00 80\"");
+    exec("cd data; python ../rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 25 4A AE 0D 00 00 80\"");
     echo "Wall afgesloten en stroomtoevoer uitgeschakeld.";
   } else {
-    exec("cd data; python /home/pi/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 25 4A AE 0D 01 0F 80\"");
+    exec("cd data; python ../rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s \"0B 11 00 00 01 25 4A AE 0D 01 0F 80\"");
     echo "Stroomtoevoer naar Wall ingeschakeld.";
   }
   break;
