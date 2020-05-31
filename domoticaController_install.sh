@@ -5,6 +5,7 @@
 
 # ToDo
 # Activate Serial Hardware
+# Activate PiCamera
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
@@ -205,6 +206,7 @@ EOF
   # ToDo
   # sudo raspi-config
   # enable serial hardware
+  # enable picamera
   
   sudo wget -O /usr/sbin/PindaNetThermostat.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetThermostat.sh
   sudo chmod +x /usr/sbin/PindaNetThermostat.sh
