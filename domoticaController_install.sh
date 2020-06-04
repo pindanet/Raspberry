@@ -208,30 +208,23 @@ EOF
   # enable serial hardware
   # enable picamera
   
-  sudo wget -O /usr/sbin/PindaNetThermostat.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetThermostat.sh
-  sudo chmod +x /usr/sbin/PindaNetThermostat.sh
-  cat > PindaNetThermostat.service <<EOF
+  sudo wget -O /usr/sbin/PindaNetDomo.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetDomo.sh
+  sudo chmod +x /usr/sbin/PindaNetDomo.sh
+  cat > PindaNetDomo.service <<EOF
 [Unit]
-Description=Thermostat
+Description=PindaNetDomotica
+Wants=network-online.target
+After=network.target network-online.target
 [Service]
-Type=simple
-ExecStart=/usr/sbin/PindaNetThermostat.sh
-EOF
-  sudo mv PindaNetThermostat.service /etc/systemd/system/
-  cat > PindaNetThermostat.timer <<EOF
-[Unit]
-Description=Thermostat
-[Timer]
-OnBootSec=1min
-OnUnitActiveSec=1min
-Unit=PindaNetThermostat.service
+ExecStart=/usr/sbin/PindaNetDomo.sh
+Restart=always
+RestartSec=60
 [Install]
 WantedBy=multi-user.target
 EOF
-  sudo mv PindaNetThermostat.timer /etc/systemd/system/
-
+  sudo mv PindaNetDomo.service /etc/systemd/system/
   sudo systemctl daemon-reload
-  sudo systemctl enable PindaNetThermostat.timer
+  sudo systemctl enable PindaNetDomo.service
 
   sudo wget -O /var/www/html/daylymotion.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/daylymotion.php
   
