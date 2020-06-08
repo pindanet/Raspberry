@@ -209,7 +209,6 @@ EOF
   # enable picamera
   
   sudo wget -O /var/www/html/data/thermostat https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/data/thermostat
-  sudo wget -O /var/www/html/data/heaters https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/data/heaters
   sudo wget -O /usr/sbin/PindaNetDomo.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetDomo.sh
   sudo chmod +x /usr/sbin/PindaNetDomo.sh
   cat > PindaNetDomo.service <<EOF
