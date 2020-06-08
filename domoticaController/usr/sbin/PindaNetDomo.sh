@@ -175,19 +175,37 @@ echo "Zuid uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis)}") "°C."
       if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 2)}") )); then
         echo "Livingverwarming Noord inschakelen"
         tasmota ${heater[LivingNoord]} on
+        if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 4)}") )); then
+          echo "Livingverwarming NoordOost inschakelen"
+          tasmota ${heater[LivingNoordOost]} on
+          if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 6)}") )); then
+            echo "Livingverwarming Oost inschakelen"
+            tasmota ${heater[LivingOost]} on
+          fi
+        fi
       fi
-    elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 2)}") )); then
-      echo "Livingverwarming Noord uitschakelen"
-      tasmota ${heater[LivingNoord]} off
-      if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
-        echo "Livingverwarming Zuid uitschakelen"
-        tasmota ${heater[LivingZuid]} off
+    elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 6)}") )); then
+      echo "Livingverwarming Oost uitschakelen"
+      tasmota ${heater[LivingOost]} off
+      if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 4)}") )); then
+        echo "Livingverwarming NoordOost uitschakelen"
+        tasmota ${heater[LivingNoordOost]} off
+        if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 2)}") )); then
+          echo "Livingverwarming Noord uitschakelen"
+          tasmota ${heater[LivingNoord]} off
+          if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
+            echo "Livingverwarming Zuid uitschakelen"
+            tasmota ${heater[LivingZuid]} off
+          fi
+        fi
       fi
     fi
   else
     echo "Living niet verwarmen"
     tasmota ${heater[LivingZuid]} off
     tasmota ${heater[LivingNoord]} off
+    tasmota ${heater[LivingNoordOost]} off
+    tasmota ${heater[LivingOost]} off
   fi
 }
 
@@ -229,7 +247,7 @@ do
   thermostatkitchendefault[0]="07:30 08:30 21.70"
   thermostatkitchendefault[1]="11:00 13:30 21.70"
   thermostatkitchendefault[2]="16:45 17:30 21.70"
-  thermostatkitchendefault[3]="22:09 22:45 21.70"
+  thermostatkitchendefault[3]="22:09 22:50 21.70"
 
   thermostatlivingdefault[0]="08:15 11:15 21.50"
   thermostatlivingdefault[1]="13:15 17:00 21.50"
@@ -242,12 +260,23 @@ do
   PresHumiTempfile="/var/www/html/data/PresHumiTemp"
 
   declare -A heater
+  declare -a heaterLiving
+  declare -a heaterKeuken
   mapfile -t heaters < /var/www/html/data/heaters
   #printf '%s\n' "${heaters[@]}"
   for heateritem in "${heaters[@]}"; do
     line=(${heateritem})
     heater[${line[0]}]=${line[1]}
+    if [ ${heateritem:0:6} == "Living" ]; then
+      heaterLiving+=(${line[0]})
+    fi
+    if [ ${heateritem:0:6} == "Keuken" ]; then
+      heaterKeuken+=(${line[0]})
+    fi
   done
+#  printf '%s\n' "${heaterLiving[@]}"
+#  printf '%s\n' "${heaterKeuken[@]}"
+
   #printf '%s\n' "${heater[@]}"
   #printf '%s\n' "${!heater[@]}"
 
@@ -441,19 +470,6 @@ do
     if [ $_ret -eq 1 ]; then
       echo "[!] PIR is tripped, Smile ..."
 
-#      # bepaal het oudste bestand in de op te ruimen map
-#      oudste=`ls -t "$fotomap"/* | tail -1`
-#      refdatum=`date --date="1 day ago" +%s`
-#      oudstedatum=`date --utc --reference="$oudste" +%s`
-#      # wis alle bestanden ouder dan 1 dag
-#      while (( refdatum > oudstedatum )); do
-#        # verwijder het oudste bestand
-#        rm "$oudste"
-##        echo $oudste
-#        # bepaal opnieuw het oudste bestand in de op te ruimen map
-#        oudste=`ls -t "$fotomap"/* | tail -1`   
-#        oudstedatum=`date --utc --reference="$oudste" +%s`
-#      done
       find "$fotomap/" -mindepth 1 -maxdepth 1 -mtime +0 -exec rm {} \;
       DATE=$(date +"%Y %m %d %H:%M:%S") # 2020 05 05 07:05:03.jpg
       raspistill --width 800 --height 480 --nopreview -o "$fotomap/$DATE.jpg"
