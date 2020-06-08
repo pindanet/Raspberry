@@ -86,24 +86,29 @@ function thermostat {
   # remove leading whitespace characters
   temp="${temp#"${temp%%[![:space:]]*}"}"
 
-  if [ ! -f $thermostatkitchenfile ]; then # default
-    printf "%s\n" "${thermostatkitchendefault[@]}" > $thermostatkitchenfile
-    chown www-data:www-data $thermostatkitchenfile
-  fi
-  mapfile -t raw < $thermostatkitchenfile
+#  if [ ! -f $thermostatkitchenfile ]; then # default
+#    printf "%s\n" "${thermostatkitchendefault[@]}" > $thermostatkitchenfile
+#    chown www-data:www-data $thermostatkitchenfile
+#  fi
+#  mapfile -t raw < $thermostatkitchenfile
 
-  IFS=$'\n' thermostatkitchen=($(sort <<<"${raw[*]}"))
+  IFS=$'\n' thermostatkitchen=($(sort <<<"${thermostatkitchendefault[*]}"))
   unset IFS
-  unset raw
+#  unset raw
+
+  for thermostatitem in "${thermostatkitchenevent[@]}"; do
+    daytime=(${thermostatitem})
+    echo ${daytime[0]}
+  done
 
 #  printf "%s\n" "${thermostatkitchen[@]}"
 #  echo $now
 
-  heating="off"
+  heatingKitchen="off"
   for thermostatitem in "${thermostatkitchen[@]}"; do
     daytime=(${thermostatitem})
     if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
-      heating="on"
+      heatingKitchen="on"
       break
     fi
   done
@@ -112,23 +117,23 @@ function thermostat {
     read roomtemp < /var/www/html/data/thermostatManualkitchen
     tempWanted=$roomtemp
     echo "Manual temp kichen: $tempWanted °C"
-    heating="on"
+    heatingKitchen="on"
   fi
-  if [ "$heating" == "off" ]; then
+  if [ "$heatingKitchen" == "off" ]; then
     echo "Keuken basisverwarming"
     tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
   fi
-#  if [ "$heating" == "on" ]; then
+#  if [ "$heatingKitchen" == "on" ]; then
   total=${#heaterKeuken[@]}
   for (( i=0; i<$total; i++ )); do
-    tempToggle=$(awk "BEGIN {print ($tempWanted - $hysteresis - $hysteresis * (2 * $i))}")
+    tempToggle=$(awk "BEGIN {print ($tempWanted + ($hysteresis * 2) - $hysteresis - $hysteresis * (2 * $i))}")
 #    echo  ${heater[${heaterKeuken[$i]}]}
     echo "${heaterKeuken[$i]} aan bij $tempToggle °C."
     if (( $(awk "BEGIN {print ($temp < $tempToggle)}") )); then
       echo "${heaterKeuken[$i]} ingeschakeld bij $temp °C."
       tasmota ${heater[${heaterKeuken[$i]}]} on
     fi
-    tempToggle=$(awk "BEGIN {print ($tempWanted + $hysteresis - $hysteresis * (2 * $i))}")
+    tempToggle=$(awk "BEGIN {print ($tempWanted + ($hysteresis * 2) + $hysteresis - $hysteresis * (2 * $i))}")
     echo "${heaterKeuken[$i]} uit bij $tempToggle °C."
     if (( $(awk "BEGIN {print ($temp > $tempToggle)}") )); then
       echo "${heaterKeuken[$i]} uitgeschakeld bij $temp °C."
@@ -160,24 +165,24 @@ function thermostat {
 #    tasmota ${heater[KeukenNoord]} off
 #  fi
 
-  if [ ! -f $thermostatlivingfile ]; then # default
-    printf "%s\n" "${thermostatlivingdefault[@]}" > $thermostatlivingfile
-    chown www-data:www-data $thermostatlivingfile
-  fi
-  mapfile -t raw < $thermostatlivingfile
+#  if [ ! -f $thermostatlivingfile ]; then # default
+#    printf "%s\n" "${thermostatlivingdefault[@]}" > $thermostatlivingfile
+#    chown www-data:www-data $thermostatlivingfile
+#  fi
+#  mapfile -t raw < $thermostatlivingfile
 
-  IFS=$'\n' thermostatliving=($(sort <<<"${raw[*]}"))
+  IFS=$'\n' thermostatliving=($(sort <<<"${thermostatlivingdefault[*]}"))
   unset IFS
-  unset raw
+#  unset raw
 
 #  printf "%s\n" "${thermostatliving[@]}"
   echo $now
 
-  heating="off"
+  heatingLiving="off"
   for thermostatitem in "${thermostatliving[@]}"; do
     daytime=(${thermostatitem})
     if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
-      heating="on"
+      heatingLiving="on"
       break
     fi
   done
@@ -186,15 +191,15 @@ function thermostat {
     read roomtemp < /var/www/html/data/thermostatManualliving
     tempWanted=$roomtemp
     echo "Manual temp living: $tempWanted °C"
-    heating="on"
+    heatingLiving="on"
   fi
-  if [ "$heating" == "off" ]; then
+  if [ "$heatingLiving" == "off" ]; then
     echo "Living basisverwarming"
     tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
   fi
-#  if [ "$heating" == "on" ]; then
-  echo "Kamertemp: $temp °C"
-  echo "Thermostaat temp: $tempWanted"
+#  if [ "$heatingLiving" == "on" ]; then
+#  echo "Kamertemp: $temp °C"
+#  echo "Thermostaat temp: $tempWanted"
   total=${#heaterLiving[@]}
   for (( i=0; i<$total; i++ )); do
     tempToggle=$(awk "BEGIN {print ($tempWanted - $hysteresis - $hysteresis * (2 * $i))}")
@@ -284,27 +289,28 @@ echo "in" > /sys/class/gpio/gpio$_pir_pin/direction
  
 while true
 do
-  tempComfort="21.50"
-  # Timer default array
-  timerdefault[0]="0 07:30 22:50"
-  timerdefault[1]="1 07:30 22:50"
-  timerdefault[2]="2 07:30 22:50"
-  timerdefault[3]="3 07:30 22:50"
-  timerdefault[4]="4 07:30 22:50"
-  timerdefault[5]="5 07:30 22:50"
-  timerdefault[6]="6 07:30 22:50"
-  # timerdefault[7]="0 16:30 17:00"
-  # timerdefault[8]="0 17:30 22:45"
-
-  thermostatkitchendefault[0]="07:30 08:30 21.70"
-  thermostatkitchendefault[1]="11:00 13:30 21.70"
-  thermostatkitchendefault[2]="16:45 17:30 21.70"
-  thermostatkitchendefault[3]="22:09 22:50 21.70"
-
-  thermostatlivingdefault[0]="08:15 11:15 21.50"
-  thermostatlivingdefault[1]="13:15 17:00 21.50"
-  thermostatlivingdefault[2]="17:15 22:45 21.50"
-  # thermostatlivingdefault[3]="16:45 17:15 21.50"
+  . /var/www/html/data/thermostat
+#  tempComfort="21.50"
+#  # Timer default array
+#  timerdefault[0]="0 07:30 22:50"
+#  timerdefault[1]="1 07:30 22:50"
+#  timerdefault[2]="2 07:30 22:50"
+#  timerdefault[3]="3 07:30 22:50"
+#  timerdefault[4]="4 07:30 22:50"
+#  timerdefault[5]="5 07:30 22:50"
+#  timerdefault[6]="6 07:30 22:50"
+#  # timerdefault[7]="0 16:30 17:00"
+#  # timerdefault[8]="0 17:30 22:45"
+#
+#  thermostatkitchendefault[0]="07:30 08:30 21.70"
+#  thermostatkitchendefault[1]="11:00 13:30 21.70"
+#  thermostatkitchendefault[2]="16:45 17:30 21.70"
+#  thermostatkitchendefault[3]="22:09 22:50 21.70"
+#
+#  thermostatlivingdefault[0]="08:15 11:15 21.50"
+#  thermostatlivingdefault[1]="13:15 17:00 21.50"
+#  thermostatlivingdefault[2]="17:15 22:45 21.50"
+#  # thermostatlivingdefault[3]="16:45 17:15 21.50"
 
   timerfile="/var/www/html/data/timer"
   thermostatkitchenfile="/var/www/html/data/thermostatkitchen"
@@ -316,8 +322,8 @@ do
   declare -a heaterLiving
   unset heaterKeuken
   declare -a heaterKeuken
-  mapfile -t heaters < /var/www/html/data/heaters
-  #printf '%s\n' "${heaters[@]}"
+#  mapfile -t heaters < /var/www/html/data/heaters
+#  printf '%s\n' "${heaters[@]}"
   for heateritem in "${heaters[@]}"; do
     line=(${heateritem})
     heater[${line[0]}]=${line[1]}
@@ -341,22 +347,22 @@ do
   #heater[KeukenZuid]="tasmota_a943fa-1018"
   #heater[KeukenNoord]="tasmota_c699b5-6581"
 
-  hysteresis="0.1"
+#  hysteresis="0.1"
 
-  if [ -f /var/www/html/data/thermostatDefault ]; then
-    echo "Restoring default thermostat"
-    if [ -f $timerfile ]; then
-      rm $timerfile
-    fi
-    if [ -f $thermostatkitchenfile ]; then
-      rm $thermostatkitchenfile
-    fi
-    if [ -f $thermostatlivingfile ]; then
-      rm $thermostatlivingfile
-    fi
-    thermostatManualReset
-    rm /var/www/html/data/thermostatDefault
-  fi
+#  if [ -f /var/www/html/data/thermostatDefault ]; then
+#    echo "Restoring default thermostat"
+#    if [ -f $timerfile ]; then
+#      rm $timerfile
+#    fi
+#    if [ -f $thermostatkitchenfile ]; then
+#      rm $thermostatkitchenfile
+#    fi
+#    if [ -f $thermostatlivingfile ]; then
+#      rm $thermostatlivingfile
+#    fi
+#    thermostatManualReset
+#    rm /var/www/html/data/thermostatDefault
+#  fi
 
   if [ -f /var/www/html/data/thermostatReset ]; then
     echo "Resetting thermostat"
@@ -471,35 +477,47 @@ do
     done
   fi
 
-  if [ ! -f $timerfile ]; then # default
-    printf "%s\n" "${timerdefault[@]}" > $timerfile
-    chown www-data:www-data $timerfile
-  fi
-  mapfile -t raw < $timerfile
+#  if [ ! -f $timerfile ]; then # default
+#    printf "%s\n" "${timerdefault[@]}" > $timerfile
+#    chown www-data:www-data $timerfile
+#  fi
+#  mapfile -t raw < $timerfile
 
-  IFS=$'\n' timer=($(sort <<<"${raw[*]}"))
-  unset IFS
-  unset raw
+#  IFS=$'\n' timer=($(sort <<<"${timerdefault[*]}"))
+#  unset IFS
+#  unset raw
 
-  state="sleep"
   weekday=$(date +%w)
   now=$(date +%H:%M)
-  for timeritem in "${timer[@]}"; do
-    daytime=(${timeritem})
-    if [ "${daytime[0]}" == "$weekday" ]; then
-      echo "$timeritem"
-      if [[ "${daytime[1]}" < "$now" ]] && [[ "${daytime[2]}" > "$now" ]]; then
-        state="awake"
-        break
-      fi
-    fi
-  done
+
+  thermostat
+
+  echo "heatingKitchen: $heatingKitchen"
+  echo "heatingLiving: $heatingLiving"
+
+  state="sleep"
+  if [ $heatingKitchen == "on" ] || [ $heatingLiving == "on" ]; then
+    state="awake"
+  fi
+  if [ -f /var/www/html/data/thermostatManualkitchen ] || [ -f /var/www/html/data/thermostatManualliving ]; then
+    state="awake"
+  fi
+#  for timeritem in "${timer[@]}"; do
+#    daytime=(${timeritem})
+#    if [ "${daytime[0]}" == "$weekday" ]; then
+#      echo "$timeritem"
+#      if [[ "${daytime[1]}" < "$now" ]] && [[ "${daytime[2]}" > "$now" ]]; then
+#        state="awake"
+#        break
+#      fi
+#    fi
+#  done
   echo $state
   if [ $state == "awake" ]; then
     echo 0 > /sys/class/backlight/rpi_backlight/bl_power
   #  echo 255 > /sys/class/leds/led0/brightness
   #  echo 255 > /sys/class/leds/led1/brightness
-    thermostat
+#    thermostat
   else
     # deactivate backlight touchscreen
     echo 1 > /sys/class/backlight/rpi_backlight/bl_power
@@ -513,8 +531,8 @@ do
       # Power off RPIWall
       python /var/www/html/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 25 4A AE 0D 00 00 80"
     fi
-    thermostatOff
-    thermostatManualReset
+#    thermostatOff
+#    thermostatManualReset
   fi
 
 # PIR detector for 1 minute
