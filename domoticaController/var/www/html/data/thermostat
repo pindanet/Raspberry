@@ -23,9 +23,13 @@ thermostatkitchendefault[1]="11:00 13:30"
 thermostatkitchendefault[2]="16:45 17:30"
 thermostatkitchendefault[3]="22:09 22:50"
 
+thermostatkitchenevent[0]="2020-05-27 14 07:00 13:30 on"
+
 thermostatlivingdefault[0]="08:15 11:15"
 thermostatlivingdefault[1]="13:15 17:00"
 thermostatlivingdefault[2]="17:15 22:45"
 # thermostatlivingdefault[3]="16:45 17:15"
+
+thermostatlivingevent[0]="2020-05-27 14 07:00 11:45 on"
 
 hysteresis="0.1"
