@@ -181,31 +181,36 @@ function thermostat {
       break
     fi
   done
+  tempWanted=$tempComfort
   if [ -f /var/www/html/data/thermostatManualliving ]; then
     read roomtemp < /var/www/html/data/thermostatManualliving
-    daytime[2]=$roomtemp
-    echo "Manual temp living: ${daytime[2]} °C"
+    tempWanted=$roomtemp
+    echo "Manual temp living: $tempWanted °C"
     heating="on"
   fi
-  if [ "$heating" == "on" ]; then
-    echo "Kamertemp: $temp °C"
-    echo "Thermostaat temp: ${daytime[2]}"
-    total=${#heaterLiving[@]}
-    for (( i=0; i<$total; i++ )); do
-      tempToggle=$(awk "BEGIN {print (${daytime[2]} - $hysteresis - $hysteresis * (2 * $i))}")
-#      echo  ${heater[${heaterLiving[$i]}]}
-      echo "${heaterLiving[$i]} aan bij $tempToggle °C."
-      if (( $(awk "BEGIN {print ($temp < $tempToggle)}") )); then
-        echo "${heaterLiving[$i]} ingeschakeld bij $temp °C."
-        tasmota ${heater[${heaterLiving[$i]}]} on
-      fi
-      tempToggle=$(awk "BEGIN {print (${daytime[2]} + $hysteresis - $hysteresis * (2 * $i))}")
-      echo "${heaterLiving[$i]} uit bij $tempToggle °C."
-      if (( $(awk "BEGIN {print ($temp > $tempToggle)}") )); then
-        echo "${heaterLiving[$i]} uitgeschakeld bij $temp °C."
-        tasmota ${heater[${heaterLiving[$i]}]} off
-      fi
-    done
+  if [ "$heating" == "off" ]; then
+    echo "Living basisverwarming"
+    tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
+  fi
+#  if [ "$heating" == "on" ]; then
+  echo "Kamertemp: $temp °C"
+  echo "Thermostaat temp: $tempWanted"
+  total=${#heaterLiving[@]}
+  for (( i=0; i<$total; i++ )); do
+    tempToggle=$(awk "BEGIN {print ($tempWanted - $hysteresis - $hysteresis * (2 * $i))}")
+#    echo  ${heater[${heaterLiving[$i]}]}
+    echo "${heaterLiving[$i]} aan bij $tempToggle °C."
+    if (( $(awk "BEGIN {print ($temp < $tempToggle)}") )); then
+      echo "${heaterLiving[$i]} ingeschakeld bij $temp °C."
+      tasmota ${heater[${heaterLiving[$i]}]} on
+    fi
+    tempToggle=$(awk "BEGIN {print ($tempWanted + $hysteresis - $hysteresis * (2 * $i))}")
+    echo "${heaterLiving[$i]} uit bij $tempToggle °C."
+    if (( $(awk "BEGIN {print ($temp > $tempToggle)}") )); then
+      echo "${heaterLiving[$i]} uitgeschakeld bij $temp °C."
+      tasmota ${heater[${heaterLiving[$i]}]} off
+    fi
+  done
 #  echo "Zuid aan bij" $(awk "BEGIN {print (${daytime[2]} - $hysteresis)}") "°C."
 #  echo "Noord aan bij" $(awk "BEGIN {print (${daytime[2]} - $hysteresis - $hysteresis * 2)}") "°C."
 #  echo "Noord uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis - $hysteresis * 2)}") "°C."
@@ -242,17 +247,17 @@ function thermostat {
 #        fi
 #      fi
 #    fi
-  else
-    echo "Living niet verwarmen"
-    for heateritem in "${heaterLiving[@]}"; do
-      echo "$heateritem uitschakelen"
-      tasmota ${heater[$heateritem]} off
-    done
+#  else
+#    echo "Living niet verwarmen"
+#    for heateritem in "${heaterLiving[@]}"; do
+#      echo "$heateritem uitschakelen"
+#      tasmota ${heater[$heateritem]} off
+#    done
 #    tasmota ${heater[LivingZuid]} off
 #    tasmota ${heater[LivingNoord]} off
 #    tasmota ${heater[LivingNoordOost]} off
 #    tasmota ${heater[LivingOost]} off
-  fi
+#  fi
 }
 
 _pir_pin=4 # BCM4
