@@ -96,15 +96,30 @@ function thermostat {
   unset IFS
 #  unset raw
 
+  heatingKitchen="off"
   for thermostatitem in "${thermostatkitchenevent[@]}"; do
     daytime=(${thermostatitem})
-    echo ${daytime[0]}
+    recevent=$(date -u --date "${daytime[0]}" +%s)
+    timebetween=$((${daytime[1]} * 86400))
+    nowSec=$(date -u +%s)
+    today=$((nowSec - (nowSec % 86400)))
+    while  [ $recevent -lt $today ]; do
+      recevent=$((recevent + timebetween))
+    done
+    echo $today $recevent
+    if [ $today == $recevent ]; then
+      echo "Event op $(date -u --date @$recevent)"
+      if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
+        echo "Tussen ${daytime[2]} en ${daytime[3]}: heatingKitchen: ${daytime[4]}"
+        heatingKitchen=${daytime[4]}
+        break
+      fi
+    fi
   done
 
 #  printf "%s\n" "${thermostatkitchen[@]}"
 #  echo $now
 
-  heatingKitchen="off"
   for thermostatitem in "${thermostatkitchen[@]}"; do
     daytime=(${thermostatitem})
     if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
