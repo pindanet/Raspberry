@@ -4,8 +4,8 @@ heaters[0]="LivingZuid tasmota_8bbe4d-7757"
 heaters[1]="LivingNoord tasmota_8be4af-1199"
 heaters[2]="LivingNoordOost tasmota_8bbe0d-7693"
 heaters[3]="LivingOost tasmota_a94717-1815"
-heaters[4]="KeukenZuid tasmota_a943fa-1018"
-heaters[5]="KeukenNoord tasmota_c699b5-6581"
+heaters[4]="KeukenNoord tasmota_c699b5-6581"
+heaters[5]="KeukenZuid tasmota_a943fa-1018"
 
 # Timer default array
 #timerdefault[0]="0 07:30 22:50"
@@ -30,6 +30,6 @@ thermostatlivingdefault[1]="13:15 17:00"
 thermostatlivingdefault[2]="17:15 22:45"
 # thermostatlivingdefault[3]="16:45 17:15"
 
-thermostatlivingevent[0]="2020-05-27 14 07:00 11:45 on"
+thermostatlivingevent[0]="2020-05-27 14 07:45 11:45 on"
 
 hysteresis="0.1"
