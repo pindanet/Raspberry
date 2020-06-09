@@ -108,7 +108,7 @@ function thermostat {
     done
     echo $today $recevent
     if [ $today == $recevent ]; then
-      echo "Event op $(date -u --date @$recevent)"
+      echo "Event in Keuken op $(date -u --date @$recevent)"
       if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
         echo "Tussen ${daytime[2]} en ${daytime[3]}: heatingKitchen: ${daytime[4]}"
         heatingKitchen=${daytime[4]}
@@ -194,6 +194,27 @@ function thermostat {
   echo $now
 
   heatingLiving="off"
+
+  for thermostatitem in "${thermostatlivingevent[@]}"; do
+    daytime=(${thermostatitem})
+    recevent=$(date -u --date "${daytime[0]}" +%s)
+    timebetween=$((${daytime[1]} * 86400))
+    nowSec=$(date -u +%s)
+    today=$((nowSec - (nowSec % 86400)))
+    while  [ $recevent -lt $today ]; do
+      recevent=$((recevent + timebetween))
+    done
+    echo $today $recevent
+    if [ $today == $recevent ]; then
+      echo "Event in Living op $(date -u --date @$recevent)"
+      if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
+        echo "Tussen ${daytime[2]} en ${daytime[3]}: heatingLiving: ${daytime[4]}"
+        heatingLiving=${daytime[4]}
+        break
+      fi
+    fi
+  done
+
   for thermostatitem in "${thermostatliving[@]}"; do
     daytime=(${thermostatitem})
     if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
