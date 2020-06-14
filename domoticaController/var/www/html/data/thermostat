@@ -2,10 +2,12 @@ tempComfort="21.50"
 
 heaters[0]="LivingZuid tasmota_8bbe4d-7757"
 heaters[1]="LivingNoord tasmota_8be4af-1199"
-heaters[2]="LivingNoordOost tasmota_8bbe0d-7693"
+heaters[2]="LivingWest tasmota_fb7b27-6951"
 heaters[3]="LivingOost tasmota_a94717-1815"
-heaters[4]="KeukenNoord tasmota_c699b5-6581"
-heaters[5]="KeukenZuid tasmota_a943fa-1018"
+heaters[4]="LivingNoordOost tasmota_8bbe0d-7693"
+heaters[5]="LivingZuidOost tasmota_4bf311-4881"
+heaters[6]="KeukenNoord tasmota_c699b5-6581"
+heaters[7]="KeukenZuid tasmota_a943fa-1018"
 
 # Timer default array
 #timerdefault[0]="0 07:30 22:50"
