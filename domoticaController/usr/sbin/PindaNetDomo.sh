@@ -53,15 +53,15 @@ function tasmota () {
   if [ ! -f /tmp/$1 ]; then # initialize
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
   fi
-  if [ $2 == "on" ] && [ $(cat /tmp/$1) == '{"POWER":"OFF"}' ]; then
+  if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
     dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
-  elif [ $2 == "off" ] && [ $(cat /tmp/$1) == '{"POWER":"ON"}' ]; then
+  elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
     dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
-  elif [ $(cat /tmp/$1) != '{"POWER":"OFF"}' ] && [ $(cat /tmp/$1) != '{"POWER":"ON"}' ]; then
+  elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
   fi
@@ -106,7 +106,7 @@ function thermostat {
     while  [ $recevent -lt $today ]; do
       recevent=$((recevent + timebetween))
     done
-    echo $today $recevent
+#    echo $today $recevent
     if [ $today == $recevent ]; then
       echo "Event in Keuken op $(date -u --date @$recevent)"
       if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
@@ -204,7 +204,7 @@ function thermostat {
     while  [ $recevent -lt $today ]; do
       recevent=$((recevent + timebetween))
     done
-    echo $today $recevent
+#    echo $today $recevent
     if [ $today == $recevent ]; then
       echo "Event in Living op $(date -u --date @$recevent)"
       if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
