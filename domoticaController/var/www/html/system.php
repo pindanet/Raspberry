@@ -44,6 +44,9 @@ case "reboot":
 case "halt": 
   exec("sudo /sbin/shutdown -h now");
   break;
+case "rsync": 
+  exec("sudo /bin/bash remote.sh rsync");
+  break;
 case "update": 
   exec("sudo /bin/bash remote.sh update");
   break;
