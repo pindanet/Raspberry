@@ -162,6 +162,7 @@ EOF
 
   echo "www-data ALL = NOPASSWD: /bin/bash remote.sh clean" | sudo tee -a /etc/sudoers
   echo "www-data ALL = NOPASSWD: /bin/bash remote.sh update" | sudo tee -a /etc/sudoers
+  echo "www-data ALL = NOPASSWD: /bin/bash remote.sh rsync" | sudo tee -a /etc/sudoers
 
   echo "www-data ALL = NOPASSWD: /sbin/shutdown -r now" | sudo tee -a /etc/sudoers
   echo "www-data ALL = NOPASSWD: /sbin/shutdown -h now" | sudo tee -a /etc/sudoers
