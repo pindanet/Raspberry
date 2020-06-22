@@ -32,6 +32,18 @@ switch ($command) {
     unlink("/var/www/html/data/mpc.txt");
     exit();
     break;
+  case "volup":
+    exec("amixer -q -M sset Headphone 5%+", $output, $return);
+    exec("mpc status", $output, $return);
+    status($output);
+    exit();
+    break;
+  case "voldown":
+    exec("amixer -q -M sset Headphone 5%-", $output, $return);
+    exec("mpc status", $output, $return);
+    status($output);
+    exit();
+    break;
   case "status":
     exec("mpc status", $output, $return);
     status($output);
