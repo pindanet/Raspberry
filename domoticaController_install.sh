@@ -230,9 +230,23 @@ EOF
 
   sudo wget -O /var/www/html/daylymotion.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/daylymotion.php
 
-  sudo wget -O /var/www/html/mpc.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/mpc.php
-  
   sudo apt install -y python3-gpiozero
+
+  sudo apt install mpc mpd -y
+  sudo wget -O /var/www/html/mpc.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/mpc.php
+  mpc add http://icecast.vrtcdn.be/radio1-high.mp3
+  mpc add http://icecast.vrtcdn.be/ra2wvl-high.mp3
+  mpc add http://icecast.vrtcdn.be/klara-high.mp3
+  mpc add http://icecast.vrtcdn.be/klaracontinuo-high.mp3
+  mpc add http://icecast.vrtcdn.be/stubru-high.mp3
+  mpc add http://icecast.vrtcdn.be/mnm-high.mp3
+  mpc add http://icecast.vrtcdn.be/mnm_hits-high.mp3
+  mpc add http://progressive-audio.lwc.vrtcdn.be/content/fixed/11_11niws-snip_hi.mp3 
+  mpc add http://icecast.vrtcdn.be/ketnetradio-high.mp3
+  mpc add http://77.92.64.44:8045/stream
+  mpc add http://stream.vbro.be:9100/vbro
+  mpc add http://icecast-qmusic.cdp.triple-it.nl/JOEfm_be_live_128.mp3
+  mpc add http://icecast-qmusic.cdp.triple-it.nl/Qmusic_be_live_128.mp3
 
 exit
 
