@@ -229,6 +229,8 @@ EOF
   sudo systemctl enable PindaNetDomo.service
 
   sudo wget -O /var/www/html/daylymotion.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/daylymotion.php
+
+  sudo wget -O /var/www/html/mpc.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/mpc.php
   
   sudo apt install -y python3-gpiozero
 
