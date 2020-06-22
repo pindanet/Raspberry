@@ -233,6 +233,7 @@ EOF
   sudo apt install -y python3-gpiozero
 
   sudo apt install mpc mpd -y
+  sudo usermod -a -G audio www-data
   sudo wget -O /var/www/html/mpc.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/mpc.php
   mpc add http://icecast.vrtcdn.be/radio1-high.mp3
   mpc add http://icecast.vrtcdn.be/ra2wvl-high.mp3
