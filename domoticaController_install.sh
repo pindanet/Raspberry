@@ -243,7 +243,7 @@ EOF
   mpc add http://icecast.vrtcdn.be/mnm_hits-high.mp3
   mpc add http://progressive-audio.lwc.vrtcdn.be/content/fixed/11_11niws-snip_hi.mp3 
   mpc add http://icecast.vrtcdn.be/ketnetradio-high.mp3
-  mpc add http://streams.crooze.fm:8000/listen.pls?sid=1
+  mpc add http://streams.crooze.fm:8000
   mpc add http://stream.vbro.be:9100/vbro
   mpc add http://icecast-qmusic.cdp.triple-it.nl/JOEfm_be_live_128.mp3
   mpc add http://icecast-qmusic.cdp.triple-it.nl/Qmusic_be_live_128.mp3
