@@ -196,22 +196,46 @@ console.log(state, this.responseText);
         event.stopPropagation();
       }
       function radioCommand(event, command, options) {
+        if ( command == "volup" ) {
+          if ( parseInt(document.getElementById("volumeinfo").innerHTML) == 40 ) { // Maximun Volume
+            event.stopPropagation();
+            return;
+          }
+        }
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "mpc.php", true);
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.onload = function(e) {
           if (this.status == 200) {
-            document.getElementById("radioinfo").innerHTML = this.responseText;
-            centerContent();
+            if (command == "getvol") {
+              document.getElementById("volumeinfo").innerHTML = this.responseText;
+            } else {
+              var element = document.getElementById("radioinfo")
+              if (element == null || typeof(element) == 'undefinedd') {
+                clearInterval(radioStatusInterval);
+              } else {
+                document.getElementById("radioinfo").innerHTML = this.responseText;
+                centerContent();
+                if (command == "volup" || command == "voldown") {
+                  radioCommand(event, 'getvol', 1);
+                }
+              }
+            }
           }
         };
         xhr.send("command=" + command + "&options=" + options);
-        document.getElementById("radioinfo").innerHTML = "Even geduld, de zender wordt opgehaald...";
+	if (command == "play") {
+          document.getElementById("radioinfo").innerHTML = "Even geduld, de zender wordt opgehaald...";
+        }
         event.stopPropagation();
       }
+      var radioStatusInterval;
       function radio(event) {
+        radioCommand(event, 'getvol', 1);
+        radioCommand(event, 'status', 1);
+        radioStatusInterval = setInterval(function () { radioCommand(event, 'status', 1); }, 60000); // Elke minuut
         document.getElementById("content").innerHTML = `      
-        <pre class="terminalbox" style="text-align: center; display: inline-block; max-width: 736px;" id="radioinfo"></pre>
+        <p class="terminalbox" style="text-align: center; display: inline-block; max-width: 736px;" id="radioinfo"></p>
         <br>
         <button onclick="radioCommand(event, 'play', 1);">Radio 1</button>
         <button onclick="radioCommand(event, 'play', 2);">Radio 2</button>
@@ -226,10 +250,12 @@ console.log(state, this.responseText);
         <button onclick="radioCommand(event, 'play', 11);">VBRO</button>
         <button onclick="radioCommand(event, 'play', 12);">Joe FM</button>
         <button onclick="radioCommand(event, 'play', 13);">Q-Music</button>
+        <button onclick="radioCommand(event, 'play', 14);">Willy</button>
         <br>
+        <!--button onclick="radioCommand(event, 'status', 1);">Status</button-->
+        <button onclick="clearInterval(radioStatusInterval); radioCommand(event, 'stop', 1);">Stop</button>
         <button onclick="radioCommand(event, 'voldown', 1);">V-</button>
-        <button onclick="radioCommand(event, 'status', 1);">Status</button>
-        <button onclick="radioCommand(event, 'stop', 1);">Stop</button>
+        <span class="terminalbox" style="text-align: center; font-size: 30px; padding: 15px; font-weight: bold; margin-right: 5px;" id="volumeinfo"></span>
         <button onclick="radioCommand(event, 'volup', 1);">V+</button>`
         centerContent();
         event.stopPropagation();
