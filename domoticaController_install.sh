@@ -248,6 +248,7 @@ EOF
   mpc add http://stream.vbro.be:9100/vbro
   mpc add http://icecast-qmusic.cdp.triple-it.nl/JOEfm_be_live_128.mp3
   mpc add http://icecast-qmusic.cdp.triple-it.nl/Qmusic_be_live_128.mp3
+  mpc add https://playerservices.streamtheworld.com/api/livestream-redirect/WILLY.mp3
 
 exit
 
