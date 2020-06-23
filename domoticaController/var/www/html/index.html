@@ -854,16 +854,27 @@ console.log(command);
                 }
                 var htmlcode = `<div id="thermostatUI">
 <div style="width: 800px; overflow: hidden;">
-    <div style="width: 50%; float: left;">
-      <div id="title">Radiators</div>
-      <div class="room">
-        <span>Keuken:</span>`;
-
-// console.log(keuken);
-console.log(living);
+  <div style="width: 50%; float: left;">
+    <div id="title">Radiators</div>
+    <div class="room">
+      <span>Living:</span>`;
                 for (var i = 0; i < keuken.length; i++) {
-                  htmlcode += `<button onclick="document.getElementById('iframe_heater').src = 'http://tasmota_fb7b27-6951'; event.stopPropagation();">West</button>`;
-console.log(keuken[i].substr(0,keuken[i].indexOf(' ')));
+                  htmlcode += `<button onclick="document.getElementById('iframe_heater').src = 'http://`
+                  htmlcode += keuken[i].substr(keuken[i].indexOf(' ')+1);
+                  htmlcode += `'; event.stopPropagation();">`;
+                  htmlcode += keuken[i].substr(0,keuken[i].indexOf(' '));
+                  htmlcode += `</button>`;
+                }
+
+                htmlcode += `</div>
+    <div class="room">
+      <span>Keuken:</span>`;
+                for (var i = 0; i < keuken.length; i++) {
+                  htmlcode += `<button onclick="document.getElementById('iframe_heater').src = 'http://`
+                  htmlcode += keuken[i].substr(keuken[i].indexOf(' ')+1);
+                  htmlcode += `'; event.stopPropagation();">`;
+                  htmlcode += keuken[i].substr(0,keuken[i].indexOf(' '));
+                  htmlcode += `</button>`;
                 }
 
                 htmlcode += `</div>
@@ -871,8 +882,8 @@ console.log(keuken[i].substr(0,keuken[i].indexOf(' ')));
     <div style="margin-left: 400px;">
       <iframe src="http://tasmota_a943fa-1018" id="iframe_heater" style="height:590px;width:400px;"></iframe>
     </div>
-</div>
-                </div>`
+  </div>
+</div>`
                 document.getElementById("content").innerHTML = htmlcode;
                 centerContent();
               }
