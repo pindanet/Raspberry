@@ -8,8 +8,8 @@ $command = htmlspecialchars($_POST["command"]);
 
 function status($output) {
   $myfile = fopen("/var/www/html/data/mpc.txt", "a") or die("Unable to open file!");
+  echo "$output[0]";
   foreach ($output as $line) {
-    echo "$line\n";
     fwrite($myfile, $line . "\n");
   }
   fclose($myfile);
@@ -41,6 +41,11 @@ switch ($command) {
   case "voldown":
     exec("amixer -q -M sset Headphone 5%-", $output, $return);
     exec("mpc status", $output, $return);
+    status($output);
+    exit();
+    break;
+  case "getvol":
+    exec("amixer -M sget Headphone | awk -F\"[][]\" '/dB/ { print $2,$4 }'", $output, $return);
     status($output);
     exit();
     break;
