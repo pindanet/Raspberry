@@ -798,7 +798,6 @@ loadThermostat();
         xhr.send("id=" + id);
       }
       function thermostatUI (event, command, id) {
-console.log(command);
         switch (command) {
           case "Reset":
 //          case "Default":
@@ -858,11 +857,11 @@ console.log(command);
     <div id="title">Radiators</div>
     <div class="room">
       <span>Living:</span>`;
-                for (var i = 0; i < keuken.length; i++) {
+                for (var i = 0; i < living.length; i++) {
                   htmlcode += `<button onclick="document.getElementById('iframe_heater').src = 'http://`
-                  htmlcode += keuken[i].substr(keuken[i].indexOf(' ')+1);
+                  htmlcode += living[i].substr(living[i].indexOf(' ')+1);
                   htmlcode += `'; event.stopPropagation();">`;
-                  htmlcode += keuken[i].substr(0,keuken[i].indexOf(' '));
+                  htmlcode += living[i].substr(0,living[i].indexOf(' '));
                   htmlcode += `</button>`;
                 }
 
