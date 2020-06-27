@@ -18,6 +18,7 @@ if [ ${#command}  -lt 7 ]; then
       apt-get clean -y > /root/update.log 2>&1
       apt-get update -y >> /root/update.log 2>&1
       apt-get upgrade -y >> /root/update.log 2>&1
+      apt-get autoremove -y >> /root/update.log 2>&1
       mv /root/update.log /var/www/html/remote/update.log
       ;;
     clean)
