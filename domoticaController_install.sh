@@ -250,6 +250,7 @@ EOF
   mpc add http://icecast-qmusic.cdp.triple-it.nl/Qmusic_be_live_128.mp3
   mpc add https://playerservices.streamtheworld.com/api/livestream-redirect/WILLY.mp3
   # USB sound
+  TAB=$'\t'
   sudo sed -i.ori "/#${TAB}device${TAB}${TAB}\"hw:0,0\"${TAB}# optional/a \\${TAB}device${TAB}${TAB}\"hw:1,0\"" /etc/mpd.conf
 
 exit
