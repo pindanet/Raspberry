@@ -197,7 +197,7 @@ console.log(state, this.responseText);
       }
       function radioCommand(event, command, options) {
         if ( command == "volup" ) {
-          if ( parseInt(document.getElementById("volumeinfo").innerHTML) == 40 ) { // Maximun Volume
+          if ( parseInt(document.getElementById("volumeinfo").innerHTML) == 100 ) { // Maximun Volume
             event.stopPropagation();
             return;
           }
