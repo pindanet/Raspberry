@@ -33,19 +33,27 @@ switch ($command) {
     exit();
     break;
   case "volup":
-    exec("amixer -q -M sset Headphone 5%+", $output, $return);
+// Headphone
+//    exec("amixer -q -M sset PCM 5%+", $output, $return);
+// USB Soundcard
+    exec("mpc volume +10", $output, $return);
     exec("mpc status", $output, $return);
     status($output);
     exit();
     break;
   case "voldown":
-    exec("amixer -q -M sset Headphone 5%-", $output, $return);
+//    exec("amixer -q -M sset PCM 5%-", $output, $return);
+// USB Soundcard
+    exec("mpc volume -10", $output, $return);
     exec("mpc status", $output, $return);
     status($output);
     exit();
     break;
   case "getvol":
-    exec("amixer -M sget Headphone | awk -F\"[][]\" '/dB/ { print $2,$4 }'", $output, $return);
+// headphone
+//    exec("amixer -M sget PCM | awk -F\"[][]\" '/dB/ { print $2,$4 }'", $output, $return);
+// USB Soundcard
+    exec("mpc volume | awk -F \":\" '{print $2}'", $output, $return);
     status($output);
     exit();
     break;
