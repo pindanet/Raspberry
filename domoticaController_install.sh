@@ -260,6 +260,9 @@ EOF
     fi
   done < /etc/mpd.conf.ori
   sudo chmod +r /etc/mpd.conf
+  
+  # Set Volume manually
+  # alsamixer
 
 exit
 
