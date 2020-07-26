@@ -38,6 +38,14 @@ if [[ `date -r ${backgroundDir}/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]
     convert -scale "800x480^" -gravity center -crop "800x480+0+0" +repage "${backgroundDir}/${BUTTONARRAY[5]}.${BUTTONARRAY[7]}" "${backgroundDir}/${BUTTONARRAY[5]}.jpg"
     IMGFROM="AlphaCoders: ${BUTTONARRAY[5]}.jpg"
     achtergrond=${backgroundDir}/${BUTTONARRAY[5]}.jpg
+  elif curl -s --head  --request GET http://wallpaperswide.com ; then
+    PICPAGEURL=`wget -qO - http://wallpaperswide.com/latest_wallpapers.html | awk '/mini-hud/{getline; print}' | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
+    PICURL=`wget -qO - http://wallpaperswide.com$PICPAGEURL | grep 800x480.jpg | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
+    wget -O ${backgroundDir}/background/${PICURL:10} http://wallpaperswide.com$PICURL
+    IMGFROM="WallpapersWide: $(basename $PICURL)"
+    achtergrond=${backgroundDir}/${PICURL:10}
+#    mogrify -crop 800x480+0+60 ${achtergrond}
+# Is interfacelift still offline!!!
   elif curl -s --head  --request GET https://interfacelift.com ; then
     PAGE=https://interfacelift.com/wallpaper/downloads/random/android/800x480/index.html
     # extract wallpaper of the day url
@@ -46,13 +54,6 @@ if [[ `date -r ${backgroundDir}/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]
     wget --user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0"  --output-document=${backgroundDir}/$(basename $WOTD) https://interfacelift.com$WOTD
     IMGFROM="InterfaceLift: $(basename $WOTD)"
     achtergrond=${backgroundDir}/$(basename $WOTD)
-  else
-    PICPAGEURL=`wget -qO - http://wallpaperswide.com/latest_wallpapers.html | awk '/mini-hud/{getline; print}' | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
-    PICURL=`wget -qO - http://wallpaperswide.com$PICPAGEURL | grep 800x480.jpg | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
-    wget -O ${backgroundDir}/background/${PICURL:10} http://wallpaperswide.com$PICURL
-    IMGFROM="WallpapersWide: $(basename $PICURL)"
-    achtergrond=${backgroundDir}/${PICURL:10}
-#    mogrify -crop 800x480+0+60 ${achtergrond}
   fi
   if file "$achtergrond" | grep 'JPEG image data' ; then
     echo "New backgroundimage from ${IMGFROM}."
