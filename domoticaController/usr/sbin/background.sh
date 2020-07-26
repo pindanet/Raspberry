@@ -48,11 +48,11 @@ if [[ `date -r ${backgroundDir}/latest.txt +%s` -lt `date -d "1 day ago" +%s` ]]
     achtergrond=${backgroundDir}/$(basename $WOTD)
   else
     PICPAGEURL=`wget -qO - http://wallpaperswide.com/latest_wallpapers.html | awk '/mini-hud/{getline; print}' | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
-    PICURL=`wget -qO - http://wallpaperswide.com$PICPAGEURL | grep 800x600.jpg | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
+    PICURL=`wget -qO - http://wallpaperswide.com$PICPAGEURL | grep 800x480.jpg | head -1 | sed -e "s,.*href=\",," -e "s,\",," | cut -d ' ' -f 1`
     wget -O ${backgroundDir}/background/${PICURL:10} http://wallpaperswide.com$PICURL
     IMGFROM="WallpapersWide: $(basename $PICURL)"
     achtergrond=${backgroundDir}/${PICURL:10}
-    mogrify -crop 800x480+0+60 ${achtergrond}
+#    mogrify -crop 800x480+0+60 ${achtergrond}
   fi
   if file "$achtergrond" | grep 'JPEG image data' ; then
     echo "New backgroundimage from ${IMGFROM}."
