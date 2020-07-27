@@ -1136,6 +1136,18 @@ loadThermostat();
       }
 */
       function menu() {
+        clearTimeout(startTimer);
+        centerContent();
+        document.getElementById("clockdate").innerHTML = `<img style="height: 100px;" onclick="radio(event);" src="emoji/radio.svg">
+        <img style="height: 100px;" onclick="hourly=60;weather(event);" src="emoji/weather.svg">
+        <img style="height: 100px;" onclick="timerThermostat(event);" src="emoji/thermostat.svg">
+        <img style="height: 100px;" onclick="fotokader(event);" src="emoji/framed_picture.svg">
+        <div style="overflow: hidden; display: inline-block; margin-bottom: -18px;" onclick="startTime(event);"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div>`;
+        document.getElementById("clockdate").style.bottom = "-65px";
+        event.stopPropagation();
+      }
+
+      function gestureMenu() {
 //        state("awake");
         clearTimeout(startTimer);
         document.getElementById("content").innerHTML = `<div style="width: 800px; text-align: center;">
@@ -1186,6 +1198,36 @@ loadThermostat();
       }
       getPresHumiTemp();
 
+      clockMenuCombination = 0;
+      function clockmenu() { // show admin menu with touch gesture
+        var combination;
+        clearTimeout(startTimer);
+        var element = document.getElementById("clockdate");
+//        if (element != null && typeof(element) != 'undefined') {
+//          element.innerHTML = "x=" + event.touches[0].clientX + " y=" + event.touches[0].clientY;
+//        }
+        if (event.touches[0].clientX > 230 && event.touches[0].clientX < 350 && clockMenuCombination == 0) {
+          clockMenuCombination=1;  // moved to second digit 12:00
+        } else if (event.touches[0].clientX < 230 && clockMenuCombination == 1) {
+          clockMenuCombination=0;  // moved to wrong direction
+        } else if (event.touches[0].clientX > 450 && event.touches[0].clientX < 570 && clockMenuCombination == 1) {
+          clockMenuCombination=2;  // moved to third digit 12:00
+        } else if (event.touches[0].clientX > 570 && clockMenuCombination == 2) {
+          clockMenuCombination=0;  // moved to wrong direction  
+        } else if (event.touches[0].clientX > 100 && event.touches[0].clientX < 230 && clockMenuCombination == 2) {
+          clockMenuCombination=3;  // moved to first digit 12:00
+        } else if (event.touches[0].clientX < 100 && clockMenuCombination == 3) {
+          clockMenuCombination=0;  // moved to wrong direction  
+        } else if (event.touches[0].clientX > 230 && event.touches[0].clientX < 350 && clockMenuCombination == 3) {
+          clockMenuCombination=0;  // moved to second digit 12:00, gesture complete
+          gestureMenu();
+          event.stopPropagation();
+          return;
+        }
+
+//        centerContent();
+        event.stopPropagation();
+      }
       function startTime(event) {
         clearTimeout(startTimer);
         var today = new Date();
@@ -1194,7 +1236,7 @@ loadThermostat();
         m = checkTime(m);
 	var w = window.innerWidth;
 	document.getElementById('content').innerHTML = '<div id="clockday" onclick="timerThermostat(event);">' + dayNames[today.getDay()] + ' ' + roomTemp + '</div>';
-	document.getElementById('content').innerHTML += '<div id="clock" style="width: ' + w + 'px;">' + h + ":" + m + '</div>';
+	document.getElementById('content').innerHTML += '<div id="clock" onclick="menu();" ontouchmove="clockmenu();" style="width: ' + w + 'px;">' + h + ":" + m + '</div>';
 	document.getElementById('content').innerHTML += '<div id="clockdate" onclick="menu();">' + today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear() + '</div>';
         centerContent();
         startTimer = setTimeout(startTime, 1000); // elke seconde
