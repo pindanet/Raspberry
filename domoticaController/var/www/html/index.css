@@ -85,6 +85,12 @@ td button {
   left: 0; 
   right: 0;
 }
+#clockmenu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -65px;
+}
 #temp {
   color: white;
   font-size: 210px;
