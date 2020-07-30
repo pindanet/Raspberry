@@ -1135,15 +1135,17 @@ loadThermostat();
         }
       }
 */
+      var clockDateMenuCode = `<img style="height: 100px;" onclick="clearTimeout(startTimer);radio(event);" src="emoji/radio.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);hourly=60;weather(event);" src="emoji/weather.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);timerThermostat(event);" src="emoji/thermostat.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);fotokader(event);" src="emoji/framed_picture.svg">
+        <div style="overflow: hidden; display: inline-block; margin-bottom: -2px;" onclick="document.getElementById('clockmenu').style.display = 'none';document.getElementById('clockdate').style.display = '';event.stopPropagation();"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div>`;
       function menu() {
-        clearTimeout(startTimer);
-        centerContent();
-        document.getElementById("clockdate").innerHTML = `<img style="height: 100px;" onclick="radio(event);" src="emoji/radio.svg">
-        <img style="height: 100px;" onclick="hourly=60;weather(event);" src="emoji/weather.svg">
-        <img style="height: 100px;" onclick="timerThermostat(event);" src="emoji/thermostat.svg">
-        <img style="height: 100px;" onclick="fotokader(event);" src="emoji/framed_picture.svg">
-        <div style="overflow: hidden; display: inline-block; margin-bottom: -18px;" onclick="startTime(event);"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div>`;
-        document.getElementById("clockdate").style.bottom = "-65px";
+//        clearTimeout(startTimer);
+//        centerContent();
+        document.getElementById("clockmenu").innerHTML = clockDateMenuCode;
+        document.getElementById("clockmenu").style.display = "";
+        document.getElementById("clockdate").style.display = "none";
         event.stopPropagation();
       }
 
@@ -1235,10 +1237,35 @@ loadThermostat();
         var m = today.getMinutes();
         m = checkTime(m);
 	var w = window.innerWidth;
-	document.getElementById('content').innerHTML = '<div id="clockday" onclick="timerThermostat(event);">' + dayNames[today.getDay()] + ' ' + roomTemp + '</div>';
-	document.getElementById('content').innerHTML += '<div id="clock" onclick="menu();" ontouchmove="clockmenu();" style="width: ' + w + 'px;">' + h + ":" + m + '</div>';
-	document.getElementById('content').innerHTML += '<div id="clockdate" onclick="menu();">' + today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear() + '</div>';
-        centerContent();
+
+	var clockDateCode = today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear();
+        var element = document.getElementById("clockdate");
+ 
+        if (element == null || typeof(element) == 'undefined') {
+  	  var elementCode = '<div id="clockday" onclick="timerThermostat(event);">' + dayNames[today.getDay()] + ' ' + roomTemp + '</div>';
+	  elementCode += '<div id="clock" onclick="menu();" ontouchmove="clockmenu();" style="width: ' + w + 'px;">' + h + ":" + m + '</div>';
+          elementCode += '<div id="clockdate" onclick="menu();">' + clockDateCode + '</div>';
+          elementCode += '<div id="clockmenu" onclick="menu();" style="display: none;"></div>';
+	  document.getElementById('content').innerHTML = elementCode;
+          centerContent();
+        } else {
+	  document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + roomTemp;
+	  document.getElementById('clock').innerHTML = h + ":" + m;
+          document.getElementById("clock").style.width = w + "px";
+//          var monthDay = parseInt(document.getElementById('clockdate').innerHTML);
+//          if (Number.isInteger(monthDay)) {
+          document.getElementById('clockdate').innerHTML = clockDateCode;
+//          } else {
+//	    document.getElementById('clockdate').innerHTML = clockDateMenuCode;
+//          }
+        }
+//        elementCode += '<div id="clockdate" onclick="menu();">' + clockDateCode + '</div>';
+//	document.getElementById('content').innerHTML = elementCode;
+
+//	document.getElementById('content').innerHTML = '<div id="clockday" onclick="timerThermostat(event);">' + dayNames[today.getDay()] + ' ' + roomTemp + '</div>';
+//	document.getElementById('content').innerHTML += '<div id="clock" onclick="menu();" ontouchmove="clockmenu();" style="width: ' + w + 'px;">' + h + ":" + m + '</div>';
+//	document.getElementById('content').innerHTML += '<div id="clockdate" onclick="menu();">' + today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear() + '</div>';
+//        centerContent();
         startTimer = setTimeout(startTime, 1000); // elke seconde
         if (typeof event !== 'undefined') {
           event.stopPropagation();
