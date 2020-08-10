@@ -194,6 +194,7 @@ EOF
 #  sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
   sudo apt install ddcutil -y
+  echo "dtparam=i2c2_iknowwhatimdoing" | sudo tee -a /boot/config.txt
 # cd /var/www/html
 # sudo -u www-data php genkeys.php
 # sudo rm /var/www/html/genkeys.php
