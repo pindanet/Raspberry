@@ -104,7 +104,13 @@ else
   echo "xset -dpms" >> $HOME/.config/openbox/autostart
   echo "xset s noblank" >> $HOME/.config/openbox/autostart
 
-  echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
+  sudo apt install ddcutil -y
+  sudo wget -O $HOME/brightness.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/brightness.sh
+  echo "dtparam=i2c2_iknowwhatimdoing" | sudo tee -a /boot/config.txt
+  echo "# Start auto brightness script" >> $HOME/.config/openbox/autostart
+  echo "bash ~/brightness.sh &" >> $HOME/.config/openbox/autostart
+
+echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
   echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
 
   echo "# Start fullscreen video" >> $HOME/.config/openbox/autostart
@@ -192,9 +198,7 @@ EOF
   printf '\033[1;32;40mPress key to secure ssh.\033[0m' # Groene letters op zwarte achtergrond
   read Keypress
 #  sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
-
-  sudo apt install ddcutil -y
-  echo "dtparam=i2c2_iknowwhatimdoing" | sudo tee -a /boot/config.txt
+  
 # cd /var/www/html
 # sudo -u www-data php genkeys.php
 # sudo rm /var/www/html/genkeys.php
