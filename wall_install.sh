@@ -193,6 +193,7 @@ EOF
   read Keypress
 #  sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
+  sudo apt install ddcutil -y
 # cd /var/www/html
 # sudo -u www-data php genkeys.php
 # sudo rm /var/www/html/genkeys.php
