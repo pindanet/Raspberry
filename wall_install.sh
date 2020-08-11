@@ -105,10 +105,10 @@ else
   echo "xset s noblank" >> $HOME/.config/openbox/autostart
 
   sudo apt install ddcutil -y
-  sudo wget -O $HOME/brightness.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/brightness.sh
+  sudo wget -O /var/www/html/brightness.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/brightness.sh
   echo "dtparam=i2c2_iknowwhatimdoing" | sudo tee -a /boot/config.txt
   echo "# Start auto brightness script" >> $HOME/.config/openbox/autostart
-  echo "bash ~/brightness.sh &" >> $HOME/.config/openbox/autostart
+  echo "bash /var/www/html/brightness.sh &" >> $HOME/.config/openbox/autostart
 
 echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
   echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
