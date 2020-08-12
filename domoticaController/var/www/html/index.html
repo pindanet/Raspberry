@@ -36,40 +36,36 @@ Fullscreen HTML API
         document.getElementById('PINbox').value = "";
         event.stopPropagation();
       }
+
       var encryptedPIN="";
-      var pubkey;
-      var callback;
+//      var pubkey;
+//      var callback;
       function submitForm(event) {
-        if (document.getElementById('PINbox').value == "") {
-          alert("PINcode invoeren");
-        } else {
-          // Encrypt with the public key...
-          var encrypt = new JSEncrypt();
-          encrypt.setPublicKey(pubkey);
-          encryptedPIN = encrypt.encrypt(document.getElementById('PINbox').value);
-          document.getElementById('PINbox').value="";
-          document.getElementById("content").innerHTML = "";
-          callback(event);
+        if (document.getElementById('PINbox').value != "") {
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', "openssl.php", true);
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhr.onload = function(e) {
+            if (this.status == 200) {
+              document.getElementById("content").style.display = "";
+              document.getElementById("clockmenu").innerHTML = atob(this.responseText);
+console.log(atob(this.responseText));
+              document.getElementById("pinpad").innerHTML = "";
+              centerContent();
+              event.stopPropagation();
+            }
+          };
+          xhr.send("IGTzbhSjRf=" + btoa(document.getElementById('PINbox').value));
         }
         event.stopPropagation();
       }
       function enterPIN(event) {
-        document.getElementById("content").innerHTML = '<pre class="terminalbox">Even geduld...</pre>';
-        centerContent();
+        document.getElementById("pinpad").innerHTML = `<form action="" method="" name="PINform" id="PINform" autocomplete="off"><input id="PINbox" value="" name="PINbox" disabled="" type="password"><br><input class="PINbutton" name="1" value="1" id="1" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="2" value="2" id="2" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="3" value="3" id="3" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="4" value="4" id="4" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="5" value="5" id="5" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="6" value="6" id="6" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="7" value="7" id="7" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="8" value="8" id="8" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="9" value="9" id="9" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton clear" name="-" value="clear" id="-" onclick="clearForm(event);" type="button"><input class="PINbutton" name="0" value="0" id="0" onclick="addNumber(event,this);" type="button"><input class="PINbutton enter" name="+" value="enter" id="+" onclick="submitForm(event);" type="button"></form>`;
+        document.getElementById("content").style.display = "none";
+        centerContent("pinpad");
 	if (typeof event !== 'undefined') {
           event.stopPropagation();
         }
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', "bash.sh", true);
-        xhr.onload = function(e) {
-          if (this.status == 200) {
-            pubkey = this.responseText;
-            document.getElementById("content").innerHTML = `<form action="" method="" name="PINform" id="PINform" autocomplete="off"><input id="PINbox" value="" name="PINbox" disabled="" type="password"><br><input class="PINbutton" name="1" value="1" id="1" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="2" value="2" id="2" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="3" value="3" id="3" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="4" value="4" id="4" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="5" value="5" id="5" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="6" value="6" id="6" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="7" value="7" id="7" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="8" value="8" id="8" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="9" value="9" id="9" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton clear" name="-" value="clear" id="-" onclick="clearForm(event);" type="button"><input class="PINbutton" name="0" value="0" id="0" onclick="addNumber(event,this);" type="button"><input class="PINbutton enter" name="+" value="enter" id="+" onclick="submitForm(event);" type="button"></form>`;
-            centerContent();
-            event.stopPropagation();
-          }
-        };
-        xhr.send("command=genkey");
       }
     // End PinPad
 
@@ -149,9 +145,12 @@ console.log(state, this.responseText);
           startBackgroundTimer = setTimeout(background, 60000); // elke minuut
         }
       }
-      function centerContent() {
-        document.getElementById("content").style.top = Math.max(0, (window.innerHeight - document.getElementById("content").offsetHeight)/2 - 8) + "px";
-        document.getElementById("content").style.left = (window.innerWidth - document.getElementById("content").offsetWidth)/2 + "px";
+      function centerContent(elementid) {
+        elementid = typeof elementid !== 'undefined' ? elementid : "content";
+        var element = document.getElementById(elementid);
+//console.log(elementid);
+        element.style.top = Math.max(0, (window.innerHeight - element.offsetHeight)/2 - 8) + "px";
+        element.style.left = (window.innerWidth - element.offsetWidth)/2 + "px";
       }
       function thermometer(event) {
         var xhrthermometer = new XMLHttpRequest();
@@ -1139,7 +1138,16 @@ loadThermostat();
         <img style="height: 100px;" onclick="clearTimeout(startTimer);hourly=60;weather(event);" src="emoji/weather.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);timerThermostat(event);" src="emoji/thermostat.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);fotokader(event);" src="emoji/framed_picture.svg">
+        <img style="height: 100px;" onclick="enterPIN(event);" src="emoji/keyring.svg">
         <div style="overflow: hidden; display: inline-block; margin-bottom: -2px;" onclick="document.getElementById('clockmenu').style.display = 'none';document.getElementById('clockdate').style.display = '';event.stopPropagation();"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div>`;
+/*
+      var clockDateMenuCode = `<img style="height: 100px;" onclick="clearTimeout(startTimer);timelapse(event);" src="emoji/timelapse.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);location.reload();" src="emoji/refresh.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);remoteCommand(event,'reboot');" src="emoji/reboot.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);remoteCommand(event,'halt');" src="emoji/shutdown.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);remoteCommand(event,'rpiwall');" src="emoji/monitor.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);thermometer(event);" src="emoji/thermometer.svg">`;
+*/
       function menu() {
 //        clearTimeout(startTimer);
 //        centerContent();
@@ -1252,20 +1260,8 @@ loadThermostat();
 	  document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + roomTemp;
 	  document.getElementById('clock').innerHTML = h + ":" + m;
           document.getElementById("clock").style.width = w + "px";
-//          var monthDay = parseInt(document.getElementById('clockdate').innerHTML);
-//          if (Number.isInteger(monthDay)) {
           document.getElementById('clockdate').innerHTML = clockDateCode;
-//          } else {
-//	    document.getElementById('clockdate').innerHTML = clockDateMenuCode;
-//          }
         }
-//        elementCode += '<div id="clockdate" onclick="menu();">' + clockDateCode + '</div>';
-//	document.getElementById('content').innerHTML = elementCode;
-
-//	document.getElementById('content').innerHTML = '<div id="clockday" onclick="timerThermostat(event);">' + dayNames[today.getDay()] + ' ' + roomTemp + '</div>';
-//	document.getElementById('content').innerHTML += '<div id="clock" onclick="menu();" ontouchmove="clockmenu();" style="width: ' + w + 'px;">' + h + ":" + m + '</div>';
-//	document.getElementById('content').innerHTML += '<div id="clockdate" onclick="menu();">' + today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear() + '</div>';
-//        centerContent();
         startTimer = setTimeout(startTime, 1000); // elke seconde
         if (typeof event !== 'undefined') {
           event.stopPropagation();
@@ -1920,6 +1916,7 @@ function openFullscreen(event) {
   <g style="clip-path: url(#temperature-clip-red-PunktUtlandet:2800931); -webkit-clip-path: url(#temperature-clip-red-PunktUtlandet:2800931);">
 </svg>
 <div id="status"><span id="statuswireless"></span></div>
+<div id="pinpad"></div>
 <div id="content"></div>
 </body>
 </html>
