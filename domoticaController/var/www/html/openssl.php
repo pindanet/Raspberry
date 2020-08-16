@@ -18,6 +18,7 @@ $ciphertext = base64_decode("QU5kTVN4MVlxWGNGNC9BcTRadVJHcjBRMWhuWTZSS1lCNGZZckh
 
 $password = htmlspecialchars($_POST["IGTzbhSjRf"]);
 if (password_verify(base64_decode($password), $hash)) {
+/*
   $cipher = "aes-128-gcm";
   if (isset($_POST["pkxuBCfCDnRnzyWLi"])) { //encrypt
     $salt = openssl_random_pseudo_bytes(12);
@@ -41,6 +42,16 @@ if (password_verify(base64_decode($password), $hash)) {
     $original_plaintext = openssl_decrypt($ciphertext, $cipher, $key, $options=0, $iv, $tag);
     echo base64_encode($original_plaintext);
   }
+*/
+  $original_plaintext = <<<EOT
+<img style="height: 100px;" onclick="clearTimeout(startTimer);timelapse(event);" src="emoji/timelapse.svg">
+<img style="height: 100px;" onclick="clearTimeout(startTimer);location.reload();" src="emoji/refresh.svg">
+<img style="height: 100px;" onclick="clearTimeout(startTimer);remoteCommand(event,'reboot');" src="emoji/reboot.svg">
+<img style="height: 100px;" onclick="clearTimeout(startTimer);remoteCommand(event,'halt');" src="emoji/shutdown.svg">
+<img style="height: 100px;" onclick="clearTimeout(startTimer);calendar(event);" src="emoji/calendar.svg">
+<img style="height: 100px;" onclick="clearTimeout(startTimer);thermometer(event);" src="emoji/thermometer.svg">
+EOT;
+  echo base64_encode($original_plaintext);
 } else {
   $hash = password_hash($password, PASSWORD_DEFAULT);;
   echo "Password hash: ".$hash."\n";
