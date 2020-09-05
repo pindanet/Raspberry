@@ -6,7 +6,7 @@
 #sleep 60
 
 # calculate sunset
-printf "sunset=%s;" $(hdate -s -l N51 -L E3 -z2 | tail -c 6) > /var/www/html/sunset.js
+printf "sunset=\"%s\";" $(hdate -s -l N51 -L E3 -z2 | tail -c 6) > /var/www/html/sunset.js
 
 backgroundDir="/var/www/html/background"
 rm ${backgroundDir}/latest.txt
