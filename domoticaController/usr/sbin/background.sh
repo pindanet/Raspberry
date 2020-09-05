@@ -3,10 +3,13 @@
 #ls background/*.jpg | sort -R | tail -1
 
 # Wait until network is up
-sleep 60
+#sleep 60
+
+# calculate sunset
+printf "sunset=%s;" $(hdate -s -l N51 -L E3 -z2 | tail -c 6) > /var/www/html/sunset.js
 
 backgroundDir="/var/www/html/background"
-#rm ${backgroundDir}/latest.txt
+rm ${backgroundDir}/latest.txt
 if [ ! -f ${backgroundDir}/latest.txt ]; then
   mkdir -p ${backgroundDir}
   touch -d "2 days ago" ${backgroundDir}/latest.txt
