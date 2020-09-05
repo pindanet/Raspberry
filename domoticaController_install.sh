@@ -136,6 +136,7 @@ else
 
 # Fetch background images
   sudo apt-get install imagemagick -y
+  sudo apt-get install hdate -y
 # tar cvzf - background | split -b 20m - background.tar.gz
   wget https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/background.tar.gzaa
   wget https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/background.tar.gzab
