@@ -557,8 +557,6 @@ do
   sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
   startInterval=$(date -u --date='-11 minute' +"%H:%M")
   endInterval=$(date -u --date='-9 minute' +"%H:%M")
-sunset="13:46"
-lightliving="15:58"
 echo "sunset:$sunset start:$startInterval end:$endInterval light:$lightliving"
   if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
     dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
