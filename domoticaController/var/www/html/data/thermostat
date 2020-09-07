@@ -36,3 +36,5 @@ thermostatlivingdefault[2]="17:15 22:45"
 thermostatlivingevent[0]="2020-05-27 14 07:45 11:45 on"
 
 hysteresis="0.1"
+
+light="22:45"
