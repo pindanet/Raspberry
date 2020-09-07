@@ -52,15 +52,20 @@ function sendRF () {
 function tasmota () {
   if [ ! -f /tmp/$1 ]; then # initialize
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+    two=$(wget -qO- http://$1/cm?cmnd=Power | awk -F"\"" '{print $4}')
+    twolower=${two,,}
+    if [ $twolower == "on" ] || [ $twolower == "off" ]; then
+      echo "$(date -u +%s),$twolower" >> /var/www/html/data/$1.log
+    fi
   fi
   if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
     dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-    echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
+    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
   elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
     dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-    echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
+    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
   elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
@@ -97,6 +102,15 @@ function thermostat {
 #  unset raw
 
   heatingKitchen="off"
+# Default times for heating
+  for thermostatitem in "${thermostatkitchen[@]}"; do
+    daytime=(${thermostatitem})
+    if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
+      heatingKitchen="on"
+      break
+    fi
+  done
+# Exceptions with recurrent dates and times
   for thermostatitem in "${thermostatkitchenevent[@]}"; do
     daytime=(${thermostatitem})
     recevent=$(date -u --date "${daytime[0]}" +%s)
@@ -117,16 +131,6 @@ function thermostat {
     fi
   done
 
-#  printf "%s\n" "${thermostatkitchen[@]}"
-#  echo $now
-
-  for thermostatitem in "${thermostatkitchen[@]}"; do
-    daytime=(${thermostatitem})
-    if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
-      heatingKitchen="on"
-      break
-    fi
-  done
   tempWanted=$tempComfort
   if [ -f /var/www/html/data/thermostatManualkitchen ]; then
     read roomtemp < /var/www/html/data/thermostatManualkitchen
@@ -194,7 +198,15 @@ function thermostat {
   echo $now
 
   heatingLiving="off"
-
+# Default times for heating
+  for thermostatitem in "${thermostatliving[@]}"; do
+    daytime=(${thermostatitem})
+    if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
+      heatingLiving="on"
+      break
+    fi
+  done
+# Exceptions with recurrent dates and times
   for thermostatitem in "${thermostatlivingevent[@]}"; do
     daytime=(${thermostatitem})
     recevent=$(date -u --date "${daytime[0]}" +%s)
@@ -215,13 +227,6 @@ function thermostat {
     fi
   done
 
-  for thermostatitem in "${thermostatliving[@]}"; do
-    daytime=(${thermostatitem})
-    if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
-      heatingLiving="on"
-      break
-    fi
-  done
   tempWanted=$tempComfort
   if [ -f /var/www/html/data/thermostatManualliving ]; then
     read roomtemp < /var/www/html/data/thermostatManualliving
@@ -548,7 +553,13 @@ do
 #      fi
 #    fi
 #  done
-  echo $state
+sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
+startInterval=$(date -u --date='-11 minute' +"%H:%M")
+endInterval=$(date -u --date='-9 minute' +"%H:%M")
+if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
+  dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
+fi
+  echo $state $sunset $startInterval $endInterval
   if [ $state == "awake" ]; then
     echo 0 > /sys/class/backlight/rpi_backlight/bl_power
   #  echo 255 > /sys/class/leds/led0/brightness
@@ -560,6 +571,8 @@ do
     # disable status led's
     echo 0 > /sys/class/leds/led0/brightness
     echo 0 > /sys/class/leds/led1/brightness
+    # Power off mood lighting
+    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
     if (echo > /dev/tcp/rpiwall/22) >/dev/null 2>&1; then
       # shutdown RPIWall
       wget --post-data="command=halt" --quiet http://rpiwall/remote.php
