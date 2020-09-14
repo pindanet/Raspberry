@@ -23,6 +23,7 @@ Fullscreen HTML API
     <script src='fullcalendar/packages/rrule/main.js'></script>
     <script src='fullcalendar/packages/core/locales/nl.js'></script>
     <script src='fullcalendar/ical.js'></script>
+    <script src="sunset.js"></script>
     <!--script src="sha.js"></script-->
     <!--script src="jsencrypt.js"></script-->
     <script type="text/javascript">
@@ -137,6 +138,20 @@ console.log(state, this.responseText);
             }
           }
         }
+*/
+/*
+console.log(sunset);
+var current_datetime = new Date();
+var start_interval = new Date(current_datetime.getTime() - 60000);
+var end_interval = new Date(current_datetime.getTime() + 60000);
+start_interval = checkTime(start_interval.getHours()) + ":" + checkTime(start_interval.getMinutes());
+console.log(start_interval);
+end_interval = checkTime(end_interval.getHours()) + ":" + checkTime(end_interval.getMinutes());
+console.log(end_interval);
+sunset="18:20"
+if (start_interval < sunset && end_interval > sunset) {
+  console.log("http://tasmota_e7b609-5641/cm?cmnd=Power%20On");
+}
 */
         backgroundtimecounter++;
         if (backgroundtimecounter >= backgroundtimeinterval) {
@@ -1126,10 +1141,27 @@ loadThermostat();
         }
       }
 */
+      function lights(event) {
+        // restore date
+        document.getElementById('clockmenu').style.display = 'none';
+        document.getElementById('clockdate').style.display = '';
+
+        document.getElementById("statuswireless").innerHTML = `<img style="height: 2em;" src="http://tasmota_e7b609-5641/cm?cmnd=Power%20Off">`;
+        setTimeout(function(){ document.getElementById("statuswireless").innerHTML = ``; }, 1000 * 30);
+
+/*
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        xhr.open('GET', "http://tasmota_e7b609-5641/cm", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send("cmnd=" + "Power%20On");
+*/
+        event.stopPropagation();
+      }
       var clockDateMenuCode = `<img style="height: 100px;margin: 0 -15px;" onclick="clearTimeout(startTimer);radio(event);" src="emoji/radio.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);hourly=60;weather(event);" src="emoji/weather.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);timerThermostat(event);" src="emoji/thermostat.svg">
-        <img style="height: 90px; margin-bottom: 4px;" onclick="clearTimeout(startTimer);fotokader(event);" src="emoji/framed_picture.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);lights(event);" src="emoji/light_bulb.svg">
         <img style="height: 100px;" onclick="enterPIN(event);" src="emoji/keyring.svg">
         <img style="height: 90px; margin-bottom: 4px;" onclick="clearTimeout(startTimer);remoteCommand(event,'rpiwall');" src="emoji/monitor.svg" onload="centerContent();">
         <div style="overflow: hidden; display: inline-block; margin-bottom: -2px;" onclick="document.getElementById('clockmenu').style.display = 'none';document.getElementById('clockdate').style.display = '';event.stopPropagation();"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div>`;
@@ -1137,6 +1169,7 @@ loadThermostat();
       var clockDateMenuCode = `<img style="height: 100px;" onclick="clearTimeout(startTimer);timelapse(event);" src="emoji/timelapse.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);location.reload();" src="emoji/refresh.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);remoteCommand(event,'reboot');" src="emoji/reboot.svg">
+        <img style="height: 90px; margin-bottom: 4px;" onclick="clearTimeout(startTimer);fotokader(event);" src="emoji/framed_picture.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);remoteCommand(event,'halt');" src="emoji/shutdown.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);calendar(event);" src="emoji/calendar.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);thermometer(event);" src="emoji/thermometer.svg">`;
