@@ -580,8 +580,8 @@ echo "sunset:$sunset start:$startInterval end:$endInterval light:$lightliving"
     # disable status led's
     echo 0 > /sys/class/leds/led0/brightness
     echo 0 > /sys/class/leds/led1/brightness
-#    # Power off mood lighting
-#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
+    # Stop Musisc Player
+    mpc stop
     if (echo > /dev/tcp/rpiwall/22) >/dev/null 2>&1; then
       # shutdown RPIWall
       wget --post-data="command=halt" --quiet http://rpiwall/remote.php
