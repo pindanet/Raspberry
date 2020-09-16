@@ -1161,7 +1161,7 @@ loadThermostat();
       var clockDateMenuCode = `<img style="height: 100px;margin: 0 -15px;" onclick="clearTimeout(startTimer);radio(event);" src="emoji/radio.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);hourly=60;weather(event);" src="emoji/weather.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);timerThermostat(event);" src="emoji/thermostat.svg">
-        <img style="height: 100px;" onclick="clearTimeout(startTimer);lights(event);" src="emoji/light_bulb.svg">
+        <img style="height: 100px;" onclick="lights(event);" src="emoji/light_bulb.svg">
         <img style="height: 100px;" onclick="enterPIN(event);" src="emoji/keyring.svg">
         <img style="height: 90px; margin-bottom: 4px;" onclick="clearTimeout(startTimer);remoteCommand(event,'rpiwall');" src="emoji/monitor.svg" onload="centerContent();">
         <div style="overflow: hidden; display: inline-block; margin-bottom: -2px;" onclick="document.getElementById('clockmenu').style.display = 'none';document.getElementById('clockdate').style.display = '';event.stopPropagation();"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div>`;
