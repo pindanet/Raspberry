@@ -582,6 +582,7 @@ echo "sunset:$sunset start:$startInterval end:$endInterval light:$lightliving"
     echo 0 > /sys/class/leds/led1/brightness
     # Stop Musisc Player
     mpc stop
+    rm /var/www/html/data/mpc.txt
     if (echo > /dev/tcp/rpiwall/22) >/dev/null 2>&1; then
       # shutdown RPIWall
       wget --post-data="command=halt" --quiet http://rpiwall/remote.php
