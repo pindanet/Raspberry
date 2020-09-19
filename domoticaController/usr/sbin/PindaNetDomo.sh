@@ -557,17 +557,25 @@ do
   sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
   startInterval=$(date -u --date='-11 minute' +"%H:%M")
   endInterval=$(date -u --date='-9 minute' +"%H:%M")
-echo "sunset:$sunset start:$startInterval end:$endInterval light:$lightliving"
+echo "sunset:$sunset start:$startInterval end:$endInterval"
   if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
     dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
   elif [[ $startInterval > $sunset ]]; then
     startInterval=$(date --date='-1 minute' +"%H:%M")
     endInterval=$(date --date='+1 minute' +"%H:%M")
-echo "sunset:$sunset start:$startInterval end:$endInterval light:$lightliving"
+echo "start:$startInterval end:$endInterval light:$lightliving"
     if [[ $startInterval < $lightliving ]] && [[ $endInterval > $lightliving ]]; then
       dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
     fi
   fi
+
+#echo "sleep:$sleep now:$now awake:$awake"
+#  if [[ $now > $sleep ]] || [[ $now < $awake ]]; then
+#    state="sleep"
+#  else
+#    state="awake"
+#  fi
+
   echo $state
   if [ $state == "awake" ]; then
     echo 0 > /sys/class/backlight/rpi_backlight/bl_power
@@ -581,8 +589,10 @@ echo "sunset:$sunset start:$startInterval end:$endInterval light:$lightliving"
     echo 0 > /sys/class/leds/led0/brightness
     echo 0 > /sys/class/leds/led1/brightness
     # Stop Musisc Player
-    mpc stop
-    rm /var/www/html/data/mpc.txt
+    if [ -f /var/www/html/data/mpc.txt ]; then
+      mpc stop
+      rm /var/www/html/data/mpc.txt
+    fi
     if (echo > /dev/tcp/rpiwall/22) >/dev/null 2>&1; then
       # shutdown RPIWall
       wget --post-data="command=halt" --quiet http://rpiwall/remote.php
