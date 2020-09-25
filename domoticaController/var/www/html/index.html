@@ -1146,16 +1146,11 @@ loadThermostat();
         document.getElementById('clockmenu').style.display = 'none';
         document.getElementById('clockdate').style.display = '';
 
-        document.getElementById("statuswireless").innerHTML = `<img style="height: 2em;" src="http://tasmota_e7b609-5641/cm?cmnd=Power%20Off">`;
-        setTimeout(function(){ document.getElementById("statuswireless").innerHTML = ``; }, 1000 * 30);
-
-/*
         var xhr = new XMLHttpRequest();
-        xhr.responseType = 'text';
-        xhr.open('GET', "http://tasmota_e7b609-5641/cm", true);
+        xhr.open('POST', "tasmota.php", true);
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.send("cmnd=" + "Power%20On");
-*/
+        xhr.send("dev=e7b609-5641&cmd=Power%20toggle");
+
         event.stopPropagation();
       }
       var clockDateMenuCode = `<img style="height: 100px;margin: 0 -15px;" onclick="clearTimeout(startTimer);radio(event);" src="emoji/radio.svg">
