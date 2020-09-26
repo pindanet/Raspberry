@@ -328,9 +328,10 @@ echo "in" > /sys/class/gpio/gpio$_pir_pin/direction
 # Uncomment line below.
 #sleep 30
  
+. /var/www/html/data/thermostat
+
 while true
 do
-  . /var/www/html/data/thermostat
 #  tempComfort="21.50"
 #  # Timer default array
 #  timerdefault[0]="0 07:30 22:50"
