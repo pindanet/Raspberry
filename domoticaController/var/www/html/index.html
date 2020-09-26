@@ -456,8 +456,9 @@ console.log("The image " + daylyMotionPhotos[sliderItem] + " could not be loaded
         xhr.send();
       }
 */
+/*
 var thermostat = "";
-loadThermostat();
+//loadThermostat();
       function saveThermostat() {
         // sorteer op tijd
         thermostat.sort();
@@ -477,19 +478,6 @@ loadThermostat();
       }
       function loadThermostat() {
         var xhr = new XMLHttpRequest();
- /*       
-        xhr.open('POST', "thermostat.php", true);
-        xhr.onload = function(e) {
-          if (this.status == 200) {
-            if (thermostat == "") {
-              thermostat = JSON.parse(atob(this.responseText));
-            }
-            if (window.location.hostname == "localhost") { // enkel lokaal
-              thermostatTimer = setTimeout(loadThermostat, 300000);
-            }
-          }
-        };
-*/
         xhr.responseType = 'text';
         xhr.open('POST', "data/thermostat", true);
         xhr.onload = function(e) {
@@ -497,6 +485,7 @@ loadThermostat();
             if (thermostat == "") {
               var raw = this.responseText;
               thermostat = raw.split(" ");
+console.log(thermostat);
             }
           }
         };
@@ -587,6 +576,7 @@ loadThermostat();
         thermostat.splice(item, 1);
         weeklyThermostat(event);
       }
+*/
       function displayHeatingThermostat() {
         var xhrHeating = new XMLHttpRequest();
         xhrHeating.responseType = 'text';
@@ -867,7 +857,8 @@ loadThermostat();
               if (this.status == 200) {
                 var lines = this.responseText.split("\n");
                 for (line of lines) {
-                  n = line.search("heaters\\[.*\\]=\"");
+//                  n = line.search("heaters\\[.*\\]=\"");
+                  n = line.search("heaters\\+=\\(");
                   if ( n >= 0 ) {
                     heateritem = line.substring(line.indexOf("\"") + 1,line.lastIndexOf("\""));
                     if (heateritem.substr(0,6) == "Keuken") {
