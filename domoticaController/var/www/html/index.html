@@ -962,7 +962,7 @@ console.log(thermostat);
       function timerThermostat (event) {
         clearTimeout(startTimer);
         document.getElementById("content").innerHTML = `<div id="thermostatUI">
-        <div id="title">Timer - Thermostaat</div>
+        <div id="title"><span id="ThTime">Time</span> Timer - Thermostaat <span id="ThTemp">Temp</span></div>
         <button id="thermostatReset" onclick="thermostatUI(event, 'Reset');">Reset</button>
         <button id="thermostatOff" onclick="thermostatUI(event, 'Off', 'kitchentemp'); thermostatUI(event, 'Off', 'livingtemp'); ">Uit</button>
         <!--button id="thermostatDefault" onclick="thermostatUI(event, 'Default');">Standaard</button-->
@@ -986,11 +986,23 @@ console.log(thermostat);
         <button onclick="thermostatUI(event, 'Incr', 'livingtemp');">+</button>
         <button onclick="thermostatUI(event, 'Decr', 'livingtemp');">-</button>
         </div>
-
         </div>`
         centerContent();
         thermostatIfFileExist("data/thermostatManualkitchen", "kitchen");
         thermostatIfFileExist("data/thermostatManualliving", "living");
+        var timerThDateTemp = setInterval(function(){
+          var element =  document.getElementById("ThTime");
+          if (typeof(element) == "undefined" || element == null) {
+            clearInterval(timerThDateTemp);
+          } else {
+            var today = new Date();
+            var h = today.getHours();
+            var m = today.getMinutes();
+            m = checkTime(m);
+            document.getElementById("ThTime").innerHTML = h + ":" + m;
+            document.getElementById("ThTemp").innerHTML = roomTemp;
+          }
+        }, 1000);
         event.stopPropagation();
       }
       function remoteCommand(event, command) {
