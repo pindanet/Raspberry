@@ -1,94 +1,60 @@
 tempComfort="21.50"
 
+heaters+=("LivingHaard tasmota_4fdd94-7572")
 heaters+=("LivingZuid tasmota_8bbe4d-7757")
 heaters+=("LivingNoord tasmota_8be4af-1199")
 heaters+=("LivingWest tasmota_fb7b27-6951")
 heaters+=("LivingOost tasmota_a94717-1815")
 heaters+=("LivingNoordOost tasmota_8bbe0d-7693")
 heaters+=("LivingZuidOost tasmota_4bf311-4881")
-heaters+=("KeukenNoord tasmota_c699b5-6581")
-heaters+=("KeukenWest tasmota_4fd8ee-6382")
-heaters+=("KeukenZuid tasmota_a943fa-1018")
 
+heaters+=("KeukenNoord tasmota_c699b5-6581")
+heaters+=("KeukenZuid tasmota_a943fa-1018")
+heaters+=("KeukenWest tasmota_4fd8ee-6382")
+
+# Default Kitchen
 thermostatkitchendefault+=("07:30 08:30")
 thermostatkitchendefault+=("11:00 13:30")
-thermostatkitchendefault+=("16:55 17:35")
+thermostatkitchendefault+=("16:45 17:35")
 thermostatkitchendefault+=("22:09 22:50")
 
-# thermostatkitchendefault[0]="07:30 08:30" 
-# thermostatkitchendefault[1]="11:00 13:30"
-# thermostatkitchendefault[2]="16:55 17:35"
-# thermostatkitchendefault[3]="22:09 22:50"
+# Exceptions Kitchen
+thermostatkitchenevent+=("2020-10-28 14 07:00 12:00 on")
 
-thermostatkitchenevent+=("2020-05-27 14 07:00 12:00 on")
+thermostatkitchenevent+=("2020-09-02 7 07:00 07:55 on")
+thermostatkitchenevent+=("2020-09-02 7 07:56 12:15 off")
 
-thermostatkitchenevent+=("2020-09-02 7 07:00 07:50 on")
-thermostatkitchenevent+=("2020-09-02 7 07:50 12:15 off")
+thermostatkitchenevent+=("2020-09-02 7 16:15 17:00 on")
+thermostatkitchenevent+=("2020-09-02 7 17:01 21:40 off")
 
-thermostatkitchenevent+=("2020-09-02 7 16:25 17:30 on")
-thermostatkitchenevent+=("2020-09-02 7 17:30 21:45 off")
+thermostatkitchenevent+=("2020-09-03 7 07:00 07:55 on")
+thermostatkitchenevent+=("2020-09-03 7 07:56 12:15 off")
 
-thermostatkitchenevent+=("2020-09-03 7 07:00 07:50 on")
-thermostatkitchenevent+=("2020-09-03 7 07:50 12:15 off")
+thermostatkitchenevent+=("2020-09-08 7 12:50 17:15 off")
 
-thermostatkitchenevent+=("2020-09-08 7 12:40 17:15 off")
+thermostatkitchenevent+=("2020-09-07 7 07:00 07:55 on")
+thermostatkitchenevent+=("2020-09-07 7 07:56 12:15 off")
 
-thermostatkitchenevent+=("2020-09-07 7 07:00 07:50 on")
-thermostatkitchenevent+=("2020-09-07 7 07:50 12:15 off")
-
-thermostatkitchenevent+=("2020-09-07 7 16:25 17:30 on")
-thermostatkitchenevent+=("2020-09-07 7 17:30 21:45 off")
+thermostatkitchenevent+=("2020-09-07 7 16:15 17:00 on")
+thermostatkitchenevent+=("2020-09-07 7 17:01 21:40 off")
 
 thermostatkitchenevent+=("2020-09-17 7 12:15 15:25 off")
 
-# thermostatkitchenevent[0]="2020-05-27 14 07:00 12:00 on"
-
-# thermostatkitchenevent[1]="2020-09-02 7 07:00 07:50 on"
-# thermostatkitchenevent[2]="2020-09-02 7 07:50 12:15 off"
-
-# thermostatkitchenevent[3]="2020-09-02 7 16:25 17:30 on"
-# thermostatkitchenevent[4]="2020-09-02 7 17:30 21:45 off"
-
-# thermostatkitchenevent[5]="2020-09-03 7 07:00 07:50 on"
-# thermostatkitchenevent[6]="2020-09-03 7 07:50 12:15 off"
-
-# thermostatkitchenevent[7]="2020-09-08 7 12:40 17:15 off"
-
-# thermostatkitchenevent[8]="2020-09-07 7 07:00 07:50 on"
-# thermostatkitchenevent[9]="2020-09-07 7 07:50 12:15 off"
-
-# thermostatkitchenevent[10]="2020-09-07 7 16:25 17:30 on"
-# thermostatkitchenevent[11]="2020-09-07 7 17:30 21:45 off"
-
-# thermostatkitchenevent[12]="2020-09-17 7 12:15 15:25 off"
-
+# Default Living
 thermostatlivingdefault+=("08:15 11:15")
 thermostatlivingdefault+=("13:15 17:00")
-thermostatlivingdefault+=("17:15 22:45")
+thermostatlivingdefault+=("17:20 22:30")
 
-# thermostatlivingdefault[0]="08:15 11:15"
-# thermostatlivingdefault[1]="13:15 17:00"
-# thermostatlivingdefault[2]="17:15 22:45"
-
-thermostatlivingevent+=("2020-05-27 14 07:45 11:45 on")
+# Exceptions Living
+thermostatlivingevent+=("2020-10-28 14 07:45 11:45 on")
 
 thermostatlivingevent+=("2020-09-02 7 08:00 12:15 off")
-thermostatlivingevent+=("2020-09-02 7 17:14 21:45 off")
+thermostatlivingevent+=("2020-09-02 7 16:30 21:40 off")
 thermostatlivingevent+=("2020-09-03 7 08:00 12:15 off")
 thermostatlivingevent+=("2020-09-08 7 12:40 17:15 off")
 thermostatlivingevent+=("2020-09-07 7 08:00 12:15 off")
-thermostatlivingevent+=("2020-09-07 7 17:14 21:45 off")
-thermostatlivingevent+=("2020-09-17 7 12:15 15:25 off")
-
-#thermostatlivingevent[0]="2020-05-27 14 07:45 11:45 on"
-#
-#thermostatlivingevent[1]="2020-09-02 7 08:00 12:15 off"
-#thermostatlivingevent[2]="2020-09-02 7 17:14 21:45 off"
-#thermostatlivingevent[3]="2020-09-03 7 08:00 12:15 off"
-#thermostatlivingevent[4]="2020-09-08 7 12:40 17:15 off"
-#thermostatlivingevent[5]="2020-09-07 7 08:00 12:15 off"
-#thermostatlivingevent[6]="2020-09-07 7 17:14 21:45 off"
-#thermostatlivingevent[7]="2020-09-17 7 12:15 15:25 off"
+thermostatlivingevent+=("2020-09-07 7 16:30 21:40 off")
+thermostatlivingevent+=("2020-09-17 7 12:15 15:00 off")
 
 hysteresis="0.1"
 
