@@ -28,8 +28,8 @@ if [ $USER == "pi" ]; then
   #sudo raspi-config nonint do_wifi_country "$COUNTRY"
 
   # Change hostname
-  read -p "Enter the new hostname [pindadomo]: " NEW_HOSTNAME
-  NEW_HOSTNAME=${NEW_HOSTNAME:-pindadomo}
+  read -p "Enter the new hostname [pindakeuken]: " NEW_HOSTNAME
+  NEW_HOSTNAME=${NEW_HOSTNAME:-pindakeuken}
   sudo raspi-config nonint do_hostname "$NEW_HOSTNAME"
 
   # enable ssh
