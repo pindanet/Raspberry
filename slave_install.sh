@@ -25,7 +25,7 @@ if [ $USER == "pi" ]; then
   sudo raspi-config nonint do_change_timezone "$TIMEZONE"
 
   # Change WiFi country
-  sudo raspi-config nonint do_wifi_country "$COUNTRY"
+  #sudo raspi-config nonint do_wifi_country "$COUNTRY"
 
   # Change hostname
   read -p "Enter the new hostname [pindadomo]: " NEW_HOSTNAME
@@ -33,7 +33,7 @@ if [ $USER == "pi" ]; then
   sudo raspi-config nonint do_hostname "$NEW_HOSTNAME"
 
   # enable ssh
-  sudo raspi-config nonint do_ssh 0
+  #sudo raspi-config nonint do_ssh 0
 
   # Upgrade
   sudo apt-get update
