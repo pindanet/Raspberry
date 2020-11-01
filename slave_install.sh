@@ -68,8 +68,9 @@ else
   # Remove pi user
   sudo userdel -r pi
 
+  sudo mkdir -p /var/www/html/data/
   sudo wget -O /var/www/html/data/thermostat https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/data/thermostat
-  sudo wget -O /usr/sbin/PindaNetDomo.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetDomo.sh
+  sudo wget -O /usr/sbin/PindaNetSlave.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetDomo.sh
   sudo chmod +x /usr/sbin/PindaNetDomo.sh
   cat > PindaNetDomo.service <<EOF
 [Unit]
