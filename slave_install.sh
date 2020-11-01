@@ -34,6 +34,9 @@ if [ $USER == "pi" ]; then
 
   # enable ssh
   #sudo raspi-config nonint do_ssh 0
+  
+  # enable i2c
+  sudo raspi-config nonint do_i2c 0
 
   # Upgrade
   sudo apt-get update
