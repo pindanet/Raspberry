@@ -1,6 +1,6 @@
 #!/bin/bash
 # For Raspbian Buster Lite
-# wget https://github.com/pindanet/Raspberry/raw/master/domoticaController_install.sh
+# wget https://github.com/pindanet/Raspberry/raw/master/slave_install.sh
 # bash domoticaController_install.sh
 
 # ToDo
