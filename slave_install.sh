@@ -79,6 +79,9 @@ else
   
   sudo apt-get install i2c-tools
   i2cdetect -y 1
+  
+  sudo apt install python3-pip
+  sudo pip3 install adafruit-circuitpython-mcp9808
 
   sudo mkdir -p /var/www/html/data/
   sudo wget -O /var/www/html/data/thermostat https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/data/thermostat
