@@ -9,7 +9,7 @@
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
-  "") echo "usage: bash domoticaController_install.sh"
+  "") echo "usage: bash slave_install.sh"
       exit;;
 esac
 
