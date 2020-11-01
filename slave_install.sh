@@ -70,23 +70,23 @@ else
 
   sudo mkdir -p /var/www/html/data/
   sudo wget -O /var/www/html/data/thermostat https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/data/thermostat
-  sudo wget -O /usr/sbin/PindaNetSlave.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetDomo.sh
-  sudo chmod +x /usr/sbin/PindaNetDomo.sh
-  cat > PindaNetDomo.service <<EOF
+  sudo wget -O /usr/sbin/PindaNetSlave.sh https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/PindaNetSlave.sh
+  sudo chmod +x /usr/sbin/PindaNetSlave.sh
+  cat > PindaNetSlave.service <<EOF
 [Unit]
-Description=PindaNetDomotica
+Description=PindaNet Domotica Slave
 Wants=network-online.target
 After=network.target network-online.target
 [Service]
-ExecStart=/usr/sbin/PindaNetDomo.sh
+ExecStart=/usr/sbin/PindaNetSlave.sh
 Restart=always
 RestartSec=60
 [Install]
 WantedBy=multi-user.target
 EOF
-  sudo mv PindaNetDomo.service /etc/systemd/system/
+  sudo mv PindaNetSlave.service /etc/systemd/system/
   sudo systemctl daemon-reload
-  sudo systemctl enable PindaNetDomo.service
+  sudo systemctl enable PindaNetSlave.service
 
 exit
 
