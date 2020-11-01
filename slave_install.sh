@@ -51,8 +51,8 @@ if [ $USER == "pi" ]; then
   sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio "$NEW_USER"
   
   # Continue after reboot
-  sudo mv domoticaController_install.sh /home/$NEW_USER/
-  echo "bash domoticaController_install.sh" | sudo tee -a /home/$NEW_USER/.bashrc
+  sudo mv slave_install.sh /home/$NEW_USER/
+  echo "bash slave_install.sh" | sudo tee -a /home/$NEW_USER/.bashrc
 
   echo "Login as $NEW_USER"
   read -p "Press Return to Restart " key
