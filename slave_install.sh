@@ -1,11 +1,11 @@
 #!/bin/bash
 # For Raspbian Buster Lite
 # wget https://github.com/pindanet/Raspberry/raw/master/slave_install.sh
-# bash domoticaController_install.sh
+# bash slave_install.sh
 
 # ToDo
-# Activate Serial Hardware
-# Activate PiCamera
+# Setup Headless: https://www.raspberrypi.org/documentation/configuration/wireless/headless.md
+# Activate ssh on boot partition
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
