@@ -59,7 +59,7 @@ if [ $USER == "pi" ]; then
 
 else
   # Disable Continue after reboot
-  sed -i '/^bash domoticaController_install.sh/d' .bashrc
+  sed -i '/^bash slave_install.sh/d' .bashrc
 
   # Enable PgUp, PgDn search in bash history
   echo "bind '\"\e[5~\": history-search-backward'" >> .bashrc
