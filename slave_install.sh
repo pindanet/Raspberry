@@ -13,19 +13,11 @@ case "$BASH_VERSION" in
       exit;;
 esac
 
-KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
-FULLCALENDAR="4.4.0"
 
 if [ $USER == "pi" ]; then
-  # rotate Touchscreen
-  echo 'lcd_rotate=2' | sudo tee -a /boot/config.txt
-  
-  # Change keyboard
-  sudo raspi-config nonint do_configure_keyboard "$KEYMAP"
-
   # Change locale
   sudo raspi-config nonint do_change_locale "$LOCALE"
 
