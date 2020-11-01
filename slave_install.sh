@@ -88,53 +88,13 @@ EOF
   sudo systemctl daemon-reload
   sudo systemctl enable PindaNetSlave.service
 
-exit
-
-#  read -s -p "Typ bindelings de encryptie wachtzin: " passphrase
-#  sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/genkeys.php
-#  sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/curl.php
-  while true; do
-    read -s -p  "Typ blindelings de gebruikersnaam voor de remote webpagina: " user
-    echo
-    read -s -p  "Typ blindelings de gebruikersnaam voor de remote webpagina (nogmaals): " user2
-    echo
-    [ "$user" = "$user2" ] && break
-    echo "Please try again"
-  done
-  sudo sed -i "s|^\(\$user =\).*$|\1 \'$user\';|" /var/www/html/curl.php
-  while true; do
-    read -s -p "Typ bindelings het wachtwoord voor de remote webpagina: " password
-    echo
-    read -s -p "Typ bindelings het wachtwoord voor de remote webpagina (nogmaals): " password2
-    echo
-    [ "$password" = "$password2" ] && break
-    echo "Please try again"
-  done
-  sudo sed -i "s|^\(\$password =\).*$|\1 \'$password\';|" /var/www/html/curl.php
-  
-# Remote LAN commands
-  sudo mkdir /var/www/html/remote
-  sudo chown -R www-data:www-data /var/www/html/remote
-  sudo wget -O /var/www/html/remote.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/remote.php
-  sudo wget -O /var/www/html/remote.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/remote.sh
-  sudo apt install incron -y
-  echo root | sudo tee /etc/incron.allow
-  echo '/var/www/html/remote    IN_CLOSE_WRITE  /bin/bash /var/www/html/remote.sh "$@/$#"' | sudo tee /var/spool/incron/root
-  sudo chmod go-rwx /var/spool/incron/root # enkel rw user blijft over
-  sudo systemctl start incron
-  sudo systemctl enable incron
-
-  printf '\033[1;37;40mOn the main computer: ssh-copy-id -i ~/.ssh/id_rsa.pub rpiwall.local\n\033[0m' # Witte letters op zwarte achtergrond
-  printf '\033[1;37;40mOn the domotica controller: ssh-copy-id -i ~/.ssh/id_rsa.pub rpiwall.local\n\033[0m' # Witte letters op zwarte achtergrond
+  printf '\033[1;37;40mOn the main computer: ssh-copy-id -i ~/.ssh/id_rsa.pub $HOSTNAME\n\033[0m' # Witte letters op zwarte achtergrond
+  printf '\033[1;37;40mOn the domotica controller: ssh-copy-id -i ~/.ssh/id_rsa.pub $HOSTNAME\n\033[0m' # Witte letters op zwarte achtergrond
   printf '\033[1;32;40mPress key to secure ssh.\033[0m' # Groene letters op zwarte achtergrond
   read Keypress
-  sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
+#  sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
-# cd /var/www/html
-# sudo -u www-data php genkeys.php
-# sudo rm /var/www/html/genkeys.php
-# read -p "cp /var/www/html/data/public.key to your remote website and press Return to continue " key
-
+  exit
 fi
 # Restart Raspberry Pi
 sudo shutdown -r now
