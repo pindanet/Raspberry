@@ -86,10 +86,16 @@ function thermostatOff {
 }
 
 function thermostat {
+  . /var/www/html/data/thermostat
+
   temp=$(tail -1 $PresHumiTempfile)
   temp=${temp%% C*}
   # remove leading whitespace characters
   temp="${temp#"${temp%%[![:space:]]*}"}"
+
+  heatingKitchen="off"
+
+if false; then # Niet uitvoeren
 
 #  if [ ! -f $thermostatkitchenfile ]; then # default
 #    printf "%s\n" "${thermostatkitchendefault[@]}" > $thermostatkitchenfile
@@ -101,7 +107,6 @@ function thermostat {
   unset IFS
 #  unset raw
 
-  heatingKitchen="off"
 # Default times for heating
   for thermostatitem in "${thermostatkitchen[@]}"; do
     daytime=(${thermostatitem})
@@ -189,6 +194,8 @@ function thermostat {
 #    chown www-data:www-data $thermostatlivingfile
 #  fi
 #  mapfile -t raw < $thermostatlivingfile
+
+fi # Einde Niet uitvoeren
 
   IFS=$'\n' thermostatliving=($(sort <<<"${thermostatlivingdefault[*]}"))
   unset IFS
@@ -327,8 +334,6 @@ echo "in" > /sys/class/gpio/gpio$_pir_pin/direction
 # Let PIR settle to ambient IR to avoid false positives? 
 # Uncomment line below.
 #sleep 30
- 
-. /var/www/html/data/thermostat
 
 while true
 do
