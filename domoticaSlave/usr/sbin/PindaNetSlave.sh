@@ -1,11 +1,6 @@
 #!/bin/bash
 # ToDo
 
-function thermostatManualReset () {
-  if [ -f /var/www/html/data/thermostatManualkitchen ]; then
-    rm /var/www/html/data/thermostatManualkitchen
-  fi
-}
 function tasmota () {
   if [ ! -f /tmp/$1 ]; then # initialize
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
@@ -76,8 +71,14 @@ function thermostat {
   done
 
   tempWanted=$tempComfort
-  if [ -f /var/www/html/data/thermostatManualkitchen ]; then
-    read roomtemp < /var/www/html/data/thermostatManualkitchen
+
+  roomtemp=$(wget -qO- http://pindadomo/data/thermostatManualkitchen)
+  if [ $? -gt 0 ]; then
+    echo Auto
+  else
+#  fi
+#  if [ -f /var/www/html/data/thermostatManualkitchen ]; then
+#    read roomtemp < /var/www/html/data/thermostatManualkitchen
     tempWanted=$roomtemp
     echo "Manual temp kichen: $tempWanted °C"
     heatingKitchen="on"
@@ -151,7 +152,7 @@ do
   done
 #  printf '%s\n' "${heaterKeuken[@]}"
 
-  if [ -f /var/www/html/data/thermostatReset ]; then
+  if [ -f /tmp/thermostatReset ]; then
     echo "Resetting thermostat"
     for switch in "${!heater[@]}"
     do
@@ -163,8 +164,7 @@ do
         rm $tempfile
       fi
     done
-    thermostatManualReset
-    rm /var/www/html/data/thermostatReset
+    rm /tmp/thermostatReset
   fi
 
   # Collect sensordata
