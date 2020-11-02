@@ -84,6 +84,8 @@ else
   sudo pip3 install adafruit-circuitpython-mcp9808
   sudo wget -O /usr/sbin/mcp9808.py https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/mcp9808.py
   sudo chmod +x /usr/sbin/mcp9808.py
+  
+  sudo apt-get install hdate
 
   sudo mkdir -p /var/www/html/data/
   sudo wget -O /var/www/html/data/thermostat https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/data/thermostat
