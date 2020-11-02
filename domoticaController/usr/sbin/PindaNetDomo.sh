@@ -412,6 +412,9 @@ do
 #  fi
 
   if [ -f /var/www/html/data/thermostatReset ]; then
+    # copy to DomoticaSlave
+    sudo -u dany scp /var/www/html/data/thermostatReset pindakeuken:/tmp/
+
     echo "Resetting thermostat"
     for switch in "${!heater[@]}"
     do
