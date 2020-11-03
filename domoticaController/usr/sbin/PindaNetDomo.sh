@@ -1,6 +1,5 @@
 #!/bin/bash
 # ToDo
-# thermostatOff, thermostatReset
 # Activate Serial Hardware
 
 function thermostatManualReset () {
@@ -95,8 +94,6 @@ function thermostat {
 
   heatingKitchen="off"
 
-if false; then # Niet uitvoeren
-
 #  if [ ! -f $thermostatkitchenfile ]; then # default
 #    printf "%s\n" "${thermostatkitchendefault[@]}" > $thermostatkitchenfile
 #    chown www-data:www-data $thermostatkitchenfile
@@ -138,11 +135,14 @@ if false; then # Niet uitvoeren
 
   tempWanted=$tempComfort
   if [ -f /var/www/html/data/thermostatManualkitchen ]; then
-    read roomtemp < /var/www/html/data/thermostatManualkitchen
-    tempWanted=$roomtemp
+#    read roomtemp < /var/www/html/data/thermostatManualkitchen
+#    tempWanted=$roomtemp
     echo "Manual temp kichen: $tempWanted °C"
     heatingKitchen="on"
   fi
+
+if false; then # Niet uitvoeren
+
   if [ "$heatingKitchen" == "off" ]; then
     echo "Keuken basisverwarming"
     tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
@@ -414,6 +414,7 @@ do
   if [ -f /var/www/html/data/thermostatReset ]; then
     # copy to DomoticaSlave
     sudo -u dany scp /var/www/html/data/thermostatReset pindakeuken:/tmp/
+    sudo -u dany scp /var/www/html/data/thermostat pindakeuken:/tmp/
 
     echo "Resetting thermostat"
     for switch in "${!heater[@]}"
@@ -616,7 +617,7 @@ echo "start:$startInterval end:$endInterval light:$lightliving"
 
 # PIR detector for 1 minute
   starttime=$(date +"%s")
-  while [ $(($(date +"%s") - starttime)) -lt 60 ]; do
+  while [ $(($(date +"%s") - starttime)) -lt 55 ]; do
     _ret=$( cat /sys/class/gpio/gpio$_pir_pin/value )
     if [ $_ret -eq 1 ]; then
       echo "[!] PIR is tripped, Smile ..."
