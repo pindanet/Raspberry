@@ -36,6 +36,27 @@ function thermostat {
   # remove leading whitespace characters
   temp="${temp#"${temp%%[![:space:]]*}"}"
 
+  # mininmum maximum temp
+### ToDo Reset dagelijkse tempmax, tempmin
+  if [ ! -f /var/www/html/data/tempmax ]; then
+    echo 0 > /var/www/html/data/tempmax
+  fi
+  tempmax=$(cat /var/www/html/data/tempmax)
+  if [ ! -f /var/www/html/data/tempmin ]; then
+    echo 100 > /var/www/html/data/tempmin
+  fi
+  tempmin=$(cat /var/www/html/data/tempmin)
+  if [ ${temp%.*} -eq ${tempmax%.*} ] && [ ${temp#*.} \> ${tempmax#*.} ] || [ ${temp%.*} -gt ${tempmax%.*} ]; then
+    tempmax=$temp
+    echo $tempmax > /var/www/html/data/tempmax
+    echo "Min: $tempmin, Max: $tempmax" > /var/www/html/data/temp$(date +%A)
+  fi
+  if [ ${temp%.*} -eq ${tempmin%.*} ] && [ ${temp#*.} \< ${tempmin#*.} ] || [ ${temp%.*} -lt ${tempmin%.*} ]; then
+    tempmin=$temp
+    echo $tempmin > /var/www/html/data/tempmin
+    echo "Min: $tempmin, Max: $tempmax" > /var/www/html/data/temp$(date +%A)
+  fi
+
   IFS=$'\n' thermostatkitchen=($(sort <<<"${thermostatkitchendefault[*]}"))
   unset IFS
 #  unset raw
