@@ -107,6 +107,37 @@ EOF
   sudo systemctl daemon-reload
   sudo systemctl enable PindaNetSlave.service
 
+  sudo wget -O /usr/sbin/PindaNetDaily.sh https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/PindaNetDaily.sh
+  sudo chmod +x /usr/sbin/PindaNetDaily.sh
+  cat > PindaNetDaily.service <<EOF
+[Unit]
+Description= Execute once a day
+
+[Service]
+Type= simple
+
+ExecStart= /usr/sbin/PindaNetDaily.sh
+
+[Install]
+WantedBy= multi-user.target
+EOF
+  sudo mv PindaNetDaily.service /etc/systemd/system/
+  
+  cat > PindaNetDaily.timer <<EOF
+[Unit]
+Description= Execute once a day
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+  sudo mv PindaNetDaily.timer /etc/systemd/system/
+  sudo systemctl daemon-reload
+  sudo systemctl enable PindaNetDaily.timer
+  
   printf "\033[1;37;40mOn the main computer: ssh-copy-id -i ~/.ssh/id_rsa.pub $HOSTNAME\n\033[0m" # Witte letters op zwarte achtergrond
   printf "\033[1;37;40mOn the domotica controller: ssh-keygen\n\033[0m" # Witte letters op zwarte achtergrond
   printf "\033[1;37;40mOn the domotica controller: ssh-copy-id -i ~/.ssh/id_rsa.pub $HOSTNAME\n\033[0m" # Witte letters op zwarte achtergrond
