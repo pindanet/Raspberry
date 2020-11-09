@@ -16,32 +16,33 @@ heaters+=("LivingZuidOost tasmota_4bf311-4881")
 
 heaters+=("KeukenNoord tasmota_c699b5-6581")
 heaters+=("KeukenZuid tasmota_a943fa-1018")
-heaters+=("KeukenWest tasmota_4fd8ee-6382")
+#heaters+=("KeukenWest tasmota_4fd8ee-6382")
+heaters+=("KeukenWest tasmota_relayGPIO23")
 
 # Default Kitchen
-thermostatkitchendefault+=("07:30 08:30")
-thermostatkitchendefault+=("11:00 13:30")
-thermostatkitchendefault+=("16:45 17:35")
-thermostatkitchendefault+=("22:09 22:50")
+thermostatkitchendefault+=("07:35 08:30")
+thermostatkitchendefault+=("11:05 13:30")
+thermostatkitchendefault+=("16:50 17:35")
+thermostatkitchendefault+=("22:19 22:50")
 
 # Exceptions Kitchen
-thermostatkitchenevent+=("2020-11-25 14 07:00 12:00 on")
+thermostatkitchenevent+=("2020-11-25 14 07:05 12:00 on")
 
-thermostatkitchenevent+=("2020-11-16 7 07:00 07:55 on")
+thermostatkitchenevent+=("2020-11-16 7 07:05 07:55 on")
 thermostatkitchenevent+=("2020-11-16 7 07:56 12:15 off")
 
-thermostatkitchenevent+=("2020-11-16 7 16:15 17:00 on")
+thermostatkitchenevent+=("2020-11-16 7 16:20 17:00 on")
 thermostatkitchenevent+=("2020-11-16 7 17:01 21:40 off")
 
 thermostatkitchenevent+=("2020-11-17 7 12:50 17:15 off")
 
-thermostatkitchenevent+=("2020-11-18 7 07:00 07:55 on")
+thermostatkitchenevent+=("2020-11-18 7 07:05 07:55 on")
 thermostatkitchenevent+=("2020-11-18 7 07:56 12:15 off")
 
-thermostatkitchenevent+=("2020-11-18 7 16:15 17:00 on")
+thermostatkitchenevent+=("2020-11-18 7 16:20 17:00 on")
 thermostatkitchenevent+=("2020-11-18 7 17:01 21:40 off")
 
-thermostatkitchenevent+=("2020-11-19 7 07:00 07:55 on")
+thermostatkitchenevent+=("2020-11-19 7 07:05 07:55 on")
 thermostatkitchenevent+=("2020-11-19 7 07:56 15:00 off")
 
 # Default Living
