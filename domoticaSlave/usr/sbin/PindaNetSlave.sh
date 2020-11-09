@@ -1,7 +1,37 @@
 #!/bin/bash
 # ToDo
+function relayGPIO () {
+  _r1_pin=23
+  # Activate GPIO Relay
+  if [ ! -d "/sys/class/gpio/gpio$_r1_pin" ]; then
+    #   Exports pin to userspace
+    echo $_r1_pin > /sys/class/gpio/export
+    # Sets pin as an output
+    echo "out" > /sys/class/gpio/gpio$_r1_pin/direction
+  fi
 
+  if [ ! -f /tmp/$1 ]; then # initialize
+    echo '{"POWER":"ON"}' > /tmp/$1
+    echo "$(date -u +%s),off" >> /var/www/html/data/$1.log
+  fi
+  if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
+    echo 0 > /sys/class/gpio/gpio$_r1_pin/value # Power on
+    echo '{"POWER":"ON"}' > /tmp/$1
+    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
+  elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
+    echo 1 > /sys/class/gpio/gpio$_r1_pin/value # Power off
+    echo '{"POWER":"OFF"}' > /tmp/$1
+    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
+  elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
+    echo '{"POWER":"ON"}' > /tmp/$1
+    echo "$(date): Relay error. Heating $1" >> /tmp/PindaNetDebug.txt
+  fi
+}
 function tasmota () {
+  if [[ $1 == *"relayGPIO"* ]]; then
+    relayGPIO $1 $2
+    return
+  fi
   if [ ! -f /tmp/$1 ]; then # initialize
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     two=$(wget -qO- http://$1/cm?cmnd=Power | awk -F"\"" '{print $4}')
@@ -37,7 +67,6 @@ function thermostat {
   temp="${temp#"${temp%%[![:space:]]*}"}"
 
   # mininmum maximum temp
-### ToDo Reset dagelijkse tempmax, tempmin
   if [ ! -f /var/www/html/data/tempmax ]; then
     echo 0 > /var/www/html/data/tempmax
   fi
@@ -128,27 +157,27 @@ function thermostat {
   done
 }
 
-_pir_pin=4 # BCM4
- 
-# https://raspberrypi-aa.github.io/session2/bash.html
-# Clean up on ^C and TERM, use 'gpio unexportall' to flush everything manually.
-#trap "gpio unexport $_pir_pin" INT TERM
-if [ -d "/sys/class/gpio/gpio$_pir_pin" ]; then
-  echo $_pir_pin > /sys/class/gpio/unexport
-fi
-fotomap="/var/www/html/motion/fotos"
-if [ ! -d "$fotomap" ]; then
-  mkdir -p "$fotomap"
-fi
- 
-#   Exports pin to userspace
-echo $_pir_pin > /sys/class/gpio/export
-# Sets pin as an input
-echo "in" > /sys/class/gpio/gpio$_pir_pin/direction
- 
-# Let PIR settle to ambient IR to avoid false positives? 
-# Uncomment line below.
-#sleep 30
+#_pir_pin=4 # BCM4
+# 
+## https://raspberrypi-aa.github.io/session2/bash.html
+## Clean up on ^C and TERM, use 'gpio unexportall' to flush everything manually.
+##trap "gpio unexport $_pir_pin" INT TERM
+#if [ -d "/sys/class/gpio/gpio$_pir_pin" ]; then
+#  echo $_pir_pin > /sys/class/gpio/unexport
+#fi
+#fotomap="/var/www/html/motion/fotos"
+#if [ ! -d "$fotomap" ]; then
+#  mkdir -p "$fotomap"
+#fi
+# 
+##   Exports pin to userspace
+#echo $_pir_pin > /sys/class/gpio/export
+## Sets pin as an input
+#echo "in" > /sys/class/gpio/gpio$_pir_pin/direction
+# 
+## Let PIR settle to ambient IR to avoid false positives? 
+## Uncomment line below.
+##sleep 30
  
 while true
 do
@@ -160,6 +189,10 @@ do
     mv -f /tmp/thermostat /var/www/html/data/thermostat
   fi
   . /var/www/html/data/thermostat
+
+  # compensate position temperature sensor
+  hysteresis=$(awk "BEGIN {print ($hysteresis * 2)}")
+#  tempComfort=$(awk "BEGIN {print ($tempComfort - 3.5)}")
 
   declare -A heater
   unset heaterKeuken
