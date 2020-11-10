@@ -85,8 +85,6 @@ else
   sudo wget -O /usr/sbin/mcp9808.py https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/mcp9808.py
   sudo chmod +x /usr/sbin/mcp9808.py
   
-  sudo apt-get install hdate
-
   sudo mkdir -p /var/www/html/data/
   sudo wget -O /var/www/html/data/thermostat https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/data/thermostat
   sudo wget -O /usr/sbin/PindaNetSlave.sh https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/PindaNetSlave.sh
@@ -137,7 +135,26 @@ EOF
   sudo mv PindaNetDaily.timer /etc/systemd/system/
   sudo systemctl daemon-reload
   sudo systemctl enable PindaNetDaily.timer
-  
+
+  sudo apt-get install hdate
+  sudo wget -O /usr/sbin/PindaNetLightTimer.sh https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/PindaNetLightTimer.sh
+  sudo chmod +x /usr/sbin/PindaNetLightTimer.sh
+  cat > PindaNetLightTimer.service <<EOF
+[Unit]
+Description=PindaNet Domotica Light Timer
+Wants=network-online.target
+After=network.target network-online.target
+[Service]
+ExecStart=/usr/sbin/PindaNetLightTimer.sh
+Restart=always
+RestartSec=60
+[Install]
+WantedBy=multi-user.target
+EOF
+  sudo mv PindaNetLightTimer.service /etc/systemd/system/
+  sudo systemctl daemon-reload
+  sudo systemctl enable PindaNetLightTimer.service
+
   printf "\033[1;37;40mOn the main computer: ssh-copy-id -i ~/.ssh/id_rsa.pub $HOSTNAME\n\033[0m" # Witte letters op zwarte achtergrond
   printf "\033[1;37;40mOn the domotica controller: ssh-keygen\n\033[0m" # Witte letters op zwarte achtergrond
   printf "\033[1;37;40mOn the domotica controller: ssh-copy-id -i ~/.ssh/id_rsa.pub $HOSTNAME\n\033[0m" # Witte letters op zwarte achtergrond
