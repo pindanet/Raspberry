@@ -1,5 +1,8 @@
 #!/bin/bash
 # ToDo
+# Compensate temperature sensor
+tempOffset=2
+
 function relayGPIO () {
   _r1_pin=23
   # Activate GPIO Relay
@@ -129,13 +132,14 @@ function thermostat {
 #  fi
 #  if [ -f /var/www/html/data/thermostatManualkitchen ]; then
 #    read roomtemp < /var/www/html/data/thermostatManualkitchen
-    tempWanted=$roomtemp
+#    tempWanted=$roomtemp
+    tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
     echo "Manual temp kichen: $tempWanted °C"
     heatingKitchen="on"
   fi
   if [ "$heatingKitchen" == "off" ]; then
     echo "Keuken basisverwarming"
-    tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
+    tempWanted=$(awk "BEGIN {print ($tempComfort - 5 - $tempOffset)}")
   fi
 #  if [ "$heatingKitchen" == "on" ]; then
   total=${#heaterKeuken[@]}
@@ -192,7 +196,7 @@ do
 
   # compensate position temperature sensor
   hysteresis=$(awk "BEGIN {print ($hysteresis * 2)}")
-#  tempComfort=$(awk "BEGIN {print ($tempComfort - 3.5)}")
+  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset)}")
 
   declare -A heater
   unset heaterKeuken
