@@ -608,7 +608,7 @@ echo "start:$startInterval end:$endInterval light:$lightliving"
       wget --post-data="command=halt" --quiet http://rpiwall/remote.php
 #      sleep 30
       # Power off RPIWall
-#      dummy=$(wget -qO- http://tasmota_4fdd94-7572/cm?cmnd=Power%20Off)
+      dummy=$(wget -qO- http://tasmota_4fd8ee-6382/cm?cmnd=Power%20Off)
 #      python /var/www/html/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 25 4A AE 0D 00 00 80"
     fi
 #    thermostatOff
