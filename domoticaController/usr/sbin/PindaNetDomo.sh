@@ -2,6 +2,9 @@
 # ToDo
 # Activate Serial Hardware
 
+# Compensate temperature sensor
+tempOffset=0.5
+
 function thermostatManualReset () {
   if [ -f /var/www/html/data/thermostatManualkitchen ]; then
     rm /var/www/html/data/thermostatManualkitchen
@@ -86,6 +89,8 @@ function thermostatOff {
 
 function thermostat {
   . /var/www/html/data/thermostat
+  # compensate position temperature sensor
+  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset)}")
 
   temp=$(tail -1 $PresHumiTempfile)
   temp=${temp%% C*}
@@ -145,7 +150,8 @@ if false; then # Niet uitvoeren
 
   if [ "$heatingKitchen" == "off" ]; then
     echo "Keuken basisverwarming"
-    tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
+#    tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
+    tempWanted=15
   fi
 #  if [ "$heatingKitchen" == "on" ]; then
   total=${#heaterKeuken[@]}
@@ -237,13 +243,15 @@ fi # Einde Niet uitvoeren
   tempWanted=$tempComfort
   if [ -f /var/www/html/data/thermostatManualliving ]; then
     read roomtemp < /var/www/html/data/thermostatManualliving
-    tempWanted=$roomtemp
+#    tempWanted=$roomtemp
+    tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
     echo "Manual temp living: $tempWanted °C"
     heatingLiving="on"
   fi
   if [ "$heatingLiving" == "off" ]; then
     echo "Living basisverwarming"
-    tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
+#    tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
+    tempWanted=15
   fi
 #  if [ "$heatingLiving" == "on" ]; then
 #  echo "Kamertemp: $temp °C"
