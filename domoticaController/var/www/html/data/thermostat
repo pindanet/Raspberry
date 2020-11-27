@@ -4,7 +4,7 @@ unset thermostatkitchenevent
 unset thermostatlivingdefault
 unset thermostatlivingevent
 
-tempComfort="21.50"
+tempComfort="20.00"
 
 heaters+=("LivingHaard tasmota_4fdd94-7572")
 heaters+=("LivingZuid tasmota_8bbe4d-7757")
@@ -32,7 +32,7 @@ thermostatkitchenevent+=("2020-11-16 7 07:05 07:55 on")
 thermostatkitchenevent+=("2020-11-16 7 07:56 12:15 off")
 
 thermostatkitchenevent+=("2020-11-16 7 16:20 17:00 on")
-thermostatkitchenevent+=("2020-11-16 7 17:01 21:40 off")
+thermostatkitchenevent+=("2020-11-16 7 17:01 21:30 off")
 
 thermostatkitchenevent+=("2020-11-17 7 12:50 17:15 off")
 
@@ -40,10 +40,10 @@ thermostatkitchenevent+=("2020-11-18 7 07:05 07:55 on")
 thermostatkitchenevent+=("2020-11-18 7 07:56 12:15 off")
 
 thermostatkitchenevent+=("2020-11-18 7 16:20 17:00 on")
-thermostatkitchenevent+=("2020-11-18 7 17:01 21:40 off")
+thermostatkitchenevent+=("2020-11-18 7 17:01 21:30 off")
 
 thermostatkitchenevent+=("2020-11-19 7 07:05 07:55 on")
-thermostatkitchenevent+=("2020-11-19 7 07:56 15:00 off")
+thermostatkitchenevent+=("2020-11-19 7 07:56 12:00 off")
 
 # Default Living
 thermostatlivingdefault+=("08:15 11:15")
@@ -54,15 +54,15 @@ thermostatlivingdefault+=("17:20 22:30")
 thermostatlivingevent+=("2020-11-25 14 07:45 11:45 on")
 
 thermostatlivingevent+=("2020-11-16 7 08:00 12:15 off")
-thermostatlivingevent+=("2020-11-16 7 16:30 21:40 off")
+thermostatlivingevent+=("2020-11-16 7 16:30 21:30 off")
 
 thermostatlivingevent+=("2020-11-17 7 12:40 17:15 off")
 
 thermostatlivingevent+=("2020-11-18 7 08:00 12:15 off")
-thermostatlivingevent+=("2020-11-18 7 16:30 21:40 off")
+thermostatlivingevent+=("2020-11-18 7 16:30 21:30 off")
 
 thermostatlivingevent+=("2020-11-19 7 08:00 12:15 off")
-thermostatlivingevent+=("2020-11-19 7 12:15 15:00 off")
+thermostatlivingevent+=("2020-11-19 7 12:15 12:00 off")
 
 hysteresis="0.1"
 
