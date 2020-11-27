@@ -1,7 +1,7 @@
 #!/bin/bash
 # ToDo
 # Compensate temperature sensor
-tempOffset=2
+tempOffset=3.5
 
 function relayGPIO () {
   _r1_pin=23
@@ -139,7 +139,9 @@ function thermostat {
   fi
   if [ "$heatingKitchen" == "off" ]; then
     echo "Keuken basisverwarming"
-    tempWanted=$(awk "BEGIN {print ($tempComfort - 5 - $tempOffset)}")
+    tempWanted=15
+#    tempWanted=$(awk "BEGIN {print ($tempComfort - 5 - $tempOffset)}")
+#    echo "Tempwanted kitchen: $tempWanted °C"
   fi
 #  if [ "$heatingKitchen" == "on" ]; then
   total=${#heaterKeuken[@]}
