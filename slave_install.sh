@@ -164,7 +164,31 @@ EOF
 
   sudo wget -O /usr/sbin/PindaNetUpdate.sh https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/PindaNetUpdate.sh
   sudo chmod +x /usr/sbin/PindaNetUpdate.sh
+  cat > PindaNetUpdate.timer <<EOF
+[Unit]
+Description=Update and Reset
+[Timer]
+OnCalendar=*-*-* 14:00:00
+Unit=PindaNetUpdate.service
+[Install]
+WantedBy=multi-user.target
+EOF
+  sudo mv PindaNetUpdate.timer /etc/systemd/system/
 
+  cat > PindaNetUpdate.service <<EOF
+[Unit]
+Description=Update and Reset
+[Service]
+Type=simple
+ExecStart=/usr/sbin/PindaNetUpdate.sh
+EOF
+  sudo mv PindaNetUpdate.service /etc/systemd/system/
+
+  sudo systemctl daemon-reload
+  sudo systemctl enable PindaNetUpdate.timer
+  sudo systemctl start PindaNetUpdate.timer
+# systemctl list-timers
+# uptime
   exit
 fi
 # Restart Raspberry Pi
