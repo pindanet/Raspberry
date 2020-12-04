@@ -162,6 +162,9 @@ EOF
   read Keypress
 #  sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
+  sudo wget -O /usr/sbin/PindaNetUpdate.sh https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/PindaNetUpdate.sh
+  sudo chmod +x /usr/sbin/PindaNetUpdate.sh
+
   exit
 fi
 # Restart Raspberry Pi
