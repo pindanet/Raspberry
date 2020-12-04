@@ -189,6 +189,8 @@ EOF
   sudo systemctl start PindaNetUpdate.timer
 # systemctl list-timers
 # uptime
+# cat /var/log/apt/history.log
+# cat /var/log/apt/term.log
   exit
 fi
 # Restart Raspberry Pi
