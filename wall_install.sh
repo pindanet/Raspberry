@@ -119,7 +119,7 @@ echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
   echo "# Start fullscreen video with Pimoroni Speaker pHAT" >> $HOME/.config/openbox/autostart
   echo "#amixer sset 'Master' 46%" >> $HOME/.config/openbox/autostart
   echo "#omxplayer -o alsa --loop --no-osd ~/video.mp4" >> $HOME/.config/openbox/autostart
-  echo "#vlc --fullscreen --loop --no-video-title-show --no-osd ~/video.mp4" >> $HOME/.config/openbox/autostart
+  echo '#vlc --fullscreen --loop --no-video-title-show --no-osd ~/video.mp4 --aout=alsa --alsa-audio-device="sysdefault:CARD=b1"' >> $HOME/.config/openbox/autostart
   #sudo apt-get install omxplayer
   #curl -sS https://get.pimoroni.com/speakerphat | bash
   # Disable Pimoroni Speaker pHAT LED-bar
