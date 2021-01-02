@@ -583,8 +583,8 @@ do
 
   startInterval=$((nowSec - 60))
   endInterval=$((nowSec + 60))
-  lightmorningSec=$(date --date "$lightmorning" +%s)
-  lighteveningSec=$(date --date "$lightevening" +%s)
+  lightmorningSec=$(date -u --date "$lightmorning" +%s)
+  lighteveningSec=$(date -u --date "$lightevening" +%s)
   if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
     if [[ $nowSec < $lighteveningSec ]]; then
       echo "$(date): Sunset Light On" >> /home/dany/light.log
