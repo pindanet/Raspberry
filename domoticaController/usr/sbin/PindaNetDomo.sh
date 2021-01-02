@@ -3,7 +3,7 @@
 # Activate Serial Hardware
 
 # Compensate temperature sensor
-tempOffset=0.5
+tempOffset=0
 
 function thermostatManualReset () {
   if [ -f /var/www/html/data/thermostatManualkitchen ]; then
@@ -571,21 +571,52 @@ do
 #      fi
 #    fi
 #  done
-# mood lighting on/off
-  sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
-  startInterval=$(date -u --date='-1 minute' +"%H:%M")
-  endInterval=$(date -u --date='+1 minute' +"%H:%M")
-echo "sunset:$sunset start:$startInterval end:$endInterval"
+# Night lightning on/off
+  nowSec=$(date -u +%s)
+  sunrise=$(date --date "$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)" +%s)
+  sunset=$(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s)
+
+#  sunrise=$(date --date "15:18" +%s)
+#  sunset=$(date --date "15:07" +%s)
+#  lightevening="15:04"
+#  lightmorning="15:20"
+
+  startInterval=$((nowSec - 60))
+  endInterval=$((nowSec + 60))
+  lightmorningSec=$(date --date "$lightmorning" +%s)
+  lighteveningSec=$(date --date "$lightevening" +%s)
   if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
-    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
-  elif [[ $startInterval > $sunset ]]; then
-    startInterval=$(date --date='-1 minute' +"%H:%M")
-    endInterval=$(date --date='+1 minute' +"%H:%M")
-echo "start:$startInterval end:$endInterval light:$lightliving"
-    if [[ $startInterval < $lightliving ]] && [[ $endInterval > $lightliving ]]; then
-      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
+    if [[ $nowSec < $lighteveningSec ]]; then
+      echo "$(date): Sunset Light On" >> /home/dany/light.log
+      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
     fi
+  elif [[ $startInterval < $lighteveningSec ]] && [[ $endInterval > $lighteveningSec ]]; then
+    echo "$(date): Sleep Light Off" >> /home/dany/light.log
+    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
+  elif [[ $startInterval < $lightmorningSec ]] && [[ $endInterval > $lightmorningSec ]]; then
+    if [[ $nowSec < $sunrise ]]; then
+      echo "$(date): Wakeup Light On" >> /home/dany/light.log
+      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
+    fi
+  elif [[ $startInterval < $sunrise ]] && [[ $endInterval > $sunrise ]]; then
+    echo "$(date): Sunrise Light Off" >> /home/dany/light.log
+    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
   fi
+# oud
+#  sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
+#  startInterval=$(date -u --date='-1 minute' +"%H:%M")
+#  endInterval=$(date -u --date='+1 minute' +"%H:%M")
+#echo "sunset:$sunset start:$startInterval end:$endInterval"
+#  if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
+#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
+#  elif [[ $startInterval > $sunset ]]; then
+#    startInterval=$(date --date='-1 minute' +"%H:%M")
+#    endInterval=$(date --date='+1 minute' +"%H:%M")
+#echo "start:$startInterval end:$endInterval light:$lightliving"
+#    if [[ $startInterval < $lightliving ]] && [[ $endInterval > $lightliving ]]; then
+#      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
+#    fi
+#  fi
 
 #echo "sleep:$sleep now:$now awake:$awake"
 #  if [[ $now > $sleep ]] || [[ $now < $awake ]]; then
