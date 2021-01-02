@@ -572,9 +572,11 @@ do
 #    fi
 #  done
 # Night lightning on/off
+  IFS=":" read hh mm < <(date +%:z)
+  diffUTC=$(($hh*3600+$mm*60))
   nowSec=$(date -u +%s)
-  sunrise=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)" +%s) + 3600))
-  sunset=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + 3600))
+  sunrise=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)" +%s) + diffUTC))
+  sunset=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + diffUTC))
 
 #  sunrise=$(date --date "15:18" +%s)
 #  sunset=$(date --date "15:07" +%s)
