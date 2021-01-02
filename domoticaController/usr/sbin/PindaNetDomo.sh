@@ -573,8 +573,8 @@ do
 #  done
 # Night lightning on/off
   nowSec=$(date -u +%s)
-  sunrise=$(date --date "$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)" +%s)
-  sunset=$(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s)
+  sunrise=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)" +%s) + 3600))
+  sunset=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + 3600))
 
 #  sunrise=$(date --date "15:18" +%s)
 #  sunset=$(date --date "15:07" +%s)
@@ -583,8 +583,8 @@ do
 
   startInterval=$((nowSec - 60))
   endInterval=$((nowSec + 60))
-  lightmorningSec=$(date -u --date "$lightmorning" +%s)
-  lighteveningSec=$(date -u --date "$lightevening" +%s)
+  lightmorningSec=$(date --date "$lightmorning" +%s)
+  lighteveningSec=$(date --date "$lightevening" +%s)
   if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
     if [[ $nowSec < $lighteveningSec ]]; then
       echo "$(date): Sunset Light On" >> /home/dany/light.log
