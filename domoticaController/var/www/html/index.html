@@ -27,6 +27,8 @@ Fullscreen HTML API
     <!--script src="sha.js"></script-->
     <!--script src="jsencrypt.js"></script-->
     <script type="text/javascript">
+    // Configuration
+      tempOff = "15.00"
     // PinPad
       function addNumber(event, element){
         document.getElementById('PINbox').value = document.getElementById('PINbox').value+element.value;
@@ -797,7 +799,7 @@ console.log(thermostat);
             if (this.status === 404) {
               document.getElementById(id+"Auto").style.color = "black";
             } else {
-              if (this.responseText == 10.00) {
+              if (this.responseText == tempOff) {
                 document.getElementById(id+"Off").style.color = "black";
                 if (document.getElementById("kitchenOff").style.color == "black" && document.getElementById("livingOff").style.color == "black") {
                   document.getElementById("thermostatOff").style.color = "black";
@@ -932,7 +934,7 @@ console.log(thermostat);
             };
             var temp = document.getElementById(id).innerHTML;
             if (command == "Off") {
-              temp = "10.00";
+              temp = tempOff;
               command = "Manual";
             }
             if (id == "kitchentemp") {
