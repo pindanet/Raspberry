@@ -28,7 +28,8 @@ Fullscreen HTML API
     <!--script src="jsencrypt.js"></script-->
     <script type="text/javascript">
     // Configuration
-      tempOff = "15.00"
+      tempOff = "15.00";
+      tempIncrDecr = 0.5;
     // PinPad
       function addNumber(event, element){
         document.getElementById('PINbox').value = document.getElementById('PINbox').value+element.value;
@@ -912,13 +913,13 @@ console.log(thermostat);
             break;
           case "Incr":
             var temp = parseFloat(document.getElementById(id).innerHTML);
-            temp += 0.1;
+            temp += tempIncrDecr;
             temp = temp.toFixed(2);
             document.getElementById(id).innerHTML = temp;
             break;
           case "Decr":
             var temp = parseFloat(document.getElementById(id).innerHTML);
-            temp -= 0.1;
+            temp -= tempIncrDecr;
             temp = temp.toFixed(2);
             document.getElementById(id).innerHTML = temp;
             break;
