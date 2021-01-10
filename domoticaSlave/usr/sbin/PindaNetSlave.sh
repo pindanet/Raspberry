@@ -132,8 +132,8 @@ function thermostat {
 #  fi
 #  if [ -f /var/www/html/data/thermostatManualkitchen ]; then
 #    read roomtemp < /var/www/html/data/thermostatManualkitchen
-#    tempWanted=$roomtemp
-    tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
+    tempWanted=$roomtemp
+#    tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
     echo "Manual temp kichen: $tempWanted °C"
     heatingKitchen="on"
   fi
