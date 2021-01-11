@@ -1,694 +1,1954 @@
-#!/bin/bash
-# ToDo
-# Activate Serial Hardware
+<!DOCTYPE html>
+<!--
+TODO
+Send thermostatManualkitchen minder naar pindakeuken:
+  sudo -u dany scp /var/www/html/data/thermostatManualkitchen pindakeuken:/tmp/
+Fullscreen Android App
+-->
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!--meta name="mobile-web-app-capable" content="yes"-->
+    <link rel="manifest" href="/manifest.json">
+    <title>PindaNet Raspberry Pi</title>
+    <link rel="icon" href="data:;base64,iVBORwOKGO=" />
+    <link href='fullcalendar/packages/core/main.css' rel='stylesheet' />
+    <link href='fullcalendar/packages/daygrid/main.css' rel='stylesheet' />
+    <link href='fullcalendar/packages/timegrid/main.css' rel='stylesheet' />
+    <link href='fullcalendar/packages/list/main.css' rel='stylesheet' />
+    <link href='index.css' rel='stylesheet' />
+    <script src='fullcalendar/vendor/rrule.js'></script>
+    <script src='fullcalendar/packages/core/main.js'></script>
+    <script src='fullcalendar/packages/interaction/main.js'></script>
+    <script src='fullcalendar/packages/daygrid/main.js'></script>
+    <script src='fullcalendar/packages/timegrid/main.js'></script>
+    <script src='fullcalendar/packages/list/main.js'></script>
+    <script src='fullcalendar/packages/rrule/main.js'></script>
+    <script src='fullcalendar/packages/core/locales/nl.js'></script>
+    <script src='fullcalendar/ical.js'></script>
+    <script src="sunset.js"></script>
+    <!--script src="sha.js"></script-->
+    <!--script src="jsencrypt.js"></script-->
+    <script type="text/javascript">
+    // Configuration
+//    tempOff = "15.00";
+//    tempOffKitchen = "11.50"; // tempOff - tempOffset (keuken)
+    tempIncrDecr = 0.5;
+    // PinPad
+      function addNumber(event, element){
+        document.getElementById('PINbox').value = document.getElementById('PINbox').value+element.value;
+        event.stopPropagation();
+      }
+      function clearForm(event){
+        document.getElementById('PINbox').value = "";
+        event.stopPropagation();
+      }
+      function submitForm(event) {
+        if (document.getElementById('PINbox').value != "") {
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', "openssl.php", true);
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhr.onload = function(e) {
+            if (this.status == 200) {
+              document.getElementById("content").style.display = "";
+              document.getElementById("pinpad").innerHTML = "";
+              document.getElementById("clockmenu").innerHTML = atob(this.responseText);
+              centerContent();
+              event.stopPropagation();
+            }
+          };
+          xhr.send("IGTzbhSjRf=" + btoa(document.getElementById('PINbox').value));
+        } else {
+          document.getElementById("content").style.display = "";
+          document.getElementById("pinpad").innerHTML = "";
+        }
+        event.stopPropagation();
+      }
+      function enterPIN(event) {
+//        document.getElementById("pinpad").innerHTML = `<form action="" method="" name="PINform" id="PINform" autocomplete="off"><input id="PINbox" value="" name="PINbox" disabled="" type="password"><br><input class="PINbutton" name="1" value="1" id="1" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="2" value="2" id="2" onclick="addNumber(event, this);" type="button"><input class="PINbutton" name="3" value="3" id="3" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="4" value="4" id="4" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="5" value="5" id="5" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="6" value="6" id="6" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton" name="7" value="7" id="7" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="8" value="8" id="8" onclick="addNumber(event,this);" type="button"><input class="PINbutton" name="9" value="9" id="9" onclick="addNumber(event,this);" type="button"><br><input class="PINbutton clear" name="-" value="clear" id="-" onclick="clearForm(event);" type="button"><input class="PINbutton" name="0" value="0" id="0" onclick="addNumber(event,this);" type="button"><input class="PINbutton enter" name="+" value="enter" id="+" onclick="submitForm(event);" type="button"></form>`;
+        document.getElementById("pinpad").innerHTML = `<form action="" method="" name="PINform" id="PINform" autocomplete="off">
+<input id="PINbox" value="" name="PINbox" disabled="" type="password"><br>
+<input class="PINbutton" name="1" value="1" id="1" onclick="addNumber(event, this);" type="button">
+<input class="PINbutton" name="2" value="2" id="2" onclick="addNumber(event, this);" type="button">
+<input class="PINbutton" name="3" value="3" id="3" onclick="addNumber(event,this);" type="button">
+<input class="PINbutton" name="4" value="4" id="4" onclick="addNumber(event,this);" type="button">
+<input class="PINbutton" name="5" value="5" id="5" onclick="addNumber(event,this);" type="button"><br>
+<input class="PINbutton" name="6" value="6" id="6" onclick="addNumber(event,this);" type="button">
+<input class="PINbutton" name="7" value="7" id="7" onclick="addNumber(event,this);" type="button">
+<input class="PINbutton" name="8" value="8" id="8" onclick="addNumber(event,this);" type="button">
+<input class="PINbutton" name="9" value="9" id="9" onclick="addNumber(event,this);" type="button">
+<input class="PINbutton" name="0" value="0" id="0" onclick="addNumber(event,this);" type="button"><br>
+<input class="button clear" name="-" value="Clear" id="-" onclick="clearForm(event);" type="button">
+<input class="button enter" name="+" value="Enter" id="+" onclick="submitForm(event);" type="button">
+</form>`;
+        document.getElementById("content").style.display = "none";
+        centerContent("PINform");
+	if (typeof event !== 'undefined') {
+          event.stopPropagation();
+        }
+      }
+    // End PinPad
 
-# Compensate temperature sensor
-tempOffset=0
-
-function thermostatManualReset () {
-  if [ -f /var/www/html/data/thermostatManualkitchen ]; then
-    rm /var/www/html/data/thermostatManualkitchen
-  fi
-  if [ -f /var/www/html/data/thermostatManualliving ]; then
-    rm /var/www/html/data/thermostatManualliving
-  fi
+      function setcursor() {
+        if (window.location.hostname == "localhost") {
+          document.body.style.cursor = "url(nocursor.gif), auto";
+        } else {
+          document.body.style.cursor = "default";
+        }
+      }
+      var backgroundtimeinterval = 15; // change background every 15 minutes
+      var backgroundtimecounter = backgroundtimeinterval;
+/*
+      function setstate(state) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "setstate.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+console.log(state, this.responseText);
+          }
+        };
+        xhr.send("state=" + state);
+      }
+*/
+      function background() {
+/*
+        if (encryptedPIN != "") {
+          encryptedPIN="";
+          document.getElementById("content").innerHTML = "";
+        }
+// check sleep/wakeup
+        var nowdate = new Date(); // Works in Chrome, Chromium, not in Firefox
+        var n = nowdate.getDay();
+        for (var i = 0; i < thermostat.length; i++) {
+          if (thermostat[i].charAt(0) == n) {
+	    var hour = parseInt(thermostat[i].substring(2, 4));
+	    var min = parseInt(thermostat[i].substring(5, 7));
+            var statedate = new Date();
+            statedate.setHours(hour, min, 0, 0);
+            var thermostatIndex = i;
+// Chrome uses local time, Firefox universal time (adapt use with Firefox)
+            var startinterval = statedate.getTime() - (1*60*1000); // 1 minute interval
+            var endinterval = statedate.getTime() + (1*60*1000); // 1 minute interval
+	    if (thermostat[i].substring(8) == "-off-") {
+              if (nowdate.getTime() > startinterval) {
+                if(nowdate.getTime() < endinterval) {
+                  setstate("sleep");
+                }
+              }
+            } else {
+              if (nowdate.getTime() > startinterval) {
+                if(nowdate.getTime() < endinterval) {
+                  setstate("awake");
+                }
+              }
+            }
+          }
+        }
+*/
+/*
+console.log(sunset);
+var current_datetime = new Date();
+var start_interval = new Date(current_datetime.getTime() - 60000);
+var end_interval = new Date(current_datetime.getTime() + 60000);
+start_interval = checkTime(start_interval.getHours()) + ":" + checkTime(start_interval.getMinutes());
+console.log(start_interval);
+end_interval = checkTime(end_interval.getHours()) + ":" + checkTime(end_interval.getMinutes());
+console.log(end_interval);
+sunset="18:20"
+if (start_interval < sunset && end_interval > sunset) {
+  console.log("http://tasmota_e7b609-5641/cm?cmnd=Power%20On");
 }
-#function tasmotaRF () {
-#  if [[ "$1" == tasmota* ]]; then
-#    tasmota $1 $2
-#  else
-#    sendRF $1 $2
-#  fi
-#}
-function sendRF () {
-  tempfile="/tmp/${1:0:6}${1:8:10}${1:22:2}"
-  if [ ! -f "$tempfile" ]; then # initialize
-    if [ "$2" == "off" ]; then
-      echo 'on' > "$tempfile"
-    else
-      echo 'off' > "$tempfile"
-    fi
-  fi
-#echo $tempfile $(cat "$tempfile") $2
-  if [ $(cat "$tempfile") == "off" ] && [ "$2" == "on" ]; then
-    if [ ! -f /var/www/html/data/mpc.txt ]; then # disable motion photo's
-      touch /var/www/html/data/mpc.txt
-    fi
-    python /var/www/html/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "$1"
-    echo 'on' > "$tempfile"
-    echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
-  elif [ $(cat "$tempfile") == "on" ] && [ "$2" == "off" ]; then
-    if [ ! -f /var/www/html/data/mpc.txt ]; then # disable motion photo's
-      touch /var/www/html/data/mpc.txt
-    fi
-    python /var/www/html/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "$1"
-    echo 'off' > "$tempfile"
-    echo "$(date): Heating $1 $2" >> /tmp/PindaNetDebug.txt
-  fi
-  if [ -f /var/www/html/data/mpc.txt ]; then
-    if [ ! -s /var/www/html/data/mpc.txt ]; then
-      rm /var/www/html/data/mpc.txt
-    fi
-  fi
-}
-function tasmota () {
-  if [ ! -f /tmp/$1 ]; then # initialize
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-    two=$(wget -qO- http://$1/cm?cmnd=Power | awk -F"\"" '{print $4}')
-    twolower=${two,,}
-    if [ $twolower == "on" ] || [ $twolower == "off" ]; then
-      echo "$(date -u +%s),$twolower" >> /var/www/html/data/$1.log
-    fi
-  fi
-  if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
-    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
-    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-    echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
-  fi
-}
-function thermostatOff {
-  for switch in "${!heater[@]}"
-  do
-#   if [[ "$switch" == *Off ]]; then
-     tasmota ${heater[$switch]} "off"
-#     if [[ "${heater[$switch]}" == tasmota* ]]; then
-#       tasmota ${heater[$switch]}
-#     else
-#       sendRF ${heater[$switch]}
-#     fi
-#   fi
-  done
-}
+*/
+        backgroundtimecounter++;
+        if (backgroundtimecounter >= backgroundtimeinterval) {
+          backgroundtimecounter = 0;
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', "background.php", true);
+          xhr.onload = function(e) {
+            if (this.status == 200) {
+              var lines = this.responseText.split("\n");
+              var imageFileName = lines[0];
+              document.body.style.background = 'linear-gradient( rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25) ), url(' + imageFileName + ')';
+//              startBackgroundTimer = setTimeout(background, 864000);
+              startBackgroundTimer = setTimeout(background, 60000); // elke minuut
+            }
+          };
+          xhr.send();
+        } else {
+          startBackgroundTimer = setTimeout(background, 60000); // elke minuut
+        }
+      }
+      function centerContent(elementid) {
+        elementid = typeof elementid !== 'undefined' ? elementid : "content";
+        var element = document.getElementById(elementid);
+//console.log(elementid);
+        element.style.top = Math.max(0, (window.innerHeight - element.offsetHeight)/2 - 8) + "px";
+        element.style.left = (window.innerWidth - element.offsetWidth)/2 + "px";
+      }
+      function thermometer(event) {
+        var xhrthermometer = new XMLHttpRequest();
+        xhrthermometer.responseType = 'text';
+        xhrthermometer.open('POST', "data/PresHumiTemp", true);
+        xhrthermometer.onload = function(e) {
+          if (this.status == 200) {
+            var PresHumiTemp = this.responseText.split('\n');
+/*
+            document.getElementById("content").innerHTML = "<span id=\"temp\">" + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C</span><br><span id=\"preshumi\">Luchtdruk: " + parseFloat(PresHumiTemp[0]).toFixed(0) + " hPa Vochtigheid: " + parseFloat(PresHumiTemp[1]).toFixed(0) + " % </span>";
+            
+            document.getElementById("content").innerHTML = "<span id=\"preshumi\">Luchtdruk: " + parseFloat(PresHumiTemp[0]).toFixed(0) + " hPa</span><br>";
+            document.getElementById("content").innerHTML += "<span id=\"temp\">" + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C</span><br>";
+            document.getElementById("content").innerHTML += "<span id=\"preshumi\">Vochtigheid: " + parseFloat(PresHumiTemp[1]).toFixed(0) + " %</span>";
+*/          
+            var w = window.innerWidth;
+            document.getElementById('content').innerHTML = '<div id="pres">Luchtdruk: ' + parseFloat(PresHumiTemp[0]).toFixed(0) + ' hPa</div>';
+            document.getElementById('content').innerHTML += '<div id="temp" style="width: ' + w + 'px;">' + parseFloat(PresHumiTemp[2]).toFixed(1) + ' °C</div>';
+            document.getElementById('content').innerHTML += '<div id="humi">Vochtigheid: ' + parseFloat(PresHumiTemp[1]).toFixed(0) + ' %</div>';
 
-function thermostat {
-  . /var/www/html/data/thermostat
-  # compensate position temperature sensor
-  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset)}")
+            centerContent();
+          }
+        };
+        xhrthermometer.send();
 
-  temp=$(tail -1 $PresHumiTempfile)
-  temp=${temp%% C*}
-  # remove leading whitespace characters
-  temp="${temp#"${temp%%[![:space:]]*}"}"
+        startTimer = setTimeout(thermometer, 60000); // herhaal elke 1 min
+        event.stopPropagation();
+      }
+      function weather(event) {
+        document.getElementById("content").innerHTML = '<pre class="terminalbox">Bezig met het ophalen van het weerbericht...</pre>';
+        var xhrforecast = new XMLHttpRequest();
+        xhrforecast.open('POST', "forecast.php", true);
+        xhrforecast.onload = function(e) {
+          if (this.status == 200) {
+            document.getElementById("content").innerHTML = this.responseText;
+          }
+        };
+        xhrforecast.send();
 
-  heatingKitchen="off"
+        startTimer = setTimeout(weather, 600000); // herhaal elke 10 min
+        centerContent();
+        event.stopPropagation();
+      }
+      function radioCommand(event, command, options) {
+        if ( command == "volup" ) {
+          if ( parseInt(document.getElementById("volumeinfo").innerHTML) == 100 ) { // Maximun Volume
+            event.stopPropagation();
+            return;
+          }
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "mpc.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            if (command == "getvol") {
+              document.getElementById("volumeinfo").innerHTML = this.responseText;
+            } else {
+              var element = document.getElementById("radioinfo")
+              if (element == null || typeof(element) == 'undefinedd') {
+                clearInterval(radioStatusInterval);
+              } else {
+                document.getElementById("radioinfo").innerHTML = this.responseText;
+                centerContent();
+                if (command == "volup" || command == "voldown") {
+                  radioCommand(event, 'getvol', 1);
+                }
+              }
+            }
+          }
+        };
+        xhr.send("command=" + command + "&options=" + options);
+	if (command == "play") {
+          document.getElementById("radioinfo").innerHTML = "Even geduld, de zender wordt opgehaald...";
+        }
+        event.stopPropagation();
+      }
+      var radioStatusInterval;
+      function radio(event) {
+        radioCommand(event, 'getvol', 1);
+        radioCommand(event, 'status', 1);
+        radioStatusInterval = setInterval(function () { radioCommand(event, 'status', 1); }, 60000); // Elke minuut
+        document.getElementById("content").innerHTML = `      
+        <p class="terminalbox" style="text-align: center; display: inline-block; max-width: 736px;" id="radioinfo"></p>
+        <br>
+        <button onclick="radioCommand(event, 'play', 1);">Radio 1</button>
+        <button onclick="radioCommand(event, 'play', 2);">Radio 2</button>
+        <button onclick="radioCommand(event, 'play', 3);">Klara</button>
+        <button onclick="radioCommand(event, 'play', 4);">Klara continuo</button>
+        <button onclick="radioCommand(event, 'play', 5);">Studio Brussel</button>
+        <button onclick="radioCommand(event, 'play', 6);">MNM</button>
+        <button onclick="radioCommand(event, 'play', 7);">MNM Hits</button>
+        <button onclick="radioCommand(event, 'play', 8);">VRT NWS</button>
+        <button onclick="radioCommand(event, 'play', 9);">Ketnet Hits</button>
+        <button onclick="radioCommand(event, 'play', 10);">Crooze</button>
+        <button onclick="radioCommand(event, 'play', 11);">VBRO</button>
+        <button onclick="radioCommand(event, 'play', 12);">Joe FM</button>
+        <button onclick="radioCommand(event, 'play', 13);">Q-Music</button>
+        <button onclick="radioCommand(event, 'play', 14);">Willy</button>
+        <br>
+        <!--button onclick="radioCommand(event, 'status', 1);">Status</button-->
+        <button onclick="clearInterval(radioStatusInterval); radioCommand(event, 'stop', 1);">Stop</button>
+        <button onclick="radioCommand(event, 'voldown', 1);">V-</button>
+        <span class="terminalbox" style="text-align: center; font-size: 30px; padding: 15px; font-weight: bold; margin-right: 5px;" id="volumeinfo"></span>
+        <button onclick="radioCommand(event, 'volup', 1);">V+</button>`
+        centerContent();
+        event.stopPropagation();
+      }
+/*
+var motionPhoto;
+var motionPhotos = "";
+var motionPhotoPage;
+      function motionNextPhoto(event) {
+        motionPhoto += 1;
+        if (motionPhoto == motionPhotos.length - 1) {
+          motionPhoto = 0;
+        }
+        motionDisplayPhoto(event,motionPhoto);
+        event.stopPropagation();
+      }
+      function motionPrevPhoto(event) {
+        motionPhoto -= 1;
+        if (motionPhoto < 0) {
+          motionPhoto = motionPhotos.length - 2;
+        }
+        motionDisplayPhoto(event,motionPhoto);
+        event.stopPropagation();
+      }
+      function motionDisplayPhoto(event, photoIndex) {
+        motionPhoto = photoIndex;
+        if (photoIndex < motionPhotos.length - 1) {
+          document.getElementById("content").innerHTML = `      
+          <div onclick="motionDisplayPhotoPage(event)" style="height: 480px; width: 800px; background-image: url('motion/fotos/` + motionPhotos[photoIndex] + `');">
+          <p style="color: white;">` + motionPhotos[photoIndex].substring(0, 16) + `</p>
+          <button style="position: absolute; right: 2px; top: 50%;" title="Volgende" onclick="motionNextPhoto(event);">&gt;</button>
+          <button style="position: absolute; left: 2px; top: 50%;" title="Vorige" onclick="motionPrevPhoto(event);">&lt;</button>
+          </div>`
+          centerContent();
+        }
+        event.stopPropagation();
+      }
+      function motionNextPhotoPage(event) {
+        motionPhotoPage += 1;
+        if (motionPhotoPage == 4) {
+          motionPhotoPage = 0;
+        }
+        motionDisplayPhotoPage(event);
+        event.stopPropagation();
+      }
+      function motionPrevPhotoPage(event) {
+        motionPhotoPage -= 1;
+        if (motionPhotoPage == -1) {
+          motionPhotoPage = 3;
+        }
+        motionDisplayPhotoPage(event);
+        event.stopPropagation();
+      }
+      function motionDisplayPhotoPage(event) {
+        var innerHTML = '<table style="border-spacing: 0; position: fixed; top: 0px; left:0px; height: 480px; width: 800px;">';
+        for (tr = 0; tr < 5; tr++) {
+          innerHTML += "<tr>";
+          for (td = 0; td < 5; td++) {
+            if ((tr * 5) + td + (motionPhotoPage * 25) < motionPhotos.length - 1) {
+              innerHTML += `<td onclick="motionDisplayPhoto(event,` + ((tr * 5) + td + (motionPhotoPage * 25)) +`);" style="vertical-align: top; color: white; height: 96px; width: 160px; background-size: 100% 100%; background-repeat: no-repeat; background-image: url('motion/fotos/` + motionPhotos[(tr * 5) + td + (motionPhotoPage * 25)] + `');">`;
+              innerHTML += motionPhotos[(tr * 5) + td + (motionPhotoPage * 25)].substring(0, 16);
+            } else {
+              innerHTML += `<td style="vertical-align: top; color: white; height: 96px; width: 160px;">`;
+              innerHTML += "Foto " + ((tr * 5) + td + (motionPhotoPage * 25) + 1);
+            }
+            innerHTML += "</td>";
+          }
+          innerHTML += "</tr>";
+        }
+        innerHTML += '</table>';
+        innerHTML += `<button style="position: fixed; right: 2px; top: 50%;" title="Volgende" onclick="motionNextPhotoPage(event);">&gt;</button>
+        <button style="position: fixed; left: 2px; top: 50%;" title="Vorige" onclick="motionPrevPhotoPage(event);">&lt;</button>
+        <button style="position: fixed; right: 2px; top: 2px;" title="Sluiten" onclick="">X</button>`
+        document.getElementById("content").innerHTML = innerHTML;
+        event.stopPropagation();
+      }
+*/
+      var daylyMotionPhotos;
+      var sliderItem = 0;
+      var sliderTimeout;
+      var sliderTimeoutActive = true;
+      var sliderItemVar = 1;
+      function daylySlideLoaded() {
+        document.getElementById("daylySlideText").innerHTML = daylyMotionPhotos[sliderItem].split('\\').pop().split('/').pop().split('.').slice(0, -1).join('.');
+        document.getElementById("daylySlidetransition").src = document.getElementById("daylySlide").src;
+	if (sliderTimeoutActive) {
+          sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+	}
+      }
+      function daylySlideError() {
+        sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+console.log("The image " + daylyMotionPhotos[sliderItem] + " could not be loaded.");
+      }
+      function daylymotionPlayer() {
+	sliderItem += sliderItemVar;
+        if(sliderItem >= daylyMotionPhotos.length) {
+          sliderItem = 0;
+        } else if (sliderItem < 0) {
+          sliderItem = sliderItem + daylyMotionPhotos.length;
+        }
+        document.getElementById("daylySlide").src = daylyMotionPhotos[sliderItem];
+      }
+      function daylySlideCommand(event, command) {
+        switch(command) {
+          case "play":
+            if (document.getElementById("daylySlidePlayPause").innerHTML == "&lt;&gt;") {
+              sliderTimeoutActive = true;
+              sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+              document.getElementById("daylySlidePlayPause").innerHTML = "||";
+            } else {
+              clearTimeout(sliderTimeout);
+              sliderTimeoutActive = false;
+              document.getElementById("daylySlidePlayPause").innerHTML = "&lt;&gt;";
+            }
+            break;
+          case "backward":
+            sliderItemVar = -1;
+            sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+            break;
+          case "forward":
+            sliderItemVar = 1;
+            sliderTimeout = setTimeout(function(){ daylymotionPlayer() }, 100);
+            break;
+        }
+        event.stopPropagation();
+      }
+      function timelapse(event) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "daylymotion.php", true);
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            daylyMotionPhotos = Object.values(JSON.parse(this.responseText));
+            var innerHTML =  '<div style="position: absolute; height: 480px; width: 800px; left: 0; top: 0;"><img id="daylySlide" onload="daylySlideLoaded();" onerror="daylySlideError();"></div>';
+            innerHTML += '<div id="daylySlideToplayer" style="position: absolute; height: 480px; width: 800px; left: 0; top: 0;"><img id="daylySlidetransition">';
+            innerHTML += '<div id="daylySlideText" style="position: absolute; color: white;">Tekst</div>';
+            innerHTML += '<div id="daylySlideCommand" style="position: absolute; color: white;">';
+            innerHTML += '<button id="daylySlideSlowMotion" onclick="daylySlideCommand(event, \'backward\');">||&lt;</button>';
+            innerHTML += '<button id="daylySlidePlayPause" onclick="daylySlideCommand(event, \'play\');">||</button>';
+            innerHTML += '<button id="daylySlideSlowMotion" onclick="daylySlideCommand(event, \'forward\');">&gt;||</button>';
+            innerHTML += '</div>';
+            innerHTML += '</div>';
+            document.getElementById("content").innerHTML = innerHTML;
 
-#  if [ ! -f $thermostatkitchenfile ]; then # default
-#    printf "%s\n" "${thermostatkitchendefault[@]}" > $thermostatkitchenfile
-#    chown www-data:www-data $thermostatkitchenfile
-#  fi
-#  mapfile -t raw < $thermostatkitchenfile
+            document.getElementById("daylySlideText").style.right = "8px";
+            document.getElementById("daylySlideText").style.top = "8px";
+            document.getElementById("daylySlideCommand").style.left = "8px";
+            document.getElementById("daylySlideCommand").style.top = "8px";
+            event.stopPropagation();
+            sliderTimeout = setTimeout(function(){
+              document.getElementById("content").style.top = "0";
+              document.getElementById("content").style.left = "0";
+              daylymotionPlayer()
+            }, 100);
+          }
+        };
+        xhr.send();
+        event.stopPropagation();
+      }
+/*
+      function motionDetection(event) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "motion.php", true);
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            motionPhotos = JSON.parse(this.responseText);
+            motionPhoto = 0;
+            motionPhotoPage = 0;
+            motionDisplayPhotoPage(event);
+            event.stopPropagation();
+          }
+        };
+        xhr.send();
+      }
+*/
+/*
+var thermostat = "";
+//loadThermostat();
+      function saveThermostat() {
+        // sorteer op tijd
+        thermostat.sort();
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "system.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            getThermostatTemp();
+          }
+        };
+        xhr.send("command=saveThermostat&json=" + btoa(thermostat.join(" ")));
+      }
+      function exportThermostat(event) {
+        window.open("exportthermostat.php");
+        event.stopPropagation();
+      }
+      function loadThermostat() {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        xhr.open('POST', "data/thermostat", true);
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            if (thermostat == "") {
+              var raw = this.responseText;
+              thermostat = raw.split(" ");
+console.log(thermostat);
+            }
+          }
+        };
+        xhr.send();
+      }
+      function importThermostat(event) {
+        document.getElementById("content").innerHTML = `      
+        <form class="terminalbox" id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
+            <h2 style="text-align: center;">Thermostaat importeren</h2>
+            <input type='file' id='fileinput' onclick="event.stopPropagation();">
+            <input type='button' id='btnLoad' value='Laden' onclick='loadFile();'>
+        </form>`
+        centerContent();
+        event.stopPropagation();
+      }
+      function loadFile() {
+        var input, file, fr;
 
-  IFS=$'\n' thermostatkitchen=($(sort <<<"${thermostatkitchendefault[*]}"))
-  unset IFS
-#  unset raw
+        if (typeof window.FileReader !== 'function') {
+          alert("The file API isn't supported on this browser yet.");
+          return;
+        }
 
-# Default times for heating
-  for thermostatitem in "${thermostatkitchen[@]}"; do
-    daytime=(${thermostatitem})
-    if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
-      heatingKitchen="on"
-      break
-    fi
-  done
-# Exceptions with recurrent dates and times
-  for thermostatitem in "${thermostatkitchenevent[@]}"; do
-    daytime=(${thermostatitem})
-    recevent=$(date -u --date "${daytime[0]}" +%s)
-    timebetween=$((${daytime[1]} * 86400))
-    nowSec=$(date -u +%s)
-    today=$((nowSec - (nowSec % 86400)))
-    while  [ $recevent -lt $today ]; do
-      recevent=$((recevent + timebetween))
-    done
-#    echo $today $recevent
-    if [ $today == $recevent ]; then
-      echo "Event in Keuken op $(date -u --date @$recevent)"
-      if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
-        echo "Tussen ${daytime[2]} en ${daytime[3]}: heatingKitchen: ${daytime[4]}"
-        heatingKitchen=${daytime[4]}
-        break
-      fi
-    fi
-  done
+        input = document.getElementById('fileinput');
+        if (!input) {
+          alert("Um, couldn't find the fileinput element.");
+        }
+        else if (!input.files) {
+          alert("This browser doesn't seem to support the `files` property of file inputs.");
+        }
+        else if (!input.files[0]) {
+          alert("Please select a file before clicking 'Load'");
+        }
+        else {
+          file = input.files[0];
+          fr = new FileReader();
+          fr.onload = receivedText;
+          fr.readAsText(file);
+        }
+      }
+      function receivedText(e) {
+        lines = e.target.result;
+        thermostat = lines.split(" ");
+        weeklyThermostat(e);
+      }
+      function outputUpdate(event, value, elmid, item) {
+        if (elmid == "settemp") {
+          if (isNaN(value)) {
+            document.getElementById(elmid).value = "-off-"
+          } else {
+            var temp = Math.round(value * 2) / 2;
+            temp = temp.toFixed(2);
+            document.getElementById(elmid).value = temp;
+          }
+        } else {
+          document.getElementById(elmid).value = ("0" + value).slice(-2);
+        }
+        thermostat[item] = thermostat[item].substring(0, 2) + document.getElementById("sethour").value + ":" + document.getElementById("setmin").value + ";" + ("0" + document.getElementById("settemp").value).slice(-5);
+        event.stopPropagation();
+      }
+      function setThermostat(event, item) {
+          var day = thermostat[item].substr(0,1);
+          var hour = thermostat[item].substr(2,2);
+          var min = thermostat[item].substr(5,2);
+          var temp = thermostat[item].substr(8,5);
 
-  tempWanted=$tempComfort
-  if [ -f /var/www/html/data/thermostatManualkitchen ]; then
-    read roomtemp < /var/www/html/data/thermostatManualkitchen
-    tempWanted=$roomtemp
-    if [ "$roomtemp" == "off" ]; then
-      echo "Kitchen Off"
-      heatingKitchen="off"
-    else
-      echo "Manual temp kichen: $tempWanted °C"
-      heatingKitchen="on"
-    fi
-  fi
+          document.getElementById("content").innerHTML = `<div class="dayname">
+          <button onclick="weeklyThermostat(event);">&#x25C0;</button> ` +
+          dayNames[day] + ` <input type="text" size="2" id="sethour" onchange="outputUpdate(event,value,'sethour',` + item + `)" onclick="event.stopPropagation();" value="` + hour + `">
+          <input class="inline" type="range" orient="vertical" min="0" max="23" oninput="outputUpdate(event,value,'sethour',` + item + `)" onclick="event.stopPropagation();" value="` + hour + `">
 
-#if false; then # Niet uitvoeren
-#
-#  if [ "$heatingKitchen" == "off" ]; then
-#    echo "Keuken basisverwarming"
-##    tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
-#    tempWanted=15
-#  fi
-##  if [ "$heatingKitchen" == "on" ]; then
-#  total=${#heaterKeuken[@]}
-#  for (( i=0; i<$total; i++ )); do
-#    tempToggle=$(awk "BEGIN {print ($tempWanted + ($hysteresis * 2) - $hysteresis - $hysteresis * (2 * $i))}")
-##    echo  ${heater[${heaterKeuken[$i]}]}
-#    echo "${heaterKeuken[$i]} aan bij $tempToggle °C."
-#    if (( $(awk "BEGIN {print ($temp < $tempToggle)}") )); then
-#      echo "${heaterKeuken[$i]} ingeschakeld bij $temp °C."
-#      tasmota ${heater[${heaterKeuken[$i]}]} on
-#    fi
-#    tempToggle=$(awk "BEGIN {print ($tempWanted + ($hysteresis * 2) + $hysteresis - $hysteresis * (2 * $i))}")
-#    echo "${heaterKeuken[$i]} uit bij $tempToggle °C."
-#    if (( $(awk "BEGIN {print ($temp > $tempToggle)}") )); then
-#      echo "${heaterKeuken[$i]} uitgeschakeld bij $temp °C."
-#      tasmota ${heater[${heaterKeuken[$i]}]} off
-#    fi
-#  done
-#    if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
-#      echo "Keukenverwarming Noord inschakelen"
-#      tasmota ${heater[KeukenNoord]} on
-#      if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 2)}") )); then
-#        echo "Keukenverwarming Zuid inschakelen"
-#        tasmota ${heater[KeukenZuid]} on
-#      fi
-#    elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 2)}") )); then
-#      echo "Keukenverwarming Zuid uitschakelen"
-#      tasmota ${heater[KeukenZuid]} off
-#      if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
-#        tasmota ${heater[KeukenNoord]} off
-#        echo "Keukenverwarming Noord uitschakelen"
-#      fi
-#    fi
-#  else
-#    echo "Keuken niet verwarmen"
-#    for heateritem in "${heaterKeuken[@]}"; do
-#      echo "$heateritem uitschakelen"
-#      tasmota ${heater[$heateritem]} off
-#    done
-#    tasmota ${heater[KeukenZuid]} off
-#    tasmota ${heater[KeukenNoord]} off
-#  fi
-#
-#  if [ ! -f $thermostatlivingfile ]; then # default
-#    printf "%s\n" "${thermostatlivingdefault[@]}" > $thermostatlivingfile
-#    chown www-data:www-data $thermostatlivingfile
-#  fi
-#  mapfile -t raw < $thermostatlivingfile
-#
-#fi # Einde Niet uitvoeren
+          <input type="text" size="2" id="setmin" onchange="outputUpdate(event,value,'setmin',` + item + `)" onclick="event.stopPropagation();" value="` + min + `">
+          <input class="inline" type="range" orient="vertical" min="0" max="59" oninput="outputUpdate(event,value,'setmin',` + item + `)" onclick="event.stopPropagation();" value ="` + min + `">
 
-  IFS=$'\n' thermostatliving=($(sort <<<"${thermostatlivingdefault[*]}"))
-  unset IFS
-#  unset raw
+          <input type="text" size="5" id="settemp" onchange="outputUpdate(event,value,'settemp',` + item + `)" onclick="event.stopPropagation();" value="` + temp + `"> °C
+          <input class="inline" type="range" orient="vertical" min="0" max="24" step=".05" oninput="outputUpdate(event,value,'settemp',` + item + `)" onclick="event.stopPropagation();" value="` + temp + `">
+          <button onclick="outputUpdate(event,'-off-','settemp',` + item + `);">Uit</button>
 
-#  printf "%s\n" "${thermostatliving[@]}"
-  echo $now
+          <button onclick="delTimeTemp(event,` + item + `);">&mdash;</button></div>`;
+          event.stopPropagation();
+      }
+      function addTimeTemp(event, day) {
+        thermostat.push(day + ";23:59;15.00");
+        weeklyThermostat(event);
+        event.stopPropagation();
+      }
+      function delTimeTemp(event, item) {
+        thermostat.splice(item, 1);
+        weeklyThermostat(event);
+      }
+*/
+      function displayHeatingThermostat() {
+        var xhrHeating = new XMLHttpRequest();
+        xhrHeating.responseType = 'text';
+        xhrHeating.open('POST', "data/heating", true);
+        xhrHeating.onload = function(e) {
+          if (this.status == 200) {
+            var heating = this.responseText.slice(0, -1);
+            if (heating == "off") {
+              document.getElementById("autoThermostat").style = "color: black;";
+              document.getElementById("onThermostat").style = "color: black;";
+              document.getElementById("offThermostat").style = "";
+              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: -- °C";
+            } else if (heating == "on") {
+              document.getElementById("autoThermostat").style = "color: black;";
+              document.getElementById("onThermostat").style = "";
+              document.getElementById("offThermostat").style = "color: black;";
+              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: -- °C";
+            } else {
+              document.getElementById("autoThermostat").style = "";
+              document.getElementById("onThermostat").style = "color: black;";
+              document.getElementById("offThermostat").style = "color: black;";
 
-  heatingLiving="off"
-# Default times for heating
-  for thermostatitem in "${thermostatliving[@]}"; do
-    daytime=(${thermostatitem})
-    if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
-      heatingLiving="on"
-      break
-    fi
-  done
-# Exceptions with recurrent dates and times
-  for thermostatitem in "${thermostatlivingevent[@]}"; do
-    daytime=(${thermostatitem})
-    recevent=$(date -u --date "${daytime[0]}" +%s)
-    timebetween=$((${daytime[1]} * 86400))
-    nowSec=$(date -u +%s)
-    today=$((nowSec - (nowSec % 86400)))
-    while  [ $recevent -lt $today ]; do
-      recevent=$((recevent + timebetween))
-    done
-#    echo $today $recevent
-    if [ $today == $recevent ]; then
-      echo "Event in Living op $(date -u --date @$recevent)"
-      if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
-        echo "Tussen ${daytime[2]} en ${daytime[3]}: heatingLiving: ${daytime[4]}"
-        heatingLiving=${daytime[4]}
-        break
-      fi
-    fi
-  done
+              var d = new Date();
+              var weekday = d.getDay();
+              var now = d.toLocaleTimeString().substring(0,5);
+              var thermostatTemp = thermostat[thermostat.length - 1].slice(-5);
+              for (var i in thermostat) {
+                if (thermostat[i].substr(0,1) > weekday) {
+                  break;
+                } else if (thermostat[i].substr(0,1) < weekday) {
+                  thermostatTemp = thermostat[i].slice(-5);
+                } else if (thermostat[i].substr(2,5) < now) {
+                  thermostatTemp = thermostat[i].slice(-5);
+                }
+              }
+              if (thermostatTemp == "-off-") {
+                thermostatTemp = "Uit";
+              } else {
+                thermostatTemp = parseFloat(thermostatTemp.substr(0,4)).toFixed(1) + " °C";
+              }
+              document.getElementById("thermostatTemp").innerHTML = "Regeltemp: " + thermostatTemp;
+            }
+            var xhrthermometer = new XMLHttpRequest();
+            xhrthermometer.responseType = 'text';
+            xhrthermometer.open('POST', "data/PresHumiTemp", true);
+            xhrthermometer.onload = function(e) {
+              if (this.status == 200) {
+                var PresHumiTemp = this.responseText.split('\n');
+                document.getElementById("roomTemp").innerHTML = "Kamertemp: " + parseFloat(PresHumiTemp[2]).toFixed(1) + " °C";
+                centerContent();
+              }
+            };
+            xhrthermometer.send();
+          }
+        };
+        xhrHeating.send();
+      }
+      function getThermostatTemp() {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        xhr.open('POST', "data/thermostat", true);
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            var raw = this.responseText;
+            thermostat = raw.split(" ");
+            tableel='<table style="width:790px">';
+            tableel+='<tr>';
+            for (var day = 0; day < 7; day++) {
+              tableel += '<th>' + dayNames[day] + '</th>';
+            }
+            tableel+='</tr>';
+            timetemp=0;
+            timetempvalues=true;
+            dayValues = [true, true, true, true, true, true, true];
+            while (timetempvalues) {
+              timetempvalues=false;
+              var column = 0;
+              tableel+='<tr>';
+              for (var day = 0; day < 7; day++) {
+                var occurred = 0;
+                for (var item = 0; item <= thermostat.length; item++) {
+                  if (typeof thermostat[item] === 'undefined') {
+                    if (dayValues[day] && day == 6) {
+                      tableel += '<td><button onclick="addTimeTemp(event,' + day + ');">&nbsp;+++++&nbsp;</button></td>';
+                      column++;
+                    }
+                    dayValues[day] = false;
+                    break;
+                  } else if (thermostat[item].substring(0,1) == day) {
+                    if (occurred == timetemp) {
+                      var timeTempValue = thermostat[item].substring(8,13);
+                      if (timeTempValue == "-off-") {
+                        timeTempValue = "Uit";
+                      } else {
+                        timeTempValue = parseFloat(timeTempValue.substr(0,4)).toFixed(1) + ' °C';
+                      }
+                      tableel+='<td><button onclick="setThermostat(event,' + item + ');">' + thermostat[item].substring(2,7) + ' ' + timeTempValue + '</button></td>';
+                      timetempvalues=true;
+                      column++;
+                      break;
+                    }
+                    occurred++;
+                  } else if (thermostat[item].substring(0,1) > day) {
+                    if (dayValues[day]) {
+                      tableel += '<td><button onclick="addTimeTemp(event,' + day + ');">&nbsp;+++++&nbsp;</button></td>';
+                      column++;
+                    }
+                    dayValues[day] = false;
+                    break;
+                  } else if (column < day) {
+                    tableel += '<td></td>';
+                    column++;
+                  }
+                }
+              }
+              tableel+='</tr>';
+              timetemp++;
+            }
+            tableel+='<tr><td colspan="7">';
+            tableel+=' <button id="onThermostat" onclick="onThermostat(event);">Aan</button>';
+            tableel+=' <button id="offThermostat" onclick="offThermostat(event);">Uit</button>';
+            tableel+=' <button id="autoThermostat" onclick="autoThermostat(event);">Auto</button>';
+            tableel+=' <span class="terminalbox"><span id="thermostatTemp">Regeltemp: 5 °C</span></span>';
+            tableel+=' <span class="terminalbox"><span id="roomTemp">Kamertemp: 5 °C</span></span>';
+            tableel+=' <button id="resetThermostat" onclick="resetThermostat(event);">Reset</button>';
+            tableel+=' <button title="Opslaan" onclick="exportThermostat(event);">&DownArrowBar;</button>';
+            tableel+=' <button title="Laden" onclick="importThermostat(event);">&UpArrowBar;</button>';
+            tableel+=' <button title="Naar thermostaat sturen" onclick="sendThermostat(event,this);">Send</button>';
+            tableel+='</td></tr>';
+            tableel+='</table>';
+            document.getElementById("content").innerHTML = tableel;
+            centerContent();
+            displayHeatingThermostat();
+          }
+        };
+        xhr.send();
+      }
+/*
+      function sendBT(filename, value, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        xhr.open('POST', "sendBT.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = callback;
+        xhr.send("file=" + filename + "&value=" + value);
+      }
+*/
+      function sendThermostat(event, element) {
+        element.style = "color: black;";
+/*
+        sendBT("thermostat","-1", function(e) {
+          if (this.status == 200) {
+            element.style = "";
+            event.stopPropagation();
+          }
+        });
+*/
+        event.stopPropagation();
+      }
+      function autoThermostat(event) {
+/*
+        sendBT("heating","auto", function(e) {
+          if (this.status == 200) {
+            displayHeatingThermostat();
+            centerContent();
+            event.stopPropagation();
+          }
+        });
+*/
+        event.stopPropagation();
+      }
+      function onThermostat(event) {
+/*
+        sendBT("heating","on", function(e) {
+          if (this.status == 200) {
+            displayHeatingThermostat();
+            centerContent();
+            event.stopPropagation();
+          }
+        });
+*/
+        event.stopPropagation();
+      }
+      function offThermostat(event) {
+/*
+        sendBT("heating","off", function(e) {
+          if (this.status == 200) {
+            displayHeatingThermostat();
+            centerContent();
+            event.stopPropagation();
+          }
+        });
+*/
+        event.stopPropagation();
+      }
+      function resetThermostat(event) {
+        event.stopPropagation();
+        var raw = "0;07:20;22.00 0;22:45;-off- 1;07:20;22.00 1;22:45;-off- 2;07:20;22.00 2;22:45;-off- 3;07:20;22.00 3;22:45;-off- 4;07:20;22.00 4;22:45;-off- 5;07:20;22.00 5;22:45;-off- 6;07:20;22.00 6;22:45;-off-";
+        thermostat = raw.split(" ");
+        weeklyThermostat(event);
+      }
+      function weeklyThermostat(event) {
+        document.getElementById("content").innerHTML = '<pre class="terminalbox">Bezig met het ophalen van de Thermostaat...</pre>';
+        centerContent();
+        event.stopPropagation();
+        if (thermostat == "") {
+          setTimeout(weeklyThermostat, 1000, event);
+          return;
+        }
+        saveThermostat();
+      }
+      function thermostatIfFileExist(url, id) {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        xhr.open('POST', url)
+        xhr.onload = function() {
+          if (this.readyState === 4) {
+            if (this.status === 404) {
+              document.getElementById(id+"Auto").style.color = "black";
+            } else {
+              if (this.responseText == "off") {
+                document.getElementById(id+"Off").style.color = "black";
+                if (document.getElementById("kitchenOff").style.color == "black" && document.getElementById("livingOff").style.color == "black") {
+                  document.getElementById("thermostatOff").style.color = "black";
+                } else {
+                  document.getElementById("thermostatOff").style.color = "";
+                }
+              } else {
+                document.getElementById(id+"Manual").style.color = "black";
+                document.getElementById("kitchentemp").innerHTML = this.responseText;
+              }
+            }
+          }
+        }
+        xhr.send("id=" + id);
+      }
+      function thermostatUI (event, command, id) {
+        switch (command) {
+          case "Reset":
+//          case "Default":
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', "thermostatcommand.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+              if (this.readyState === 4) {
+                document.getElementById("thermostat" + command).classList.remove('blink');
+                timerThermostat (event);
+              }
+            };
+            document.getElementById("thermostat" + command).classList.add('blink');
+            xhr.send("command=" + command);
+            break;
+/*
+          case "Configure":
+            document.getElementById("content").innerHTML = `<div id="thermostatUI">
+            <div id="title">Timer instellen</div>
+            <button id="thermostatReset" onclick="thermostatUI(event, 'Kitchen');">Keuken</button>
+            <button id="thermostatReset" onclick="thermostatUI(event, 'Living');">Living</button>
+            <div class="day" style="text-align: left;">
+            Zondag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Maandag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Dinsdag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Woensdag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Donderdag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Vrijdag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            Zaterdag <span class="period" style="display: inline-block; width: 600px; background-color: red;">&nbsp;</span>
+            </div>
+            </div>`
+            centerContent();
+            event.stopPropagation();
+            break;
+*/
+          case "Heaters":
+            var keuken = new Array(), living = new Array();
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', "data/thermostat", true);
+            xhr.onload = function(e) {
+              if (this.status == 200) {
+                var lines = this.responseText.split("\n");
+                for (line of lines) {
+//                  n = line.search("heaters\\[.*\\]=\"");
+                  n = line.search("heaters\\+=\\(");
+                  if ( n >= 0 ) {
+                    heateritem = line.substring(line.indexOf("\"") + 1,line.lastIndexOf("\""));
+                    if (heateritem.substr(0,6) == "Keuken") {
+                      keuken.push(heateritem.substring(6));
+                    } else if (heateritem.substr(0,6) == "Living") {
+                      living.push(heateritem.substring(6));
+                    }
+                  }
+                }
+                var htmlcode = `<div id="thermostatUI">
+<div style="width: 800px; overflow: hidden;">
+  <div style="width: 50%; float: left;">
+    <div id="title">Radiators</div>
+    <div class="room">
+      <span>Living:</span>`;
+                for (var i = 0; i < living.length; i++) {
+                  htmlcode += `<button onclick="document.getElementById('iframe_heater').src = 'http://`
+                  htmlcode += living[i].substr(living[i].indexOf(' ')+1);
+                  htmlcode += `'; event.stopPropagation();">`;
+                  htmlcode += living[i].substr(0,living[i].indexOf(' '));
+                  htmlcode += `</button>`;
+                }
 
-  tempWanted=$tempComfort
-  if [ -f /var/www/html/data/thermostatManualliving ]; then
-    read roomtemp < /var/www/html/data/thermostatManualliving
-#    tempWanted=$roomtemp
-    if [ "$roomtemp" == "off" ]; then
-      echo "Living Off"
-      heatingLiving="off"
-    else
-      tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
-      echo "Manual temp living: $tempWanted °C"
-      heatingLiving="on"
-    fi
-  fi
-  if [ "$heatingLiving" == "off" ]; then
-    echo "Living basisverwarming"
-#    tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
-    tempWanted=15
-  fi
-#  if [ "$heatingLiving" == "on" ]; then
-#  echo "Kamertemp: $temp °C"
-#  echo "Thermostaat temp: $tempWanted"
-  total=${#heaterLiving[@]}
-  for (( i=0; i<$total; i++ )); do
-    tempToggle=$(awk "BEGIN {print ($tempWanted - $hysteresis - $hysteresis * (2 * $i))}")
-#    echo  ${heater[${heaterLiving[$i]}]}
-    echo "${heaterLiving[$i]} aan bij $tempToggle °C."
-    if (( $(awk "BEGIN {print ($temp < $tempToggle)}") )); then
-      echo "${heaterLiving[$i]} ingeschakeld bij $temp °C."
-      tasmota ${heater[${heaterLiving[$i]}]} on
-    fi
-    tempToggle=$(awk "BEGIN {print ($tempWanted + $hysteresis - $hysteresis * (2 * $i))}")
-    echo "${heaterLiving[$i]} uit bij $tempToggle °C."
-    if (( $(awk "BEGIN {print ($temp > $tempToggle)}") )); then
-      echo "${heaterLiving[$i]} uitgeschakeld bij $temp °C."
-      tasmota ${heater[${heaterLiving[$i]}]} off
-    fi
-  done
-#  echo "Zuid aan bij" $(awk "BEGIN {print (${daytime[2]} - $hysteresis)}") "°C."
-#  echo "Noord aan bij" $(awk "BEGIN {print (${daytime[2]} - $hysteresis - $hysteresis * 2)}") "°C."
-#  echo "Noord uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis - $hysteresis * 2)}") "°C."
-#  echo "Zuid uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis)}") "°C."
-#    if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
-#      echo "Livingverwarming Zuid inschakelen"
-#      tasmota ${heater[LivingZuid]} on
-#      if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 2)}") )); then
-#        echo "Livingverwarming Noord inschakelen"
-#        tasmota ${heater[LivingNoord]} on
-#        if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 4)}") )); then
-#          echo "Livingverwarming NoordOost inschakelen"
-#          tasmota ${heater[LivingNoordOost]} on
-#          if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 6)}") )); then
-#            echo "Livingverwarming Oost inschakelen"
-#            tasmota ${heater[LivingOost]} on
-#          fi
-#        fi
-#      fi
-#    fi
-#    if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 6)}") )); then
-#      echo "Livingverwarming Oost uitschakelen"
-#      tasmota ${heater[LivingOost]} off
-#      if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 4)}") )); then
-#        echo "Livingverwarming NoordOost uitschakelen"
-#        tasmota ${heater[LivingNoordOost]} off
-#        if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 2)}") )); then
-#          echo "Livingverwarming Noord uitschakelen"
-#          tasmota ${heater[LivingNoord]} off
-#          if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
-#            echo "Livingverwarming Zuid uitschakelen"
-#            tasmota ${heater[LivingZuid]} off
-#          fi
-#        fi
-#      fi
-#    fi
-#  else
-#    echo "Living niet verwarmen"
-#    for heateritem in "${heaterLiving[@]}"; do
-#      echo "$heateritem uitschakelen"
-#      tasmota ${heater[$heateritem]} off
-#    done
-#    tasmota ${heater[LivingZuid]} off
-#    tasmota ${heater[LivingNoord]} off
-#    tasmota ${heater[LivingNoordOost]} off
-#    tasmota ${heater[LivingOost]} off
-#  fi
-}
+                htmlcode += `</div>
+    <div class="room">
+      <span>Keuken:</span>`;
+                for (var i = 0; i < keuken.length; i++) {
+                  htmlcode += `<button onclick="document.getElementById('iframe_heater').src = 'http://`
+                  htmlcode += keuken[i].substr(keuken[i].indexOf(' ')+1);
+                  htmlcode += `'; event.stopPropagation();">`;
+                  htmlcode += keuken[i].substr(0,keuken[i].indexOf(' '));
+                  htmlcode += `</button>`;
+                }
 
-_pir_pin=4 # BCM4
+                htmlcode += `</div>
+    </div>
+    <div style="margin-left: 400px;">
+      <iframe src="http://tasmota_a943fa-1018" id="iframe_heater" style="height:590px;width:400px;border:none;"></iframe>
+    </div>
+  </div>
+</div>`
+                document.getElementById("content").innerHTML = htmlcode;
+                centerContent();
+              }
+            };
+            xhr.send();
+
+            event.stopPropagation();
+            break;
+          case "Incr":
+            var temp = parseFloat(document.getElementById(id).innerHTML);
+            temp += tempIncrDecr;
+            temp = temp.toFixed(2);
+            document.getElementById(id).innerHTML = temp;
+            break;
+          case "Decr":
+            var temp = parseFloat(document.getElementById(id).innerHTML);
+            temp -= tempIncrDecr;
+            temp = temp.toFixed(2);
+            document.getElementById(id).innerHTML = temp;
+            break;
+          case "Manual":
+          case "Off":
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', "thermostatcommand.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+              if (this.readyState === 4) {
+                timerThermostat (event);
+              }
+            };
+            var temp = document.getElementById(id).innerHTML;
+            if (command == "Off") {
+              temp = "off";
+              command = "Manual";
+            }
+            if (id == "kitchentemp") {
+              xhr.send("command=" + command + "&room=kitchen&temp=" + temp);
+            } else {
+              xhr.send("command=" + command + "&room=living&temp=" + temp);
+            }
+            break;
+          case "Auto":
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', "thermostatcommand.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+              if (this.readyState === 4) {
+                timerThermostat (event);
+              }
+            };
+            if (id == "kitchentemp") {
+              xhr.send("command=" + command + "&room=kitchen&temp=auto");
+            } else {
+              xhr.send("command=" + command + "&room=living&temp=auto");
+            }
+            break;
+        }
+        event.stopPropagation();
+      }
+      function timerThermostat (event) {
+        clearTimeout(startTimer);
+        document.getElementById("content").innerHTML = `<div id="thermostatUI">
+        <div id="title"><span id="ThTime">14:49</span> Timer - Thermostaat <span id="ThTemp">21.5 °C</span></div>
+        <button id="thermostatReset" onclick="thermostatUI(event, 'Reset');">Reset</button>
+        <button id="thermostatOff" onclick="thermostatUI(event, 'Off', 'kitchentemp'); thermostatUI(event, 'Off', 'livingtemp'); ">Uit</button>
+        <!--button id="thermostatDefault" onclick="thermostatUI(event, 'Default');">Standaard</button-->
+        <!--button onclick="thermostatUI(event, 'Configure');">Instellen</button-->
+        <button onclick="thermostatUI(event, 'Heaters');">Radiators</button>
+        <br>
+        <div class="room">
+        <span>Keuken:</span>
+        <button id="kitchenAuto" onclick="thermostatUI(event, 'Auto', 'kitchentemp');">Auto</button>
+        <button id="kitchenOff" onclick="thermostatUI(event, 'Off', 'kitchentemp');">Uit</button>
+        <button id="kitchenManual"onclick="thermostatUI(event, 'Manual', 'kitchentemp');">Manueel op <span id="kitchentemp">20.00</span> °C</button>
+        <button onclick="thermostatUI(event, 'Incr', 'kitchentemp');">+</button>
+        <button onclick="thermostatUI(event, 'Decr', 'kitchentemp');">-</button>
+        </div>
+        <div class="room">
+        <!--hr-->
+        <span style="width: 110px; display: inline-block;">Living:</span>
+        <button id="livingAuto" onclick="thermostatUI(event, 'Auto', 'livingtemp');">Auto</button>
+        <button id="livingOff" onclick="thermostatUI(event, 'Off', 'livingtemp');">Uit</button>
+        <button id="livingManual" onclick="thermostatUI(event, 'Manual', 'livingtemp');">Manueel op <span id="livingtemp">20.00</span> °C</button>
+        <button onclick="thermostatUI(event, 'Incr', 'livingtemp');">+</button>
+        <button onclick="thermostatUI(event, 'Decr', 'livingtemp');">-</button>
+        </div>
+        </div>`
+        centerContent();
+        thermostatIfFileExist("data/thermostatManualkitchen", "kitchen");
+        thermostatIfFileExist("data/thermostatManualliving", "living");
+        var timerThDateTemp = setInterval(function(){
+          var element =  document.getElementById("ThTime");
+          if (typeof(element) == "undefined" || element == null) {
+            clearInterval(timerThDateTemp);
+          } else {
+            var today = new Date();
+            var h = today.getHours();
+            var m = today.getMinutes();
+            m = checkTime(m);
+            document.getElementById("ThTime").innerHTML = h + ":" + m;
+            document.getElementById("ThTemp").innerHTML = roomTemp;
+          }
+        }, 1000);
+        event.stopPropagation();
+      }
+      function remoteCommand(event, command) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "system.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+//            document.getElementById("content").innerHTML = '<pre class="terminalbox">' + this.responseText + "</pre>";
+            document.getElementById("content").innerHTML = '';
+            centerContent();
+            switch (this.responseText) {
+              case "WiFi AP actief":
+                document.getElementById("statuswireless").innerHTML = `<img style="height: 2em;" src="emoji/network-wireless.svg">`;
+                break;
+              case "WiFi AP uitgeschakeld":
+                document.getElementById("statuswireless").innerHTML = ``;
+                break;              
+              case "Stroomtoevoer naar Wall ingeschakeld.":
+              case "Wall afgesloten en stroomtoevoer uitgeschakeld.":
+                startTime();
+                break;              
+            }
+          }
+        };
+        xhr.send("command=" + command);
+        document.getElementById("content").innerHTML = '<pre class="terminalbox">Bezig met de ' + command + " opdracht</pre>";
+        centerContent();
+        event.stopPropagation();
+      }
+      function parseICS(iCalendarData) {
+        var jcalData = ICAL.parse(iCalendarData);
+        var comp = new ICAL.Component(jcalData);
+        var eventComps = comp.getAllSubcomponents("vevent");
+        for (var key in eventComps) {
+          // skip loop if the property is from prototype
+          if (!eventComps.hasOwnProperty(key)) continue;
+          var obj = eventComps[key];
+          for (var prop in obj) {
+            // skip loop if the property is from prototype
+            if(!obj.hasOwnProperty(prop)) continue;
+            if (prop === "parent") continue;
+            var vevent;
+            var icsevent = {};
+            for (vevent in obj[prop][1]) {
+              switch(obj[prop][1][vevent][0]) {
+		case "exdate":
+		  console.log(obj[prop][1][vevent]);
+		  break;
+                case "summary":
+                  icsevent["title"] = obj[prop][1][vevent][3];
+                  break;
+                case "dtstart":
+                  icsevent["start"] = obj[prop][1][vevent][3];
+                  break;
+                case "dtend":
+                  icsevent["end"] = obj[prop][1][vevent][3];
+                  break;
+                case "location":
+                  icsevent["location"] = obj[prop][1][vevent][3];
+                  break;
+                case "rrule": // https://fullcalendar.io/docs/v4/rrule-plugin
+                  var rrule = {};
+                  rrule["freq"] = obj[prop][1][vevent][3]["freq"];
+                  rrule["interval"] = obj[prop][1][vevent][3]["interval"];
+                  rrule["byweekday"] = obj[prop][1][vevent][3]["byday"];
+                  rrule["until"] = obj[prop][1][vevent][3]["until"];
+                  rrule["count"] = obj[prop][1][vevent][3]["count"];
+                  icsevent["rrule"] = rrule;
+                  break;
+              }
+            }
+            if(icsevent.hasOwnProperty("rrule")){
+              icsevent["rrule"]["dtstart"] = icsevent["start"];
+              var dtstart = new Date(icsevent["start"]);
+              var dtend = new Date(icsevent["end"]);
+              icsevent["duration"] = dtend - dtstart;
+            }
+            icsevents.push(icsevent);
+          }
+        };
+      }
+      function getICS() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            parseICS(this.responseText);
+            ICSfiles.shift();
+            if (ICSfiles.length > 0) {
+              getICS();
+            } else {
+              var calendarEl = document.getElementById('calendar');
+              var calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: [ 'interaction', 'dayGrid', 'rrule' ],
+                header: {
+                  left: '',
+                  center: 'title',
+                  right: ''
+                },
+                height: 480,
+                locale: 'nl',
+                editable: true,
+                eventLimit: true, // allow "more" link when too many events
+                events: icsevents
+              });
+              calendar.render();
+            };
+          };
+        };
+        xhttp.overrideMimeType('text/plain');
+        xhttp.open("GET", ICSfiles[0], true);
+        xhttp.send();
+      }
+      var icsevents = new Array();
+      var ICSfiles = ["fullcalendar/snt.ics", "fullcalendar/basic.ics"];
+      function calendar(event) {
+	clearTimeout(startTimer);
+        document.getElementById("content").innerHTML = '<div id="calendar"></div>';
+        document.getElementById("content").style.top = "0";
+        icsevents =[];
+        ICSfiles = ["fullcalendar/snt.ics", "fullcalendar/basic.ics"];
+        getICS();
+        event.stopPropagation();
+      }
+      function fotokader(event) {
+        background();
+        document.getElementById("content").innerHTML = "";
+        event.stopPropagation();
+      }
+/*
+      function state(state) {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        xhr.open('POST', "state.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send("state=" + state);
+        if (state == "sleep") {
+          document.getElementById("content").innerHTML = "";
+        }
+      }
+*/
+      function lights(event) {
+        // restore date
+        document.getElementById('clockmenu').style.display = 'none';
+        document.getElementById('clockdate').style.display = '';
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "tasmota.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send("dev=e7b609-5641&cmd=Power%20toggle");
+
+        event.stopPropagation();
+      }
+      var clockDateMenuCode = `<img style="height: 100px;margin: 0 -15px;" onclick="clearTimeout(startTimer);radio(event);" src="emoji/radio.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);hourly=60;weather(event);" src="emoji/weather.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);timerThermostat(event);" src="emoji/thermostat.svg">
+        <img style="height: 100px;" onclick="lights(event);" src="emoji/light_bulb.svg">
+        <img style="height: 100px;" onclick="enterPIN(event);" src="emoji/keyring.svg">
+        <img style="height: 90px; margin-bottom: 4px;" onclick="clearTimeout(startTimer);remoteCommand(event,'rpiwall');" src="emoji/monitor.svg" onload="centerContent();">
+        <div style="overflow: hidden; display: inline-block; margin-bottom: -2px;" onclick="document.getElementById('clockmenu').style.display = 'none';document.getElementById('clockdate').style.display = '';event.stopPropagation();"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div>`;
+/*
+      var clockDateMenuCode = `<img style="height: 100px;" onclick="clearTimeout(startTimer);timelapse(event);" src="emoji/timelapse.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);location.reload();" src="emoji/refresh.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);remoteCommand(event,'reboot');" src="emoji/reboot.svg">
+        <img style="height: 90px; margin-bottom: 4px;" onclick="clearTimeout(startTimer);fotokader(event);" src="emoji/framed_picture.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);remoteCommand(event,'halt');" src="emoji/shutdown.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);calendar(event);" src="emoji/calendar.svg">
+        <img style="height: 100px;" onclick="clearTimeout(startTimer);thermometer(event);" src="emoji/thermometer.svg">`;
+*/
+      function menu() {
+//        clearTimeout(startTimer);
+//        centerContent();
+        document.getElementById("clockmenu").innerHTML = clockDateMenuCode;
+        document.getElementById("clockmenu").style.display = "";
+        document.getElementById("clockdate").style.display = "none";
+        event.stopPropagation();
+      }
+/*
+      function gestureMenu() {
+//        state("awake");
+        clearTimeout(startTimer);
+        document.getElementById("content").innerHTML = `<div style="width: 800px; text-align: center;">
+        <img style="height: 100px;" onclick="fotokader(event);" src="emoji/framed_picture.svg">
+        <img style="height: 100px;" onclick="thermometer(event);" src="emoji/thermometer.svg">
+        <div style="overflow: hidden; display: inline-block; margin-bottom: -4px;" onclick="calendar(event);"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div>
+        <div id="menuclock" onclick="startTime(event);"></div>
+        <img style="height: 100px;" onclick="hourly=60;weather(event);" src="emoji/weather.svg">
+        <img style="height: 100px;" onclick="weeklyThermostat(event);" src="emoji/thermostat.svg">
+        <!--img style="height: 100px;" onclick="motionDetection(event);" src="emoji/surveillance-camera.svg"-->
+        <img style="height: 100px;" onclick="timelapse(event);" src="emoji/timelapse.svg">
+        <img style="height: 100px;" onclick="radio(event);" src="emoji/radio.svg">
+        <img style="height: 100px;" onclick="remoteCommand(event,'softap');" src="emoji/network-wireless.svg">
+        <img style="height: 100px;" onclick="location.reload();" src="emoji/refresh.svg">
+        <img style="height: 100px;" onclick="remoteCommand(event,'reboot');" src="emoji/reboot.svg">
+        <img style="height: 100px;" onclick="remoteCommand(event,'halt');" src="emoji/shutdown.svg">
+        <img style="height: 100px;" onclick="remoteCommand(event,'rpiwall');" src="emoji/monitor.svg" onload="centerContent();">
+        <!--img style="height: 100px;" onclick="state('sleep'); event.stopPropagation();" src="emoji/logout.svg"-->
+        </div>`;
+        centerContent();
+        event.stopPropagation();
+      }
+*/
+      window.addEventListener("click", startTime);
+
+      var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
+      var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
+//      function toLocaleDateString(datumobj) {
+//        return dayNames[datumobj.getDay()] + '&nbsp;' + datumobj.getDate() + '&nbsp;' + monthNames[datumobj.getMonth()] + '&nbsp;' + datumobj.getFullYear();
+//      }
+      var startTimer;
+      var roomTemp="20,0 °C";
+      function getPresHumiTemp() {
+        var xhrthermometer = new XMLHttpRequest();
+        xhrthermometer.responseType = 'text';
+        xhrthermometer.open('POST', "data/PresHumiTemp", true);
+        xhrthermometer.onload = function(e) {
+          if (this.status == 200) {
+            var PresHumiTemp = this.responseText.split('\n');
+            var Luchtdruk = parseFloat(PresHumiTemp[0]).toFixed(0) + ' hPa';
+            roomTemp = parseFloat(PresHumiTemp[2]).toFixed(1) + ' °C';
+            var Vochtigheid = parseFloat(PresHumiTemp[1]).toFixed(0) + ' %';
+            getPresHumiTempTimer = setTimeout(getPresHumiTemp, 1000 * 60); // elke minuut
+          }
+        };
+        xhrthermometer.send();
+      }
+      getPresHumiTemp();
+/*
+      clockMenuCombination = 0;
+      function clockmenu() { // show admin menu with touch gesture
+        var combination;
+        clearTimeout(startTimer);
+        var element = document.getElementById("clockdate");
+//        if (element != null && typeof(element) != 'undefined') {
+//          element.innerHTML = "x=" + event.touches[0].clientX + " y=" + event.touches[0].clientY;
+//        }
+        if (event.touches[0].clientX > 230 && event.touches[0].clientX < 350 && clockMenuCombination == 0) {
+          clockMenuCombination=1;  // moved to second digit 12:00
+        } else if (event.touches[0].clientX < 230 && clockMenuCombination == 1) {
+          clockMenuCombination=0;  // moved to wrong direction
+        } else if (event.touches[0].clientX > 450 && event.touches[0].clientX < 570 && clockMenuCombination == 1) {
+          clockMenuCombination=2;  // moved to third digit 12:00
+        } else if (event.touches[0].clientX > 570 && clockMenuCombination == 2) {
+          clockMenuCombination=0;  // moved to wrong direction  
+        } else if (event.touches[0].clientX > 100 && event.touches[0].clientX < 230 && clockMenuCombination == 2) {
+          clockMenuCombination=3;  // moved to first digit 12:00
+        } else if (event.touches[0].clientX < 100 && clockMenuCombination == 3) {
+          clockMenuCombination=0;  // moved to wrong direction  
+        } else if (event.touches[0].clientX > 230 && event.touches[0].clientX < 350 && clockMenuCombination == 3) {
+          clockMenuCombination=0;  // moved to second digit 12:00, gesture complete
+          gestureMenu();
+          event.stopPropagation();
+          return;
+        }
+
+//        centerContent();
+        event.stopPropagation();
+      }
+*/
+      function startTime(event) {
+        clearTimeout(startTimer);
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        m = checkTime(m);
+	var w = window.innerWidth;
+
+	var clockDateCode = today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear();
+        var element = document.getElementById("clockdate");
  
-# https://raspberrypi-aa.github.io/session2/bash.html
-# Clean up on ^C and TERM, use 'gpio unexportall' to flush everything manually.
-#trap "gpio unexport $_pir_pin" INT TERM
-if [ -d "/sys/class/gpio/gpio$_pir_pin" ]; then
-  echo $_pir_pin > /sys/class/gpio/unexport
-fi
-fotomap="/var/www/html/motion/fotos"
-if [ ! -d "$fotomap" ]; then
-  mkdir -p "$fotomap"
-fi
- 
-#   Exports pin to userspace
-echo $_pir_pin > /sys/class/gpio/export
-# Sets pin as an input
-echo "in" > /sys/class/gpio/gpio$_pir_pin/direction
- 
-# Let PIR settle to ambient IR to avoid false positives? 
-# Uncomment line below.
-#sleep 30
+        if (element == null || typeof(element) == 'undefined') {
+  	  var elementCode = '<div id="clockday" onclick="timerThermostat(event);">' + dayNames[today.getDay()] + ' ' + roomTemp + '</div>';
+	  elementCode += '<div id="clock" onclick="menu();" style="width: ' + w + 'px;">' + h + ":" + m + '</div>';
+          elementCode += '<div id="clockdate" onclick="menu();">' + clockDateCode + '</div>';
+          elementCode += '<div id="clockmenu" onclick="menu();" style="display: none;"></div>';
+	  document.getElementById('content').innerHTML = elementCode;
+          centerContent();
+        } else {
+	  document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + roomTemp;
+	  document.getElementById('clock').innerHTML = h + ":" + m;
+          document.getElementById("clock").style.width = w + "px";
+          document.getElementById('clockdate').innerHTML = clockDateCode;
+        }
+        startTimer = setTimeout(startTime, 1000); // elke seconde
+        if (typeof event !== 'undefined') {
+          event.stopPropagation();
+        }
+      }
+/*
+      function startMenuTime() {
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        m = checkTime(m);
+        document.getElementById('menuclock').innerHTML = h + ":" + m;
+//        centerContent();
+//        startTimer = setTimeout(startMenuTime, 500);
+        startTimer = setTimeout(startMenuTime, 1000); // elke seconde
+      }
+*/
+      function checkTime(i) {
+        if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+        return i;
+      }
+/* View in fullscreen */
+/*
+function fullscreen() {
+  document.getElementById("content").innerHTML = "<button id=\"fullscreen\" onclick=\"openFullscreen(event);\";>Schermvullend</button>";
+}
+function openFullscreen(event) {
+  var elem = document.documentElement;
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) { // Firefox
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { // Chrome, Safari and Opera
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { // IE/Edge
+    elem.msRequestFullscreen();
+  }
+  document.getElementById("content").innerHTML = "";
+  event.stopPropagation();
+}
+*/
+    </script>
+  </head>
+  <body onload="background();setcursor();startTime(event);">
+<svg id="symbolDefs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="0" width="0" style="position:absolute;">
 
-while true
-do
-#  tempComfort="21.50"
-#  # Timer default array
-#  timerdefault[0]="0 07:30 22:50"
-#  timerdefault[1]="1 07:30 22:50"
-#  timerdefault[2]="2 07:30 22:50"
-#  timerdefault[3]="3 07:30 22:50"
-#  timerdefault[4]="4 07:30 22:50"
-#  timerdefault[5]="5 07:30 22:50"
-#  timerdefault[6]="6 07:30 22:50"
-#  # timerdefault[7]="0 16:30 17:00"
-#  # timerdefault[8]="0 17:30 22:45"
-#
-#  thermostatkitchendefault[0]="07:30 08:30 21.70"
-#  thermostatkitchendefault[1]="11:00 13:30 21.70"
-#  thermostatkitchendefault[2]="16:45 17:30 21.70"
-#  thermostatkitchendefault[3]="22:09 22:50 21.70"
-#
-#  thermostatlivingdefault[0]="08:15 11:15 21.50"
-#  thermostatlivingdefault[1]="13:15 17:00 21.50"
-#  thermostatlivingdefault[2]="17:15 22:45 21.50"
-#  # thermostatlivingdefault[3]="16:45 17:15 21.50"
+  <symbol id="cloud">
+    <path d="M55.7,5A23.94,23.94,0,0,0,34.37,18.05a9.9,9.9,0,0,0-12.78,5.56,15,15,0,0,0-1.71-.1A14.81,14.81,0,0,0,9.2,28,14.63,14.63,0,0,0,5,38.17v.21A14.83,14.83,0,0,0,19.88,53.06H75.59a14.3,14.3,0,0,0,3.67-28.14A23.93,23.93,0,0,0,55.7,5Z"></path>
+    <image x="5" y="14" width="85" height="43" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAAAkCAMAAAAkYj0PAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAVUExURSgoKExpcaCgoFBQUG5ublBQUISEhI1fsT0AAAAHdFJOUxsACBsPFRpGXuFgAAABWElEQVRIx7XV25bDIAgF0BMu/v8nF/E+iWlqHNKVN3cpIMXxL4GFM3SQfTazkUyxk63oLYwlVSy2silXkS/wUrZS2a3ZCn1zsdSw7UUYijuHsTa1IvfwWrbSXLkc4N9r27JViwmM1UtWXA3hohQ41m6vl8FQZi7wu2z7KXPW4uRiZS+2AmdXN7DdQEQWQHYHlt6z0dXBBa2xeeVktiZc1jDoF5eGkI4d4MjKc7cNbZ3bqjocLLx5oPDYTaIftcfvAvcs2GFxVsJTOP1wO1jGdUSLaz/DWA1Tl45+Tkqul2ArcPzayGq8JafOUffP3TUp6JQs+Rptc6vtmtBkUw+dv0NzWG0PYf8O7Ym09+ITXyXOPZqEX95aFe3PKxRsL2XV3HR+ZALirPSF0ceHp6F51WBv1A22VaW2GHWzWvat8LOAPf4CrjrA+neNK7+PQBf/DmmLrId09/QDWyESBsibwBUAAAAASUVORK5CYII="></image>
+  </symbol>
 
-  timerfile="/var/www/html/data/timer"
-  thermostatkitchenfile="/var/www/html/data/thermostatkitchen"
-  thermostatlivingfile="/var/www/html/data/thermostatliving"
-  PresHumiTempfile="/var/www/html/data/PresHumiTemp"
+  <symbol id="fog">
+    <g fill="#999999">
+      <path d="M88.7,3H14.3C13.6,3,13,2.3,13,1.5S13.6,0,14.3,0h74.4C89.4,0,90,0.7,90,1.5S89.4,3,88.7,3z"></path>
+      <path d="M75.7,11H1.3C0.6,11,0,10.3,0,9.5S0.6,8,1.3,8h74.4C76.4,8,77,8.7,77,9.5S76.4,11,75.7,11z"></path>
+      <path d="M86.7,19H12.3c-0.7,0-1.3-0.7-1.3-1.5s0.6-1.5,1.3-1.5h74.4c0.7,0,1.3,0.7,1.3,1.5S87.4,19,86.7,19z"></path>
+    </g>
+  </symbol>
 
-  declare -A heater
-  unset heaterLiving
-  declare -a heaterLiving
-  unset heaterKeuken
-  declare -a heaterKeuken
-#  mapfile -t heaters < /var/www/html/data/heaters
-#  printf '%s\n' "${heaters[@]}"
-  for heateritem in "${heaters[@]}"; do
-    line=(${heateritem})
-    heater[${line[0]}]=${line[1]}
-    if [ ${heateritem:0:6} == "Living" ]; then
-      heaterLiving+=(${line[0]})
-    fi
-    if [ ${heateritem:0:6} == "Keuken" ]; then
-      heaterKeuken+=(${line[0]})
-    fi
-  done
-#  printf '%s\n' "${heaterLiving[@]}"
-#  printf '%s\n' "${heaterKeuken[@]}"
+  <symbol id="lightning">
+    <polygon fill="#ffdd15" points="19.6 23.42 12.74 20.39 15.55 5 5 24.49 12.08 27.51 7.49 45 19.6 23.42"></polygon>
+  </symbol>
 
-  #printf '%s\n' "${heater[@]}"
-  #printf '%s\n' "${!heater[@]}"
+  <defs>
+    <linearGradient id="moon-grad" x1="0%" y1="50%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#686e73" />
+      <stop offset="100%" stop-color="#6a7075" />
+    </linearGradient>
+  </defs>
+  <symbol id="moon">
+    <path d="M28.43,0A28.44,28.44,0,0,1,32.3,14.32,28.61,28.61,0,0,1,3.69,42.93,28.71,28.71,0,0,1,0,42.66,28.59,28.59,0,1,0,28.43,0Z" fill="url(#moon-grad)"></path>
+  </symbol>
 
-  #unset heater
-  #declare -A heater
-  #heater[LivingZuid]="tasmota_8bbe4d-7757"
-  #heater[LivingNoord]="tasmota_8be4af-1199"
-  #heater[KeukenZuid]="tasmota_a943fa-1018"
-  #heater[KeukenNoord]="tasmota_c699b5-6581"
+  <symbol id="raindrop">
+    <path fill="#0062bf" d="M2.5,13A2.5,2.5,0,0,1,.21,9.51l3.55-8a2.5,2.5,0,0,1,4.57,2l-3.55,8A2.5,2.5,0,0,1,2.5,13Z"></path>
+  </symbol>
 
-#  hysteresis="0.1"
+  <symbol id="snowflake">
+    <path fill="#47c0e3" d="M11.68,4.47H8.85L10.27,2A1.35,1.35,0,1,0,7.93.67L6.51,3.12,5.1.67A1.35,1.35,0,0,0,3.26.18,1.35,1.35,0,0,0,2.76,2L4.18,4.47H1.35a1.35,1.35,0,1,0,0,2.7H4.18L2.76,9.62a1.35,1.35,0,0,0,.49,1.84A1.39,1.39,0,0,0,5.1,11L6.51,8.52,7.93,11a1.35,1.35,0,1,0,2.34-1.35L8.85,7.17h2.83a1.35,1.35,0,1,0,0-2.7Z"></path>
+  </symbol>
 
-#  if [ -f /var/www/html/data/thermostatDefault ]; then
-#    echo "Restoring default thermostat"
-#    if [ -f $timerfile ]; then
-#      rm $timerfile
-#    fi
-#    if [ -f $thermostatkitchenfile ]; then
-#      rm $thermostatkitchenfile
-#    fi
-#    if [ -f $thermostatlivingfile ]; then
-#      rm $thermostatlivingfile
-#    fi
-#    thermostatManualReset
-#    rm /var/www/html/data/thermostatDefault
-#  fi
+  <defs>
+    <linearGradient id="sun-inner-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffaf22" />
+      <stop offset="100%" stop-color="#f09900" />
+    </linearGradient>
+    <radialGradient id="sun-glow-grad" cx="41" cy="41" r="41" gradientUnits="userSpaceOnUse">
+      <stop offset="54%" stop-color="#d6b849"/>
+      <stop offset="67%" stop-color="#ffce47"/>
+      <stop offset="100%" stop-color="#ffdb73"/>
+    </radialGradient>
+    <radialGradient id="sun-winter-glow-grad" cx="45" cy="2" r="42" gradientUnits="userSpaceOnUse">
+      <stop offset="54%" stop-color="#d6b849"/>
+      <stop offset="67%" stop-color="#ffce47"/>
+      <stop offset="100%" stop-color="#ffdb73"/>
+    </radialGradient>
+  </defs>
+  <symbol id="sun">
+    <path class="sun-glow" fill="url(#sun-glow-grad)" d="M66.64,47.86,82,41,66.64,34.12l9.84-13.66L59.76,22.22,61.46,5.47l-13.6,9.89L41,0,34.12,15.36,20.46,5.52l1.76,16.72L5.47,20.54l9.89,13.6L0,41l15.36,6.83L5.52,61.54l16.72-1.76L20.54,76.53l13.6-9.89L41,82l6.83-15.36,13.66,9.84L59.78,59.76l16.75,1.69Z"></path>
+    <path class="sun-outer" fill="#ffd348" d="M19.28,53.5a25,25,0,1,0,9.15-34.16A25,25,0,0,0,19.28,53.5Z"></path>
+    <path class="sun-inner" fill="url(#sun-inner-grad)" d="M22.74,51.5a21,21,0,1,0,7.69-28.69A21,21,0,0,0,22.74,51.5Z"></path>
+  </symbol>
 
-  if [ -f /var/www/html/data/thermostatOffkitchen ]; then
-    echo "Send Kitchen Off"
-    sudo -u dany ssh pindakeuken touch /tmp/thermostatOffkitchen
-    rm /var/www/html/data/thermostatOffkitchen
-  fi
-  if [ -f /var/www/html/data/thermostatOnkitchen ]; then
-    echo "Send Kitchen On"
-    sudo -u dany ssh pindakeuken rm /tmp/thermostatOffkitchen
-    rm /var/www/html/data/thermostatOnkitchen
-  fi
-  if [ -f /var/www/html/data/thermostatReset ]; then
-    # copy to DomoticaSlave
-    sudo -u dany scp /var/www/html/data/thermostatReset pindakeuken:/tmp/
-    sudo -u dany scp /var/www/html/data/thermostat pindakeuken:/tmp/
+  <defs>
+    <mask id="sunWinterMask">
+      <rect x="0" y="0" width="100" height="100" fill="white"></rect>
+    </mask>
+  </defs>
+  <symbol id="sunWinter">
+    <g mask="url(#sunWinterMask)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(4,-40) scale(1,1)"></use>
+    </g>
+    <path fill="#333333" d="M88.29,2.7H1.71A1.56,1.56,0,0,1,0,1.35,1.56,1.56,0,0,1,1.71,0H88.29A1.56,1.56,0,0,1,90,1.35,1.56,1.56,0,0,1,88.29,2.7Z"></path>
+  </symbol>
 
-    echo "Resetting thermostat"
-    for switch in "${!heater[@]}"
-    do
-  #   if [[ "$switch" == *Off ]]; then
-      heateritem=${heater[$switch]}
-      if [[ "$heateritem" == tasmota* ]]; then
-          tempfile="/tmp/${heateritem:0:19}"
-      else
-          tempfile="/tmp/${heateritem:0:6}${heateritem:8:10}${heateritem:22:2}"
-      fi
-      if [ -f $tempfile ]; then
-        rm $tempfile
-      fi
-  #   fi
-    done
-    thermostatManualReset
-    rm /var/www/html/data/thermostatReset
-  fi
+  <defs>
 
-  # Collect sensordata
-  # BME280 I2C Temperature and Pressure Sensor
-  # 3v3 - Vin
-  # Gnd - Gnd
-  # BCM 3 (SCL) - SCK (White)
-  # BCM 2 (SDA) - SDI (Brown)
-  # read pressure, humididy and temperature from sensor
-  read_bme280 --i2c-address 0x77 > $PresHumiTempfile
+  <mask id="lightning_37_51_1_1_4">
+    <rect x="0" y="0" width="100" height="100" fill="white"></rect>
+    <use xlink:href="#lightning" fill="black" stroke="black" stroke-linejoin="round" stroke-width="8" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+  </mask>
 
-  # Calculate lux tls2591
-  lux=$(python3 /var/www/html/tls2591.py | awk '{print $1}')
-  echo $lux  > /var/www/html/data/luxtls
-  if [ ! -f /var/www/html/data/luxmaxtls ]; then
-    echo 0 > /var/www/html/data/luxmaxtls
-  fi
-  luxmax=$(cat /var/www/html/data/luxmaxtls)
-  if [ ! -f /var/www/html/data/luxmintls ]; then
-    echo 1000000 > /var/www/html/data/luxmintls
-  fi
-  luxmin=$(cat /var/www/html/data/luxmintls)
-  if [ ${lux%.*} -eq ${luxmax%.*} ] && [ ${lux#*.} \> ${luxmax#*.} ] || [ ${lux%.*} -gt ${luxmax%.*} ]; then
-    luxmax=$lux
-  fi
-  if [ ${lux%.*} -eq ${luxmin%.*} ] && [ ${lux#*.} \< ${luxmin#*.} ] || [ ${lux%.*} -lt ${luxmin%.*} ]; then
-    luxmin=$lux
-  fi
-  echo $luxmax > /var/www/html/data/luxmaxtls
-  echo $luxmin > /var/www/html/data/luxmintls
+  <mask id="cloud_43_37_063_063_5">
+    <rect x="0" y="0" width="100" height="100" fill="white"></rect>
+    <use xlink:href="#cloud" fill="black" stroke="black" stroke-linejoin="round" stroke-width="10" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
+  </mask>
 
-  #echo "Omgevingslicht: $lux"
-  #echo Maximaal gemeten omgevingslicht: $luxmax
-  #echo Minimaal gemeten omgevingslicht: $luxmin
-  rangelux=$(awk "BEGIN {printf \"%.2f\", $luxmax - $luxmin}")
-  #echo Bereik gemeten omgevingslicht: $rangelux
-  rellux=$(awk "BEGIN {printf \"%.2f\", ($lux - $luxmin) / $rangelux}")
+  <mask id="cloud_3_18_1_1_5">
+    <rect x="0" y="0" width="100" height="100" fill="white"></rect>
+    <use xlink:href="#cloud" fill="black" stroke="black" stroke-linejoin="round" stroke-width="10" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+  </mask>
+  </defs>
 
-  #rellux=$(awk "BEGIN {printf sqrt($rellux)}")
-
-  # https://ledshield.wordpress.com/2012/11/13/led-brightness-to-your-eye-gamma-correction-no/
-  correction=(65535 65508 65479 65451 65422 65394 65365 65337
-      65308 65280 65251 65223 65195 65166 65138 65109
-      65081 65052 65024 64995 64967 64938 64909 64878
-      64847 64815 64781 64747 64711 64675 64637 64599
-      64559 64518 64476 64433 64389 64344 64297 64249
-      64200 64150 64099 64046 63992 63937 63880 63822
-      63763 63702 63640 63577 63512 63446 63379 63310
-      63239 63167 63094 63019 62943 62865 62785 62704
-      62621 62537 62451 62364 62275 62184 62092 61998
-      61902 61804 61705 61604 61501 61397 61290 61182
-      61072 60961 60847 60732 60614 60495 60374 60251
-      60126 59999 59870 59739 59606 59471 59334 59195
-      59053 58910 58765 58618 58468 58316 58163 58007
-      57848 57688 57525 57361 57194 57024 56853 56679
-      56503 56324 56143 55960 55774 55586 55396 55203
-      55008 54810 54610 54408 54203 53995 53785 53572
-      53357 53140 52919 52696 52471 52243 52012 51778
-      51542 51304 51062 50818 50571 50321 50069 49813
-      49555 49295 49031 48764 48495 48223 47948 47670
-      47389 47105 46818 46529 46236 45940 45641 45340
-      45035 44727 44416 44102 43785 43465 43142 42815
-      42486 42153 41817 41478 41135 40790 40441 40089
-      39733 39375 39013 38647 38279 37907 37531 37153
-      36770 36385 35996 35603 35207 34808 34405 33999
-      33589 33175 32758 32338 31913 31486 31054 30619
-      30181 29738 29292 28843 28389 27932 27471 27007
-      26539 26066 25590 25111 24627 24140 23649 23153
-      22654 22152 21645 21134 20619 20101 19578 19051
-      18521 17986 17447 16905 16358 15807 15252 14693
-      14129 13562 12990 12415 11835 11251 10662 10070
-      9473 8872 8266 7657 7043 6424 5802 5175
-      4543 3908 3267 2623 1974 1320 662 0)
-  correctionTableIndex=$(awk "BEGIN {printf \"%.0f\", 255 - ($rellux * 255)}")
-  correctionTableValue=${correction[$correctionTableIndex]}
-  correctionTableBrightness=$(awk "BEGIN {printf $correctionTableValue / ${correction[0]}}")
-  #echo CorrectionTable Relatief omgevingslicht: $correctionTableBrightness
-  rellux=$correctionTableBrightness
-
-  #echo Relatief omgevingslicht: $rellux
-
-  backlight=$(awk "BEGIN {printf \"%.0f\", 25 + $rellux * 230}")
-  current=$(cat /sys/class/backlight/rpi_backlight/brightness)
-  # Smooth backlight adjustment
-  echo "Brightness from $current to $backlight"
-  if [ $current -lt $backlight ]; then
-    for i in $(seq $current $backlight); do
-      echo $i > /sys/class/backlight/rpi_backlight/brightness
-    done
-  else
-    for i in $(seq $current -1 $backlight); do
-      echo $i > /sys/class/backlight/rpi_backlight/brightness
-    done
-  fi
-
-#  if [ ! -f $timerfile ]; then # default
-#    printf "%s\n" "${timerdefault[@]}" > $timerfile
-#    chown www-data:www-data $timerfile
-#  fi
-#  mapfile -t raw < $timerfile
-
-#  IFS=$'\n' timer=($(sort <<<"${timerdefault[*]}"))
-#  unset IFS
-#  unset raw
-
-  weekday=$(date +%w)
-  now=$(date +%H:%M)
-
-  thermostat
-
-  echo "heatingKitchen: $heatingKitchen"
-  echo "heatingLiving: $heatingLiving"
-
-  state="sleep"
-  if [ $heatingKitchen == "on" ] || [ $heatingLiving == "on" ]; then
-    state="awake"
-  fi
-  if [ -f /var/www/html/data/thermostatManualkitchen ] || [ -f /var/www/html/data/thermostatManualliving ]; then
-    state="awake"
-  fi
-#  for timeritem in "${timer[@]}"; do
-#    daytime=(${timeritem})
-#    if [ "${daytime[0]}" == "$weekday" ]; then
-#      echo "$timeritem"
-#      if [[ "${daytime[1]}" < "$now" ]] && [[ "${daytime[2]}" > "$now" ]]; then
-#        state="awake"
-#        break
-#      fi
-#    fi
-#  done
-# Night lightning on/off
-  IFS=":" read hh mm < <(date +%:z)
-  diffUTC=$(($hh*3600+$mm*60))
-  nowSec=$(date -u +%s)
-  sunrise=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)" +%s) + diffUTC))
-  sunset=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + diffUTC))
-#  sunrise=$(date --date "15:18" +%s)
-#  sunset=$(date --date "15:07" +%s)
-#  lightevening="15:04"
-#  lightmorning="15:20"
-
-  startInterval=$((nowSec - 60))
-  endInterval=$((nowSec + 60))
-  lightmorningSec=$(date --date "$lightmorning" +%s)
-  lighteveningSec=$(date --date "$lightevening" +%s)
-  if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
-    if [[ $nowSec < $lighteveningSec ]]; then
-      echo "$(date): Sunset Light On" >> /home/dany/light.log
-      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
-    fi
-  elif [[ $startInterval < $lighteveningSec ]] && [[ $endInterval > $lighteveningSec ]]; then
-    echo "$(date): Sleep Light Off" >> /home/dany/light.log
-    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
-  elif [[ $startInterval < $lightmorningSec ]] && [[ $endInterval > $lightmorningSec ]]; then
-    if [[ $nowSec < $sunrise ]]; then
-      echo "$(date): Wakeup Light On" >> /home/dany/light.log
-      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
-    fi
-  elif [[ $startInterval < $sunrise ]] && [[ $endInterval > $sunrise ]]; then
-    echo "$(date): Sunrise Light Off" >> /home/dany/light.log
-    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
-  fi
-# oud
-#  sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
-#  startInterval=$(date -u --date='-1 minute' +"%H:%M")
-#  endInterval=$(date -u --date='+1 minute' +"%H:%M")
-#echo "sunset:$sunset start:$startInterval end:$endInterval"
-#  if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
-#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
-#  elif [[ $startInterval > $sunset ]]; then
-#    startInterval=$(date --date='-1 minute' +"%H:%M")
-#    endInterval=$(date --date='+1 minute' +"%H:%M")
-#echo "start:$startInterval end:$endInterval light:$lightliving"
-#    if [[ $startInterval < $lightliving ]] && [[ $endInterval > $lightliving ]]; then
-#      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
-#    fi
-#  fi
-
-#echo "sleep:$sleep now:$now awake:$awake"
-#  if [[ $now > $sleep ]] || [[ $now < $awake ]]; then
-#    state="sleep"
-#  else
-#    state="awake"
-#  fi
-
-  echo $state
-  if [ $state == "awake" ]; then
-    echo 0 > /sys/class/backlight/rpi_backlight/bl_power
-  #  echo 255 > /sys/class/leds/led0/brightness
-  #  echo 255 > /sys/class/leds/led1/brightness
-#    thermostat
-  else
-    # deactivate backlight touchscreen
-    echo 1 > /sys/class/backlight/rpi_backlight/bl_power
-    # disable status led's
-    echo 0 > /sys/class/leds/led0/brightness
-    echo 0 > /sys/class/leds/led1/brightness
-    # Stop Musisc Player
-    if [ -f /var/www/html/data/mpc.txt ]; then
-      mpc stop
-      rm /var/www/html/data/mpc.txt
-    fi
-    if (echo > /dev/tcp/rpiwall/22) >/dev/null 2>&1; then
-      # shutdown RPIWall
-      wget --post-data="command=halt" --quiet http://rpiwall/remote.php
-      sleep 30
-      # Power off RPIWall
-      dummy=$(wget -qO- http://tasmota_4fd8ee-6382/cm?cmnd=Power%20Off)
-#      python /var/www/html/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 25 4A AE 0D 00 00 80"
-    fi
-#    thermostatOff
-#    thermostatManualReset
-  fi
-
-# PIR detector for 1 minute
-  starttime=$(date +"%s")
-  while [ $(($(date +"%s") - starttime)) -lt 55 ]; do
-    _ret=$( cat /sys/class/gpio/gpio$_pir_pin/value )
-    if [ $_ret -eq 1 ]; then
-      echo "[!] PIR is tripped, Smile ..."
-
-      find "$fotomap/" -mindepth 1 -maxdepth 1 -mtime +0 -exec rm {} \;
-      DATE=$(date +"%Y %m %d %H:%M:%S") # 2020 05 05 07:05:03.jpg
-      raspistill --width 800 --height 480 --nopreview -o "$fotomap/$DATE.jpg"
-    elif [ $_ret -eq 0 ]; then
-#       echo "Geen beweging"
-       sleep 3 # time to reset PIR
-    fi
-#    echo $(($(date +"%s") - starttime))
-  done
-done
+  <symbol id="s10">
+    <use xlink:href="#cloud" fill="#999999" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(18,78) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(32,87) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(47,79) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(60,78) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(74,87) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s11">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use xlink:href="#cloud" fill="#999999" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#lightning"  x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(18,78) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(29,87) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(55,79) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(68,78) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(82,87) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s12">
+    <use xlink:href="#cloud" fill="#b2b2b2" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(30,79) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(46,86) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(60,80) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s13">
+    <use xlink:href="#cloud" fill="#b2b2b2" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(30,79) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(44,88) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(58,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s14">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use xlink:href="#cloud" fill="#b2b2b2" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#lightning"  x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(26,79) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(52,88) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(66,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s15">
+    <use xlink:href="#cloud" fill="#dddddd" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use xlink:href="#fog"  x="0" y="0" width="100" height="100" transform="translate(0,76) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s22">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use xlink:href="#cloud" fill="#b2b2b2" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#lightning"  x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(29,78) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(50,87) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(65,78) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s23">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use xlink:href="#cloud" fill="#b2b2b2" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#lightning"  x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(27,79) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(50,86) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(64,80) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s30">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use xlink:href="#cloud" fill="#cccccc" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#lightning"  x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(28,87) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(58,78) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s31">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use xlink:href="#cloud" fill="#cccccc" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#lightning"  x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(26,88) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(58,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s32">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use xlink:href="#cloud" fill="#999999" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#lightning"  x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(15,79) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(30,86) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(55,80) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(66,88) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(82,80) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s33">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use xlink:href="#cloud" fill="#cccccc" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#lightning"  x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(26,88) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(58,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s34">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use xlink:href="#cloud" fill="#999999" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#lightning"  x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(13,79) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(27,88) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(55,79) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(69,88) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(83,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s46">
+    <use xlink:href="#cloud" fill="#cccccc" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(32,87) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(56,78) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s47">
+    <use xlink:href="#cloud" fill="#cccccc" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(29,88) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(60,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s48">
+    <use xlink:href="#cloud" fill="#999999" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(15,79) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(32,86) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(47,80) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(58,88) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(74,80) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s49">
+    <use xlink:href="#cloud" fill="#cccccc" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(29,88) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(58,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s50">
+    <use xlink:href="#cloud" fill="#999999" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(15,79) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(29,88) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(44,79) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(58,88) scale(1,1)"></use>
+    <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(72,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s04">
+    <use xlink:href="#cloud" fill="#dddddd" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s09">
+    <use xlink:href="#cloud" fill="#b2b2b2" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(32,78) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(45,87) scale(1,1)"></use>
+    <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(60,78) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s01d">
+    <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(9,9) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s02d">
+    <g mask="url(#cloud_43_37_063_063_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(4,9) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#cloud" fill="#dddddd" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
+  </symbol>
+  <symbol id="s03d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s04" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s40d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s46" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s05d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s09" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s41d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s10" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s42d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s47" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s07d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s12" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s43d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s48" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s44d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s49" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s08d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s13" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s45d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s50" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s24d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s30" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s06d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s22" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s25d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s11" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s26d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s31" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s20d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s23" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s27d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s32" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s28d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s33" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s21d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s14" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s29d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s34" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s01n">
+    <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(20,20) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s02n">
+    <g mask="url(#cloud_43_37_063_063_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(15,20) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#cloud" fill="#dddddd" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
+  </symbol>
+  <symbol id="s03n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s04" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s40n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s46" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s05n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s09" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s41n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s10" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s42n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s47" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s07n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s12" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s43n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s48" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s44n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s49" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s08n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s13" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s45n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s50" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s24n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s30" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s06n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s22" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s25n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s11" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s26n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s31" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s20n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s23" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s27n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s32" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s28n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s33" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s21n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s14" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s29n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#s34" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s01m">
+    <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(5,37) scale(1,1)"></use>
+  </symbol>
+  <symbol id="s02m">
+    <g mask="url(#cloud_43_37_063_063_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,37) scale(1,1)"></use>
+    </g>
+    <use xlink:href="#cloud" fill="#dddddd" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
+  </symbol>
+  <symbol id="s03m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s04" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s40m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s46" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s05m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s09" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s41m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s10" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s42m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s47" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s07m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s12" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s43m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s48" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s44m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s49" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s08m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s13" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s45m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s50" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s24m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s30" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s06m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s22" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s25m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s11" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s26m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s31" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s20m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s23" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s27m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s32" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s28m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s33" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s21m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s14" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="s29m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#s34" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <g style="clip-path: url(#temperature-clip-blue-PunktUtlandet:2800931); -webkit-clip-path: url(#temperature-clip-blue-PunktUtlandet:2800931);">
+  <g style="clip-path: url(#temperature-clip-red-PunktUtlandet:2800931); -webkit-clip-path: url(#temperature-clip-red-PunktUtlandet:2800931);">
+</svg>
+<div id="status"><span id="statuswireless"></span></div>
+<div id="pinpad"></div>
+<div id="content"></div>
+</body>
+</html>
