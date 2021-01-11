@@ -244,9 +244,14 @@ fi # Einde Niet uitvoeren
   if [ -f /var/www/html/data/thermostatManualliving ]; then
     read roomtemp < /var/www/html/data/thermostatManualliving
 #    tempWanted=$roomtemp
-    tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
-    echo "Manual temp living: $tempWanted °C"
-    heatingLiving="on"
+    if [ "$roomtemp" == "off" ]; then
+      echo "Living Off"
+      heatingLiving="off"
+    else
+      tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
+      echo "Manual temp living: $tempWanted °C"
+      heatingLiving="on"
+    fi
   fi
   if [ "$heatingLiving" == "off" ]; then
     echo "Living basisverwarming"
@@ -419,6 +424,16 @@ do
 #    rm /var/www/html/data/thermostatDefault
 #  fi
 
+  if [ -f /var/www/html/data/thermostatOffkitchen ]; then
+    echo "Send Kitchen Off"
+    sudo -u dany ssh pindakeuken touch /tmp/thermostatOffkitchen
+    rm /var/www/html/data/thermostatOffkitchen
+  fi
+  if [ -f /var/www/html/data/thermostatOnkitchen ]; then
+    echo "Send Kitchen On"
+    sudo -u dany ssh pindakeuken rm /tmp/thermostatOffkitchen
+    rm /var/www/html/data/thermostatOnkitchen
+  fi
   if [ -f /var/www/html/data/thermostatReset ]; then
     # copy to DomoticaSlave
     sudo -u dany scp /var/www/html/data/thermostatReset pindakeuken:/tmp/
@@ -577,7 +592,6 @@ do
   nowSec=$(date -u +%s)
   sunrise=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)" +%s) + diffUTC))
   sunset=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + diffUTC))
-
 #  sunrise=$(date --date "15:18" +%s)
 #  sunset=$(date --date "15:07" +%s)
 #  lightevening="15:04"
