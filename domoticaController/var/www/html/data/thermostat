@@ -28,20 +28,20 @@ thermostatkitchendefault+=("22:19 22:50")
 # Exceptions Kitchen
 # thermostatkitchenevent+=("2020-12-26 14 16:50 18:35 on") # Luc
 
-thermostatkitchenevent+=("2020-11-25 14 07:05 12:00 on")
+thermostatkitchenevent+=("2020-11-25 14 07:00 12:00 on")
 
-thermostatkitchenevent+=("2021-01-18 7 12:50 21:30 off")
+thermostatkitchenevent+=("2021-01-18 7 12:59 21:15 off")
 
-thermostatkitchenevent+=("2021-01-19 7 07:00 07:55 on")
-thermostatkitchenevent+=("2021-01-19 7 07:56 17:00 off")
+thermostatkitchenevent+=("2021-01-19 7 07:00 07:59 on")
+thermostatkitchenevent+=("2021-01-19 7 08:00 16:45 off")
 
 thermostatkitchenevent+=("2021-01-20 7 16:20 17:00 on")
-thermostatkitchenevent+=("2021-01-20 7 17:01 21:30 off")
+thermostatkitchenevent+=("2021-01-20 7 17:01 21:15 off")
 
-thermostatkitchenevent+=("2021-01-21 7 11:00 14:30 off")
+#thermostatkitchenevent+=("2021-01-21 7 11:00 14:30 off")
 
-thermostatkitchenevent+=("2021-01-22 7 07:00 07:55 on")
-thermostatkitchenevent+=("2021-01-22 7 07:56 12:15 off")
+thermostatkitchenevent+=("2021-01-22 7 07:00 07:59 on")
+thermostatkitchenevent+=("2021-01-22 7 08:00 11:45 off")
 
 #thermostatkitchenevent+=("2020-11-18 7 16:20 17:00 on")
 #thermostatkitchenevent+=("2020-11-18 7 17:01 21:30 off")
@@ -59,16 +59,16 @@ thermostatlivingdefault+=("17:20 22:30")
 
 thermostatlivingevent+=("2020-11-25 14 07:45 11:45 on")
 
-thermostatlivingevent+=("2021-01-18 7 12:40 21:30 off")
+thermostatlivingevent+=("2021-01-18 7 13:00 21:15 off")
 
 thermostatlivingevent+=("2021-01-19 7 08:00 17:00 off")
 
-thermostatlivingevent+=("2021-01-20 7 16:30 21:30 off")
+thermostatlivingevent+=("2021-01-20 7 16:30 21:15 off")
 
-thermostatlivingevent+=("2021-01-21 7 11:00 11:49 on")
-thermostatlivingevent+=("2021-01-21 7 11:50 14:25 off")
+#thermostatlivingevent+=("2021-01-21 7 11:00 11:49 on")
+#thermostatlivingevent+=("2021-01-21 7 11:50 14:25 off")
 
-thermostatlivingevent+=("2021-01-22 7 08:00 12:15 off")
+thermostatlivingevent+=("2021-01-22 7 08:00 12:00 off")
 
 hysteresis="0.1"
 
