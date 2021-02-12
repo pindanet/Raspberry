@@ -16,38 +16,33 @@ heaters+=("LivingZuidOost tasmota_4bf311-4881")
 
 heaters+=("KeukenNoord tasmota_c699b5-6581")
 heaters+=("KeukenZuid tasmota_a943fa-1018")
-#heaters+=("KeukenWest tasmota_4fd8ee-6382")
-heaters+=("KeukenWest tasmota_relayGPIO23")
+heaters+=("KeukenWest tasmota_4fd8ee-6382")
+#heaters+=("KeukenWest tasmota_relayGPIO23")
 
 # Default Kitchen
 thermostatkitchendefault+=("07:30 08:30")
-thermostatkitchendefault+=("11:05 13:30")
+thermostatkitchendefault+=("11:00 13:30")
 thermostatkitchendefault+=("16:45 17:35")
-thermostatkitchendefault+=("22:19 22:50")
+thermostatkitchendefault+=("22:09 22:50")
 
 # Exceptions Kitchen
 # thermostatkitchenevent+=("2020-12-26 14 16:50 18:35 on") # Luc
 
-thermostatkitchenevent+=("2020-11-25 14 07:00 12:00 on")
+thermostatkitchenevent+=("2020-11-25 14 07:00 12:00 on") # Laura
 
-thermostatkitchenevent+=("2021-01-18 7 12:59 21:15 off")
+#thermostatkitchenevent+=("2021-01-18 7 12:59 21:15 off") # SNT
 
-thermostatkitchenevent+=("2021-01-19 7 07:00 07:59 on")
-thermostatkitchenevent+=("2021-01-19 7 08:00 16:45 off")
+#thermostatkitchenevent+=("2021-01-19 7 07:00 07:59 on") # SNT
+#thermostatkitchenevent+=("2021-01-19 7 08:00 11:45 off") # SNT
+#thermostatkitchenevent+=("2021-01-19 7 13:00 16:45 off") # SNT
 
-thermostatkitchenevent+=("2021-01-20 7 16:20 17:00 on")
-thermostatkitchenevent+=("2021-01-20 7 17:01 21:15 off")
+#thermostatkitchenevent+=("2021-01-20 7 16:15 17:00 on") # SNT
+#thermostatkitchenevent+=("2021-01-20 7 17:01 21:15 off") # SNT
 
-#thermostatkitchenevent+=("2021-01-21 7 11:00 14:30 off")
+#thermostatkitchenevent+=("2021-01-21 7 11:00 14:30 off") # PCB Peter
 
-thermostatkitchenevent+=("2021-01-22 7 07:00 07:59 on")
-thermostatkitchenevent+=("2021-01-22 7 08:00 11:45 off")
-
-#thermostatkitchenevent+=("2020-11-18 7 16:20 17:00 on")
-#thermostatkitchenevent+=("2020-11-18 7 17:01 21:30 off")
-
-#thermostatkitchenevent+=("2020-11-19 7 07:00 07:55 on")
-#thermostatkitchenevent+=("2020-11-19 7 07:56 12:00 off")
+#thermostatkitchenevent+=("2021-01-22 7 07:00 07:59 on") # SNT
+#thermostatkitchenevent+=("2021-01-22 7 08:00 11:45 off") # SNT
 
 # Default Living
 thermostatlivingdefault+=("08:15 11:15")
@@ -57,18 +52,18 @@ thermostatlivingdefault+=("17:20 22:30")
 # Exceptions Living
 # thermostatlivingevent+=("2020-12-26 14 13:15 17:21 on") # Luc
 
-thermostatlivingevent+=("2020-11-25 14 07:45 11:45 on")
+thermostatlivingevent+=("2020-11-25 14 07:45 11:45 on") # Laura
 
-thermostatlivingevent+=("2021-01-18 7 13:00 21:15 off")
+#thermostatlivingevent+=("2021-01-18 7 13:00 21:15 off") # SNT
 
-thermostatlivingevent+=("2021-01-19 7 08:00 17:00 off")
+#thermostatlivingevent+=("2021-01-19 7 08:00 17:00 off") # SNT
 
-thermostatlivingevent+=("2021-01-20 7 16:30 21:15 off")
+#thermostatlivingevent+=("2021-01-20 7 16:30 21:15 off") # SNT
 
-#thermostatlivingevent+=("2021-01-21 7 11:00 11:49 on")
-#thermostatlivingevent+=("2021-01-21 7 11:50 14:25 off")
+#thermostatlivingevent+=("2021-01-21 7 11:00 11:49 on") # PCB Peter
+#thermostatlivingevent+=("2021-01-21 7 11:50 14:25 off") # PCB Peter
 
-thermostatlivingevent+=("2021-01-22 7 08:00 12:00 off")
+#thermostatlivingevent+=("2021-01-22 7 08:00 12:00 off") # SNT
 
 hysteresis="0.1"
 
