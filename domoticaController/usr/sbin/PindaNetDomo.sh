@@ -5,6 +5,16 @@
 # Compensate temperature sensor
 tempOffset=0
 
+function broadcast() {
+  current="$(cat /var/www/html/data/thermostat)"
+#  current="${current}
+#heatingLiving=\"off\""
+  new=$(echo "$current" | sed "s/$1=.*/$1=\"$2\"/")
+  if [ "$current" != "$new" ]; then
+    echo "Broadcast new situation $1 $2"
+  fi
+}
+
 function thermostatManualReset () {
   if [ -f /var/www/html/data/thermostatManualkitchen ]; then
     rm /var/www/html/data/thermostatManualkitchen
@@ -585,6 +595,7 @@ do
 
   echo "heatingKitchen: $heatingKitchen"
   echo "heatingLiving: $heatingLiving"
+  broadcast "heatingLiving" $heatingLiving
 
   state="sleep"
   if [ $heatingKitchen == "on" ] || [ $heatingLiving == "on" ]; then
