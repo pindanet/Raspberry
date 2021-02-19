@@ -381,6 +381,7 @@ do
   thermostatkitchenfile="/var/www/html/data/thermostatkitchen"
   thermostatlivingfile="/var/www/html/data/thermostatliving"
   PresHumiTempfile="/var/www/html/data/PresHumiTemp"
+  stderrLogfile="/var/www/html/stderr.log"
 
   declare -A heater
   unset heaterLiving
@@ -470,7 +471,18 @@ do
   # BCM 3 (SCL) - SCK (White)
   # BCM 2 (SDA) - SDI (Brown)
   # read pressure, humididy and temperature from sensor
-  read_bme280 --i2c-address 0x77 > $PresHumiTempfile
+  error_file=$(mktemp)
+  PresHumiTempVar=$(read_bme280 --i2c-address 0x77 2>$error_file)
+  if [ "$?" -ne 0 ]; then # skip faulty reading
+      echo "___________________________" >> $stderrLogfile
+      echo "$(date)" >> $stderrLogfile
+      echo "$(< $error_file)" >> $stderrLogfile
+    else
+#      echo "$PresHumiTempVar"
+      echo "$PresHumiTempVar" > $PresHumiTempfile
+  fi
+  rm $error_file
+#  read_bme280 --i2c-address 0x77 > $PresHumiTempfile
 
   # Calculate lux tls2591
   lux=$(python3 /var/www/html/tls2591.py | awk '{print $1}')
