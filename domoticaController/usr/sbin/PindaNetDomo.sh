@@ -365,6 +365,7 @@ echo "in" > /sys/class/gpio/gpio$_pir_pin/direction
 
 while true
 do
+  starttime=$(date +"%s") # complete cycle: 1 minute
 #  tempComfort="21.50"
 #  # Timer default array
 #  timerdefault[0]="0 07:30 22:50"
@@ -699,8 +700,8 @@ do
   fi
 
 # PIR detector for 1 minute
-  starttime=$(date +"%s")
-  while [ $(($(date +"%s") - starttime)) -lt 55 ]; do
+#  starttime=$(date +"%s") # moved to start while true loop
+  while [ $(($(date +"%s") - starttime)) -lt 56 ]; do
     _ret=$( cat /sys/class/gpio/gpio$_pir_pin/value )
     if [ $_ret -eq 1 ]; then
       echo "[!] PIR is tripped, Smile ..."
