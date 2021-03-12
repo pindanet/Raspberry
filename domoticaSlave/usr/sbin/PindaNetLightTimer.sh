@@ -5,6 +5,11 @@
 
 # ToDo
 
+morningShutterDown="07:00"
+morningShutterUp="08:00"
+eveningShutterDown="22:20"
+eveningShutterUp="22:47"
+
 lighttimer=180 #in seconds
 
 _pir_pin=4
@@ -19,10 +24,19 @@ while true; do
   sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
   sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
   clock=$(date -u +"%H:%M")
+  localclock=$(date +"%H:%M")
 
-#  echo "up: $sunrise, down:  $sunset, tijd: $clock"
+#  echo "down: $morningShutterDown, up:  $morningShutterUp, tijd: $localclock"
 
-  if [[ $clock < $sunrise ]] || [[ $clock > $sunset ]]; then # Night
+  if [[ $localclock > $morningShutterDown ]] && [[ $localclock < $morningShutterUp ]]; then # Morning and shutters down
+    shutter="down"
+  elif [[ $localclock > $eveningShutterDown ]] && [[ $localclock < $eveningShutterUp ]]; then # Evening and shutters down
+    shutter="down"
+  else
+    shutter="up"
+  fi
+
+  if [[ $clock < $sunrise ]] || [[ $clock > $sunset ]] || [[ $shutter == "down" ]]; then # Night
 #    echo "Test"
 #  else
     starttime=$(date +"%s")
