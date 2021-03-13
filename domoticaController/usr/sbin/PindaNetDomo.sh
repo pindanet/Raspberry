@@ -615,38 +615,67 @@ do
 #      fi
 #    fi
 #  done
-# Night lightning on/off
-  IFS=":" read hh mm < <(date +%:z)
-  diffUTC=$(($hh*3600+$mm*60))
-  nowSec=$(date -u +%s)
-  sunrise=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)" +%s) + diffUTC))
-  sunset=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + diffUTC))
-#  sunrise=$(date --date "15:18" +%s)
-#  sunset=$(date --date "15:07" +%s)
-#  lightevening="15:04"
-#  lightmorning="15:20"
+# Night/Morning lightning on/off
+  unset lightDining
+  lightDining+=("07:45")
+  lightDining+=("08:00")
 
-  startInterval=$((nowSec - 60))
-  endInterval=$((nowSec + 60))
-  lightmorningSec=$(date --date "$lightmorning" +%s)
-  lighteveningSec=$(date --date "$lightevening" +%s)
-  if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
-    if [[ $nowSec < $lighteveningSec ]]; then
-      echo "$(date): Sunset Light On" >> /home/dany/light.log
-      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
+  IFS=":" read hh mm < <(date +%:z)
+  sunset=$(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6) + ${hh}hour" +"%H:%M")
+  lightDining+=($sunset)
+  lightDining+=("22:50")
+#printf '%s\n' "${lightDining[@]}"
+
+  nowTime=$(date +"%H:%M")
+  lights="off"
+  for ((i=0;i< ${#lightDining[@]} ;i+=2)); do
+    if [[ "${lightDining[i]}" < "$nowTime" ]] && [[ "${lightDining[i+1]}" > "$nowTime" ]]; then
+      lights="on"
     fi
-  elif [[ $startInterval < $lighteveningSec ]] && [[ $endInterval > $lighteveningSec ]]; then
-    echo "$(date): Sleep Light Off" >> /home/dany/light.log
-    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
-  elif [[ $startInterval < $lightmorningSec ]] && [[ $endInterval > $lightmorningSec ]]; then
-    if [[ $nowSec < $sunrise ]]; then
-      echo "$(date): Wakeup Light On" >> /home/dany/light.log
-      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
-    fi
-  elif [[ $startInterval < $sunrise ]] && [[ $endInterval > $sunrise ]]; then
-    echo "$(date): Sunrise Light Off" >> /home/dany/light.log
+  done
+  if [ ! -f "/tmp/lightDining" ] && [ "$lights" == "on"  ]; then
+    echo "$(date): Dining Light On"
+    touch /tmp/lightDining
+    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
+  elif [ -f "/tmp/lightDining" ] && [ "$lights" == "off"  ]; then
+    echo "$(date): Dining Light Off"
+    rm /tmp/lightDining
     dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
   fi
+
+#if false; then # Niet uitvoeren
+#  IFS=":" read hh mm < <(date +%:z)
+#  diffUTC=$(($hh*3600+$mm*60))
+#  nowSec=$(date -u +%s)
+#  sunrise=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)" +%s) + diffUTC))
+#  sunset=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + diffUTC))
+##  sunrise=$(date --date "15:18" +%s)
+##  sunset=$(date --date "15:07" +%s)
+##  lightevening="15:04"
+##  lightmorning="15:20"
+#
+#  startInterval=$((nowSec - 60))
+#  endInterval=$((nowSec + 60))
+#  lightmorningSec=$(date --date "$lightmorning" +%s)
+#  lighteveningSec=$(date --date "$lightevening" +%s)
+#  if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
+#    if [[ $nowSec < $lighteveningSec ]]; then
+#      echo "$(date): Sunset Light On" >> /home/dany/light.log
+#      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
+#    fi
+#  elif [[ $startInterval < $lighteveningSec ]] && [[ $endInterval > $lighteveningSec ]]; then
+#    echo "$(date): Sleep Light Off" >> /home/dany/light.log
+#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
+#  elif [[ $startInterval < $lightmorningSec ]] && [[ $endInterval > $lightmorningSec ]]; then
+#    if [[ $nowSec < $sunrise ]]; then
+#      echo "$(date): Wakeup Light On" >> /home/dany/light.log
+#      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
+#    fi
+#  elif [[ $startInterval < $sunrise ]] && [[ $endInterval > $sunrise ]]; then
+#    echo "$(date): Sunrise Light Off" >> /home/dany/light.log
+#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
+#  fi
+#fi # einde Niet uitvoeren
 # oud
 #  sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
 #  startInterval=$(date -u --date='-1 minute' +"%H:%M")
