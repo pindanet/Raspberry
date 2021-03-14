@@ -5,10 +5,10 @@
 
 # ToDo
 
-morningShutterDown="07:00"
+morningShutterDown="05:00"
 morningShutterUp="08:00"
 eveningShutterDown="22:20"
-eveningShutterUp="22:47"
+eveningShutterUp="23:00"
 
 lighttimer=180 #in seconds
 
