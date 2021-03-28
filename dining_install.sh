@@ -1,7 +1,7 @@
 #!/bin/bash
 # For Raspbian Buster Lite
-# wget https://github.com/pindanet/Raspberry/raw/master/wall_install.sh
-# bash wall_install.sh
+# wget https://github.com/pindanet/Raspberry/raw/master/dining_install.sh
+# bash dining_install.sh
 
 # ToDo
 
