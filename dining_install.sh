@@ -30,8 +30,8 @@ if [ $USER == "pi" ]; then
   sudo raspi-config nonint do_wifi_country "$COUNTRY"
 
   # Change hostname
-  read -p "Enter the new hostname [rpiwall]: " NEW_HOSTNAME
-  NEW_HOSTNAME=${NEW_HOSTNAME:-rpiwall}
+  read -p "Enter the new hostname [pindadining]: " NEW_HOSTNAME
+  NEW_HOSTNAME=${NEW_HOSTNAME:-pindadining}
   sudo raspi-config nonint do_hostname "$NEW_HOSTNAME"
 
   # enable ssh
