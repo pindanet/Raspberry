@@ -15,6 +15,14 @@ body {
   font-size: 2em;
   -webkit-text-stroke: 1px black;
 }
+#temp {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  color: white;
+  font-size: 2em;
+  -webkit-text-stroke: 1px black;
+}
 </style>
 </head>
 <body>
@@ -24,7 +32,27 @@ body {
 <div id="datetime">
 Maandag 29 maart 2021 19:05
 </div>
+<div id="temp">
+20 °C
+</div>
 <script>
+function readTemp()
+{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", "file:///home/dany/temp.txt", false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                document.getElementById("temp").innerHTML = allText;
+            }
+        }
+    }
+    rawFile.send(null);
+}
 var startTimer;
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
@@ -41,6 +69,7 @@ function startTime() {
 
   var clockDateCode = dayNames[today.getDay()] + ' ' + today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear() + '&nbsp;' + h + ":" + m;
   document.getElementById("datetime").innerHTML = clockDateCode;
+  readTemp();
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
 startTime();
