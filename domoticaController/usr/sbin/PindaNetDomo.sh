@@ -621,7 +621,10 @@ do
   lightDining+=("08:00")
 
   IFS=":" read hh mm < <(date +%:z)
-  sunset=$(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6) + ${hh}hour" +"%H:%M")
+  diffUTC=$(($hh*3600+$mm*60))
+  sunsetSec=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + diffUTC))
+  sunset=$(date --date @$sunsetSec +"%H:%M")
+#  sunset=$(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6) + ${hh}hour" +"%H:%M")
   lightDining+=($sunset)
   lightDining+=("22:50")
 #printf '%s\n' "${lightDining[@]}"
