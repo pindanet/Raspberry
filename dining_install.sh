@@ -70,8 +70,6 @@ else
   echo '"\e[5~": history-search-backward' > .inputrc
   echo '"\e[6~": history-search-forward' >> .inputrc
   
-  # HIER
-  
   # Muiscursor verbergen
   sudo apt-get install unclutter -y
 
@@ -86,7 +84,10 @@ else
   echo "xset s off" >> $HOME/.config/openbox/autostart
   echo "xset -dpms" >> $HOME/.config/openbox/autostart
   echo "xset s noblank" >> $HOME/.config/openbox/autostart
-
+  echo "chromium-browser --start-fullscreen --autoplay-policy=no-user-gesture-required --allow-file-access-from-files --app=file:///home/dany/index.html" >> $HOME/.config/openbox/autostart
+  
+  # HIER
+  
   sudo apt install ddcutil -y
   sudo wget -O /var/www/html/brightness.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/brightness.sh
   echo "dtparam=i2c2_iknowwhatimdoing" | sudo tee -a /boot/config.txt
