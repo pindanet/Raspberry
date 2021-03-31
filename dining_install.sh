@@ -85,16 +85,17 @@ else
   echo "xset s off" >> $HOME/.config/openbox/autostart
   echo "xset -dpms" >> $HOME/.config/openbox/autostart
   echo "xset s noblank" >> $HOME/.config/openbox/autostart
+
+  sudo apt install ddcutil -y
+  sudo wget -O brightness.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/brightness.sh
+  echo "dtparam=i2c2_iknowwhatimdoing" | sudo tee -a /boot/config.txt
+  echo "# Start auto brightness script" >> $HOME/.config/openbox/autostart
+  echo "bash $HOME/brightness.sh &" >> $HOME/.config/openbox/autostart
+
   echo "chromium-browser --start-fullscreen --autoplay-policy=no-user-gesture-required --allow-file-access-from-files --app=file:///home/dany/index.html" >> $HOME/.config/openbox/autostart
   
   # HIER
   
-  sudo apt install ddcutil -y
-  sudo wget -O /var/www/html/brightness.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/brightness.sh
-  echo "dtparam=i2c2_iknowwhatimdoing" | sudo tee -a /boot/config.txt
-  echo "# Start auto brightness script" >> $HOME/.config/openbox/autostart
-  echo "bash /var/www/html/brightness.sh &" >> $HOME/.config/openbox/autostart
-
 echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
   echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
 
