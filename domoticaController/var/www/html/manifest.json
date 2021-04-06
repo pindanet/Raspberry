@@ -3,12 +3,16 @@
   "name": "Pinda Domotica",
   "icons": [
     {
-      "src": "pindadomo.png",
+      "src": "pindadomo192.png",
       "sizes": "192x192",
+      "type": "image/png"
+    },
+    { 
+      "src": "pindadomo512.png",
+      "sizes": "512x512", 
       "type": "image/png"
     }
   ],
   "start_url": "/index.html",
   "display": "fullscreen",
-  "orientation": "landscape"
 }
