@@ -14,17 +14,17 @@
   <div id="clockdate">3 april 2021</div>
 </div></a>
 <div id="menu">
-  <h1>Apps</h1>
-  <a href="#radio"><img onclick="radio();" style="height: 100px;margin: 0 -15px;" src="emoji/radio.svg"></a>
-  <img style="height: 100px;" onclick="weather(event);" src="emoji/weather.svg">
-  <a href="#thermostatUI"><img style="height: 100px;" src="emoji/thermostat.svg"></a>
-  <img style="height: 100px;" onclick="lights(event);" src="emoji/light_bulb.svg">
-  <img style="height: 100px;" onclick="enterPIN(event);" src="emoji/keyring.svg">
-  <img style="height: 90px; margin-bottom: 4px;" onclick="remoteCommand(event,'rpiwall');" src="emoji/monitor.svg">
-  <a href="#top"><div style="overflow: hidden; display: inline-block; margin-bottom: -2px;"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div></a>
+  <a href="#radio"><img class="menubutton" src="emoji/radio.svg"></a>
+  <a href="#radio"><img class="menubutton" onclick="weather(event);" src="emoji/weather.svg"></a>
+  <a href="#thermostatUI"><img class="menubutton" src="emoji/thermostat.svg"></a>
+  <a href="#radio"><img class="menubutton" onclick="lights(event);" src="emoji/light_bulb.svg"></a>
+  <a href="#radio"><img class="menubutton" onclick="enterPIN(event);" src="emoji/keyring.svg"></a>
+  <a href="#radio"><img class="menubutton" onclick="remoteCommand(event,'rpiwall');" src="emoji/monitor.svg"></a>
+  <a href="#top"><object class="menubutton" data="emoji/calendar.svg"></object></a>
+  <!--a href="#top"><div style="overflow: hidden; display: inline-block; margin-bottom: -2px;"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div></a-->
 </div>
 <div id="radio">
-  <h1><img src="emoji/radio.svg"> Radio</h1>
+  <img src="emoji/radio.svg">
   <button onclick="radioCommand(event, 'play', 1);">Radio 1</button>
   <button onclick="radioCommand(event, 'play', 2);">Radio 2</button>
   <button onclick="radioCommand(event, 'play', 3);">Klara</button>
@@ -40,7 +40,7 @@
   <button onclick="radioCommand(event, 'play', 13);">Q-Music</button>
   <button onclick="radioCommand(event, 'play', 14);">Willy</button>
   <br>
-  <a href="#top"><button onclick="clearInterval(radioStatusInterval); radioCommand(event, 'stop', 1);">Stop</button></a>
+  <button onclick="clearInterval(radioStatusInterval); radioCommand(event, 'stop', 1);">Stop</button>
   <button onclick="radioCommand(event, 'voldown', 1);">V-</button>
   <span class="terminalbox" style="text-align: center; font-size: 30px; padding: 15px; font-weight: bold; margin-right: 5px;" id="volumeinfo"></span>
   <button onclick="radioCommand(event, 'volup', 1);">V+</button>
@@ -67,4 +67,3 @@
 </div>
 </body>
 </html>
-
