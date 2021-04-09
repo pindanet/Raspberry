@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <!--
 TODO
-Fullscreen HTML API
+Send thermostatManualkitchen minder naar pindakeuken:
+  sudo -u dany scp /var/www/html/data/thermostatManualkitchen pindakeuken:/tmp/
+Fullscreen Android App
 -->
 <html>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>PindaNet Raspberry Pi</title>
+    <!--meta name="mobile-web-app-capable" content="yes"-->
     <link rel="manifest" href="/manifest.json">
+    <title>PindaNet Raspberry Pi</title>
     <link rel="icon" href="data:;base64,iVBORwOKGO=" />
     <link href='fullcalendar/packages/core/main.css' rel='stylesheet' />
     <link href='fullcalendar/packages/daygrid/main.css' rel='stylesheet' />
@@ -29,8 +32,9 @@ Fullscreen HTML API
     <!--script src="jsencrypt.js"></script-->
     <script type="text/javascript">
     // Configuration
-      tempOff = "15.00";
-      tempIncrDecr = 0.5;
+//    tempOff = "15.00";
+//    tempOffKitchen = "11.50"; // tempOff - tempOffset (keuken)
+    tempIncrDecr = 0.5;
     // PinPad
       function addNumber(event, element){
         document.getElementById('PINbox').value = document.getElementById('PINbox').value+element.value;
@@ -801,7 +805,7 @@ console.log(thermostat);
             if (this.status === 404) {
               document.getElementById(id+"Auto").style.color = "black";
             } else {
-              if (this.responseText == tempOff) {
+              if (this.responseText == "off") {
                 document.getElementById(id+"Off").style.color = "black";
                 if (document.getElementById("kitchenOff").style.color == "black" && document.getElementById("livingOff").style.color == "black") {
                   document.getElementById("thermostatOff").style.color = "black";
@@ -936,7 +940,7 @@ console.log(thermostat);
             };
             var temp = document.getElementById(id).innerHTML;
             if (command == "Off") {
-              temp = tempOff;
+              temp = "off";
               command = "Manual";
             }
             if (id == "kitchentemp") {
