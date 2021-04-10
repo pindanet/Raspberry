@@ -1,9 +1,94 @@
+// Configuration
+tempIncrDecr = 0.5;
+
+function thermostatUI (event, command, id) {
+  switch (command) {
+    case "Incr":
+      var temp = parseFloat(document.getElementById(id).innerHTML);
+      temp += tempIncrDecr;
+      temp = temp.toFixed(2);
+      document.getElementById(id).innerHTML = temp;
+      break;
+    case "Decr":
+      var temp = parseFloat(document.getElementById(id).innerHTML);
+      temp -= tempIncrDecr;
+      temp = temp.toFixed(2);
+      document.getElementById(id).innerHTML = temp;
+      break;
+    case "Manual":
+    case "Off":
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "thermostatcommand.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function() {
+        if (this.readyState === 4) {
+          setThermostatUI(event);
+        }
+      };
+      var temp = document.getElementById(id).innerHTML;
+      if (command == "Off") {
+        temp = "off";
+        command = "Manual";
+      }
+      if (id == "kitchentemp") {
+        xhr.send("command=" + command + "&room=kitchen&temp=" + temp);
+      } else {
+        xhr.send("command=" + command + "&room=living&temp=" + temp);
+      }
+      break;
+    case "Auto":
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "thermostatcommand.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function() {
+        if (this.readyState === 4) {
+          setThermostatUI(event);
+        }
+      };
+      if (id == "kitchentemp") {
+        xhr.send("command=" + command + "&room=kitchen&temp=auto");
+      } else {
+        xhr.send("command=" + command + "&room=living&temp=auto");
+      }
+      break;
+  }
+}
+function setThermostatUI (event) {
+  thermostatIfFileExist("data/thermostatManualkitchen", "kitchen");
+  thermostatIfFileExist("data/thermostatManualliving", "living");
+  document.getElementById('livingRoomTemp').innerHTML = roomTemp;
+}
+function thermostatIfFileExist(url, id) {
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = 'text';
+  xhr.open('POST', url)
+  xhr.onload = function() {
+    if (this.readyState === 4) {
+      if (this.status === 404) {
+        document.getElementById(id+"Auto").style.color = "black";
+        document.getElementById(id+"Manual").style.color = "";
+        document.getElementById(id+"Off").style.color = "";
+      } else {
+        document.getElementById(id+"Auto").style.color = "";
+        if (this.responseText == "off") {
+          document.getElementById(id+"Off").style.color = "black";
+          document.getElementById(id+"Manual").style.color = "";
+        } else {
+          document.getElementById(id+"Off").style.color = "";
+          document.getElementById(id+"Manual").style.color = "black";
+          document.getElementById("kitchentemp").innerHTML = this.responseText;
+        }
+      }
+    }
+  }
+  xhr.send("id=" + id);
+}
+
 var radioStatusInterval;
 function radio(event) {
   radioCommand(event, 'getvol', 1);
   radioCommand(event, 'status', 1);
   radioStatusInterval = setInterval(function () { radioCommand(event, 'status', 1); }, 60000); // Elke minuut
-console.log("Radio");
 }
 function radioCommand(event, command, options) {
   if ( command == "volup" ) {
@@ -104,11 +189,16 @@ function startTime() {
   if (getApp("radio")) {
     radio(event);
   }
-  getApp("thermostatUI");
+  if (getApp("thermostatUI")) {
+    setThermostatUI(event);
+  }
   if (waitMinute++ > 59) {
     waitMinute = 0;
     if (app["radio"]) {
       radio(event);
+    }
+    if (app["thermostatUI"]) {
+      setThermostatUI(event);
     }
   }
   startTimer = setTimeout(startTime, 1000); // elke seconde
