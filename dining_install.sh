@@ -4,7 +4,7 @@
 # bash dining_install.sh
 
 # ToDo
-# https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing
+# raspi-config enable 1-wire
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
