@@ -94,7 +94,25 @@ else
 
   echo "chromium-browser --start-fullscreen --autoplay-policy=no-user-gesture-required --allow-file-access-from-files --app=file:///home/dany/index.html" >> $HOME/.config/openbox/autostart
   
-  # HIER
+  sudo wget -O /usr/sbin/PindaNetDining.sh https://github.com/pindanet/Raspberry/raw/master/dining/usr/sbin/PindaNetDining.sh
+  sudo chmod +x /usr/sbin/PindaNetDining.sh
+  cat > PindaNetDining.service <<EOF
+[Unit]
+Description=PindaNet Domotica Dining Room
+Wants=network-online.target
+After=network.target network-online.target
+[Service]
+ExecStart=/usr/sbin/PindaNetDining.sh
+Restart=always
+RestartSec=60
+[Install]
+WantedBy=multi-user.target
+EOF
+  sudo mv PindaNetDining.service /etc/systemd/system/
+  sudo systemctl daemon-reload
+  sudo systemctl enable PindaNetDining.service
+
+# HIER
   
 echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
   echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
