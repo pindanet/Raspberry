@@ -1,7 +1,7 @@
 #!/bin/bash
-# Gnd (9) > Gnd (Black)
+# Gnd (9) > Gnd (Brown)
 # GPIO 4 (7) > Output (White)
-# 5 V (2) > Vcc (Grey)
+# 5 V (2) > Vcc (Orange)
 
 # ToDo
 
