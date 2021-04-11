@@ -1,7 +1,7 @@
 #!/bin/bash
 # ToDo
 # Compensate temperature sensor
-tempOffset=3.5
+tempOffset=0
 
 function relayGPIO () {
   _r1_pin=23
