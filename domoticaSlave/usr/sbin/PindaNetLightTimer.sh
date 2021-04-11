@@ -13,10 +13,33 @@ eveningShutterUp="23:00"
 lighttimer=180 #in seconds
 
 _pir_pin=4
-_light_pin=24
+#_light_pin=24
+
+function tasmota () {
+  if [ ! -f /tmp/$1 ]; then # initialize
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+    two=$(wget -qO- http://$1/cm?cmnd=Power | awk -F"\"" '{print $4}')
+    twolower=${two,,}
+    if [ $twolower == "on" ] || [ $twolower == "off" ]; then
+      echo "$(date -u +%s),$twolower" >> /var/www/html/data/$1.log
+    fi
+  fi
+  if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
+    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
+  elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
+    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
+  elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+    echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
+  fi
+}
 
 raspi-gpio set $_pir_pin ip pd # input pull down
-raspi-gpio set $_light_pin op dh  # output high
+#raspi-gpio set $_light_pin op dh  # output high
 
 timer=$(date +"%s")
 
@@ -46,7 +69,8 @@ while true; do
       if [[ $pir == *"level=1"* ]]; then
         if [[ $(raspi-gpio get $_light_pin) == *"level=1"* ]]; then
           echo "$(date): Motion: Light on"
-          raspi-gpio set $_light_pin dl
+          tasmota "tasmota_15dd89-7561" "on"
+#          raspi-gpio set $_light_pin dl
 #        else
 #          echo "$(date): Motion: Keep light on"
        fi
@@ -55,7 +79,8 @@ while true; do
         if [ $(($(date +"%s") - timer)) -gt "$lighttimer" ]; then
           if [[ $(raspi-gpio get $_light_pin) == *"level=0"* ]]; then
             echo "$(date): Motion: Light off"
-            raspi-gpio set $_light_pin dh
+            tasmota "tasmota_15dd89-7561" "off"
+#            raspi-gpio set $_light_pin dh
 #          else
 #            echo "$(date): Motion: Keep light off"
           fi
@@ -65,7 +90,8 @@ while true; do
     done
   else
 #    echo "$(date): Dag: Lights off"
-    raspi-gpio set $_light_pin dh
+#    raspi-gpio set $_light_pin dh
+    tasmota "tasmota_15dd89-7561" "off"
     sleep 55
   fi
 done
