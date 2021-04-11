@@ -234,10 +234,10 @@ do
 
   # Collect sensordata
   # MCP9808 I2C Temperature and Pressure Sensor
-  # 3v3 - Vin (Orange)
-  # Gnd - Gnd (Yellow)
-  # BCM 3 (SCL) - SCK (Green)
-  # BCM 2 (SDA) - SDI (Blue)
+  # 3v3 - Vin (red)
+  # Gnd - Gnd (black)
+  # BCM 3 (SCL) - SCK (Brown)
+  # BCM 2 (SDA) - SDI (White)
   # read temperature from sensor
   mcp9808.py > $PresHumiTempfile
 
