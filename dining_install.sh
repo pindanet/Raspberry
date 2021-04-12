@@ -5,6 +5,8 @@
 
 # ToDo
 # raspi-config enable 1-wire
+# raspi-config configure WiFi connection
+# raspi-config Advanced Options > GL Driver > G2 GL (Fake KMS)
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
