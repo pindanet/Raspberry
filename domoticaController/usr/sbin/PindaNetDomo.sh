@@ -1,6 +1,7 @@
 #!/bin/bash
 # ToDo
 # Activate Serial Hardware
+# replace /home/dany by search default user
 
 # Compensate temperature sensor
 tempOffset=0
