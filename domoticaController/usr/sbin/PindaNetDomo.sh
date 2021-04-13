@@ -451,6 +451,15 @@ do
     sudo -u dany ssh pindakeuken rm /tmp/thermostatOffkitchen
     rm /var/www/html/data/thermostatOnkitchen
   fi
+  if [ -f /var/www/html/data/getKitchenTemp ]; then
+    fileSize=$(stat --printf="%s" /var/www/html/data/getKitchenTemp)
+    if [ $fileSize == "0" ]; then # get kitchenTemp once
+      sudo -u dany scp pindakeuken:/var/www/html/data/PresHumiTemp /tmp/getKitchenTemp
+      mv /tmp/getKitchenTemp /var/www/html/data/getKitchenTemp
+    else
+      rm /var/www/html/data/getKitchenTemp
+    fi
+  fi
   if [ -f /var/www/html/data/thermostatReset ]; then
     # copy to DomoticaSlave
     sudo -u dany scp /var/www/html/data/thermostatReset pindakeuken:/tmp/
