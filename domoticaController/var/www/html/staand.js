@@ -1,6 +1,35 @@
 // Configuration
 tempIncrDecr = 0.5;
 
+function getKitchenTemp(command) {
+/*
+  switch (command) {
+    case "on":
+      console.log("getKitchenTemp On");
+    case "displayTemp":
+      console.log("getKitchenTemp Display Temp");
+      break;
+    case "off":
+      console.log("getKitchenTemp Off");
+      break;
+  }
+*/
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "thermostatcommand.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.readyState === 4) {
+console.log(this.responseText);
+      var kitchenTemp = parseFloat(this.responseText).toFixed(1);
+      if (!isNaN(kitchenTemp)) {
+//        document.getElementById("kitchenRoomTemp").innerHTML = "--.- °C";
+//      } else {
+        document.getElementById("kitchenRoomTemp").innerHTML = kitchenTemp + " °C";
+      }
+    }
+  };
+  xhr.send("command=getKitchenTemp&status=" + command);
+}
 function thermostatUI (event, command, id) {
   switch (command) {
     case "Incr":
@@ -161,17 +190,19 @@ function getApp(id) {
       if (app[id]) {
         app[id] = false;
 //console.log(id + " Off");
+        return "off";
       }
     } else {
       if (!app[id]) {
         app[id]=true;
 //console.log(id + " On")
-        return true;
+        return "on";
       }
     }
   } else if (app[id]) {
     app[id]=false;
 //console.log(id + " Off");
+    return "off";
   }
 }
 waitMinute=0;
@@ -186,11 +217,19 @@ function startTime() {
   document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + roomTemp;
   document.getElementById('clock').innerHTML = h + ":" + m;
   getRoomTemp();
-  if (getApp("radio")) {
+  var radioApp = getApp("radio");
+  if (radioApp == "on") {
     radio(event);
+//  } else if (radioApp == "off") {
   }
-  if (getApp("thermostatUI")) {
+  var thermostatUIApp = getApp("thermostatUI");
+  if (thermostatUIApp == "on") {
+//console.log(thermostatUIApp);
     setThermostatUI(event);
+    getKitchenTemp("on");
+  } else if (thermostatUIApp == "off") {
+//console.log(thermostatUIApp);
+    getKitchenTemp("off");
   }
   if (waitMinute++ > 59) {
     waitMinute = 0;
@@ -199,6 +238,7 @@ function startTime() {
     }
     if (app["thermostatUI"]) {
       setThermostatUI(event);
+      getKitchenTemp("displayTemp");
     }
   }
   startTimer = setTimeout(startTime, 1000); // elke seconde
