@@ -471,4 +471,4 @@ You can not overwrite existing files.
     https://www.raspberrypi.org/forums/viewtopic.php?t=247892
         works with to much latency, can only connect once.
     https://www.raspberrypi.org/forums/viewtopic.php?t=235519
-    
+    https://wiki.archlinux.org/index.php/PulseAudio/Examples#PulseAudio_over_network
