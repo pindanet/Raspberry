@@ -470,4 +470,5 @@ You can not overwrite existing files.
     https://www.hifiberry.com/docs/data-sheets/datasheet-miniamp/
     https://www.raspberrypi.org/forums/viewtopic.php?t=247892
         works with to much latency, can only connect once.
+    https://www.raspberrypi.org/forums/viewtopic.php?t=235519
     
