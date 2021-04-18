@@ -489,8 +489,31 @@ You can not overwrite existing files.
     speaker-test -Dsoftvol -c2 -twav
     alsamixer
 
-    https://www.raspberrypi.org/forums/viewtopic.php?t=235519
-        # Latency: https://www.reddit.com/r/linux_gaming/comments/e1ougw/how_to_fix_high_sound_latency/
+    # https://www.raspberrypi.org/forums/viewtopic.php?t=235519
+    sudo apt-get install pulseaudio pulseaudio-module-bluetooth
+    sudo usermod -a -G bluetooth pi
+    sudo reboot
+    sudo nano /etc/bluetooth/main.conf
+        Class = 0x41C
+        DiscoverableTimeout = 0
+    sudo systemctl restart bluetooth
+    bluetoothctl
+        power on
+        discoverable on
+        pairable on
+        agent on
+    # starten na bluetooth
+    pulseaudio --start
+    sudo systemctl status bluetooth
+    sudo journalctl -f -u bluetooth.service
+    bluetoothctl
+        scan on
+        pair XX:XX:XX:XX:XX:XX
+        trust XX:XX:XX:XX:XX:XX
+        connect XX:XX:XX:XX:XX:XX
+    # To be continued
+    
+    # Latency: https://www.reddit.com/r/linux_gaming/comments/e1ougw/how_to_fix_high_sound_latency/
 
     https://www.raspberrypi.org/forums/viewtopic.php?t=247892
         works with to much latency, can only connect once.
