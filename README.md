@@ -514,6 +514,7 @@ You can not overwrite existing files.
     # To be continued
     
     # Latency: https://www.reddit.com/r/linux_gaming/comments/e1ougw/how_to_fix_high_sound_latency/
+    #          https://askubuntu.com/questions/145935/get-rid-of-0-5s-latency-when-playing-audio-over-bluetooth-with-a2dp
 
     https://www.raspberrypi.org/forums/viewtopic.php?t=247892
         works with to much latency, can only connect once.
