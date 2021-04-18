@@ -469,6 +469,11 @@ You can not overwrite existing files.
 ![MiniAmp](images/miniamp-connection.jpg "MiniAmp")
 
     https://www.hifiberry.com/docs/software/configuring-linux-3-18-x/
+    sudo nano /boot/config.txt
+        disable
+            #dtparam=audio=on
+        add
+            dtoverlay=hifiberry-dac
     speaker-test -c2 --test=wav -w /usr/share/sounds/alsa/Front_Center.wav
     https://www.hifiberry.com/docs/data-sheets/datasheet-miniamp/
     https://www.raspberrypi.org/forums/viewtopic.php?t=247892
