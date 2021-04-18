@@ -489,7 +489,9 @@ You can not overwrite existing files.
     speaker-test -Dsoftvol -c2 -twav
     alsamixer
 
+    https://www.raspberrypi.org/forums/viewtopic.php?t=235519
+        # Latency: https://www.reddit.com/r/linux_gaming/comments/e1ougw/how_to_fix_high_sound_latency/
+
     https://www.raspberrypi.org/forums/viewtopic.php?t=247892
         works with to much latency, can only connect once.
-    https://www.raspberrypi.org/forums/viewtopic.php?t=235519
     https://wiki.archlinux.org/index.php/PulseAudio/Examples#PulseAudio_over_network
