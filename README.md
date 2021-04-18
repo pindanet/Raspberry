@@ -465,6 +465,8 @@ You can not overwrite existing files.
     curl -s https://api.github.com/repos/arendst/Tasmota/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")' | cut -d$'v' -f 2
     wget -qO- http://tasmota_8be4af-1199/cm?cmnd=Status%202 | python -c 'import sys, json; print(json.load(sys.stdin)["StatusFWR"]["Version"])' | cut -d$'(' -f 1
 ## HifiBerry miniAmp
+![MiniAmp](images/miniamp-connection.jpg "MiniAmp")
+
     https://www.hifiberry.com/docs/software/configuring-linux-3-18-x/
     speaker-test -c2 --test=wav -w /usr/share/sounds/alsa/Front_Center.wav
     https://www.hifiberry.com/docs/data-sheets/datasheet-miniamp/
