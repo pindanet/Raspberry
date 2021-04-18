@@ -440,6 +440,7 @@ You can not overwrite existing files.
     Shutdown and Power off Raspberry Pi
     
     Open Sonoff Basic and solder connections (see: https://www.sigmdel.ca/michel/ha/sonoff/flashing_sonoff_en.html with PSU)
+![Flashing Sonoff](images/sonoff-rpi-2.jpg "Flashing Sonoff")
     
     Start Raspberry Pi
     wget http://ota.tasmota.com/tasmota/release/tasmota.bin
