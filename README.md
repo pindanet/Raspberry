@@ -494,7 +494,7 @@ You can not overwrite existing files.
     sudo usermod -a -G bluetooth pi
     sudo reboot
     sudo nano /etc/bluetooth/main.conf
-        Class = 0x41C
+        Class = 0x240414
         DiscoverableTimeout = 0
     sudo systemctl restart bluetooth
     bluetoothctl
