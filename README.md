@@ -512,10 +512,46 @@ You can not overwrite existing files.
         trust XX:XX:XX:XX:XX:XX
         connect XX:XX:XX:XX:XX:XX
     # To be continued
-    
-    # Latency: https://www.reddit.com/r/linux_gaming/comments/e1ougw/how_to_fix_high_sound_latency/
-    #          https://askubuntu.com/questions/145935/get-rid-of-0-5s-latency-when-playing-audio-over-bluetooth-with-a2dp
+## IQaudio DigiAMP+
+    sudo nano /boot/config.txt
+        disable
+            #dtparam=audio=on
+        add
+            dtoverlay=iqaudio-dacplus,auto_mute_amp
+    alsamixer
+    speaker-test -c2 -twav
+    # https://www.raspberrypi.org/forums/viewtopic.php?t=247892
+    sudo apt install bluealsa
+    sudo nano -B -P /lib/systemd/system/bluealsa.service
+    [Unit]
+    Description=BluezALSA proxy
+    Requires=bluetooth.service
+    After=bluetooth.service
 
-    https://www.raspberrypi.org/forums/viewtopic.php?t=247892
-        works with to much latency, can only connect once.
-    https://wiki.archlinux.org/index.php/PulseAudio/Examples#PulseAudio_over_network
+    [Service]
+    Type=simple
+    User=root
+    ExecStart=/usr/bin/bluealsa --profile=a2dp-sink
+    
+    sudo nano /etc/systemd/system/aplay.service
+    [Unit]
+    Description=BlueALSA aplay service
+    After=bluetooth.service
+    Requires=bluetooth.service
+
+    [Service]
+    ExecStart=/usr/bin/bluealsa-aplay 00:00:00:00:00:00 --pcm-buffer-time=10000
+
+    [Install]
+    WantedBy=multi-user.target
+    
+    sudo systemctl enable aplay
+    sudo usermod -a -G bluetooth pi
+    sudo nano /etc/bluetooth/main.conf
+        Class = 0x240414
+    sudo shutdown -r now
+    bluetoothctl
+        scan on
+        pair XX:XX:XX:XX:XX:XX
+        trust XX:XX:XX:XX:XX:XX
+        connect XX:XX:XX:XX:XX:XX
