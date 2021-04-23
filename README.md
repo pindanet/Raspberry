@@ -513,6 +513,7 @@ You can not overwrite existing files.
         connect XX:XX:XX:XX:XX:XX
     # To be continued
 ## IQaudio DigiAMP+
+    # https://datasheets.raspberrypi.org/iqaudio/iqaudio-product-brief.pdf
     sudo nano /boot/config.txt
         disable
             #dtparam=audio=on
