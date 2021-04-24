@@ -524,15 +524,7 @@ You can not overwrite existing files.
     # https://www.raspberrypi.org/forums/viewtopic.php?t=247892
     sudo apt install bluealsa
     sudo nano -B -P /lib/systemd/system/bluealsa.service
-    [Unit]
-    Description=BluezALSA proxy
-    Requires=bluetooth.service
-    After=bluetooth.service
-
-    [Service]
-    Type=simple
-    User=root
-    ExecStart=/usr/bin/bluealsa --profile=a2dp-sink
+        ExecStart=/usr/bin/bluealsa --profile=a2dp-sink
     
     sudo nano /etc/systemd/system/aplay.service
     [Unit]
