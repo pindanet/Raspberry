@@ -36,7 +36,7 @@ switch ($command) {
 // Headphone
 //    exec("amixer -q -M sset PCM 5%+", $output, $return);
 // USB Soundcard
-    exec("mpc volume +10", $output, $return);
+    exec("mpc volume +5", $output, $return);
     exec("mpc status", $output, $return);
     status($output);
     exit();
@@ -44,7 +44,7 @@ switch ($command) {
   case "voldown":
 //    exec("amixer -q -M sset PCM 5%-", $output, $return);
 // USB Soundcard
-    exec("mpc volume -10", $output, $return);
+    exec("mpc volume -5", $output, $return);
     exec("mpc status", $output, $return);
     status($output);
     exit();
