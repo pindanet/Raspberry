@@ -259,8 +259,11 @@ EOF
   while IFS='' read -r LINE || [ -n "${LINE}" ]; do
     echo "${LINE}" | sudo tee -a /etc/mpd.conf
     if [ "${LINE}" == "audio_output {" ]; then
-      echo "        device          \"hw:1,0\""  | sudo tee -a /etc/mpd.conf
-      echo "        mixer_type      \"software\""  | sudo tee -a /etc/mpd.conf
+#      echo "        device          \"hw:1,0\""  | sudo tee -a /etc/mpd.conf
+#      echo "        mixer_type      \"software\""  | sudo tee -a /etc/mpd.conf
+      echo "        type          \"alsa\""  | sudo tee -a /etc/mpd.conf
+      echo "        name          \"ALSADevice\""  | sudo tee -a /etc/mpd.conf
+      echo "        mixer_control      \"Digital\""  | sudo tee -a /etc/mpd.conf
     fi
   done < /etc/mpd.conf.ori
   sudo chmod +r /etc/mpd.conf
