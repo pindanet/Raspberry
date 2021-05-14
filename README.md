@@ -548,3 +548,33 @@ You can not overwrite existing files.
         pair XX:XX:XX:XX:XX:XX
         trust XX:XX:XX:XX:XX:XX
         connect XX:XX:XX:XX:XX:XX
+## Audio streaming
+### Compile and install on openSUSE Leap 15.2 x64 system
+    #https://gavv.github.io/articles/roc-tutorial/
+    sudo zypper install gcc-c++ pkg-config scons ragel gengetopt libuv-devel libunwind-devel libpulse-devel sox-devel libtool intltool autoconf automake make cmake git
+    #sudo zypper addrepo https://download.opensuse.org/repositories/#home:malcolmlewis:TESTING/openSUSE_Leap_15.2/#home:malcolmlewis:TESTING.repo
+    #sudo zypper refresh
+    #sudo zypper install cpputest-devel
+    git clone https://github.com/roc-streaming/roc-toolkit.git
+    cd roc-toolkit
+    scons -Q --build-3rdparty=openfec --disable-tests --disable-pulseaudio
+    sudo scons -Q --build-3rdparty=openfec --disable-tests --disable-pulseaudio install
+    sudo modprobe snd-aloop
+    # Test
+    roc-recv -vv -s rtp+rs8m::10001 -r rs8m::10002 -d alsa -o 'plughw:CARD=PCH,DEV=0'
+    # Play some audio through virtual audio device
+    roc-send -vv -s rtp+rs8m:127.0.0.1:10001 -r rs8m:127.0.0.1:10002 -d alsa -i 'plughw:CARD=Loopback,DEV=1'
+#### Crosscompile for Raspberry Pi on openSUSE Leap 15.2 x64 system
+    sudo zypper install docker
+    sudo systemctl start docker.service
+    cd
+    # sourcecode in new directory
+    rm -r -f roc-toolkit
+    git clone https://github.com/roc-streaming/roc-toolkit.git
+    cd roc-toolkit
+    sudo docker run -t --rm -u "${UID}" -v "${PWD}:${PWD}" -w "${PWD}"     rocproject/cross-arm-linux-gnueabihf       scons -Q         --disable-pulseaudio         --disable-tests         --host=arm-linux-gnueabihf         --build-3rdparty=libuv,libunwind,openfec,alsa,sox
+    scp ./bin/arm-linux-gnueabihf/roc-{recv,send} pindadomo:
+#### Decrease latency to synchronise sound with video
+    #https://github.com/roc-streaming/roc-toolkit/discussions/255
+    ./roc-recv -vv -s rtp+rs8m::10001 -r rs8m::10002 -d alsa -o 'plughw:CARD=IQaudIODAC,DEV=0' --frame-size=320 --sess-latency=25ms
+    roc-send -vv -s rtp+rs8m:192.168.1.38:10001 -r rs8m:192.168.1.38:10002 -d alsa -i 'plughw:CARD=Loopback,DEV=1' --nbsrc=5 --nbrpr=5 --frame-size=320
