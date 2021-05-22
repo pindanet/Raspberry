@@ -97,97 +97,13 @@ else
   echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
   echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
 
-  echo "# Start fullscreen video" >> $HOME/.config/openbox/autostart
-  echo "#omxplayer --loop --no-osd ~/video.mp4" >> $HOME/.config/openbox/autostart
-  
-  echo "# Start fullscreen video with Pimoroni Speaker pHAT" >> $HOME/.config/openbox/autostart
-  echo "#amixer sset 'Master' 46%" >> $HOME/.config/openbox/autostart
-  echo "#omxplayer -o alsa --loop --no-osd ~/video.mp4" >> $HOME/.config/openbox/autostart
-  echo "amixer -c 0 set HDMI 81%" >> $HOME/.config/openbox/autostart
-  echo '#vlc --fullscreen --loop --no-video-title-show --no-osd ~/video.mp4 --aout=alsa --alsa-audio-device="sysdefault:CARD=b1"' >> $HOME/.config/openbox/autostart
-  #sudo apt-get install omxplayer
-  #curl -sS https://get.pimoroni.com/speakerphat | bash
-  # Disable Pimoroni Speaker pHAT LED-bar
-  #sudo sed -i.ori "s/brightness .*/brightness 0/" /etc/asound.conf
+  sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/index.html
 
-  sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/index.html
-  sudo wget -O /var/www/html/random_pic.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/random_pic.php
-  sudo wget -O /var/www/html/nocursor.gif https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/nocursor.gif
-#sudo wget -P /var/www/html https://raw.githubusercontent.com/mourner/suncalc/master/suncalc.js
-  sudo wget -O /var/www/html/getPresHumiTemp.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getPresHumiTemp.php
-#sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getBrightness.php
-  sudo wget -O /var/www/html/getLux.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getLux.php
-#sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/getWeather.php
-  sudo wget -O /var/www/html/curl.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/curl.php
-#sudo wget -P /var/www/html https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/genkeys.php
-
-  echo "www-data ALL = NOPASSWD: /sbin/shutdown -r now" | sudo tee -a /etc/sudoers
-
-#  read -s -p "Typ bindelings de encryptie wachtzin: " passphrase
-#  sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/genkeys.php
-#  sudo sed -i "s|^\(\$passphrase =\).*$|\1 \'$passphrase\';|" /var/www/html/curl.php
-  while true; do
-    read -s -p  "Typ blindelings de gebruikersnaam voor de remote webpagina: " user
-    echo
-    read -s -p  "Typ blindelings de gebruikersnaam voor de remote webpagina (nogmaals): " user2
-    echo
-    [ "$user" = "$user2" ] && break
-    echo "Please try again"
-  done
-  sudo sed -i "s|^\(\$user =\).*$|\1 \'$user\';|" /var/www/html/curl.php
-  while true; do
-    read -s -p "Typ bindelings het wachtwoord voor de remote webpagina: " password
-    echo
-    read -s -p "Typ bindelings het wachtwoord voor de remote webpagina (nogmaals): " password2
-    echo
-    [ "$password" = "$password2" ] && break
-    echo "Please try again"
-  done
-  sudo sed -i "s|^\(\$password =\).*$|\1 \'$password\';|" /var/www/html/curl.php
-  
-# Remote LAN commands
-  sudo mkdir /var/www/html/remote
-  sudo chown -R www-data:www-data /var/www/html/remote
-  sudo wget -O /var/www/html/remote.php https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/remote.php
-  sudo wget -O /var/www/html/remote.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/remote.sh
-  sudo apt install incron -y
-  echo root | sudo tee /etc/incron.allow
-  echo '/var/www/html/remote    IN_CLOSE_WRITE  /bin/bash /var/www/html/remote.sh "$@/$#"' | sudo tee /var/spool/incron/root
-  sudo chmod go-rwx /var/spool/incron/root # enkel rw user blijft over
-  sudo systemctl start incron
-  sudo systemctl enable incron
-
-  wget https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.tar.gz
-  sudo tar xzvf background.tar.gz -C /var/www/html
-  rm background.tar.gz
-
-  cat > background.service <<EOF
-[Unit]
-Description=Get background image
-Wants=network-online.target
-After=network.target network-online.target
-[Service]
-ExecStart=/usr/sbin/background.sh
-[Install]
-WantedBy=multi-user.target
-EOF
-  sudo mv background.service /etc/systemd/system/
-  sudo systemctl daemon-reload
-  sudo systemctl enable background.service
-
-  sudo wget -O /usr/sbin/background.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/wall/background.sh
-  sudo chmod +x /usr/sbin/background.sh
-
-  printf '\033[1;37;40mOn the main computer: ssh-copy-id -i ~/.ssh/id_rsa.pub rpiwall.local\n\033[0m' # Witte letters op zwarte achtergrond
-  printf '\033[1;37;40mOn the domotica controller: ssh-copy-id -i ~/.ssh/id_rsa.pub rpiwall.local\n\033[0m' # Witte letters op zwarte achtergrond
+  printf '\033[1;37;40mOn the main computer: ssh-copy-id -i ~/.ssh/id_rsa.pub pindaalarm.local\n\033[0m' # Witte letters op zwarte achtergrond
+  printf '\033[1;37;40mOn the domotica controller: ssh-copy-id -i ~/.ssh/id_rsa.pub pindaalarm.local\n\033[0m' # Witte letters op zwarte achtergrond
   printf '\033[1;32;40mPress key to secure ssh.\033[0m' # Groene letters op zwarte achtergrond
   read Keypress
 #  sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
-  
-# cd /var/www/html
-# sudo -u www-data php genkeys.php
-# sudo rm /var/www/html/genkeys.php
-# read -p "cp /var/www/html/data/public.key to your remote website and press Return to continue " key
 
 fi
 # Restart Raspberry Pi
