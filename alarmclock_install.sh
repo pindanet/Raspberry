@@ -56,15 +56,15 @@ if [ $USER == "pi" ]; then
   sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio "$NEW_USER"
   
   # Continue after reboot
-  sudo mv wall_install.sh /home/$NEW_USER/
-  echo "bash wall_install.sh" | sudo tee -a /home/$NEW_USER/.bashrc
+  sudo mv alarmclock_install.sh /home/$NEW_USER/
+  echo "bash alarmclock_install.sh" | sudo tee -a /home/$NEW_USER/.bashrc
 
   echo "Login as $NEW_USER"
   read -p "Press Return to Restart " key
 
 else
   # Disable Continue after reboot
-  sed -i '/^bash wall_install.sh/d' .bashrc
+  sed -i '/^bash alarm_install.sh/d' .bashrc
   
   # Remove pi user
   sudo userdel -r pi
