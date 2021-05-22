@@ -64,7 +64,7 @@ if [ $USER == "pi" ]; then
 
 else
   # Disable Continue after reboot
-  sed -i '/^bash alarm_install.sh/d' .bashrc
+  sed -i '/^bash alarmclock_install.sh/d' .bashrc
   
   # Remove pi user
   sudo userdel -r pi
