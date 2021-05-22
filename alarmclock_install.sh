@@ -19,6 +19,7 @@ COUNTRY="BE"
 if [ $USER == "pi" ]; then
   # Configure Waveshare 5inch HDMI LCD: https://www.waveshare.com/wiki/5inch_HDMI_LCD
   echo -e '\nmax_usb_current=1\nhdmi_group=2\nhdmi_mode=87\nhdmi_cvt 800 480 60 6 0 0 0\hdmi_drive=1' | sudo tee -a /boot/config.txt
+  
   # Change keyboard
   sudo raspi-config nonint do_configure_keyboard "$KEYMAP"
 
@@ -32,7 +33,7 @@ if [ $USER == "pi" ]; then
   sudo raspi-config nonint do_wifi_country "$COUNTRY"
 
   # Change hostname
-  read -p "Enter the new hostname [rpiwall]: " NEW_HOSTNAME
+  read -p "Enter the new hostname [pindaalarmclock]: " NEW_HOSTNAME
   NEW_HOSTNAME=${NEW_HOSTNAME:-rpiwall}
   sudo raspi-config nonint do_hostname "$NEW_HOSTNAME"
 
