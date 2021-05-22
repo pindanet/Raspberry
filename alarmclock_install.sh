@@ -34,7 +34,7 @@ if [ $USER == "pi" ]; then
 
   # Change hostname
   read -p "Enter the new hostname [pindaalarmclock]: " NEW_HOSTNAME
-  NEW_HOSTNAME=${NEW_HOSTNAME:-rpiwall}
+  NEW_HOSTNAME=${NEW_HOSTNAME:-pindaalarmclock}
   sudo raspi-config nonint do_hostname "$NEW_HOSTNAME"
 
   # enable ssh
