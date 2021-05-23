@@ -112,6 +112,8 @@ else
 #  cd LCD-show-master/
 #  chmod +x LCD5-show
 #  ./LCD5-show
+  # https://www.raspberrypi.org/forums/viewtopic.php?t=143581
+  # https://www.raspberrypi.org/forums/viewtopic.php?t=241854
 fi
 # Restart Raspberry Pi
 sudo shutdown -r now
