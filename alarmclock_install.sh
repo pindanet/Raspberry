@@ -106,12 +106,12 @@ else
 #  sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
   # Touchscreen driver
-  wget https://github.com/waveshare/LCD-show/archive/master.zip
-  unzip master.zip
-  rm master.zip
-  cd LCD-show-master/
-  chmod +x LCD5-show
-  ./LCD5-show
+#  wget https://github.com/waveshare/LCD-show/archive/master.zip
+#  unzip master.zip
+#  rm master.zip
+#  cd LCD-show-master/
+#  chmod +x LCD5-show
+#  ./LCD5-show
 fi
 # Restart Raspberry Pi
 sudo shutdown -r now
