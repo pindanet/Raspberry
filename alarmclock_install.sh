@@ -106,14 +106,18 @@ else
 #  sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
   # Touchscreen driver
-#  wget https://github.com/waveshare/LCD-show/archive/master.zip
-#  unzip master.zip
-#  rm master.zip
-#  cd LCD-show-master/
-#  chmod +x LCD5-show
-#  ./LCD5-show
   # https://www.raspberrypi.org/forums/viewtopic.php?t=143581
-  # https://www.raspberrypi.org/forums/viewtopic.php?t=241854
+  echo -e '\ndtparam=i2c_arm=on\ndtparam=spi=on\ndtoverlay=ads7846,penirq=25,speed=10000,penirq_pull=2,xohms=150' | sudo tee -a /boot/config.txt
+  sudo mkdir -p /etc/X11/xorg.conf.d
+  cat > 99-calibration.conf <<EOF
+Section "InputClass"
+        Identifier "calibration"
+        MatchProduct "ADS7846 Touchscreen"
+        Option "Calibration" "3853 170 288 3796"
+        Option "SwapAxes" "1"
+EndSection
+EOF
+  sudo mv 99-calibration.conf /etc/X11/xorg.conf.d/
 fi
 # Restart Raspberry Pi
 sudo shutdown -r now
