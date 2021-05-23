@@ -4,6 +4,7 @@
 # bash alarmclock_install.sh
 
 # ToDo
+# Configure HiFiBerry MiniAmp
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
@@ -17,6 +18,20 @@ TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
 
 if [ $USER == "pi" ]; then
+  # HiFiBerry MiniAmp https://www.hifiberry.com/docs/hardware/gpio-usage-of-hifiberry-boards/
+  #  1: 3v3     |  2: 5v
+  #             |  4: 5v
+  #             |  6: Ground
+  #
+  #  9: Ground
+  #             | 12: GPIO 18
+  # ...
+  # 35: GPIO 19 | 36: GPIO 16
+  # 37: GPIO 26 | 38: GPIO 20
+  #             | 40: GPIO 21
+  
+  # Configure HiFiBerry MiniAmp https://www.hifiberry.com/docs/data-sheets/datasheet-miniamp/
+  
   # Configure Waveshare 5inch HDMI LCD: https://www.waveshare.com/wiki/5inch_HDMI_LCD
   echo -e '\nmax_usb_current=1\nhdmi_group=2\nhdmi_mode=87\nhdmi_cvt 800 480 60 6 0 0 0\nhdmi_drive=1' | sudo tee -a /boot/config.txt
   
