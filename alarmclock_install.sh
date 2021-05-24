@@ -26,6 +26,8 @@ if [ $USER == "pi" ]; then
   #  9: Ground
   #             | 12: GPIO 18
   # ...
+  # 29: GPIO 5  | 34: Ground to Sleep Button
+  # ...
   # 35: GPIO 19 | 36: GPIO 16
   # 37: GPIO 26 | 38: GPIO 20
   #             | 40: GPIO 21
@@ -87,6 +89,9 @@ else
   # PgUp, PgDn Bash History
   echo '"\e[5~": history-search-backward' > .inputrc
   echo '"\e[6~": history-search-forward' >> .inputrc
+  
+  # Webserver
+  sudo apt-get install apache2 php libapache2-mod-php php-curl php-mbstring -y
   
   # Muiscursor verbergen
   sudo apt-get install unclutter -y
