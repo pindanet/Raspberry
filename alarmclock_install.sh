@@ -142,6 +142,7 @@ EOF
   sudo mv 99-calibration.conf /etc/X11/xorg.conf.d/
   
   sudo apt-get install mpg123 -y
+  sudo apt install at -y
   
 fi
 # Restart Raspberry Pi
