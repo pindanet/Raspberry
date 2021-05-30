@@ -5,7 +5,10 @@ unset sleepevent
 radio2="http://icecast.vrtcdn.be/ra2wvl-high.mp3"
 klara="http://icecast.vrtcdn.be/klara-high.mp3"
 stubru="http://icecast.vrtcdn.be/stubru-high.mp3"
+
 alarmradio=$klara
+
+volume=1000
 
 alarmtimes+=("07:30") # maandag date '+%u'
 alarmtimes+=("07:30")
