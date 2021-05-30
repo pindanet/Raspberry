@@ -143,6 +143,23 @@ EOF
   
   sudo apt-get install mpg123 -y
   sudo apt install at -y
+  sudo wget -O /usr/sbin/PindaNetSleep.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/usr/sbin/PindaNetSleep.sh
+  sudo chmod +x /usr/sbin/PindaNetSleep.sh
+  cat > PindaNetSleep.service <<EOF
+[Unit]
+Description=PindaNet Alarm Clock
+Wants=network-online.target
+After=network.target network-online.target
+[Service]
+ExecStart=/usr/sbin/PindaNetSleep.sh
+Restart=always
+RestartSec=60
+[Install]
+WantedBy=multi-user.target
+EOF
+  sudo mv PindaNetSleep.service /etc/systemd/system/
+  sudo systemctl daemon-reload
+  sudo systemctl enable PindaNetSleep.service
   
 fi
 # Restart Raspberry Pi
