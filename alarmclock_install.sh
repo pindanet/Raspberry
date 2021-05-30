@@ -145,6 +145,7 @@ EOF
   sudo apt install at -y
   sudo mkdir -p /var/www/html/data
   sudo wget -O /var/www/html/data/alarmclock https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/var/www/html/data/alarmclock
+  sudo chmod +x /var/www/html/data/alarmclock
   sudo wget -O /usr/sbin/PindaNetSleep.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/usr/sbin/PindaNetSleep.sh
   sudo chmod +x /usr/sbin/PindaNetSleep.sh
   cat > PindaNetSleep.service <<EOF
