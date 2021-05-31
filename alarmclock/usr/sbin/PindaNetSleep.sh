@@ -10,7 +10,7 @@
 _button_pin=5
 
 function playRadio () {
-  nohup mpg123 -f -1000 $(curl -s -i $1 | grep Location | awk '{ print $2 }') 2> radio.log &
+  nohup mpg123 -f -$2 $(curl -s -i $1 | grep Location | awk '{ print $2 }') 2> radio.log &
   sleep 5
 }
 
@@ -34,7 +34,28 @@ while true; do
           killall mpg123
           sleep 5
         else
-	  playRadio $stubru
+          # Exceptions with recurrent dates and times
+          for sleepitem in "${sleepevent[@]}"; do
+            now=$(date +%H:%M)
+            daytime=(${sleepitem})
+            recevent=$(date -u --date "${daytime[0]}" +%s)
+            timebetween=$((${daytime[1]} * 86400))
+            nowSec=$(date -u +%s)
+            today=$((nowSec - (nowSec % 86400)))
+            while  [ $recevent -lt $today ]; do
+              recevent=$((recevent + timebetween))
+            done
+            if [ $today == $recevent ]; then
+#              echo "Sleep Event on $(date -u --date @$recevent)"
+              if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
+                echo "Sleep Event on $(date -u --date @$recevent +'%a %d %b %Y') between ${daytime[2]} and ${daytime[3]}: Radio: ${daytime[4]}, Volume: ${daytime[5]}"
+                radio=${daytime[4]}
+                volume=${daytime[5]}
+                break
+              fi
+            fi
+          done
+	  playRadio $radio $volume
         fi
       fi
       timer=$(date +"%s")
