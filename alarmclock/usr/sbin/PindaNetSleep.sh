@@ -10,7 +10,9 @@
 _button_pin=5
 
 function playRadio () {
-  nohup mpg123 -f -$2 $(curl -s -i $1 | grep Location | awk '{ print $2 }') 2> radio.log &
+  # $1 = radio URL
+  # $2 = volume
+  nohup mpg123 -f -$2 $(curl -s -i $1 | grep Location | awk '{ print $2 }') 2> /var/www/html/data/radio.log &
   sleep 5
 }
 
@@ -46,7 +48,6 @@ while true; do
               recevent=$((recevent + timebetween))
             done
             if [ $today == $recevent ]; then
-#              echo "Sleep Event on $(date -u --date @$recevent)"
               if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
                 echo "Sleep Event on $(date -u --date @$recevent +'%a %d %b %Y') between ${daytime[2]} and ${daytime[3]}: Radio: ${daytime[4]}, Volume: ${daytime[5]}"
                 radio=${daytime[4]}
