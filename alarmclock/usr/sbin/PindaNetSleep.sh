@@ -18,7 +18,12 @@ function playRadio () {
 
 raspi-gpio set $_button_pin ip pu # input pull up
 
-timer=$(date +"%s")
+#timer=$(date +"%s")
+
+# get next alarm
+. /var/www/html/data/alarmclock
+tomorrow=$(date --date="next day" +%u)
+echo ${alarmtimes[$tomorrow]} > /var/www/html/data/nextalarm
 
 while true; do
   . /var/www/html/data/alarmclock
@@ -59,7 +64,7 @@ while true; do
 	  playRadio $radio $volume
         fi
       fi
-      timer=$(date +"%s")
+#      timer=$(date +"%s")
     fi
     sleep 0.2
   done
