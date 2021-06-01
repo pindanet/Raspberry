@@ -2,8 +2,12 @@ body {
   margin: 0;
   padding: 0;
   background-color: black;
-  color: white;
+  color: #2F4F2F;
   font-family: sans-serif;
+}
+a {
+  color: #2F4F2F;
+  text-decoration: none;
 }
 body::-webkit-scrollbar {
   display: none;
