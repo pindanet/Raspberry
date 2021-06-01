@@ -1,6 +1,3 @@
-unset alarmtimes
-unset sleepevent
-
 radio2="http://icecast.vrtcdn.be/ra2wvl-high.mp3"
 klara="http://icecast.vrtcdn.be/klara-high.mp3"
 stubru="http://icecast.vrtcdn.be/stubru-high.mp3"
@@ -9,6 +6,7 @@ radio=$klara
 
 volume=500	# Max = 32768
 
+unset alarmtimes
 alarmtimes+=("07:30") # maandag date '+%u'
 alarmtimes+=("07:30")
 alarmtimes+=("07:30")
@@ -17,7 +15,8 @@ alarmtimes+=("07:30")
 alarmtimes+=("07:30")
 alarmtimes+=("07:30")
 
+unset sleepevent
 sleepevent+=("2021-05-31 14 07:00 12:00 $radio2 1000") # Laura
 sleepevent+=("2021-06-03 7 14:00 21:00 $klara 1000") # Peter
 
-sleepevent+=("2021-05-24 7 17:00 21:00 $stubru 1000") # Test
+#sleepevent+=("2021-05-24 7 17:00 21:00 $stubru 1000") # Test
