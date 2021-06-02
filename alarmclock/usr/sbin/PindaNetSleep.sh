@@ -2,6 +2,7 @@
 # GPIO 5 (29) > Button > Gnd (34)
 
 # ToDo
+
 # https://linuxize.com/post/at-command-in-linux/
 #at 18:34 -M <<END
 #nohup mpg123 -f -1000 $(curl -s -i http://icecast.vrtcdn.be/stubru-high.mp3 | grep Location | awk '{ print $2 }') 2> radio.log &
@@ -18,12 +19,32 @@ function playRadio () {
 
 raspi-gpio set $_button_pin ip pu # input pull up
 
-#timer=$(date +"%s")
-
 # get next alarm
 . /var/www/html/data/alarmclock
-tomorrow=$(date --date="next day" +%u)
-echo ${alarmtimes[$tomorrow]} > /var/www/html/data/nextalarm
+now=$(date +%H:%M)
+nextAlarm=$(cat /var/www/html/data/nextalarm)
+if [[ "$now" > "$nextAlarm" ]];then
+  tomorrow=$(date --date="next day" +%u)
+  nextAlarm=${alarmtimes[$((tomorrow - 1))]}
+  # Exceptions with recurrent dates
+  for alarmitem in "${alarmevent[@]}"; do
+    daytime=(${alarmitem})
+    recevent=$(date -u --date "${daytime[0]}" +%s)
+    tomorrowSec=$(date -u --date="next day" +%s)
+    tomorrow=$((tomorrowSec - (tomorrowSec % 86400)))
+    if [[ "${#daytime[@]}" > "2" ]]; then # recurrent alarm event
+       timebetween=$((${daytime[2]} * 86400))
+       while  [ $recevent -lt $tomorrow ]; do
+         recevent=$((recevent + timebetween))
+       done
+    fi
+    if [ $tomorrow == $recevent ]; then
+      echo "Alarm Event on $(date -u --date @$recevent +'%a %d %b %Y'): ${daytime[1]}"
+      nextAlarm=${daytime[1]}
+    fi
+  done
+  echo $nextAlarm > /var/www/html/data/nextalarm
+fi
 
 while true; do
   . /var/www/html/data/alarmclock
@@ -34,7 +55,6 @@ while true; do
   starttime=$(date +"%s")
   while [ $(($(date +"%s") - starttime)) -lt 55 ]; do
     sleepbutton=$(raspi-gpio get $_button_pin)
-#    echo "$(date): $sleepbutton)"
     if [[ $sleepbutton == *"level=0"* ]]; then
       if [[ $(raspi-gpio get $_button_pin) == *"level=0"* ]]; then
         if pgrep -x "mpg123" >/dev/null; then
@@ -64,7 +84,6 @@ while true; do
 	  playRadio $radio $volume
         fi
       fi
-#      timer=$(date +"%s")
     fi
     sleep 0.2
   done
