@@ -151,8 +151,8 @@ EOF
   cat > PindaNetSleep.service <<EOF
 [Unit]
 Description=PindaNet Alarm Clock
-Wants=network-online.target
-After=network.target network-online.target
+Wants=time-sync.target
+After=network.target network-online.target time-sync.target
 [Service]
 ExecStart=/usr/sbin/PindaNetSleep.sh
 Restart=always
