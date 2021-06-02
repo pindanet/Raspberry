@@ -7,18 +7,19 @@ radio=$klara
 volume=500	# Max = 32768
 
 unset alarmtimes
-alarmtimes+=("07:30") # maandag date '+%u'
+alarmtimes+=("07:00") # maandag date '+%u'
 alarmtimes+=("07:30")
 alarmtimes+=("07:00")
 alarmtimes+=("07:30")
+alarmtimes+=("07:00")
 alarmtimes+=("07:30")
-alarmtimes+=("07:30")
-alarmtimes+=("07:30")
+alarmtimes+=("07:00")
 
 unset alarmevent
 alarmevent+=("2021-05-31 07:00 14") # Laura
 
-alarmevent+=("2021-06-03 06:30") # Test
+#alarmevent+=("2021-06-03 06:30") # Test
+#alarmevent+=("2021-05-27 06:00 7") # Test
 
 unset sleepevent
 sleepevent+=("2021-05-31 14 07:00 12:00 $radio2 1000") # Laura
