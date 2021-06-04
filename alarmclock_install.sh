@@ -163,6 +163,10 @@ EOF
   sudo mv PindaNetSleep.service /etc/systemd/system/
   sudo systemctl daemon-reload
   sudo systemctl enable PindaNetSleep.service
+
+wget https://orangefreesounds.com/wp-content/uploads/2019/01/Old-alarm-clock-sound.zip
+unzip Old-alarm-clock-sound.zip
+sudo cp Old-alarm-clock-sound.mp3 /var/www/html/data/
   
 fi
 # Restart Raspberry Pi
