@@ -167,6 +167,9 @@ EOF
 wget https://orangefreesounds.com/wp-content/uploads/2019/01/Old-alarm-clock-sound.zip
 unzip Old-alarm-clock-sound.zip
 sudo cp Old-alarm-clock-sound.mp3 /var/www/html/data/
+
+sudo wget -O /var/www/html/alarmnow.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/var/www/html/alarmnow.sh
+sudo chmod +x /var/www/html/alarmnow.sh
   
 fi
 # Restart Raspberry Pi
