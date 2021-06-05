@@ -44,6 +44,9 @@ if [[ "$now" > "$nextAlarm" ]];then
     fi
   done
   echo $nextAlarm > /var/www/html/data/nextalarm
+  # remove all alarms
+  for i in `atq | awk '{print $1}'`;do atrm $i;done
+  echo /var/www/html/alarmnow.sh | at -M $nextAlarm
 fi
 
 while true; do
