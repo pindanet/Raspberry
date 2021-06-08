@@ -1,6 +1,7 @@
 #!/bin/bash
 . /var/www/html/data/alarmclock
 
+#mpg123 -f -$volume /var/www/html/data/bintro.mp3
 nohup mpg123 -f -$volume $(curl -s -i $radio | grep Location | awk '{ print $2 }') 2> /var/www/html/data/radio.log &
 #nohup mpg123 -f -$volume /var/www/html/data/Old-alarm-clock-sound.mp3 &
 sleep 180 # 3 minuten wakker worden
