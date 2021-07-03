@@ -4,7 +4,6 @@
 # bash dining_install.sh
 
 # ToDo
-# raspi-config enable 1-wire
 # raspi-config configure WiFi connection
 # raspi-config Advanced Options > GL Driver > G2 GL (Fake KMS)
 
@@ -39,6 +38,9 @@ if [ $USER == "pi" ]; then
 
   # enable ssh
   sudo raspi-config nonint do_ssh 0
+
+  # enable 1-wire
+  sudo raspi-config nonint do_onewire 0
 
   # Upgrade
   sudo apt-get update
