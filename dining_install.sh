@@ -5,7 +5,6 @@
 
 # ToDo
 # raspi-config configure WiFi connection
-# raspi-config Advanced Options > GL Driver > G2 GL (Fake KMS)
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
@@ -41,6 +40,9 @@ if [ $USER == "pi" ]; then
 
   # enable 1-wire
   sudo raspi-config nonint do_onewire 0
+  
+  # increase GPU Memory
+  sudo raspi-config nonint do_memory_split 256
 
   # Upgrade
   sudo apt-get update
