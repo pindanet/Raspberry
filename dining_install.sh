@@ -103,6 +103,7 @@ else
   
   sudo apt install omxplayer -y
   sudo wget -O Amapola.mp4 https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/Amapola.mp4
+  ln -s Amapola.mp4 video.mp4
   
   sudo wget -O /usr/sbin/PindaNetDining.sh https://github.com/pindanet/Raspberry/raw/master/dining/usr/sbin/PindaNetDining.sh
   sudo chmod +x /usr/sbin/PindaNetDining.sh
