@@ -99,6 +99,9 @@ else
 
 #  echo "chromium-browser --start-fullscreen --autoplay-policy=no-user-gesture-required --allow-file-access-from-files --app=file:///home/dany/index.html" >> $HOME/.config/openbox/autostart
   
+  sudo apt install omxplayer -y
+  sudo wget -O Amapola.mp4 https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/Amapola.mp4
+  
   sudo wget -O /usr/sbin/PindaNetDining.sh https://github.com/pindanet/Raspberry/raw/master/dining/usr/sbin/PindaNetDining.sh
   sudo chmod +x /usr/sbin/PindaNetDining.sh
   cat > PindaNetDining.service <<EOF
