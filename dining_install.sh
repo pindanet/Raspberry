@@ -94,8 +94,8 @@ else
   sudo wget -O brightness.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/brightness.sh
   sudo chmod +x brightness.sh
   echo "dtparam=i2c2_iknowwhatimdoing" | sudo tee -a /boot/config.txt
-  sed "/exit 0/i# Start auto brightness script" /etc/rc.local
-  sed "/exit 0/i$HOME/brightness.sh &" /etc/rc.local
+  sed -i "/^exit 0/i# Start auto brightness script" /etc/rc.local
+  sed -i "/^exit 0/i$HOME/brightness.sh &" /etc/rc.local
   #echo "# Start auto brightness script" >> $HOME/.config/openbox/autostart
   #echo "bash $HOME/brightness.sh &" >> $HOME/.config/openbox/autostart
 
