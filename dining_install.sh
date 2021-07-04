@@ -93,8 +93,10 @@ else
   sudo apt install ddcutil -y
   sudo wget -O brightness.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/brightness.sh
   echo "dtparam=i2c2_iknowwhatimdoing" | sudo tee -a /boot/config.txt
-  echo "# Start auto brightness script" >> $HOME/.config/openbox/autostart
-  echo "bash $HOME/brightness.sh &" >> $HOME/.config/openbox/autostart
+  sed "/exit 0/i# Start auto brightness script" /etc/rc.local
+  sed "/exit 0/i$HOME/brightness.sh &" /etc/rc.local
+  #echo "# Start auto brightness script" >> $HOME/.config/openbox/autostart
+  #echo "bash $HOME/brightness.sh &" >> $HOME/.config/openbox/autostart
 
   echo "chromium-browser --start-fullscreen --autoplay-policy=no-user-gesture-required --allow-file-access-from-files --app=file:///home/dany/index.html" >> $HOME/.config/openbox/autostart
   
