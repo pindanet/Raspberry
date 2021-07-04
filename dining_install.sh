@@ -76,30 +76,28 @@ else
   echo '"\e[6~": history-search-forward' >> .inputrc
   
   # Muiscursor verbergen
-  #sudo apt-get install unclutter -y
+#  sudo apt-get install unclutter -y
 
-  # Autostart Chromium browser
-  #sudo apt-get install chromium-browser lightdm openbox xterm fonts-symbola -y
-  #sudo raspi-config nonint do_boot_behaviour "B4"
-  #mkdir -p $HOME/.config/openbox
-  #echo "# Hide mouse when not moving the mouse" >> $HOME/.config/openbox/autostart
-  #echo "unclutter -idle 0.1 &" >> $HOME/.config/openbox/autostart
+#  # Autostart Chromium browser
+#  sudo apt-get install chromium-browser lightdm openbox xterm fonts-symbola -y
+#  sudo raspi-config nonint do_boot_behaviour "B4"
+#  mkdir -p $HOME/.config/openbox
+#  echo "# Hide mouse when not moving the mouse" >> $HOME/.config/openbox/autostart
+#  echo "unclutter -idle 0.1 &" >> $HOME/.config/openbox/autostart
 
-  #echo "# Disable Screensaver" >> $HOME/.config/openbox/autostart
-  #echo "xset s off" >> $HOME/.config/openbox/autostart
-  #echo "xset -dpms" >> $HOME/.config/openbox/autostart
-  #echo "xset s noblank" >> $HOME/.config/openbox/autostart
+#  echo "# Disable Screensaver" >> $HOME/.config/openbox/autostart
+#  echo "xset s off" >> $HOME/.config/openbox/autostart
+#  echo "xset -dpms" >> $HOME/.config/openbox/autostart
+#  echo "xset s noblank" >> $HOME/.config/openbox/autostart
 
-  sudo apt install ddcutil -y
-  sudo wget -O brightness.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/brightness.sh
-  sudo chmod +x brightness.sh
-  echo "dtparam=i2c2_iknowwhatimdoing" | sudo tee -a /boot/config.txt
-  sed -i "/^exit 0/i# Start auto brightness script" /etc/rc.local
-  sed -i "/^exit 0/i$HOME/brightness.sh &" /etc/rc.local
-  #echo "# Start auto brightness script" >> $HOME/.config/openbox/autostart
-  #echo "bash $HOME/brightness.sh &" >> $HOME/.config/openbox/autostart
+#  sudo apt install ddcutil -y
+#  sudo wget -O brightness.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/brightness.sh
+#  sudo chmod +x brightness.sh
+#  echo "dtparam=i2c2_iknowwhatimdoing" | sudo tee -a /boot/config.txt
+#  echo "# Start auto brightness script" >> $HOME/.config/openbox/autostart
+#  echo "bash $HOME/brightness.sh &" >> $HOME/.config/openbox/autostart
 
-  echo "chromium-browser --start-fullscreen --autoplay-policy=no-user-gesture-required --allow-file-access-from-files --app=file:///home/dany/index.html" >> $HOME/.config/openbox/autostart
+#  echo "chromium-browser --start-fullscreen --autoplay-policy=no-user-gesture-required --allow-file-access-from-files --app=file:///home/dany/index.html" >> $HOME/.config/openbox/autostart
   
   sudo wget -O /usr/sbin/PindaNetDining.sh https://github.com/pindanet/Raspberry/raw/master/dining/usr/sbin/PindaNetDining.sh
   sudo chmod +x /usr/sbin/PindaNetDining.sh
