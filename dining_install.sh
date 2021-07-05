@@ -101,9 +101,18 @@ else
 
 #  echo "chromium-browser --start-fullscreen --autoplay-policy=no-user-gesture-required --allow-file-access-from-files --app=file:///home/dany/index.html" >> $HOME/.config/openbox/autostart
   
-  sudo apt install omxplayer -y
+  sudo apt install omxplayer imagemagick -y
   sudo wget -O Amapola.mp4 https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/Amapola.mp4
   ln -s Amapola.mp4 video.mp4
+  
+  wget https://github.com/AndrewFromMelbourne/raspidmx/archive/refs/heads/master.zip
+  unzip master.zip
+  rm master.zip
+  cd raspidmx-master/
+  make
+  cd
+  sudo sed -i "/^exit 0/i# Start video" /etc/rc.local
+  sudo sed -i "/^exit 0/iomxplayer --aspect-mode fill --loop /home/dany/video.mp4 &" /etc/rc.local
   
   sudo wget -O /usr/sbin/PindaNetDining.sh https://github.com/pindanet/Raspberry/raw/master/dining/usr/sbin/PindaNetDining.sh
   sudo chmod +x /usr/sbin/PindaNetDining.sh
