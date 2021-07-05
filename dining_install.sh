@@ -116,6 +116,7 @@ else
   
   sudo wget -O ds18b20.py https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/ds18b20.py
   sudo touch $HOME/temp.txt
+  sudo touch $HOME/image.png
   sudo wget -O /usr/sbin/PindaNetDining.sh https://github.com/pindanet/Raspberry/raw/master/dining/usr/sbin/PindaNetDining.sh
   sudo chmod +x /usr/sbin/PindaNetDining.sh
   cat > PindaNetDining.service <<EOF
