@@ -115,6 +115,7 @@ else
   sudo sed -i "/^exit 0/iomxplayer --aspect-mode fill --loop /home/dany/video.mp4 &" /etc/rc.local
   
   sudo wget -O ds18b20.py https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/ds18b20.py
+  sudo touch $HOME/temp.txt
   sudo wget -O /usr/sbin/PindaNetDining.sh https://github.com/pindanet/Raspberry/raw/master/dining/usr/sbin/PindaNetDining.sh
   sudo chmod +x /usr/sbin/PindaNetDining.sh
   cat > PindaNetDining.service <<EOF
