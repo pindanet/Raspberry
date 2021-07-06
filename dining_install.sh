@@ -4,7 +4,7 @@
 # bash dining_install.sh
 
 # ToDo
-# Copy large video files directly on SDCard
+# Copy large video files directly on SDCard and check with md5sum
 # raspi-config configure WiFi connection
 
 # Test if executed with Bash
@@ -104,7 +104,7 @@ else
   
   sudo apt install omxplayer imagemagick -y
   sudo wget -O Amapola.mp4 https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/Amapola.mp4
-# Copy large video files directly on SDCard
+# Copy large video files directly on SDCard and check with md5sum
   ln -s Amapola.mp4 video.mp4
   
   wget https://github.com/AndrewFromMelbourne/raspidmx/archive/refs/heads/master.zip
