@@ -117,7 +117,8 @@ else
   cd
   sudo sed -i "/^exit 0/i# Start video" /etc/rc.local
   sudo sed -i "/^exit 0/iomxplayer --aspect-mode fill --loop /home/dany/video.mp4 &" /etc/rc.local
-  
+
+  sudo apt-get install hdate
   sudo wget -O ds18b20.py https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/ds18b20.py
   sudo touch $HOME/temp.txt
   sudo touch $HOME/image.png
