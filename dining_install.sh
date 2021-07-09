@@ -137,6 +137,8 @@ EOF
   sudo systemctl daemon-reload
   sudo systemctl enable PindaNetDining.service
 
+  sudo wget -O config https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/config
+
 # HIER
   
 echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
