@@ -168,9 +168,10 @@ EOF
 #unzip Old-alarm-clock-sound.zip
 #sudo cp Old-alarm-clock-sound.mp3 /var/www/html/data/
 
-sudo wget -O /var/www/html/data/bintro.mp3 https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/var/www/html/data/bintro.mp3
-sudo wget -O /var/www/html/alarmnow.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/var/www/html/alarmnow.sh
-sudo chmod +x /var/www/html/alarmnow.sh
+  sudo wget -O /var/www/html/data/bintro.mp3 https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/var/www/html/data/bintro.mp3
+  sudo wget -O /var/www/html/alarmnow.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/var/www/html/alarmnow.sh
+  sudo chmod +x /var/www/html/alarmnow.sh
+  sudo /var/www/html/pindaalarmclock
   
 fi
 # Restart Raspberry Pi
