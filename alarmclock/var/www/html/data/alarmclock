@@ -16,7 +16,7 @@ alarmtimes+=("07:30")
 alarmtimes+=("07:30")
 
 unset alarmevent
-alarmevent+=("2021-05-26 07:00 14") # Laura
+alarmevent+=("2021-08-18 07:00 14") # Laura
 alarmevent+=("2021-06-17 06:30") # Hepatitis Vaccinatie
 alarmevent+=("2021-06-22 07:00") # Tandarts Liesbeth Donck
 
