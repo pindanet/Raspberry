@@ -139,7 +139,9 @@ EOF
   sudo systemctl daemon-reload
   sudo systemctl enable PindaNetDining.service
 
-  sudo wget -O /var/www/html/data/config https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/var/www/html/data/config
+  sudo wget -O /var/www/html/data/alarmnow.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/var/www/html/data/alarmnow.sh
+  sudo chmod +x /var/www/html/alarmnow.sh
+  sudo /var/www/html/pindaalarmclock
 
 # HIER
   
