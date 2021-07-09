@@ -78,6 +78,8 @@ else
   echo '"\e[5~": history-search-backward' > .inputrc
   echo '"\e[6~": history-search-forward' >> .inputrc
   
+  sudo mkdir -p /var/www/html/data
+  
   # Muiscursor verbergen
 #  sudo apt-get install unclutter -y
 
@@ -137,7 +139,7 @@ EOF
   sudo systemctl daemon-reload
   sudo systemctl enable PindaNetDining.service
 
-  sudo wget -O config https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/config
+  sudo wget -O /var/www/html/data/config https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/var/www/html/data/config
 
 # HIER
   
