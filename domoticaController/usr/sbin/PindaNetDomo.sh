@@ -4,7 +4,7 @@
 # replace /home/dany by search default user
 
 # Compensate temperature sensor
-tempOffset=0
+tempOffset=0.5
 
 function broadcast() {
   current="$(cat /var/www/html/data/thermostat)"
@@ -625,36 +625,37 @@ do
 #      fi
 #    fi
 #  done
-# Night/Morning lightning on/off
-  unset lightDining
-  lightDining+=("07:45")
-  lightDining+=("08:00")
 
-  IFS=":" read hh mm < <(date +%:z)
-  diffUTC=$(($hh*3600+$mm*60))
-  sunsetSec=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + diffUTC))
-  sunset=$(date --date @$sunsetSec +"%H:%M")
-#  sunset=$(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6) + ${hh}hour" +"%H:%M")
-  lightDining+=($sunset)
-  lightDining+=("22:50")
-#printf '%s\n' "${lightDining[@]}"
-
-  nowTime=$(date +"%H:%M")
-  lights="off"
-  for ((i=0;i< ${#lightDining[@]} ;i+=2)); do
-    if [[ "${lightDining[i]}" < "$nowTime" ]] && [[ "${lightDining[i+1]}" > "$nowTime" ]]; then
-      lights="on"
-    fi
-  done
-  if [ ! -f "/tmp/lightDining" ] && [ "$lights" == "on"  ]; then
-    echo "$(date): Dining Light On"
-    touch /tmp/lightDining
-    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
-  elif [ -f "/tmp/lightDining" ] && [ "$lights" == "off"  ]; then
-    echo "$(date): Dining Light Off"
-    rm /tmp/lightDining
-    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
-  fi
+## Night/Morning lightning on/off
+#  unset lightDining
+#  lightDining+=("07:45")
+#  lightDining+=("08:00")
+#
+#  IFS=":" read hh mm < <(date +%:z)
+#  diffUTC=$(($hh*3600+$mm*60))
+#  sunsetSec=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + diffUTC))
+#  sunset=$(date --date @$sunsetSec +"%H:%M")
+##  sunset=$(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6) + ${hh}hour" +"%H:%M")
+#  lightDining+=($sunset)
+#  lightDining+=("22:50")
+##printf '%s\n' "${lightDining[@]}"
+#
+#  nowTime=$(date +"%H:%M")
+#  lights="off"
+#  for ((i=0;i< ${#lightDining[@]} ;i+=2)); do
+#    if [[ "${lightDining[i]}" < "$nowTime" ]] && [[ "${lightDining[i+1]}" > "$nowTime" ]]; then
+#      lights="on"
+#    fi
+#  done
+#  if [ ! -f "/tmp/lightDining" ] && [ "$lights" == "on"  ]; then
+#    echo "$(date): Dining Light On"
+#    touch /tmp/lightDining
+#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
+#  elif [ -f "/tmp/lightDining" ] && [ "$lights" == "off"  ]; then
+#    echo "$(date): Dining Light Off"
+#    rm /tmp/lightDining
+#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
+#  fi
 
 #if false; then # Niet uitvoeren
 #  IFS=":" read hh mm < <(date +%:z)
