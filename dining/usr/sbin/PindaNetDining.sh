@@ -22,7 +22,7 @@ function tasmota () {
   fi
 }
 
-. /var/www/html/data/config
+. /var/www/html/data/config.sh
 # Calculated configs
 # domoOn
 today=$(date +%u)
@@ -52,14 +52,18 @@ wget -qO- http://$diningLight/cm?cmnd=Power%20On
 
 # Lights out in the morning
 # From UTC
+lightsOut=$(date -d "$domoOn" +"%s")
+lightsOut=$((lightsOut + 60 * 60)) # 1 hour after wakeup
+lightsOut=$(date -d @$lightsOut +%H:%M)
+
 sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
 sunriseSec=$(date -d "$sunrise" +"%s")
 localToUTC=$(($(date +"%k") - $(date -u +"%k")))
 sunriseLocalSec=$((sunriseSec + localToUTC * 3600))
 # to Local
 sunrise=$(date -d @$sunriseLocalSec +"%H:%M")
-if [[ $morningShutterUp > $sunrise ]]; then # sun shines
-  echo "wget -qO- http://$diningLight/cm?cmnd=Power%20Off" | at $morningShutterUp
+if [[ $lightsOut > $sunrise ]]; then # sun shines
+  echo "wget -qO- http://$diningLight/cm?cmnd=Power%20Off" | at $lightsOut
 else # still dark
   echo "wget -qO- http://$diningLight/cm?cmnd=Power%20Off" | at $sunrise
 fi
