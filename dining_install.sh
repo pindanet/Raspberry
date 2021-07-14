@@ -44,6 +44,14 @@ if [ $USER == "pi" ]; then
   
   # increase GPU Memory
   sudo raspi-config nonint do_memory_split 256
+  
+  # Disable LED's
+  echo "# Disable the ACT LED." | sudo tee -a /boot/config.txt
+  echo "dtparam=act_led_trigger=none" | sudo tee -a /boot/config.txt
+  echo "dtparam=act_led_activelow=off" | sudo tee -a /boot/config.txt
+  echo "# Disable the PWR LED." | sudo tee -a /boot/config.txt
+  echo "dtparam=pwr_led_trigger=none" | sudo tee -a /boot/config.txt
+  echo "dtparam=pwr_led_activelow=off" | sudo tee -a /boot/config.txt
 
   # Upgrade
   sudo apt-get update
