@@ -575,7 +575,7 @@ do
 
   #echo Relatief omgevingslicht: $rellux
 
-  backlight=$(awk "BEGIN {printf \"%.0f\", 25 + $rellux * 230}")
+  backlight=$(awk "BEGIN {printf \"%.0f\", 15 + $rellux * 110}") # 25 + $relux * 230 <= 255 (max_brightness)
   current=$(cat /sys/class/backlight/rpi_backlight/brightness)
   # Smooth backlight adjustment
   echo "Brightness from $current to $backlight"
