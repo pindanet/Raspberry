@@ -1,5 +1,5 @@
 #!/bin/bash
-. /var/www/html/data/config
+. /var/www/html/data/thermostat
 
 sleep 660 # wait 11 minutes to wake up
 
