@@ -751,7 +751,7 @@ do
 
       find "$fotomap/" -mindepth 1 -maxdepth 1 -mtime +0 -exec rm {} \;
       DATE=$(date +"%Y %m %d %H:%M:%S") # 2020 05 05 07:05:03.jpg
-      raspistill --width 800 --height 480 --nopreview -o "$fotomap/$DATE.jpg"
+      raspistill --width 800 --height 480 --nopreview --rotation 90 -o "$fotomap/$DATE.jpg"
     elif [ $_ret -eq 0 ]; then
 #       echo "Geen beweging"
        sleep 3 # time to reset PIR
