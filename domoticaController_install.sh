@@ -21,7 +21,7 @@ FULLCALENDAR="4.4.0"
 
 if [ $USER == "pi" ]; then
   # rotate Touchscreen
-  echo 'lcd_rotate=2' | sudo tee -a /boot/config.txt
+  #echo 'lcd_rotate=2' | sudo tee -a /boot/config.txt
   
   # Change keyboard
   sudo raspi-config nonint do_configure_keyboard "$KEYMAP"
