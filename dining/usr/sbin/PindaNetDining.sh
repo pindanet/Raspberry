@@ -22,7 +22,7 @@ function tasmota () {
   fi
 }
 
-. /var/www/html/data/config.sh
+. /var/www/html/data/thermostat
 
 # test
 unset domoDefault
