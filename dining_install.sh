@@ -7,6 +7,21 @@
 # Copy large video files directly on SDCard and check with md5sum
 # raspi-config configure WiFi connection
 
+# Hardware
+# DS18B20 temperature sensor
+# 3.3v - red
+# 3.3v - 4k7 - yellow - GPIO 4 (7)
+# Gnd (9) - black
+
+# BTE13-005 Relaiskaart
+# 5v (4) - Red - RVcc
+# Gnd (6) - Black - Gnd
+# Gnd (39) - Black - Gnd
+# GPIO 13 (33) - Blue - In1
+# GPIO 19 (35) - Green - In2
+# GPIO 26 (37) - Yellow - In3
+# 3.3v (17) - orange - Vcc
+
 # Test if executed with Bash
 case "$BASH_VERSION" in
   "") echo "usage: bash wall_install.sh"
