@@ -4,16 +4,20 @@
 # bash dining_install.sh
 
 # ToDo
+# ====
 # Copy large video files directly on SDCard and check with md5sum
 # raspi-config configure WiFi connection
 
 # Hardware
+# ========
 # DS18B20 temperature sensor
+# --------------------------
 # 3.3v - red
 # 3.3v - 4k7 - yellow - GPIO 4 (7)
 # Gnd (9) - black
 
 # BTE13-005 Relaiskaart
+# ---------------------
 # 5v (4) - Red - RVcc
 # Gnd (6) - Black - Gnd
 # Gnd (39) - Black - Gnd
