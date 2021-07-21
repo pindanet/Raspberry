@@ -21,7 +21,8 @@ heaters+=("KeukenWest tasmota_4fd8ee-6382")
 
 # Dining
 # ======
-diningLight="tasmota_e7b609-5641"
+#diningLight="tasmota_e7b609-5641"
+diningLight="26"  # Relay on GPIO 26 (37)
 
 unset thermostatdiningdefault
 thermostatdiningdefault+=("07:30 08:30")
