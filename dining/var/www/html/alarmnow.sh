@@ -32,9 +32,6 @@ if [[ "$now" > "$nextAlarm" ]];then
   echo /var/www/html/alarmnow.sh | at -M $nextAlarm
 fi
 
-# Lights on  in the evening
-#echo "wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off" | at 19:07
-
 # update and reboot
 apt-get clean
 apt-get update
