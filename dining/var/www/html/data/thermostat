@@ -22,6 +22,8 @@ heaters+=("KeukenOost tasmota_relayGPIO19")
 
 # Dining
 # ======
+# Compensate temperature sensor
+diningTempOffset=0
 #diningLight="tasmota_e7b609-5641"
 diningLight="26"  # Relay on GPIO 26 (37)
 
