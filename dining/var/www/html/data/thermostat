@@ -6,18 +6,19 @@ lightevening="22:50"
 eveningShutterDown="22:20"
 
 unset heaters
-heaters+=("LivingHaard tasmota_4fdd94-7572")
+heaters+=("DiningTable tasmota_relayGPIO13")
+heaters+=("DiningHaard tasmota_4fdd94-7572")
+heaters+=("DiningOost tasmota_fb7b27-6951")
+heaters+=("DiningWest tasmota_relayGPIO19")
+
+heaters+=("LivingTable tasmota_4bf311-4881")
 heaters+=("LivingZuid tasmota_8bbe4d-7757")
 heaters+=("LivingNoord tasmota_8be4af-1199")
-heaters+=("LivingWest tasmota_fb7b27-6951")
-heaters+=("LivingOost tasmota_a94717-1815")
-heaters+=("LivingNoordOost tasmota_8bbe0d-7693")
-heaters+=("LivingZuidOost tasmota_4bf311-4881")
+heaters+=("LivingZuidOost tasmota_a94717-1815")
 
-heaters+=("KeukenNoord tasmota_c699b5-6581")
-heaters+=("KeukenZuid tasmota_a943fa-1018")
-heaters+=("KeukenWest tasmota_4fd8ee-6382")
-#heaters+=("KeukenWest tasmota_relayGPIO23")
+#heaters+=("KeukenNoord tasmota_c699b5-6581")
+heaters+=("KeukenWest tasmota_relayGPIO13")
+heaters+=("KeukenOost tasmota_relayGPIO19")
 
 # Dining
 # ======
@@ -33,7 +34,7 @@ thermostatdiningdefault+=("16:45 17:15")
 # Exceptions Dining
 # -----------------
 unset thermostatdiningevent
-# thermostatdiningevent+=("2020-12-26 14 16:50 18:35 on") # Luc
+thermostatdiningevent+=("2021-08-12 0 14:00 18:35 on") # Luc
 
 thermostatdiningevent+=("2021-08-18 14 07:00 12:15 on") # Laura
 
@@ -51,9 +52,9 @@ thermostatkitchendefault+=("22:09 22:50")
 # Exceptions Kitchen
 # ------------------
 unset thermostatkitchenevent
-# thermostatkitchenevent+=("2020-12-26 14 16:50 18:35 on") # Luc
+thermostatkitchenevent+=("2021-08-12 0 16:50 18:35 on") # Luc
 
-thermostatkitchenevent+=("2020-11-25 14 07:00 12:00 on") # Laura
+thermostatkitchenevent+=("2021-08-18 14 07:00 12:00 on") # Laura
 
 #thermostatkitchenevent+=("2021-01-18 7 12:59 21:15 off") # SNT
 
@@ -79,9 +80,9 @@ thermostatlivingdefault+=("17:20 22:30")
 # Exceptions Living
 # -----------------
 unset thermostatlivingevent
-# thermostatlivingevent+=("2020-12-26 14 13:15 17:21 on") # Luc
+thermostatlivingevent+=("2021-08-12 0 14:00 18:35 on") # Luc
 
-thermostatlivingevent+=("2020-11-25 14 07:45 11:45 on") # Laura
+thermostatlivingevent+=("2021-08-18 14 07:45 11:45 on") # Laura
 
 #thermostatlivingevent+=("2021-01-18 7 13:00 21:15 off") # SNT
 
@@ -115,14 +116,14 @@ alarmtimes+=("07:30")
 
 unset alarmevent
 alarmevent+=("2021-08-18 07:00 14") # Laura
-alarmevent+=("2021-06-17 06:30") # Hepatitis Vaccinatie
-alarmevent+=("2021-06-22 07:00") # Tandarts Liesbeth Donck
+#alarmevent+=("2021-06-17 06:30") # Hepatitis Vaccinatie
+#alarmevent+=("2021-06-22 07:00") # Tandarts Liesbeth Donck
 
 #alarmevent+=("2021-07-11 06:30") # Test
 #alarmevent+=("2021-06-27 06:00 7") # Test
 
 unset sleepevent
-sleepevent+=("2021-07-21 14 07:00 12:00 $radio2 1000") # Laura
+sleepevent+=("2021-07-21 7 08:00 12:00 $radio2 1000") # Laura
 sleepevent+=("2021-06-03 7 14:00 21:00 $klara 1000") # Peter
 
 #sleepevent+=("2021-05-24 7 17:00 21:00 $stubru 1000") # Test
