@@ -12,8 +12,8 @@ heaters+=("DiningOost tasmota_fb7b27-6951")
 heaters+=("DiningWest tasmota_relayGPIO19")
 
 heaters+=("LivingTable tasmota_4bf311-4881")
-heaters+=("LivingZuid tasmota_8bbe4d-7757")
-heaters+=("LivingNoord tasmota_8be4af-1199")
+heaters+=("LivingZuid tasmota_8bbeod-7693")
+heaters+=("LivingNoord tasmota_8bbe4d-7757")
 heaters+=("LivingZuidOost tasmota_a94717-1815")
 
 #heaters+=("KeukenNoord tasmota_c699b5-6581")
