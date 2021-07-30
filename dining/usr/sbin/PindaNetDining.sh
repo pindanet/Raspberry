@@ -1,24 +1,17 @@
 #!/bin/bash
 function relayGPIO () {
-  _r1_pin=23
-  # Activate GPIO Relay
-  if [ ! -d "/sys/class/gpio/gpio$_r1_pin" ]; then
-    #   Exports pin to userspace
-    echo $_r1_pin > /sys/class/gpio/export
-    # Sets pin as an output
-    echo "out" > /sys/class/gpio/gpio$_r1_pin/direction
-  fi
+  _r1_pin=${1#*relayGPIO}
 
   if [ ! -f /tmp/$1 ]; then # initialize
     echo '{"POWER":"ON"}' > /tmp/$1
     echo "$(date -u +%s),off" >> /var/www/html/data/$1.log
   fi
   if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
-    echo 0 > /sys/class/gpio/gpio$_r1_pin/value # Power on
+    raspi-gpio set $_r1_pin op dl
     echo '{"POWER":"ON"}' > /tmp/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
   elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
-    echo 1 > /sys/class/gpio/gpio$_r1_pin/value # Power off
+    raspi-gpio set $_r1_pin op dh
     echo '{"POWER":"OFF"}' > /tmp/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
   elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
@@ -51,6 +44,81 @@ function tasmota () {
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
   fi
+}
+function thermostat {
+  temp=$(tail -1 $PresHumiTempfile)
+  temp=${temp%% C*}
+  temp=${temp%% °C*}
+  # remove leading whitespace characters
+  temp="${temp#"${temp%%[![:space:]]*}"}"
+
+  IFS=$'\n' thermostatroom=($(sort <<<"${thermostatroomdefault[*]}"))
+  unset IFS
+
+  heatingRoom="off"
+# Default times for heating
+  for thermostatitem in "${thermostatroom[@]}"; do
+    daytime=(${thermostatitem})
+    if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
+      heatingRoom="on"
+      break
+    fi
+  done
+# Exceptions with recurrent dates and times
+  for thermostatitem in "${thermostatroomevent[@]}"; do
+    daytime=(${thermostatitem})
+    recevent=$(date -u --date "${daytime[0]}" +%s)
+    timebetween=$((${daytime[1]} * 86400))
+    nowSec=$(date -u +%s)
+    today=$((nowSec - (nowSec % 86400)))
+    if [[ "$timebetween" > "0" ]]; then # repeating event
+      while  [ $recevent -lt $today ]; do
+        recevent=$((recevent + timebetween))
+      done
+    fi
+    if [ $today == $recevent ]; then
+      echo "Event in $room on $(date -u --date @$recevent)"
+      if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
+        echo "Between ${daytime[2]} and ${daytime[3]}: heating: ${daytime[4]}"
+        heatingRoom=${daytime[4]}
+        break
+      fi
+    fi
+  done
+
+  tempWanted=$tempComfort
+  roomtemp=$(cat /tmp/thermostatManual)
+  if [ $? -gt 0 ]; then
+    echo Auto
+  else
+    if [ "$roomtemp" == "off" ]; then
+      echo "Heating Manual Off"
+      heatingRoom="off"
+    else
+      tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
+      echo "Manual temp kichen: $tempWanted °C"
+      heatingRoom="on"
+    fi
+  fi
+  if [ "$heatingRoom" == "off" ]; then
+    echo "Heating: Off, $tempOff °C"
+    tempWanted=$tempOff
+  fi
+  total=${#heaterRoom[@]}
+  for (( i=0; i<$total; i++ )); do
+    tempToggle=$(awk "BEGIN {print ($tempWanted - $hysteresis - $hysteresis * (2 * $i))}")
+    echo "${heaterRoom[$i]} switch on at $tempToggle °C."
+    if (( $(awk "BEGIN {print ($temp < $tempToggle)}") )); then
+      echo "${heaterRoom[$i]} on at $temp °C."
+      tasmota ${heater[${heaterRoom[$i]}]} on
+    fi
+    tempToggle=$(awk "BEGIN {print ($tempWanted + $hysteresis - $hysteresis * (2 * $i))}")
+    echo "${heaterRoom[$i]} switch off at $tempToggle °C."
+    if (( $(awk "BEGIN {print ($temp > $tempToggle)}") )); then
+      echo "${heaterRoom[$i]} off at $temp °C."
+      tasmota ${heater[${heaterRoom[$i]}]} off
+    fi
+  done
 }
 
 . /var/www/html/data/thermostat
@@ -126,6 +194,54 @@ do
 
   temp=$(python /home/*/ds18b20.py)
   LC_ALL=C printf "%.1f °C" "$temp" > /home/*/temp.txt
+
+  room="Dining"
+  PresHumiTempfile="/home/*/temp.txt"
+
+  # Received new configuration file
+  if [ -f /tmp/thermostat ]; then
+    mv -f /tmp/thermostat /var/www/html/data/thermostat
+  fi
+  . /var/www/html/data/thermostat
+
+  thermostatroomdefault=("${thermostatdiningdefault[@]}")
+  thermostatroomevent=("${thermostatdiningevent[@]}")
+  tempOffset=$diningTempOffset
+
+  # compensate position temperature sensor
+#  hysteresis=$(awk "BEGIN {print ($hysteresis * 2)}")
+  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset)}")
+
+  declare -A heater
+  unset heaterRoom
+  declare -a heaterRoom
+  for heateritem in "${heaters[@]}"; do
+    line=(${heateritem})
+    heater[${line[0]}]=${line[1]}
+    if [ ${heateritem:0:6} == "$room" ]; then
+      heaterRoom+=(${line[0]})
+    fi
+  done
+
+  if [ -f /tmp/thermostatReset ]; then
+    echo "Resetting thermostat"
+    for switch in "${!heater[@]}"
+    do
+      heateritem=${heater[$switch]}
+      if [[ "$heateritem" == tasmota* ]]; then
+          tempfile="/tmp/${heateritem:0:19}"
+      fi
+      if [ -f $tempfile ]; then
+        rm $tempfile
+      fi
+    done
+    rm /tmp/thermostatReset
+  fi
+
+  weekday=$(date +%w)
+  now=$(date +%H:%M)
+
+  thermostat
 
   sudo pkill -9 pngview
 #  convert -size 1920x70 xc:none -font Bookman-DemiItalic -pointsize 32 -fill black -stroke white -gravity center -draw "text 0,0 '$(date +"%A, %e %B %Y   %k:%M")   $(cat /home/*/temp.txt)'" /home/*/image.png
