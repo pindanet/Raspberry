@@ -146,9 +146,38 @@ for alarmitem in "${alarmevent[@]}"; do
 done
 echo $domoOn > /var/www/html/data/domoOn
 
+# get next alarm
+now=$(date +%H:%M)
+nextAlarm=$(cat /var/www/html/data/nextalarm)
+if [[ "$now" > "$nextAlarm" ]];then
+  tomorrow=$(date --date="next day" +%u)
+  nextAlarm=${alarmtimes[$((tomorrow - 1))]}
+  # Exceptions with recurrent dates
+  for alarmitem in "${alarmevent[@]}"; do
+    daytime=(${alarmitem})
+    recevent=$(date -u --date "${daytime[0]}" +%s)
+    tomorrowSec=$(date -u --date="next day" +%s)
+    tomorrow=$((tomorrowSec - (tomorrowSec % 86400)))
+    if [[ "${#daytime[@]}" > "2" ]]; then # recurrent alarm event
+       timebetween=$((${daytime[2]} * 86400))
+       while  [ $recevent -lt $tomorrow ]; do
+         recevent=$((recevent + timebetween))
+       done
+    fi
+    if [ $tomorrow == $recevent ]; then
+      echo "Alarm Event on $(date -u --date @$recevent +'%a %d %b %Y'): ${daytime[1]}"
+      nextAlarm=${daytime[1]}
+    fi
+  done
+  echo $nextAlarm > /var/www/html/data/nextalarm
+fi
+
+# remove all alarms
+for i in `atq | awk '{print $1}'`;do atrm $i;done
+
 # Lights on in the morning 
 #wget -qO- http://$diningLight/cm?cmnd=Power%20On
-raspi-gpio set $diningLight op dl
+echo "raspi-gpio set $diningLight op dl" | at -M $nextAlarm
 
 # Lights out in the morning
 # From UTC
@@ -187,6 +216,8 @@ fi
 # All lights out
 echo "raspi-gpio set $diningLight op dh" | at $lightevening
 #echo "wget -qO- http://$diningLight/cm?cmnd=Power%20Off" | at $lightevening
+# Update and reboot, 1 minute later
+echo "apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at $(date -d @$(($(date -d $lightevening +"%s") + 60)) +"%H:%M")
 
 while true
 do
