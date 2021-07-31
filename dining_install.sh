@@ -168,9 +168,6 @@ EOF
   sudo systemctl enable PindaNetDining.service
 
   sudo apt install at -y
-  sudo wget -O /var/www/html/data/alarmnow.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/var/www/html/data/alarmnow.sh
-  sudo chmod +x /var/www/html/alarmnow.sh
-  sudo /var/www/html/pindaalarmclock
 
 # HIER
   
