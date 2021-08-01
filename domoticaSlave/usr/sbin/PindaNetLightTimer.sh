@@ -13,7 +13,6 @@ eveningShutterUp="23:00"
 lighttimer=180 #in seconds
 
 _pir_pin=4
-#_light_pin=24
 
 function tasmota () {
   if [ ! -f /tmp/$1 ]; then # initialize
@@ -39,7 +38,6 @@ function tasmota () {
 }
 
 raspi-gpio set $_pir_pin ip pd # input pull down
-#raspi-gpio set $_light_pin op dh  # output high
 
 timer=$(date +"%s")
 
@@ -58,39 +56,24 @@ while true; do
   else
     shutter="up"
   fi
-
+#shutter="down" # Test
   if [[ $clock < $sunrise ]] || [[ $clock > $sunset ]] || [[ $shutter == "down" ]]; then # Night
-#    echo "Test"
-#  else
     starttime=$(date +"%s")
     while [ $(($(date +"%s") - starttime)) -lt 55 ]; do
       pir=$(raspi-gpio get $_pir_pin)
-#      echo "$(date): $pir)"
       if [[ $pir == *"level=1"* ]]; then
-        if [[ $(raspi-gpio get $_light_pin) == *"level=1"* ]]; then
-          echo "$(date): Motion: Light on"
-          tasmota "tasmota_15dd89-7561" "on"
-#          raspi-gpio set $_light_pin dl
-#        else
-#          echo "$(date): Motion: Keep light on"
-       fi
+        echo "$(date): Motion: Light on"
+        tasmota "tasmota_15dd89-7561" "on"
         timer=$(date +"%s")
       else
         if [ $(($(date +"%s") - timer)) -gt "$lighttimer" ]; then
-          if [[ $(raspi-gpio get $_light_pin) == *"level=0"* ]]; then
-            echo "$(date): Motion: Light off"
-            tasmota "tasmota_15dd89-7561" "off"
-#            raspi-gpio set $_light_pin dh
-#          else
-#            echo "$(date): Motion: Keep light off"
-          fi
+          echo "$(date): Motion: Light off"
+          tasmota "tasmota_15dd89-7561" "off"
         fi
       fi
       sleep 0.2
     done
-  else
-#    echo "$(date): Dag: Lights off"
-#    raspi-gpio set $_light_pin dh
+  else # Day
     tasmota "tasmota_15dd89-7561" "off"
     sleep 55
   fi
