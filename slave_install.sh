@@ -86,7 +86,7 @@ else
   # Remove pi user
   sudo userdel -r pi
   
-  sudo apt-get install i2c-tools
+  sudo apt-get install i2c-tools -y
   i2cdetect -y 1
   
   sudo apt install python3-pip
