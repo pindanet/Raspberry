@@ -7,6 +7,15 @@
 # Setup Headless: https://www.raspberrypi.org/documentation/configuration/wireless/headless.md
 # Activate ssh on boot partition
 
+# BTE13-003 Relaiskaart
+# ---------------------
+# 5v (4) - Red - RVcc
+# Gnd (20) - Black - Gnd
+# Gnd (39) - Black - Gnd
+# GPIO 13 (33) - Blue - In1
+# GPIO 19 (35) - Green - In2
+# 3.3v (17) - Yellow - Vcc
+
 # Test if executed with Bash
 case "$BASH_VERSION" in
   "") echo "usage: bash slave_install.sh"
