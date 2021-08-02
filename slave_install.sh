@@ -15,6 +15,12 @@
 # GPIO 13 (33) - Blue - In1
 # GPIO 19 (35) - Green - In2
 # 3.3v (17) - Yellow - Vcc
+  
+# mcp9808
+# Pi 3V3 (1) to sensor VIN orange
+# Pi GND (6) to sensor GND yellow
+# Pi SCL (5) to sensor SCK green
+# Pi SDA (3) to sensor SDA blue
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
@@ -79,12 +85,6 @@ else
   
   # Remove pi user
   sudo userdel -r pi
-  
-  # mcp9808
-  # Pi 3V3 (1) to sensor VIN orange
-  # Pi GND (6) to sensor GND yellow
-  # Pi SCL (5) to sensor SCK green
-  # Pi SDA (3) to sensor SDA blue
   
   sudo apt-get install i2c-tools
   i2cdetect -y 1
