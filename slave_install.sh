@@ -145,7 +145,7 @@ EOF
   sudo systemctl daemon-reload
   sudo systemctl enable PindaNetDaily.timer
 
-  sudo apt-get install hdate
+  sudo apt-get install hdate -y
   sudo wget -O /usr/sbin/PindaNetLightTimer.sh https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/PindaNetLightTimer.sh
   sudo chmod +x /usr/sbin/PindaNetLightTimer.sh
   cat > PindaNetLightTimer.service <<EOF
