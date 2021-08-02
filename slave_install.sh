@@ -89,7 +89,7 @@ else
   sudo apt-get install i2c-tools -y
   i2cdetect -y 1
   
-  sudo apt install python3-pip
+  sudo apt install python3-pip -y
   sudo pip3 install adafruit-circuitpython-mcp9808
   sudo wget -O /usr/sbin/mcp9808.py https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/mcp9808.py
   sudo chmod +x /usr/sbin/mcp9808.py
