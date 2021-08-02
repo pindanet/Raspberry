@@ -17,7 +17,7 @@ KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
-FULLCALENDAR="4.4.0"
+#FULLCALENDAR="4.4.0"
 
 if [ $USER == "pi" ]; then
   # rotate Touchscreen
