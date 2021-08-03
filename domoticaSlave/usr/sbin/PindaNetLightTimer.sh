@@ -25,11 +25,11 @@ function tasmota () {
   fi
   if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
     dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+    echo "$dummy" > /tmp/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
   elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
     dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+    echo "$dummy" > /tmp/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
   elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
     echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
