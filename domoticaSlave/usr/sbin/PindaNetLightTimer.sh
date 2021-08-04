@@ -12,20 +12,13 @@ eveningShutterUp="23:00"
 
 lighttimer=180 #in seconds
 
+lightSwitch="tasmota_15dd89-7561"
 _pir_pin=4
 
 declare -A status=()
-status["tasmota_15dd89-7561"]=$(wget -qO- http://tasmota_15dd89-7561/cm?cmnd=Power)
+status["$lightSwitch"]=$(wget -qO- http://$lightSwitch/cm?cmnd=Power)
 
 function tasmota () {
-#  if [ -z ${status["$1"]} ]; then # initialize
-#    status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power)
-#    two=$(echo ${status["$1"]} | awk -F"\"" '{print $4}')
-#    twolower=${two,,}
-#    if [ $twolower == "on" ] || [ $twolower == "off" ]; then
-#      echo "$(date -u +%s),$twolower" >> /var/www/html/data/$1.log
-#    fi
-#  fi
   if [ $2 == "on" ] && [ "${status["$1"]}" == '{"POWER":"OFF"}' ]; then
     status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power%20On)
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
@@ -38,29 +31,6 @@ function tasmota () {
   fi
 }
 
-#function tasmota () {
-#  if [ ! -f /tmp/$1 ]; then # initialize
-#    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-#    two=$(wget -qO- http://$1/cm?cmnd=Power | awk -F"\"" '{print $4}')
-#    twolower=${two,,}
-#    if [ $twolower == "on" ] || [ $twolower == "off" ]; then
-#      echo "$(date -u +%s),$twolower" >> /var/www/html/data/$1.log
-#    fi
-#  fi
-#  if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
-#    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
-#    echo "$dummy" > /tmp/$1
-#    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-#  elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
-#    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
-#    echo "$dummy" > /tmp/$1
-#    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-#  elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
-#    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-#    echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
-#  fi
-#}
-
 raspi-gpio set $_pir_pin ip pd # input pull down
 
 timer=$(date +"%s")
@@ -70,8 +40,6 @@ sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
 while true; do
   clock=$(date -u +"%H:%M")
   localclock=$(date +"%H:%M")
-
-#  echo "down: $morningShutterDown, up:  $morningShutterUp, tijd: $localclock"
 
   if [[ $localclock > $morningShutterDown ]] && [[ $localclock < $morningShutterUp ]]; then # Morning and shutters down
     shutter="down"
@@ -83,28 +51,25 @@ while true; do
 #shutter="down" # Test
   if [[ $clock < $sunrise ]] || [[ $clock > $sunset ]] || [[ $shutter == "down" ]]; then # Night
     starttime=$(date +"%s")
-#echo "$(date): Night NowSec: $(date +%s); Starttime: $starttime" >> /tmp/PindaNetDebug.txt
     while [ $(($(date +"%s") - starttime)) -lt 55 ]; do
       pir=$(raspi-gpio get $_pir_pin)
       if [[ $pir == *"level=1"* ]]; then 
-        if [ "${status["tasmota_15dd89-7561"]}" == '{"POWER":"OFF"}' ]; then
-#echo "$(date): Motion: Light on" >> /tmp/PindaNetDebug.txt
+        if [ "${status["$lightSwitch"]}" == '{"POWER":"OFF"}' ]; then
           echo "$(date): Motion: Light on"
-          tasmota "tasmota_15dd89-7561" "on"
+          tasmota "$lightSwitch" "on"
         fi
         timer=$(date +"%s")
       else
-        if [ $(($(date +"%s") - timer)) -gt "$lighttimer" ] && [ "${status["tasmota_15dd89-7561"]}" == '{"POWER":"ON"}' ]; then
-#echo "$(date): Motion: Light off" >> /tmp/PindaNetDebug.txt
+        if [ $(($(date +"%s") - timer)) -gt "$lighttimer" ] && [ "${status["$lightSwitch"]}" == '{"POWER":"ON"}' ]; then
           echo "$(date): Motion: Light off"
-          tasmota "tasmota_15dd89-7561" "off"
+          tasmota "$lightSwitch" "off"
         fi
       fi
       sleep 0.2
     done
   else # Day
-    if [ "${status["tasmota_15dd89-7561"]}" == '{"POWER":"ON"}' ]; then
-      tasmota "tasmota_15dd89-7561" "off"
+    if [ "${status["$lightSwitch"]}" == '{"POWER":"ON"}' ]; then
+      tasmota "$lightSwitch" "off"
     fi
     sleep 55
   fi
