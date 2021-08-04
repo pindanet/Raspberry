@@ -32,6 +32,9 @@ LOCALE="nl_BE.UTF-8"
 TIMEZONE="Europe/Brussels"
 COUNTRY="BE"
 
+# Lower Brightness Touchscreen
+echo 128 | sudo tee /sys/class/backlight/rpi_backlight/brightness
+
 if [ $USER == "pi" ]; then
   # Change locale
   sudo raspi-config nonint do_change_locale "$LOCALE"
