@@ -197,10 +197,18 @@ EOF
   sudo systemctl enable PindaNetUpdate.timer
   sudo systemctl start PindaNetUpdate.timer
 # systemctl list-timers
-# uptime
-# cat /var/log/apt/history.log
-# cat /var/log/apt/term.log
-  exit
+
+# Webserver
+  sudo apt-get install apache2 php libapache2-mod-php php-ssh2 php-gd php-xml php-curl php-mbstring -y
+  sudo systemctl restart apache2.service
+  sudo mkdir /var/www/html/data
+  sudo chown -R www-data:www-data /var/www/html/data/
+  
+# Muiscursor verbergen
+  sudo apt-get install unclutter -y
+
+# Autostart Chromium browser
+  sudo apt-get install chromium-browser lightdm openbox xterm fonts-symbola -y
 fi
 # Restart Raspberry Pi
 sudo shutdown -r now
