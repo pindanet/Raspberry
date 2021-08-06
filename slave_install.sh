@@ -225,6 +225,10 @@ EOF
 
   echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
   echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
+  
+  sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/index.html
+  sudo wget -O /var/www/html/index.css https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/index.css
+  sudo wget -O /var/www/html/index.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/index.js
 
 fi
 # Restart Raspberry Pi
