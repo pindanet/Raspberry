@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  color: #2F4F2F;
+  font-family: sans-serif;
+}
+a {
+  color: #2F4F2F;
+  text-decoration: none;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+#clockday, #clockdate, #radio {
+  font-size: 10vw;
+  text-align: center;
+}
+#clock {
+  font-size: 20vw;   
+  text-align: center;
+/*  line-height: 99%; */
+}
