@@ -212,6 +212,20 @@ EOF
 
 # Autostart Chromium browser
   sudo apt-get install chromium-browser lightdm openbox xterm fonts-symbola -y
+  
+  sudo raspi-config nonint do_boot_behaviour "B4"
+  mkdir -p $HOME/.config/openbox
+  echo "# Hide mouse when not moving the mouse" >> $HOME/.config/openbox/autostart
+  echo "unclutter -idle 0.1 &" >> $HOME/.config/openbox/autostart
+  
+  echo "# Disable Screensaver" >> $HOME/.config/openbox/autostart
+  echo "xset s off" >> $HOME/.config/openbox/autostart
+  echo "xset -dpms" >> $HOME/.config/openbox/autostart
+  echo "xset s noblank" >> $HOME/.config/openbox/autostart
+
+  echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
+  echo "chromium-browser --incognito --kiosk http://localhost/ &" >> $HOME/.config/openbox/autostart
+
 fi
 # Restart Raspberry Pi
 sudo shutdown -r now
