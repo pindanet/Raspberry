@@ -7,9 +7,20 @@
 # Setup Headless: https://www.raspberrypi.org/documentation/configuration/wireless/headless.md
 # Activate ssh on boot partition
 
+# PIR
+# ---
+# Gnd (14) > Gnd (Brown)
+# GPIO 4 (7) > Output (Orange)
+# 5 V (4) > Vcc (Red)
+
+# Touchscreen
+# -----------
+# Gnd (6) > Gnd (Black)
+# 5 V (4) > 5 V (Red)
+
 # BTE13-003 Relaiskaart
 # ---------------------
-# 5v (4) - Red - RVcc
+# 5v (2) - Red - RVcc
 # Gnd (20) - Black - Gnd
 # Gnd (39) - Black - Gnd
 # GPIO 13 (33) - Blue - In1
