@@ -2,17 +2,17 @@ body {
   margin: 0;
   padding: 0;
   background-color: black;
-  color: #2F4F2F;
+  color: white;
   font-family: sans-serif;
 }
 a {
-  color: #2F4F2F;
+  color: white;
   text-decoration: none;
 }
 body::-webkit-scrollbar {
   display: none;
 }
-#clockday, #clockdate, #radio {
+#clockday, #clockdate {
   font-size: 10vw;
   text-align: center;
 }
@@ -20,4 +20,8 @@ body::-webkit-scrollbar {
   font-size: 20vw;   
   text-align: center;
 /*  line-height: 99%; */
+}
+#buttons {
+  font-size: 10vw;
+  text-align: center;
 }
