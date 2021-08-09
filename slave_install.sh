@@ -240,6 +240,14 @@ EOF
   sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/index.html
   sudo wget -O /var/www/html/index.css https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/index.css
   sudo wget -O /var/www/html/index.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/index.js
+  sudo wget -O /var/www/html/tasmota.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/tasmota.php
+
+  sudo mkdir /var/www/html/emoji
+  sudo wget -O /var/www/html/emoji/infrared-off.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/emoji/infrared-off.svg
+  sudo wget -O /var/www/html/emoji/infrared-on.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/emoji/infrared-on.svg
+  sudo wget -O /var/www/html/emoji/light-bulb-off.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/emoji/light-bulb-off.svg
+  sudo wget -O /var/www/html/emoji/light-bulb-on.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/emoji/light-bulb-on.svg
+  sudo chown -R www-data:www-data /var/www/html/emoji/
 
 fi
 # Restart Raspberry Pi
