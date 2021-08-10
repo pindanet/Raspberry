@@ -10,10 +10,11 @@ $dev = htmlspecialchars($_POST["dev"]);
 $cmd = htmlspecialchars($_POST["cmd"]);
 
 exec("wget -qO- \"http://$dev/cm?cmnd=$cmd\"", $output);
-if (strpos("$output[0]", 'ON') !== false) {
-    copy("emoji/light-bulb-on.svg", "emoji/light-bulb.svg");
-} else {
-    copy("emoji/light-bulb-off.svg", "emoji/light-bulb.svg");
-}
+//if (strpos("$output[0]", 'ON') !== false) {
+//    copy("emoji/light-bulb-on.svg", "emoji/light-bulb.svg");
+//} else {
+//    copy("emoji/light-bulb-off.svg", "emoji/light-bulb.svg");
+//}
+file_put_contents("data/light-bulb", "$output[0]");
 echo "$output[0]";
 ?>
