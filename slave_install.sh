@@ -241,6 +241,7 @@ EOF
   sudo wget -O /var/www/html/index.css https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/index.css
   sudo wget -O /var/www/html/index.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/index.js
   sudo wget -O /var/www/html/tasmota.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/tasmota.php
+  sudo usermod -a -G gpio "www-data"
 
   sudo mkdir /var/www/html/emoji
   sudo wget -O /var/www/html/emoji/infrared-off.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/emoji/infrared-off.svg
