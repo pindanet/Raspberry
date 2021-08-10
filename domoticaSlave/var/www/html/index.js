@@ -1,8 +1,27 @@
 var lightSwitch="tasmota_15dd89-7561";
+var ir1Switch="tasmota_relayGPIO13";
+var ir2Switch="tasmota_relayGPIO19";
 
 var startTimer;
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
+
+function irstatus(irswitch, id) {
+  console.log(irswitch, id);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "data/" + id, true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) { 
+    if (this.status == 200) {
+      if (this.responseText.includes("ON")) {
+        document.getElementById(id).src = "emoji/infrared-on.svg";
+      } else {
+        document.getElementById(id).src = "emoji/infrared-off.svg";
+      }
+    }
+  };
+  xhr.send();
+}
 
 function lightstatus() {
   var xhr = new XMLHttpRequest();
@@ -17,7 +36,7 @@ function lightstatus() {
       }
     }
   };
-  xhr.send("dev=" + lightSwitch + "&cmd=Power%20toggle");
+  xhr.send();
 }
 
 function lights(event) {
@@ -67,6 +86,7 @@ function startTime() {
 
   getRoomTemp();
   lightstatus();
+  irstatus(ir1Switch, "ir1");
 
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
