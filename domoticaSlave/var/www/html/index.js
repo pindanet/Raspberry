@@ -1,6 +1,7 @@
 var lightSwitch="tasmota_15dd89-7561";
-var ir1Switch="tasmota_relayGPIO13";
-var ir2Switch="tasmota_relayGPIO19";
+var irSwitch = [];
+irSwitch["ir1"] = "tasmota_relayGPIO13";
+irSwitch["ir2"] = "tasmota_relayGPIO19";
 
 var startTimer;
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
@@ -21,6 +22,22 @@ function irstatus(irswitch, id) {
     }
   };
   xhr.send();
+}
+
+function ir(event, el) {
+  var id = el.id;
+  var xhr = new XMLHttpRequest(); 
+  xhr.open('POST', "tasmota.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) { 
+    if (this.status == 200) {
+      irstatus(irSwitch[el.id], el.id);
+      console.log(this.responseText);
+    }
+  }; 
+  xhr.send("dev=" + irSwitch[el.id] + "&cmd=Power%20toggle");
+
+  event.stopPropagation();
 }
 
 function lightstatus() {
@@ -86,7 +103,7 @@ function startTime() {
 
   getRoomTemp();
   lightstatus();
-  irstatus(ir1Switch, "ir1");
+  irstatus(irSwitch["ir1"], "ir1");
 
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
