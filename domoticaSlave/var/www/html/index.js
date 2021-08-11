@@ -8,9 +8,8 @@ var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vr
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
 
 function irstatus(irswitch, id) {
-  console.log(irswitch, id);
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', "data/" + id, true);
+  xhr.open('POST', "data/" + irswitch, true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) { 
     if (this.status == 200) {
@@ -32,7 +31,6 @@ function ir(event, el) {
   xhr.onload = function(e) { 
     if (this.status == 200) {
       irstatus(irSwitch[el.id], el.id);
-      console.log(this.responseText);
     }
   }; 
   xhr.send("dev=" + irSwitch[el.id] + "&cmd=Power%20toggle");
@@ -42,7 +40,7 @@ function ir(event, el) {
 
 function lightstatus() {
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', "data/light-bulb", true);
+  xhr.open('POST', "data/" + lightSwitch, true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) { 
     if (this.status == 200) {
@@ -104,6 +102,7 @@ function startTime() {
   getRoomTemp();
   lightstatus();
   irstatus(irSwitch["ir1"], "ir1");
+  irstatus(irSwitch["ir2"], "ir2");
 
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
