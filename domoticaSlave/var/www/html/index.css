@@ -27,4 +27,6 @@ body::-webkit-scrollbar {
 }
 #buttons img {
   height: 12vh;
+  padding-left: 6vh;
+  padding-right: 6vh;
 }
