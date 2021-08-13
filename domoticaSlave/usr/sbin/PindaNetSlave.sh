@@ -1,32 +1,26 @@
 #!/bin/bash
 # ToDo
-# Compensate temperature sensor
-tempOffset=-0.4
+
+## Compensate temperature sensor
+#tempOffset=-0.4
 
 function relayGPIO () {
-  _r1_pin=23
-  # Activate GPIO Relay
-  if [ ! -d "/sys/class/gpio/gpio$_r1_pin" ]; then
-    #   Exports pin to userspace
-    echo $_r1_pin > /sys/class/gpio/export
-    # Sets pin as an output
-    echo "out" > /sys/class/gpio/gpio$_r1_pin/direction
-  fi
+  _r1_pin=${1#*relayGPIO}
 
-  if [ ! -f /tmp/$1 ]; then # initialize
-    echo '{"POWER":"ON"}' > /tmp/$1
+  if [ ! -f /var/www/html/data/$1 ]; then # initialize
+    echo '{"POWER":"ON"}' > /var/www/html/data/$1
     echo "$(date -u +%s),off" >> /var/www/html/data/$1.log
   fi
-  if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
-    echo 0 > /sys/class/gpio/gpio$_r1_pin/value # Power on
-    echo '{"POWER":"ON"}' > /tmp/$1
+  if [ $2 == "on" ] && [ "$(cat /var/www/html/data/$1)" == '{"POWER":"OFF"}' ]; then
+    raspi-gpio set $_r1_pin op dl # Power on
+    echo '{"POWER":"ON"}' > /var/www/html/data/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
-    echo 1 > /sys/class/gpio/gpio$_r1_pin/value # Power off
-    echo '{"POWER":"OFF"}' > /tmp/$1
+  elif [ $2 == "off" ] && [ "$(cat /var/www/html/data/$1)" == '{"POWER":"ON"}' ]; then
+    raspi-gpio set $_r1_pin op dh # Power off
+    echo '{"POWER":"OFF"}' > /var/www/html/data/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
-    echo '{"POWER":"ON"}' > /tmp/$1
+  elif [ "$(cat /var/www/html/data/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /var/www/html/data/$1)" != '{"POWER":"ON"}' ]; then
+    echo '{"POWER":"ON"}' > /var/www/html/data/$1
     echo "$(date): Relay error. Heating $1" >> /tmp/PindaNetDebug.txt
   fi
 }
@@ -35,33 +29,33 @@ function tasmota () {
     relayGPIO $1 $2
     return
   fi
-  if [ ! -f /tmp/$1 ]; then # initialize
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+  if [ ! -f /var/www/html/data/$1 ]; then # initialize
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /var/www/html/data/$1
     two=$(wget -qO- http://$1/cm?cmnd=Power | awk -F"\"" '{print $4}')
     twolower=${two,,}
     if [ $twolower == "on" ] || [ $twolower == "off" ]; then
       echo "$(date -u +%s),$twolower" >> /var/www/html/data/$1.log
     fi
   fi
-  if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
+  if [ $2 == "on" ] && [ "$(cat /var/www/html/data/$1)" == '{"POWER":"OFF"}' ]; then
     dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /var/www/html/data/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
+  elif [ $2 == "off" ] && [ "$(cat /var/www/html/data/$1)" == '{"POWER":"ON"}' ]; then
     dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /var/www/html/data/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+  elif [ "$(cat /var/www/html/data/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /var/www/html/data/$1)" != '{"POWER":"ON"}' ]; then
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /var/www/html/data/$1
     echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
   fi
 }
-function thermostatOff {
-  for switch in "${!heater[@]}"
-  do
-     tasmota ${heater[$switch]} "off"
-  done
-}
+#function thermostatOff {
+#  for switch in "${!heater[@]}"
+#  do
+#     tasmota ${heater[$switch]} "off"
+#  done
+#}
 
 function thermostat {
   temp=$(tail -1 $PresHumiTempfile)
@@ -69,7 +63,7 @@ function thermostat {
   # remove leading whitespace characters
   temp="${temp#"${temp%%[![:space:]]*}"}"
 
-  # mininmum maximum temp
+  # minimum maximum temp
   if [ ! -f /var/www/html/data/tempmax ]; then
     echo 0 > /var/www/html/data/tempmax
   fi
@@ -89,35 +83,35 @@ function thermostat {
     echo "Min: $tempmin, Max: $tempmax" > /var/www/html/data/temp$(date +%A)
   fi
 
-  IFS=$'\n' thermostatkitchen=($(sort <<<"${thermostatkitchendefault[*]}"))
+  IFS=$'\n' thermostatroom=($(sort <<<"${thermostatroomdefault[*]}"))
   unset IFS
-#  unset raw
 
-  heatingKitchen="off"
+  heatingRoom="off"
 # Default times for heating
-  for thermostatitem in "${thermostatkitchen[@]}"; do
+  for thermostatitem in "${thermostatroom[@]}"; do
     daytime=(${thermostatitem})
     if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
-      heatingKitchen="on"
+      heatingRoom="on"
       break
     fi
   done
 # Exceptions with recurrent dates and times
-  for thermostatitem in "${thermostatkitchenevent[@]}"; do
+  for thermostatitem in "${thermostatroomevent[@]}"; do
     daytime=(${thermostatitem})
     recevent=$(date -u --date "${daytime[0]}" +%s)
     timebetween=$((${daytime[1]} * 86400))
     nowSec=$(date -u +%s)
     today=$((nowSec - (nowSec % 86400)))
-    while  [ $recevent -lt $today ]; do
-      recevent=$((recevent + timebetween))
-    done
-#    echo $today $recevent
+    if [[ "$timebetween" > "0" ]]; then # repeating event
+      while  [ $recevent -lt $today ]; do
+        recevent=$((recevent + timebetween))
+      done
+    fi
     if [ $today == $recevent ]; then
-      echo "Event in Keuken op $(date -u --date @$recevent)"
+      echo "Event in $room on $(date -u --date @$recevent)"
       if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
-        echo "Tussen ${daytime[2]} en ${daytime[3]}: heatingKitchen: ${daytime[4]}"
-        heatingKitchen=${daytime[4]}
+        echo "Between ${daytime[2]} en ${daytime[3]}: heating: ${daytime[4]}"
+        heatingRoom=${daytime[4]}
         break
       fi
     fi
@@ -125,97 +119,71 @@ function thermostat {
 
   tempWanted=$tempComfort
 
-  roomtemp=$(wget -qO- http://pindadomo/data/thermostatManualkitchen)
+  roomtemp=$(cat /tmp/thermostatManual)
   if [ $? -gt 0 ]; then
     echo Auto
   else
-#  fi
-#  if [ -f /var/www/html/data/thermostatManualkitchen ]; then
-#    read roomtemp < /var/www/html/data/thermostatManualkitchen
-#    tempWanted=$roomtemp
     if [ "$roomtemp" == "off" ]; then
-      echo "Kichen Off"
-      heatingKitchen="off"
+      echo "Heating Manual Off"
+      heatingRoom="off"
     else
       tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
-      echo "Manual temp kichen: $tempWanted °C"
-      heatingKitchen="on"
+      echo "Manual temp $room: $tempWanted °C"
+      heatingRoom="on"
     fi
   fi
-  if [ "$heatingKitchen" == "off" ]; then
-    echo "Keuken basisverwarming"
-    tempWanted=15
-#    tempWanted=$(awk "BEGIN {print ($tempComfort - 5 - $tempOffset)}")
-#    echo "Tempwanted kitchen: $tempWanted °C"
+  if [ "$heatingRoom" == "off" ]; then
+    echo "Heating: off, $tempOff °C"
+    tempWanted=$tempOff
   fi
-#  if [ "$heatingKitchen" == "on" ]; then
-  total=${#heaterKeuken[@]}
+  total=${#heaterRoom[@]}
   for (( i=0; i<$total; i++ )); do
-#    tempToggle=$(awk "BEGIN {print ($tempWanted + ($hysteresis * 2) - $hysteresis - $hysteresis * (2 * $i))}")
     tempToggle=$(awk "BEGIN {print ($tempWanted - $hysteresis - $hysteresis * (2 * $i))}")
-#    echo  ${heater[${heaterKeuken[$i]}]}
-    echo "${heaterKeuken[$i]} aan bij $tempToggle °C."
+    echo "${heaterRoom[$i]} switch on at $tempToggle °C."
     if (( $(awk "BEGIN {print ($temp < $tempToggle)}") )); then
-      echo "${heaterKeuken[$i]} ingeschakeld bij $temp °C."
-      tasmota ${heater[${heaterKeuken[$i]}]} on
+      echo "${heaterRoom[$i]} on at $temp °C."
+      tasmota ${heater[${heaterRoom[$i]}]} on
     fi
     tempToggle=$(awk "BEGIN {print ($tempWanted + $hysteresis - $hysteresis * (2 * $i))}")
-    echo "${heaterKeuken[$i]} uit bij $tempToggle °C."
+    echo "${heaterRoom[$i]} switch off at $tempToggle °C."
     if (( $(awk "BEGIN {print ($temp > $tempToggle)}") )); then
-      echo "${heaterKeuken[$i]} uitgeschakeld bij $temp °C."
-      tasmota ${heater[${heaterKeuken[$i]}]} off
+      echo "${heaterRoom[$i]} off at $temp °C."
+      tasmota ${heater[${heaterRoom[$i]}]} off
     fi
   done
 }
 
-#_pir_pin=4 # BCM4
-# 
-## https://raspberrypi-aa.github.io/session2/bash.html
-## Clean up on ^C and TERM, use 'gpio unexportall' to flush everything manually.
-##trap "gpio unexport $_pir_pin" INT TERM
-#if [ -d "/sys/class/gpio/gpio$_pir_pin" ]; then
-#  echo $_pir_pin > /sys/class/gpio/unexport
-#fi
-#fotomap="/var/www/html/motion/fotos"
-#if [ ! -d "$fotomap" ]; then
-#  mkdir -p "$fotomap"
-#fi
-# 
-##   Exports pin to userspace
-#echo $_pir_pin > /sys/class/gpio/export
-## Sets pin as an input
-#echo "in" > /sys/class/gpio/gpio$_pir_pin/direction
-# 
-## Let PIR settle to ambient IR to avoid false positives? 
-## Uncomment line below.
-##sleep 30
- 
 while true
 do
-  timerfile="/var/www/html/data/timer"
-  thermostatkitchenfile="/var/www/html/data/thermostatkitchen"
+#  timerfile="/var/www/html/data/timer"
+#  thermostatkitchenfile="/var/www/html/data/thermostatkitchen"
+  room="Keuken"
   PresHumiTempfile="/var/www/html/data/PresHumiTemp"
 
+  # Received new configuration file
   if [ -f /tmp/thermostat ]; then
     mv -f /tmp/thermostat /var/www/html/data/thermostat
   fi
   . /var/www/html/data/thermostat
 
+  thermostatroomdefault=("${thermostatkitchendefault[@]}")
+  thermostatroomevent=("${thermostatkitchenevent[@]}")
+  tempOffset=$kitchenTempOffset
+
   # compensate position temperature sensor
-  hysteresis=$(awk "BEGIN {print ($hysteresis * 2)}")
+#  hysteresis=$(awk "BEGIN {print ($hysteresis * 2)}")
   tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset)}")
 
   declare -A heater
-  unset heaterKeuken
-  declare -a heaterKeuken
+  unset heaterRoom
+  declare -a heaterRoom
   for heateritem in "${heaters[@]}"; do
     line=(${heateritem})
     heater[${line[0]}]=${line[1]}
-    if [ ${heateritem:0:6} == "Keuken" ]; then
-      heaterKeuken+=(${line[0]})
+    if [ ${heateritem:0:6} == "$room" ]; then
+      heaterRoom+=(${line[0]})
     fi
   done
-#  printf '%s\n' "${heaterKeuken[@]}"
 
   if [ -f /tmp/thermostatReset ]; then
     echo "Resetting thermostat"
@@ -223,7 +191,7 @@ do
     do
       heateritem=${heater[$switch]}
       if [[ "$heateritem" == tasmota* ]]; then
-          tempfile="/tmp/${heateritem:0:19}"
+          tempfile="/var/www/html/data/${heateritem:0:19}"
       fi
       if [ -f $tempfile ]; then
         rm $tempfile
@@ -246,44 +214,5 @@ do
 
   thermostat
 
-  echo "heatingKitchen: $heatingKitchen"
-
-if true; then # Dummy
   sleep 55
-else # Niet uitvoeren
-
-# mood lighting on/off
-  sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
-  startInterval=$(date -u --date='-1 minute' +"%H:%M")
-  endInterval=$(date -u --date='+1 minute' +"%H:%M")
-echo "sunset:$sunset start:$startInterval end:$endInterval"
-  if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
-#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
-    echo "Mood light On"
-  elif [[ $startInterval > $sunset ]]; then
-    startInterval=$(date --date='-1 minute' +"%H:%M")
-    endInterval=$(date --date='+1 minute' +"%H:%M")
-echo "start:$startInterval end:$endInterval light:$lightliving"
-    if [[ $startInterval < $lightliving ]] && [[ $endInterval > $lightliving ]]; then
-      echo "Mood light Off"
-#      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
-    fi
-  fi
-
-# PIR detector for 1 minute
-  starttime=$(date +"%s")
-  while [ $(($(date +"%s") - starttime)) -lt 60 ]; do
-    _ret=$( cat /sys/class/gpio/gpio$_pir_pin/value )
-    if [ $_ret -eq 1 ]; then
-      echo "[!] PIR is tripped, Smile ..."
-      sleep 3 # time to reset PIR
-    elif [ $_ret -eq 0 ]; then
-#       echo "Geen beweging"
-      sleep 3 # time to reset PIR
-    fi
-#    echo $(($(date +"%s") - starttime))
-  done
-
-fi # Einde niet uitvoeren
-
 done
