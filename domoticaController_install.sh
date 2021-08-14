@@ -23,7 +23,7 @@
 # PIR
 # BCM 4 (7) - output (Brown)
 # 5V (4) - Vdd (Red)
-# Gnd (6) - Gnd (Black)
+# Gnd (9) - Gnd (Black)
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
