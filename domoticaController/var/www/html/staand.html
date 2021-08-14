@@ -15,12 +15,13 @@
 </div></a>
 <div id="menu">
   <a href="#radio"><img class="menubutton" src="emoji/radio.svg"></a>
-  <a href="#radio"><img class="menubutton" onclick="weather(event);" src="emoji/weather.svg"></a>
+  <a href="#weather"><img class="menubutton" onclick="weather(event);" src="emoji/weather.svg"></a>
   <a href="#thermostatUI"><img class="menubutton" src="emoji/thermostat.svg"></a>
   <a href="#radio"><img class="menubutton" onclick="lights(event);" src="emoji/light_bulb.svg"></a>
   <a href="#radio"><img class="menubutton" onclick="enterPIN(event);" src="emoji/keyring.svg"></a>
   <a href="#radio"><img class="menubutton" onclick="remoteCommand(event,'rpiwall');" src="emoji/monitor.svg"></a>
-  <a href="#top"><object class="menubutton" data="emoji/calendar.svg"></object></a>
+  <a href="index.html"><img class="menubutton" src="emoji/calendar.svg"></a>
+  <!--a href="index.html"><object class="menubutton" data="emoji/calendar.svg"></object></a-->
   <!--a href="#top"><div style="overflow: hidden; display: inline-block; margin-bottom: -2px;"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div></a-->
 </div>
 <div id="radio">
@@ -64,6 +65,10 @@
     <button onclick="thermostatUI(event, 'Incr', 'livingtemp');">+</button>
     <button onclick="thermostatUI(event, 'Decr', 'livingtemp');">-</button>
   </div>
+</div>
+<div id="weather">
+   <img style="width: 100%; height: auto;" src="data/weatheryr.png" alt="YR weather"> 
+   <img style="width: 100%; height: auto;" src="data/weather.png" alt="Time and Date"> 
 </div>
 </body>
 </html>
