@@ -17,8 +17,8 @@
 # TLS2591 I2C High Dynamic Range Digital Light Sensor
 # 3v3 (1) () - Vin (Bordeau)
 # Gnd (6) > Gnd (6) (Gray)
-# BCM 3 (SCL) (5) - SCK (White)
-# BCM 2 (SDA) (3) - SDI (Blue)
+# BCM 3 (SCL) (5) - SCL (White)
+# BCM 2 (SDA) (3) - SDA (Blue)
 
 # PIR
 # BCM 4 (7) - output (Brown)
