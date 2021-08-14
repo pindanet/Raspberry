@@ -11,8 +11,8 @@
 # BME280 I2C Temperature and Pressure Sensor
 # 3v3 - Vin (Bordeau)
 # Gnd (6) - Gnd (Gray)
-# BCM 3 (SCL) - SCK (White)
-# BCM 2 (SDA) - SDI (Blue)
+# BCM 3 (SCL) (5) - SCK (White)
+# BCM 2 (SDA) (3) - SDI (Blue)
 
 # TLS2591 I2C High Dynamic Range Digital Light Sensor
 # 3v3 (1) () - Vin (Bordeau)
