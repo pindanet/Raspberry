@@ -21,7 +21,7 @@ button {
   background-color: rgba(128,128,128,0.5);
   border: 1px solid rgb(128,128,128);
   color: white;
-  padding: 2vw; /* 15px; */
+  padding: 1vw; /* 15px; */
   margin-bottom: 1vw;
   margin-right: 1vw;;
   text-align: center;
@@ -39,7 +39,7 @@ button {
 #clock {
   font-size: 32vw;   
   text-align: center;
-/*  line-height: 99%; */
+  line-height: 99%;
 }
 #clockdate {
   font-size: 10vw;   
