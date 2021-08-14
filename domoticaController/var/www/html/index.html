@@ -231,7 +231,7 @@ if (start_interval < sunset && end_interval > sunset) {
       }
       function radioCommand(event, command, options) {
         if ( command == "volup" ) {
-          if ( parseInt(document.getElementById("volumeinfo").innerHTML) == 40 ) { // Maximun Volume
+          if ( parseInt(document.getElementById("volumeinfo").innerHTML) >= 40 ) { // Maximun Volume
             event.stopPropagation();
             return;
           }
@@ -1170,7 +1170,7 @@ console.log(thermostat);
         <img style="height: 100px;" onclick="lights(event);" src="emoji/light_bulb.svg">
         <img style="height: 100px;" onclick="enterPIN(event);" src="emoji/keyring.svg">
         <img style="height: 90px; margin-bottom: 4px;" onclick="clearTimeout(startTimer);remoteCommand(event,'rpiwall');" src="emoji/monitor.svg" onload="centerContent();">
-        <div style="overflow: hidden; display: inline-block; margin-bottom: -2px;" onclick="document.getElementById('clockmenu').style.display = 'none';document.getElementById('clockdate').style.display = '';event.stopPropagation();"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div>`;
+        <div style="overflow: hidden; display: inline-block; margin-bottom: -2px;" onclick="location.href='staand.html';document.getElementById('clockmenu').style.display = 'none';document.getElementById('clockdate').style.display = '';event.stopPropagation();"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div>`;
 /*
       var clockDateMenuCode = `<img style="height: 100px;" onclick="clearTimeout(startTimer);timelapse(event);" src="emoji/timelapse.svg">
         <img style="height: 100px;" onclick="clearTimeout(startTimer);location.reload();" src="emoji/refresh.svg">
@@ -1282,14 +1282,14 @@ console.log(thermostat);
         var element = document.getElementById("clockdate");
  
         if (element == null || typeof(element) == 'undefined') {
-  	  var elementCode = '<div id="clockday" onclick="timerThermostat(event);">' + dayNames[today.getDay()] + ' ' + roomTemp + '</div>';
+  	  var elementCode = '<div id="clockday" onclick="timerThermostat(event);">' + dayNames[today.getDay()] + ' ' + parseFloat(roomTemp) + '</div>';
 	  elementCode += '<div id="clock" onclick="menu();" style="width: ' + w + 'px;">' + h + ":" + m + '</div>';
           elementCode += '<div id="clockdate" onclick="menu();">' + clockDateCode + '</div>';
           elementCode += '<div id="clockmenu" onclick="menu();" style="display: none;"></div>';
 	  document.getElementById('content').innerHTML = elementCode;
           centerContent();
         } else {
-	  document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + roomTemp;
+	  document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + parseFloat(roomTemp).toFixed(1) + " °C";
 	  document.getElementById('clock').innerHTML = h + ":" + m;
           document.getElementById("clock").style.width = w + "px";
           document.getElementById('clockdate').innerHTML = clockDateCode;
@@ -1337,7 +1337,7 @@ function openFullscreen(event) {
 */
     </script>
   </head>
-  <body onload="background();setcursor();startTime(event);">
+  <body onload="setcursor();startTime(event);">
 <svg id="symbolDefs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="0" width="0" style="position:absolute;">
 
   <symbol id="cloud">
