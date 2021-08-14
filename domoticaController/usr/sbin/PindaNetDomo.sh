@@ -4,7 +4,8 @@
 # replace /home/dany by search default user
 
 # Compensate temperature sensor
-tempOffset=0.5
+#tempOffset=0.5
+tempfact=0.9
 
 function broadcast() {
   current="$(cat /var/www/html/data/thermostat)"
@@ -101,7 +102,7 @@ function thermostatOff {
 function thermostat {
   . /var/www/html/data/thermostat
   # compensate position temperature sensor
-  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset)}")
+#  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset)}")
 
   temp=$(tail -1 $PresHumiTempfile)
   temp=${temp%% C*}
@@ -264,7 +265,8 @@ function thermostat {
       echo "Living Off"
       heatingLiving="off"
     else
-      tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
+#      tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
+      tempWanted=$roomtemp
       echo "Manual temp living: $tempWanted °C"
       heatingLiving="on"
     fi
@@ -500,6 +502,11 @@ do
       echo "$(< $error_file)" >> $stderrLogfile
     else
 #      echo "$PresHumiTempVar"
+      temp=${PresHumiTempVar##*$'\n'}
+      temp=${temp%% C*}
+      temp="${temp#"${temp%%[![:space:]]*}"}"
+      newtemp=$(awk "BEGIN {printf \"%0.2f\", ($temp * $tempfact)}")
+      PresHumiTempVar=${PresHumiTempVar/$temp/$newtemp}
       echo "$PresHumiTempVar" > $PresHumiTempfile
   fi
   rm $error_file
@@ -575,7 +582,7 @@ do
 
   #echo Relatief omgevingslicht: $rellux
 
-  backlight=$(awk "BEGIN {printf \"%.0f\", 15 + $rellux * 110}") # 25 + $relux * 230 <= 255 (max_brightness)
+  backlight=$(awk "BEGIN {printf \"%.0f\", 15 + $rellux * 110}") # 25 230
   current=$(cat /sys/class/backlight/rpi_backlight/brightness)
   # Smooth backlight adjustment
   echo "Brightness from $current to $backlight"
