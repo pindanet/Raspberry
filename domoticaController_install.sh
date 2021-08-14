@@ -7,6 +7,24 @@
 # Activate Serial Hardware
 # Activate PiCamera
 
+# Hardware
+# BME280 I2C Temperature and Pressure Sensor
+# 3v3 - Vin
+# Gnd (6) - Gnd (Black)
+# BCM 3 (SCL) - SCK (White)
+# BCM 2 (SDA) - SDI (Brown)
+
+# TLS2591 I2C High Dynamic Range Digital Light Sensor
+# 3v3 (1) () - Vin
+# Gnd (6) > Gnd (6) (Black)
+# BCM 3 (SCL) (5) - SCK (White)
+# BCM 2 (SDA) (3) - SDI (Brown)
+
+# PIR
+# BCM 4 (7) - output (Brown)
+# 5V (4) - Vdd (Red)
+# Gnd (6) - Gnd (Black)
+
 # Test if executed with Bash
 case "$BASH_VERSION" in
   "") echo "usage: bash domoticaController_install.sh"
