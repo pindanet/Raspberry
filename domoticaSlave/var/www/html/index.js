@@ -11,7 +11,7 @@ function irstatus(irswitch, id) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "data/" + irswitch, true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) { 
+  xhr.onload = function(e) {
     if (this.status == 200) {
       if (this.responseText.includes("ON")) {
         document.getElementById(id).src = "emoji/infrared-on.svg";
@@ -25,15 +25,22 @@ function irstatus(irswitch, id) {
 
 function ir(event, el) {
   var id = el.id;
-  var xhr = new XMLHttpRequest(); 
-  xhr.open('POST', "tasmota.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) { 
-    if (this.status == 200) {
-      irstatus(irSwitch[el.id], el.id);
-    }
-  }; 
-  xhr.send("dev=" + irSwitch[el.id] + "&cmd=Power%20toggle");
+  if (document.getElementById(id).src.includes("infrared-off.svg")) {
+    document.getElementById(id).src = "emoji/infrared-on.svg";
+  } else if (document.getElementById(id).src.includes("infrared-on.svg")) {
+    document.getElementById(id).src = "emoji/infrared-auto.svg";
+  } else {
+    document.getElementById(id).src = "emoji/infrared-off.svg";
+  }
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "tasmota.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function(e) {
+//    if (this.status == 200) {
+//      irstatus(irSwitch[el.id], el.id);
+//    }
+//  };
+//  xhr.send("dev=" + irSwitch[el.id] + "&cmd=Power%20toggle");
 
   event.stopPropagation();
 }
@@ -42,7 +49,7 @@ function lightstatus() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "data/" + lightSwitch, true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) { 
+  xhr.onload = function(e) {
     if (this.status == 200) {
       if (this.responseText.includes("ON")) {
         document.getElementById("light").src = "emoji/light-bulb-on.svg";
@@ -101,8 +108,8 @@ function startTime() {
 
   getRoomTemp();
   lightstatus();
-  irstatus(irSwitch["ir1"], "ir1");
-  irstatus(irSwitch["ir2"], "ir2");
+//  irstatus(irSwitch["ir1"], "ir1");
+//  irstatus(irSwitch["ir2"], "ir2");
 
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
