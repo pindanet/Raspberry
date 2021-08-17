@@ -3,6 +3,7 @@
 
 ## Compensate temperature sensor
 #tempOffset=-0.4
+tempfact=0.95
 
 function relayGPIO () {
   _r1_pin=${1#*relayGPIO}
@@ -159,6 +160,7 @@ do
 #  thermostatkitchenfile="/var/www/html/data/thermostatkitchen"
   room="Keuken"
   PresHumiTempfile="/var/www/html/data/PresHumiTemp"
+  stderrLogfile="/var/www/html/stderr.log"
 
   # Received new configuration file
   if [ -f /tmp/thermostat ]; then
@@ -207,7 +209,19 @@ do
   # BCM 3 (SCL) - SCK (Brown)
   # BCM 2 (SDA) - SDI (White)
   # read temperature from sensor
-  mcp9808.py > $PresHumiTempfile
+#  mcp9808.py > $PresHumiTempfile
+  error_file=$(mktemp)
+  PresHumiTempVar=$(mcp9808.py 2>$error_file)
+  if [ "$?" -ne 0 ]; then # skip faulty reading
+      echo "___________________________" >> $stderrLogfile
+      echo "$(date)" >> $stderrLogfile
+      echo "$(< $error_file)" >> $stderrLogfile
+    else
+      temp=$PresHumiTempVar
+      newtemp=$(awk "BEGIN {printf \"%0.2f\", ($temp * $tempfact)}")
+      echo "$newtemp" > $PresHumiTempfile
+  fi
+  rm $error_file
 
   weekday=$(date +%w)
   now=$(date +%H:%M)
