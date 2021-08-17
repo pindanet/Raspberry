@@ -1,5 +1,6 @@
 #!/bin/bash
 # ToDo
+# Tasmota dubbele wget wegwerken (zie PindaNetLightTimer.sh)
 
 ## Compensate temperature sensor
 #tempOffset=-0.4
