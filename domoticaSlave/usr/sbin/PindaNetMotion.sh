@@ -8,9 +8,13 @@ eveningShutterDown="22:20"
 eveningShutterUp="23:00"
 
 lighttimer=180 #in seconds
-
 lightSwitch="tasmota_15dd89-7561"
+
 _pir_pin=4
+
+dim=10
+bright=32
+brightness=$(cat /sys/class/backlight/rpi_backlight/brightness)
 
 declare -A status=()
 status["$lightSwitch"]=$(wget -qO- http://$lightSwitch/cm?cmnd=Power)
@@ -40,55 +44,42 @@ sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
 sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
 
 while true; do
-  clock=$(date -u +"%H:%M")
-  localclock=$(date +"%H:%M")
-
   pir=$(raspi-gpio get $_pir_pin)
   if [[ $pir == *"level=1"* ]]; then # Motion
-    echo "$(date): Motion"
+#    echo "$(date): Motion"
+    if [[ $brighness != $bright ]]; then
+      echo $bright > /sys/class/backlight/rpi_backlight/brightness
+      brightness=$bright
+    fi
     timer=$(date +"%s")
-    echo 32 > /sys/class/backlight/rpi_backlight/brightness
+    sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
+    sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
+    localclock=$(date +"%H:%M")
+    clock=$(date -u +"%H:%M")
+    if [[ $localclock > $morningShutterDown ]] && [[ $localclock < $morningShutterUp ]]; then # Morning and shutters down
+      shutter="down"
+    elif [[ $localclock > $eveningShutterDown ]] && [[ $localclock < $eveningShutterUp ]]; then # Evening and shutters down
+      shutter="down"
+    else
+      shutter="up"
+    fi
+#shutter="down" # Test
+    if [[ $clock < $sunrise ]] || [[ $clock > $sunset ]] || [[ $shutter == "down" ]]; then # Night
+      if [ "${status["$lightSwitch"]}" == '{"POWER":"OFF"}' ]; then
+#        echo "$(date): Motion: Light on"
+        tasmota "$lightSwitch" "on"
+      fi
+    fi
   fi
   if [ $(($(date +"%s") - timer)) -gt "$lighttimer" ]; then
-    echo 8 > /sys/class/backlight/rpi_backlight/brightness
+#    echo "$(date): All clear"
+    if [[ $brighness != $dim ]]; then
+      echo $dim > /sys/class/backlight/rpi_backlight/brightness
+      brightness=$dim
+    fi
+    if [ "${status["$lightSwitch"]}" == '{"POWER":"ON"}' ]; then
+      tasmota "$lightSwitch" "off"
+    fi
   fi
-
   sleep 2
 done
-#while true; do
-#  clock=$(date -u +"%H:%M")
-#  localclock=$(date +"%H:%M")
-#
-#  if [[ $localclock > $morningShutterDown ]] && [[ $localclock < $morningShutterUp ]]; then # Morning and shutters down
-#    shutter="down"
-#  elif [[ $localclock > $eveningShutterDown ]] && [[ $localclock < $eveningShutterUp ]]; then # Evening and shutters down
-#    shutter="down"
-#  else
-#    shutter="up"
-#  fi
-##shutter="down" # Test
-#  if [[ $clock < $sunrise ]] || [[ $clock > $sunset ]] || [[ $shutter == "down" ]]; then # Night
-#    starttime=$(date +"%s")
-#    while [ $(($(date +"%s") - starttime)) -lt 55 ]; do
-#      pir=$(raspi-gpio get $_pir_pin)
-#      if [[ $pir == *"level=1"* ]]; then 
-#        if [ "${status["$lightSwitch"]}" == '{"POWER":"OFF"}' ]; then
-#          echo "$(date): Motion: Light on"
-#          tasmota "$lightSwitch" "on"
-#        fi
-#        timer=$(date +"%s")
-#      else
-#        if [ $(($(date +"%s") - timer)) -gt "$lighttimer" ] && [ "${status["$lightSwitch"]}" == '{"POWER":"ON"}' ]; then
-#          echo "$(date): Motion: Light off"
-#          tasmota "$lightSwitch" "off"
-#        fi
-#      fi
-#      sleep 0.2
-#    done
-#  else # Day
-#    if [ "${status["$lightSwitch"]}" == '{"POWER":"ON"}' ]; then
-#      tasmota "$lightSwitch" "off"
-#    fi
-#    sleep 55
-#  fi
-#done
