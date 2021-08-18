@@ -160,23 +160,23 @@ EOF
   sudo systemctl enable PindaNetDaily.timer
 
   sudo apt-get install hdate -y
-  sudo wget -O /usr/sbin/PindaNetLightTimer.sh https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/PindaNetLightTimer.sh
-  sudo chmod +x /usr/sbin/PindaNetLightTimer.sh
-  cat > PindaNetLightTimer.service <<EOF
+  sudo wget -O /usr/sbin/PindaNetMotion.sh https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/usr/sbin/PindaNetMotion.sh
+  sudo chmod +x /usr/sbin/PindaNetMotion.sh
+  cat > PindaNetMotion.service <<EOF
 [Unit]
-Description=PindaNet Domotica Light Timer
+Description=PindaNet Domotica Motion detection and actions
 Wants=network-online.target
 After=network.target network-online.target
 [Service]
-ExecStart=/usr/sbin/PindaNetLightTimer.sh
+ExecStart=/usr/sbin/PindaNetMotion.sh
 Restart=always
 RestartSec=60
 [Install]
 WantedBy=multi-user.target
 EOF
-  sudo mv PindaNetLightTimer.service /etc/systemd/system/
+  sudo mv PindaNetMotion.service /etc/systemd/system/
   sudo systemctl daemon-reload
-  sudo systemctl enable PindaNetLightTimer.service
+  sudo systemctl enable PindaNetMotion.service
 
   printf "\033[1;37;40mOn the main computer: ssh-copy-id -i ~/.ssh/id_rsa.pub $HOSTNAME\n\033[0m" # Witte letters op zwarte achtergrond
   printf "\033[1;37;40mOn the domotica controller: ssh-keygen\n\033[0m" # Witte letters op zwarte achtergrond
