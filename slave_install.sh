@@ -7,10 +7,16 @@
 # Setup Headless: https://www.raspberrypi.org/documentation/configuration/wireless/headless.md
 # Activate ssh on boot partition
 
-# PIR
-# ---
+# PIR 1
+# -----
 # Gnd (14) > Gnd (Brown)
 # GPIO 4 (7) > Output (Orange)
+# 5 V (4) > Vcc (Red)
+
+# PIR 2
+# -----
+# Gnd (25) > Gnd (Black)
+# GPIO 7 (26) > Output (Brown)
 # 5 V (4) > Vcc (Red)
 
 # Touchscreen
@@ -29,7 +35,7 @@
   
 # mcp9808
 # Pi 3V3 (1) to sensor VIN orange
-# Pi GND (6) to sensor GND yellow
+# Pi GND (9) to sensor GND yellow
 # Pi SCL (5) to sensor SCK green
 # Pi SDA (3) to sensor SDA blue
 
