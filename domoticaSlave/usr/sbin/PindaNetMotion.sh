@@ -11,9 +11,10 @@ lighttimer=180 #in seconds
 lightSwitch="tasmota_15dd89-7561"
 
 _pir_pin=4
+#_pir_2_pin=7
 
 dim=10
-bright=32
+bright=48
 brightness=$(cat /sys/class/backlight/rpi_backlight/brightness)
 
 declare -A status=()
@@ -38,6 +39,7 @@ function tasmota () {
 }
 
 raspi-gpio set $_pir_pin ip pd # input pull down
+#raspi-gpio set $_pir_2_pin ip pd # input pull down
 
 timer=$(date +"%s")
 sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
@@ -81,5 +83,5 @@ while true; do
       tasmota "$lightSwitch" "off"
     fi
   fi
-  sleep 2
+  sleep 0.2
 done
