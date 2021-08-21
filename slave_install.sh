@@ -88,6 +88,9 @@ if [ $USER == "pi" ]; then
   done
   sudo usermod -a -G adm,dialout,cdrom,sudo,audio,video,plugdev,games,users,input,netdev,spi,i2c,gpio "$NEW_USER"
   
+  # rotate LCD screen 90°
+  echo "display_rotate=1 90" | sudo tee -a /boot/config.txt
+  
   # Continue after reboot
   sudo mv slave_install.sh /home/$NEW_USER/
   echo "bash slave_install.sh" | sudo tee -a /home/$NEW_USER/.bashrc
