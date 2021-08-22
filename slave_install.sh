@@ -90,6 +90,7 @@ if [ $USER == "pi" ]; then
   
   # rotate LCD screen 90°
   echo "display_rotate=1 90" | sudo tee -a /boot/config.txt
+  echo "dtoverlay=rpi-ft5406,touchscreen-swapped-x-y=1,touchscreen-inverted-x=1,touchscreen-inverted-y=1" | sudo tee -a /boot/config.txt
   
   # Continue after reboot
   sudo mv slave_install.sh /home/$NEW_USER/
