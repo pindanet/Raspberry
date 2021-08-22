@@ -10,6 +10,7 @@ Place a file named 'ssh', without any extension, onto the boot partition of the 
 ## Rotate LCD Screen
     sudo nano /boot/config.txt
     lcd_rotate=2
+    Touch-rotate: see https://www.raspberrypi.org/forums/viewtopic.php?t=219333
 ## Brightness LCD Screen (0-255)
     sudo su
     echo 32 > /sys/class/backlight/rpi_backlight/brightness
