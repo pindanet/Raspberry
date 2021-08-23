@@ -12,21 +12,34 @@ a {
 body::-webkit-scrollbar {
   display: none;
 }
-#clockday, #clockdate {
-  font-size: 10vw;
+
+#content div {
+  vertical-align: middle;
+}
+#day {
+  font-size: 15vw;
+  text-align: center;
+}
+#ir1, #ir2, #light {
+  width: 20vw;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  padding-top: 5vw;
+}
+
+#clockdate {
+  font-size: 15vw;
   text-align: center;
 }
 #clock {
-  font-size: 20vw;   
+  font-size: 35vw;   
   text-align: center;
 /*  line-height: 99%; */
 }
-#buttons {
-  font-size: 10vw;
+#temp {
+  font-size: 30vw;
   text-align: center;
 }
-#buttons img {
-  height: 12vh;
-  padding-left: 6vh;
-  padding-right: 6vh;
+#weather {
+  font-size: 3vw;
 }
