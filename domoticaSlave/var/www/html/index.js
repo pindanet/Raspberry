@@ -7,6 +7,20 @@ var startTimer;
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
 
+function weather(event) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "weather.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+//console.log(this.responseText);
+      document.getElementById("weather").innerHTML='<img id="light" onclick="weather(event);" src="emoji/weather.svg"></br>' + this.responseText;
+    }
+  };
+  xhr.send();
+  event.stopPropagation();
+}
+
 function irstatus(irswitch, id) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "data/" + irswitch, true);
@@ -75,14 +89,14 @@ function lights(event) {
   event.stopPropagation();
 }
 
-var roomTemp="20.0 °C";
+var roomTemp="20.0";
 function getRoomTemp() {
   var xhrthermometer = new XMLHttpRequest();
   xhrthermometer.responseType = 'text';
   xhrthermometer.open('POST', "data/PresHumiTemp", true);
   xhrthermometer.onload = function(e) {
     if (this.status == 200) {
-      roomTemp = parseFloat(this.responseText).toFixed(1) + " °C";
+      roomTemp = parseFloat(this.responseText).toFixed(1);
     }
   };
   xhrthermometer.send();
@@ -102,9 +116,10 @@ function startTime() {
   var s = today.getSeconds();
   s = checkTime(s);
 
-  document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear();
-  document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + roomTemp;
-  document.getElementById('clock').innerHTML = h + ":" + m + ":" + s;
+  document.getElementById('day').innerHTML = dayNames[today.getDay()];
+  document.getElementById('clock').innerHTML = h + ":" + m;
+  document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
+  document.getElementById('temp').innerHTML = roomTemp;
 
   getRoomTemp();
   lightstatus();
