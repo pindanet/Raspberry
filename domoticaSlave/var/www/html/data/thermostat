@@ -40,10 +40,17 @@ thermostatdiningdefault+=("16:45 17:15")
 unset thermostatdiningevent
 thermostatdiningevent+=("2021-08-12 0 14:00 18:35 on") # Luc
 
-thermostatdiningevent+=("2021-08-18 14 07:00 12:15 on") # Laura
+thermostatdiningevent+=("2021-09-15 14 07:00 12:15 on") # Laura
 
-#thermostatdiningevent+=("2021-07-23 14 18:00 20:00 on") # Test
+thermostatdiningevent+=("2021-09-06 7 08:00 12:00 off") # SNT
+thermostatdiningevent+=("2021-09-06 7 13:00 17:00 off") # SNT
 
+thermostatdiningevent+=("2021-09-16 7 12:00 14:00 off") # PCB, Peter
+thermostatdiningevent+=("2021-09-02 7 17:30 21:30 off") # SNT
+
+thermostatdiningevent+=("2021-09-03 7 08:00 12:00 off") # SNT
+
+thermostatdiningevent+=("2021-09-04 7 08:00 12:00 off") # SNT
 
 # Kitchen
 # =======
@@ -63,7 +70,9 @@ thermostatkitchendefault+=("22:09 22:50")
 unset thermostatkitchenevent
 thermostatkitchenevent+=("2021-08-12 0 16:50 18:35 on") # Luc
 
-thermostatkitchenevent+=("2021-08-18 14 07:00 12:00 on") # Laura
+thermostatkitchenevent+=("2021-09-15 14 07:00 12:00 on") # Laura
+
+#thermostatkitchenevent+=("2021-07-30 7 20:00 21:00 on") # Test
 
 #thermostatkitchenevent+=("2021-01-18 7 12:59 21:15 off") # SNT
 
@@ -91,7 +100,7 @@ thermostatlivingdefault+=("17:20 22:30")
 unset thermostatlivingevent
 thermostatlivingevent+=("2021-08-12 0 14:00 18:35 on") # Luc
 
-thermostatlivingevent+=("2021-08-18 14 07:45 11:45 on") # Laura
+thermostatlivingevent+=("2021-09-15 14 07:45 11:45 on") # Laura
 
 #thermostatlivingevent+=("2021-01-18 7 13:00 21:15 off") # SNT
 
@@ -124,7 +133,7 @@ alarmtimes+=("07:30")
 alarmtimes+=("07:30")
 
 unset alarmevent
-alarmevent+=("2021-08-18 07:00 14") # Laura
+alarmevent+=("2021-09-15 07:00 14") # Laura
 #alarmevent+=("2021-06-17 06:30") # Hepatitis Vaccinatie
 #alarmevent+=("2021-06-22 07:00") # Tandarts Liesbeth Donck
 
@@ -132,8 +141,7 @@ alarmevent+=("2021-08-18 07:00 14") # Laura
 #alarmevent+=("2021-06-27 06:00 7") # Test
 
 unset sleepevent
-sleepevent+=("2021-07-21 7 08:00 12:00 $radio2 1000") # Laura
-sleepevent+=("2021-06-03 7 14:00 21:00 $klara 1000") # Peter
+sleepevent+=("2021-08-25 7 08:00 12:00 $radio2 1000") # Laura
+sleepevent+=("2021-08-19 7 14:00 21:00 $klara 1000") # Peter
 
 #sleepevent+=("2021-05-24 7 17:00 21:00 $stubru 1000") # Test
-
