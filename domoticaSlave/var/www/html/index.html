@@ -8,12 +8,31 @@
   <script src='index.js'></script>
 </head>
 </body>
+<!-- curl -s wttr.in/Brugge?lang=nl | head -7 | tail -5 | aha -->
 <div id="content">
-  <div id="buttons"><img id="ir1" onclick="ir(event, this);" src="emoji/infrared-off.svg"> <img id="ir2" onclick="ir(event, this);" src="emoji/infrared-off.svg"> <img id="light" onclick="lights(event);" src="emoji/light-bulb-off.svg"></div>
-  <div id="clock">20:23:05</div>
-  <div id="clockdate">24 mei 2021</div>
-  <div id="clockday">Donderdag 20 °C</div>
-  <!--a href="."><div id="radio">Wekkerradio</div></a-->
+  <div id="day">Donderdag</div>
+  <div id="clock">20:23</div>
+  <div id="clockdate">23 augustus</div>
+  <table>
+    <tr>
+      <td><img id="light" onclick="lights(event);" src="emoji/light-bulb-off.svg"></td>
+      <td id="weather"><img id="light" onclick="weather(event);" src="emoji/weather.svg"></br>
+<pre>
+  <span style="color: rgb(255,255,0);">   \  /</span>       Gedeeltelijk bewolkt
+  <span style="color: rgb(255,255,0);"> _ /&quot;&quot;</span><span style="color: rgb(192,192,192);">.-.    </span> <span style="color: rgb(175,255,0);">18</span> °C          
+  <span style="color: rgb(255,255,0);">   \_</span><span style="color: rgb(192,192,192);">(   ).  </span> <span style="font-weight:bold;">↓</span> <span style="color: rgb(255,135,0);">24</span> km/h      
+  <span style="color: rgb(255,255,0);">   /</span><span style="color: rgb(192,192,192);">(___(__) </span> 10 km          
+                0.0 mm         
+</pre></td>
+    </tr>
+    <tr>
+      <td><img id="ir1" onclick="ir(event, this);" src="emoji/infrared-off.svg"></td>
+      <td id="temp" rowspan="2">20,0</td>
+    </tr>
+    <tr> 
+      <td><img id="ir2" onclick="ir(event, this);" src="emoji/infrared-off.svg"></td>
+    </tr> 
+  </table>
 </div>
 </body>
 </html>
