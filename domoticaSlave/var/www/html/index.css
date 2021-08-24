@@ -17,29 +17,34 @@ body::-webkit-scrollbar {
   vertical-align: middle;
 }
 #day {
-  font-size: 15vw;
+  font-size: 14vw;
   text-align: center;
 }
-#ir1, #ir2, #light {
+table img {
   width: 20vw;
-  padding-left: 5vw;
-  padding-right: 5vw;
-  padding-top: 5vw;
+  padding-left: 1vw;
+  padding-right: 1vw;
+  padding-top: 1vw;
 }
 
 #clockdate {
-  font-size: 15vw;
+  font-size: 14vw;
   text-align: center;
 }
 #clock {
-  font-size: 35vw;   
+  font-size: 32vw;   
   text-align: center;
 /*  line-height: 99%; */
 }
 #temp {
-  font-size: 30vw;
+  font-size: 28vw;
   text-align: center;
 }
 #weather {
-  font-size: 3vw;
+  font-size: 5vw;
+  vertical-align: bottom;
+}
+#weather pre {
+  margin-left: -48vw;
+  clip-path:inset(0% 0% 0% 45vw);
 }
