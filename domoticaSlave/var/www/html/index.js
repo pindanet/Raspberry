@@ -14,7 +14,7 @@ function weather(event) {
   xhr.onload = function(e) {
     if (this.status == 200) {
 //console.log(this.responseText);
-      document.getElementById("weather").innerHTML='<img id="light" onclick="weather(event);" src="emoji/weather.svg"></br>' + this.responseText;
+      document.getElementById("weather").innerHTML=this.responseText;
     }
   };
   xhr.send();
