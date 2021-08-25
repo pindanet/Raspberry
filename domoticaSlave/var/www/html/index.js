@@ -18,7 +18,9 @@ function weather(event) {
     }
   };
   xhr.send();
-  event.stopPropagation();
+  if (typeof event !== 'undefined') {
+    event.stopPropagation();
+  }
 }
 
 function irstatus(irswitch, id) {
@@ -123,6 +125,7 @@ function startTime() {
 
   getRoomTemp();
   lightstatus();
+  weather();
 //  irstatus(irSwitch["ir1"], "ir1");
 //  irstatus(irSwitch["ir2"], "ir2");
 
