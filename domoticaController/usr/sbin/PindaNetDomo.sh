@@ -100,248 +100,92 @@ function thermostatOff {
 }
 
 function thermostat {
-  . /var/www/html/data/thermostat
-  # compensate position temperature sensor
-#  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset)}")
-
+#  # Received new configuration file
+#  if [ -f /tmp/thermostat ]; then
+#    mv -f /tmp/thermostat /var/www/html/data/thermostat
+#  fi
+#  . /var/www/html/data/thermostat
+#
   temp=$(tail -1 $PresHumiTempfile)
   temp=${temp%% C*}
   # remove leading whitespace characters
   temp="${temp#"${temp%%[![:space:]]*}"}"
 
-  heatingKitchen="off"
-
-#  if [ ! -f $thermostatkitchenfile ]; then # default
-#    printf "%s\n" "${thermostatkitchendefault[@]}" > $thermostatkitchenfile
-#    chown www-data:www-data $thermostatkitchenfile
-#  fi
-#  mapfile -t raw < $thermostatkitchenfile
-
-  IFS=$'\n' thermostatkitchen=($(sort <<<"${thermostatkitchendefault[*]}"))
+  IFS=$'\n' thermostatroom=($(sort <<<"${thermostatroomdefault[*]}"))
   unset IFS
-#  unset raw
 
-# Default times for heating
-  for thermostatitem in "${thermostatkitchen[@]}"; do
-    daytime=(${thermostatitem})
-    if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
-      heatingKitchen="on"
-      break
-    fi
-  done
-# Exceptions with recurrent dates and times
-  for thermostatitem in "${thermostatkitchenevent[@]}"; do
-    daytime=(${thermostatitem})
-    recevent=$(date -u --date "${daytime[0]}" +%s)
-    timebetween=$((${daytime[1]} * 86400))
-    nowSec=$(date -u +%s)
-    today=$((nowSec - (nowSec % 86400)))
-    while  [ $recevent -lt $today ]; do
-      recevent=$((recevent + timebetween))
-    done
-#    echo $today $recevent
-    if [ $today == $recevent ]; then
-      echo "Event in Keuken op $(date -u --date @$recevent)"
-      if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
-        echo "Tussen ${daytime[2]} en ${daytime[3]}: heatingKitchen: ${daytime[4]}"
-        heatingKitchen=${daytime[4]}
-        break
-      fi
-    fi
-  done
-
-  tempWanted=$tempComfort
-  if [ -f /var/www/html/data/thermostatManualkitchen ]; then
-    read roomtemp < /var/www/html/data/thermostatManualkitchen
-    tempWanted=$roomtemp
-    if [ "$roomtemp" == "off" ]; then
-      echo "Kitchen Off"
-      heatingKitchen="off"
-    else
-      echo "Manual temp kichen: $tempWanted °C"
-      heatingKitchen="on"
-    fi
-  fi
-
-#if false; then # Niet uitvoeren
-#
-#  if [ "$heatingKitchen" == "off" ]; then
-#    echo "Keuken basisverwarming"
-##    tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
-#    tempWanted=15
-#  fi
-##  if [ "$heatingKitchen" == "on" ]; then
-#  total=${#heaterKeuken[@]}
-#  for (( i=0; i<$total; i++ )); do
-#    tempToggle=$(awk "BEGIN {print ($tempWanted + ($hysteresis * 2) - $hysteresis - $hysteresis * (2 * $i))}")
-##    echo  ${heater[${heaterKeuken[$i]}]}
-#    echo "${heaterKeuken[$i]} aan bij $tempToggle °C."
-#    if (( $(awk "BEGIN {print ($temp < $tempToggle)}") )); then
-#      echo "${heaterKeuken[$i]} ingeschakeld bij $temp °C."
-#      tasmota ${heater[${heaterKeuken[$i]}]} on
-#    fi
-#    tempToggle=$(awk "BEGIN {print ($tempWanted + ($hysteresis * 2) + $hysteresis - $hysteresis * (2 * $i))}")
-#    echo "${heaterKeuken[$i]} uit bij $tempToggle °C."
-#    if (( $(awk "BEGIN {print ($temp > $tempToggle)}") )); then
-#      echo "${heaterKeuken[$i]} uitgeschakeld bij $temp °C."
-#      tasmota ${heater[${heaterKeuken[$i]}]} off
-#    fi
-#  done
-#    if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
-#      echo "Keukenverwarming Noord inschakelen"
-#      tasmota ${heater[KeukenNoord]} on
-#      if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 2)}") )); then
-#        echo "Keukenverwarming Zuid inschakelen"
-#        tasmota ${heater[KeukenZuid]} on
-#      fi
-#    elif (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 2)}") )); then
-#      echo "Keukenverwarming Zuid uitschakelen"
-#      tasmota ${heater[KeukenZuid]} off
-#      if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
-#        tasmota ${heater[KeukenNoord]} off
-#        echo "Keukenverwarming Noord uitschakelen"
-#      fi
-#    fi
-#  else
-#    echo "Keuken niet verwarmen"
-#    for heateritem in "${heaterKeuken[@]}"; do
-#      echo "$heateritem uitschakelen"
-#      tasmota ${heater[$heateritem]} off
-#    done
-#    tasmota ${heater[KeukenZuid]} off
-#    tasmota ${heater[KeukenNoord]} off
-#  fi
-#
-#  if [ ! -f $thermostatlivingfile ]; then # default
-#    printf "%s\n" "${thermostatlivingdefault[@]}" > $thermostatlivingfile
-#    chown www-data:www-data $thermostatlivingfile
-#  fi
-#  mapfile -t raw < $thermostatlivingfile
-#
-#fi # Einde Niet uitvoeren
-
-  IFS=$'\n' thermostatliving=($(sort <<<"${thermostatlivingdefault[*]}"))
-  unset IFS
-#  unset raw
-
-#  printf "%s\n" "${thermostatliving[@]}"
+#  printf "%s\n" "${thermostatroom[@]}"
   echo $now
 
-  heatingLiving="off"
+  heatingRoom="off"
 # Default times for heating
-  for thermostatitem in "${thermostatliving[@]}"; do
+  for thermostatitem in "${thermostatroom[@]}"; do
     daytime=(${thermostatitem})
     if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
-      heatingLiving="on"
+      heatingRoom="on"
       break
     fi
   done
 # Exceptions with recurrent dates and times
-  for thermostatitem in "${thermostatlivingevent[@]}"; do
+  for thermostatitem in "${thermostatroomevent[@]}"; do
     daytime=(${thermostatitem})
     recevent=$(date -u --date "${daytime[0]}" +%s)
     timebetween=$((${daytime[1]} * 86400))
     nowSec=$(date -u +%s)
     today=$((nowSec - (nowSec % 86400)))
-    while  [ $recevent -lt $today ]; do
-      recevent=$((recevent + timebetween))
-    done
-#    echo $today $recevent
+    if [[ "$timebetween" > "0" ]]; then # repeating event
+      while  [ $recevent -lt $today ]; do
+        recevent=$((recevent + timebetween))
+      done
+    fi
     if [ $today == $recevent ]; then
-      echo "Event in Living op $(date -u --date @$recevent)"
+      echo "Event in $room on $(date -u --date @$recevent)"
       if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
-        echo "Tussen ${daytime[2]} en ${daytime[3]}: heatingLiving: ${daytime[4]}"
-        heatingLiving=${daytime[4]}
+        echo "Between ${daytime[2]} and ${daytime[3]}: heating: ${daytime[4]}"
+        heatingRoom=${daytime[4]}
         break
       fi
     fi
   done
 
   tempWanted=$tempComfort
-  if [ -f /var/www/html/data/thermostatManualliving ]; then
-    read roomtemp < /var/www/html/data/thermostatManualliving
-#    tempWanted=$roomtemp
+
+#  if [ -f /var/www/html/data/thermostatManual ]; then
+#    read roomtemp < /var/www/html/data/thermostatManual
+  roomtemp=$(cat /tmp/thermostatManual)
+  if [ $? -gt 0 ]; then
+    echo Auto
+  else
     if [ "$roomtemp" == "off" ]; then
-      echo "Living Off"
-      heatingLiving="off"
+      echo "Heating Manual Off"
+      heatingRoom="off"
     else
 #      tempWanted=$(awk "BEGIN {print ($roomtemp + $tempOffset)}")
       tempWanted=$roomtemp
-      echo "Manual temp living: $tempWanted °C"
-      heatingLiving="on"
+      echo "Manual temp $room: $tempWanted °C"
+      heatingRoom="on"
     fi
   fi
-  if [ "$heatingLiving" == "off" ]; then
-    echo "Living basisverwarming"
+  if [ "$heatingRoom" == "off" ]; then
 #    tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
-    tempWanted=15
+    echo "Heating: off, $tempOff °C"
+    tempWanted=$tempOff
   fi
-#  if [ "$heatingLiving" == "on" ]; then
-#  echo "Kamertemp: $temp °C"
-#  echo "Thermostaat temp: $tempWanted"
-  total=${#heaterLiving[@]}
+  total=${#heaterRoom[@]}
   for (( i=0; i<$total; i++ )); do
     tempToggle=$(awk "BEGIN {print ($tempWanted - $hysteresis - $hysteresis * (2 * $i))}")
-#    echo  ${heater[${heaterLiving[$i]}]}
-    echo "${heaterLiving[$i]} aan bij $tempToggle °C."
+    echo "${heaterRoom[$i]} switch on at $tempToggle °C."
     if (( $(awk "BEGIN {print ($temp < $tempToggle)}") )); then
-      echo "${heaterLiving[$i]} ingeschakeld bij $temp °C."
-      tasmota ${heater[${heaterLiving[$i]}]} on
+      echo "${heaterRoom[$i]} on at $temp °C."
+      tasmota ${heater[${heaterRoom[$i]}]} on
     fi
     tempToggle=$(awk "BEGIN {print ($tempWanted + $hysteresis - $hysteresis * (2 * $i))}")
-    echo "${heaterLiving[$i]} uit bij $tempToggle °C."
+    echo "${heaterRoom[$i]} switch off at $tempToggle °C."
     if (( $(awk "BEGIN {print ($temp > $tempToggle)}") )); then
-      echo "${heaterLiving[$i]} uitgeschakeld bij $temp °C."
-      tasmota ${heater[${heaterLiving[$i]}]} off
+      echo "${heaterRoom[$i]} off at $temp °C."
+      tasmota ${heater[${heaterRoom[$i]}]} off
     fi
   done
-#  echo "Zuid aan bij" $(awk "BEGIN {print (${daytime[2]} - $hysteresis)}") "°C."
-#  echo "Noord aan bij" $(awk "BEGIN {print (${daytime[2]} - $hysteresis - $hysteresis * 2)}") "°C."
-#  echo "Noord uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis - $hysteresis * 2)}") "°C."
-#  echo "Zuid uit bij" $(awk "BEGIN {print (${daytime[2]} + $hysteresis)}") "°C."
-#    if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis)}") )); then
-#      echo "Livingverwarming Zuid inschakelen"
-#      tasmota ${heater[LivingZuid]} on
-#      if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 2)}") )); then
-#        echo "Livingverwarming Noord inschakelen"
-#        tasmota ${heater[LivingNoord]} on
-#        if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 4)}") )); then
-#          echo "Livingverwarming NoordOost inschakelen"
-#          tasmota ${heater[LivingNoordOost]} on
-#          if (( $(awk "BEGIN {print ($temp < ${daytime[2]} - $hysteresis - $hysteresis * 6)}") )); then
-#            echo "Livingverwarming Oost inschakelen"
-#            tasmota ${heater[LivingOost]} on
-#          fi
-#        fi
-#      fi
-#    fi
-#    if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 6)}") )); then
-#      echo "Livingverwarming Oost uitschakelen"
-#      tasmota ${heater[LivingOost]} off
-#      if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 4)}") )); then
-#        echo "Livingverwarming NoordOost uitschakelen"
-#        tasmota ${heater[LivingNoordOost]} off
-#        if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis - $hysteresis * 2)}") )); then
-#          echo "Livingverwarming Noord uitschakelen"
-#          tasmota ${heater[LivingNoord]} off
-#          if (( $(awk "BEGIN {print ($temp > ${daytime[2]} + $hysteresis)}") )); then
-#            echo "Livingverwarming Zuid uitschakelen"
-#            tasmota ${heater[LivingZuid]} off
-#          fi
-#        fi
-#      fi
-#    fi
-#  else
-#    echo "Living niet verwarmen"
-#    for heateritem in "${heaterLiving[@]}"; do
-#      echo "$heateritem uitschakelen"
-#      tasmota ${heater[$heateritem]} off
-#    done
-#    tasmota ${heater[LivingZuid]} off
-#    tasmota ${heater[LivingNoord]} off
-#    tasmota ${heater[LivingNoordOost]} off
-#    tasmota ${heater[LivingOost]} off
-#  fi
 }
 
 _pir_pin=4 # BCM4
@@ -369,109 +213,44 @@ echo "in" > /sys/class/gpio/gpio$_pir_pin/direction
 while true
 do
   starttime=$(date +"%s") # complete cycle: 1 minute
-#  tempComfort="21.50"
-#  # Timer default array
-#  timerdefault[0]="0 07:30 22:50"
-#  timerdefault[1]="1 07:30 22:50"
-#  timerdefault[2]="2 07:30 22:50"
-#  timerdefault[3]="3 07:30 22:50"
-#  timerdefault[4]="4 07:30 22:50"
-#  timerdefault[5]="5 07:30 22:50"
-#  timerdefault[6]="6 07:30 22:50"
-#  # timerdefault[7]="0 16:30 17:00"
-#  # timerdefault[8]="0 17:30 22:45"
-#
-#  thermostatkitchendefault[0]="07:30 08:30 21.70"
-#  thermostatkitchendefault[1]="11:00 13:30 21.70"
-#  thermostatkitchendefault[2]="16:45 17:30 21.70"
-#  thermostatkitchendefault[3]="22:09 22:50 21.70"
-#
-#  thermostatlivingdefault[0]="08:15 11:15 21.50"
-#  thermostatlivingdefault[1]="13:15 17:00 21.50"
-#  thermostatlivingdefault[2]="17:15 22:45 21.50"
-#  # thermostatlivingdefault[3]="16:45 17:15 21.50"
 
-  timerfile="/var/www/html/data/timer"
-  thermostatkitchenfile="/var/www/html/data/thermostatkitchen"
-  thermostatlivingfile="/var/www/html/data/thermostatliving"
+  room="Living"
+#  timerfile="/var/www/html/data/timer"
+#  thermostatlivingfile="/var/www/html/data/thermostatliving"
   PresHumiTempfile="/var/www/html/data/PresHumiTemp"
   stderrLogfile="/var/www/html/stderr.log"
 
+  # Received new configuration file
+  if [ -f /tmp/thermostat ]; then
+    mv -f /tmp/thermostat /var/www/html/data/thermostat
+  fi
+  . /var/www/html/data/thermostat
+
+  thermostatroomdefault=("${thermostatlivingdefault[@]}")
+  thermostatroomevent=("${thermostatlivingevent[@]}")
+  tempOffset=$livingTempOffset
+  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset)}")
+
   declare -A heater
-  unset heaterLiving
-  declare -a heaterLiving
-  unset heaterKeuken
-  declare -a heaterKeuken
-#  mapfile -t heaters < /var/www/html/data/heaters
-#  printf '%s\n' "${heaters[@]}"
+  unset heaterRoom
+  declare -a heaterRoom
   for heateritem in "${heaters[@]}"; do
     line=(${heateritem})
     heater[${line[0]}]=${line[1]}
-    if [ ${heateritem:0:6} == "Living" ]; then
-      heaterLiving+=(${line[0]})
-    fi
-    if [ ${heateritem:0:6} == "Keuken" ]; then
-      heaterKeuken+=(${line[0]})
+    if [ ${heateritem:0:6} == "$room" ]; then
+      heaterRoom+=(${line[0]})
     fi
   done
-#  printf '%s\n' "${heaterLiving[@]}"
-#  printf '%s\n' "${heaterKeuken[@]}"
+#  printf '%s\n' "${heaterRoom[@]}"
 
-  #printf '%s\n' "${heater[@]}"
-  #printf '%s\n' "${!heater[@]}"
-
-  #unset heater
-  #declare -A heater
-  #heater[LivingZuid]="tasmota_8bbe4d-7757"
-  #heater[LivingNoord]="tasmota_8be4af-1199"
-  #heater[KeukenZuid]="tasmota_a943fa-1018"
-  #heater[KeukenNoord]="tasmota_c699b5-6581"
-
-#  hysteresis="0.1"
-
-#  if [ -f /var/www/html/data/thermostatDefault ]; then
-#    echo "Restoring default thermostat"
-#    if [ -f $timerfile ]; then
-#      rm $timerfile
-#    fi
-#    if [ -f $thermostatkitchenfile ]; then
-#      rm $thermostatkitchenfile
-#    fi
-#    if [ -f $thermostatlivingfile ]; then
-#      rm $thermostatlivingfile
-#    fi
-#    thermostatManualReset
-#    rm /var/www/html/data/thermostatDefault
-#  fi
-
-  if [ -f /var/www/html/data/thermostatOffkitchen ]; then
-    echo "Send Kitchen Off"
-    sudo -u dany ssh pindakeuken touch /tmp/thermostatOffkitchen
-    rm /var/www/html/data/thermostatOffkitchen
-  fi
-  if [ -f /var/www/html/data/thermostatOnkitchen ]; then
-    echo "Send Kitchen On"
-    sudo -u dany ssh pindakeuken rm /tmp/thermostatOffkitchen
-    rm /var/www/html/data/thermostatOnkitchen
-  fi
-  if [ -f /var/www/html/data/getKitchenTemp ]; then
-    fileSize=$(stat --printf="%s" /var/www/html/data/getKitchenTemp)
-    if [ $fileSize == "0" ]; then # get kitchenTemp once
-      sudo -u dany scp pindakeuken:/var/www/html/data/PresHumiTemp /tmp/getKitchenTemp
-      mv /tmp/getKitchenTemp /var/www/html/data/getKitchenTemp
-    else
-      rm /var/www/html/data/getKitchenTemp
-    fi
-  fi
   if [ -f /var/www/html/data/thermostatReset ]; then
     # copy to DomoticaSlave
-    sudo -u dany scp /var/www/html/data/thermostatReset pindakeuken:/tmp/
-    sudo -u dany scp /var/www/html/data/thermostat pindakeuken:/tmp/
+#    sudo -u dany scp /var/www/html/data/thermostatReset pindakeuken:/tmp/
+#    sudo -u dany scp /var/www/html/data/thermostat pindakeuken:/tmp/
 
     echo "Resetting thermostat"
     for switch in "${!heater[@]}"
     do
-  #   if [[ "$switch" == *Off ]]; then
       heateritem=${heater[$switch]}
       if [[ "$heateritem" == tasmota* ]]; then
           tempfile="/tmp/${heateritem:0:19}"
@@ -481,12 +260,10 @@ do
       if [ -f $tempfile ]; then
         rm $tempfile
       fi
-  #   fi
     done
-    thermostatManualReset
+#    thermostatManualReset
     rm /var/www/html/data/thermostatReset
   fi
-
   # Collect sensordata
   # BME280 I2C Temperature and Pressure Sensor
   # 3v3 - Vin
@@ -501,7 +278,6 @@ do
       echo "$(date)" >> $stderrLogfile
       echo "$(< $error_file)" >> $stderrLogfile
     else
-#      echo "$PresHumiTempVar"
       temp=${PresHumiTempVar##*$'\n'}
       temp=${temp%% C*}
       temp="${temp#"${temp%%[![:space:]]*}"}"
@@ -510,7 +286,6 @@ do
       echo "$PresHumiTempVar" > $PresHumiTempfile
   fi
   rm $error_file
-#  read_bme280 --i2c-address 0x77 > $PresHumiTempfile
 
   # Calculate lux tls2591
   lux=$(python3 /var/www/html/tls2591.py | awk '{print $1}')
@@ -596,136 +371,23 @@ do
     done
   fi
 
-#  if [ ! -f $timerfile ]; then # default
-#    printf "%s\n" "${timerdefault[@]}" > $timerfile
-#    chown www-data:www-data $timerfile
-#  fi
-#  mapfile -t raw < $timerfile
-
-#  IFS=$'\n' timer=($(sort <<<"${timerdefault[*]}"))
-#  unset IFS
-#  unset raw
-
   weekday=$(date +%w)
   now=$(date +%H:%M)
 
   thermostat
 
-  echo "heatingKitchen: $heatingKitchen"
-  echo "heatingLiving: $heatingLiving"
-  broadcast "heatingLiving" $heatingLiving
+#  broadcast "heatingLiving" $heatingLiving
 
   state="sleep"
-  if [ $heatingKitchen == "on" ] || [ $heatingLiving == "on" ]; then
+  if [ $heatingRoom == "on" ]; then
     state="awake"
   fi
-  if [ -f /var/www/html/data/thermostatManualkitchen ] || [ -f /var/www/html/data/thermostatManualliving ]; then
-    state="awake"
-  fi
-#  for timeritem in "${timer[@]}"; do
-#    daytime=(${timeritem})
-#    if [ "${daytime[0]}" == "$weekday" ]; then
-#      echo "$timeritem"
-#      if [[ "${daytime[1]}" < "$now" ]] && [[ "${daytime[2]}" > "$now" ]]; then
-#        state="awake"
-#        break
-#      fi
-#    fi
-#  done
-
-## Night/Morning lightning on/off
-#  unset lightDining
-#  lightDining+=("07:45")
-#  lightDining+=("08:00")
-#
-#  IFS=":" read hh mm < <(date +%:z)
-#  diffUTC=$(($hh*3600+$mm*60))
-#  sunsetSec=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + diffUTC))
-#  sunset=$(date --date @$sunsetSec +"%H:%M")
-##  sunset=$(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6) + ${hh}hour" +"%H:%M")
-#  lightDining+=($sunset)
-#  lightDining+=("22:50")
-##printf '%s\n' "${lightDining[@]}"
-#
-#  nowTime=$(date +"%H:%M")
-#  lights="off"
-#  for ((i=0;i< ${#lightDining[@]} ;i+=2)); do
-#    if [[ "${lightDining[i]}" < "$nowTime" ]] && [[ "${lightDining[i+1]}" > "$nowTime" ]]; then
-#      lights="on"
-#    fi
-#  done
-#  if [ ! -f "/tmp/lightDining" ] && [ "$lights" == "on"  ]; then
-#    echo "$(date): Dining Light On"
-#    touch /tmp/lightDining
-#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
-#  elif [ -f "/tmp/lightDining" ] && [ "$lights" == "off"  ]; then
-#    echo "$(date): Dining Light Off"
-#    rm /tmp/lightDining
-#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
-#  fi
-
-#if false; then # Niet uitvoeren
-#  IFS=":" read hh mm < <(date +%:z)
-#  diffUTC=$(($hh*3600+$mm*60))
-#  nowSec=$(date -u +%s)
-#  sunrise=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)" +%s) + diffUTC))
-#  sunset=$(($(date --date "$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)" +%s) + diffUTC))
-##  sunrise=$(date --date "15:18" +%s)
-##  sunset=$(date --date "15:07" +%s)
-##  lightevening="15:04"
-##  lightmorning="15:20"
-#
-#  startInterval=$((nowSec - 60))
-#  endInterval=$((nowSec + 60))
-#  lightmorningSec=$(date --date "$lightmorning" +%s)
-#  lighteveningSec=$(date --date "$lightevening" +%s)
-#  if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
-#    if [[ $nowSec < $lighteveningSec ]]; then
-#      echo "$(date): Sunset Light On" >> /home/dany/light.log
-#      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
-#    fi
-#  elif [[ $startInterval < $lighteveningSec ]] && [[ $endInterval > $lighteveningSec ]]; then
-#    echo "$(date): Sleep Light Off" >> /home/dany/light.log
-#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
-#  elif [[ $startInterval < $lightmorningSec ]] && [[ $endInterval > $lightmorningSec ]]; then
-#    if [[ $nowSec < $sunrise ]]; then
-#      echo "$(date): Wakeup Light On" >> /home/dany/light.log
-#      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
-#    fi
-#  elif [[ $startInterval < $sunrise ]] && [[ $endInterval > $sunrise ]]; then
-#    echo "$(date): Sunrise Light Off" >> /home/dany/light.log
-#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
-#  fi
-#fi # einde Niet uitvoeren
-# oud
-#  sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
-#  startInterval=$(date -u --date='-1 minute' +"%H:%M")
-#  endInterval=$(date -u --date='+1 minute' +"%H:%M")
-#echo "sunset:$sunset start:$startInterval end:$endInterval"
-#  if [[ $startInterval < $sunset ]] && [[ $endInterval > $sunset ]]; then
-#    dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20On)
-#  elif [[ $startInterval > $sunset ]]; then
-#    startInterval=$(date --date='-1 minute' +"%H:%M")
-#    endInterval=$(date --date='+1 minute' +"%H:%M")
-#echo "start:$startInterval end:$endInterval light:$lightliving"
-#    if [[ $startInterval < $lightliving ]] && [[ $endInterval > $lightliving ]]; then
-#      dummy=$(wget -qO- http://tasmota_e7b609-5641/cm?cmnd=Power%20Off)
-#    fi
-#  fi
-
-#echo "sleep:$sleep now:$now awake:$awake"
-#  if [[ $now > $sleep ]] || [[ $now < $awake ]]; then
-#    state="sleep"
-#  else
-#    state="awake"
-#  fi
 
   echo $state
   if [ $state == "awake" ]; then
     echo 0 > /sys/class/backlight/rpi_backlight/bl_power
   #  echo 255 > /sys/class/leds/led0/brightness
   #  echo 255 > /sys/class/leds/led1/brightness
-#    thermostat
   else
     # deactivate backlight touchscreen
     echo 1 > /sys/class/backlight/rpi_backlight/bl_power
