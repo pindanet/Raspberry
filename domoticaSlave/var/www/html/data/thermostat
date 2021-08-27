@@ -29,7 +29,7 @@ diningLight="26"  # Relay on GPIO 26 (37)
 
 unset thermostatdiningdefault
 thermostatdiningdefault+=("07:30 08:30")
-thermostatdiningdefault+=("11:00 12:15")
+thermostatdiningdefault+=("11:00 12:20")
 thermostatdiningdefault+=("12:45 13:30")
 thermostatdiningdefault+=("16:45 17:15")
 #thermostatdiningdefault+=("19:00 20:15") # Test
