@@ -13,8 +13,10 @@ lightSwitch="tasmota_15dd89-7561"
 _pir_pin=4
 #_pir_2_pin=7
 
-dim=10
-bright=48
+dim=0
+brightday=128
+brightnight=32
+bright=$brightday
 brightness=$(cat /sys/class/backlight/rpi_backlight/brightness)
 
 declare -A status=()
@@ -67,10 +69,13 @@ while true; do
     fi
 #shutter="down" # Test
     if [[ $clock < $sunrise ]] || [[ $clock > $sunset ]] || [[ $shutter == "down" ]]; then # Night
+      bright=$brightnight
       if [ "${status["$lightSwitch"]}" == '{"POWER":"OFF"}' ]; then
 #        echo "$(date): Motion: Light on"
         tasmota "$lightSwitch" "on"
       fi
+    else
+      bright=$brightday
     fi
   fi
   if [ $(($(date +"%s") - timer)) -gt "$lighttimer" ]; then
