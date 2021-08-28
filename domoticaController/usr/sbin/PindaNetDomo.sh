@@ -378,8 +378,10 @@ do
 
 #  broadcast "heatingLiving" $heatingLiving
 
+echo $now $lightmorning $lightevening
   state="sleep"
-  if [ $heatingRoom == "on" ]; then
+  if [[ $now < $lightevening ]] && [[ $now > $lightmorning ]]; then
+#  if [ $heatingRoom == "on" ] || ( [[ $now < $lightevening ]] && [[ $now > $lightmorning ]] ); then
     state="awake"
   fi
 
