@@ -94,6 +94,33 @@ else
   # Remove pi user
   sudo userdel -r pi
 
+  sudo wget -O /usr/sbin/PindaNetUpdate.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetUpdate.sh
+  sudo chmod +x /usr/sbin/PindaNetUpdate.sh
+  cat > PindaNetUpdate.timer <<EOF
+[Unit]
+Description=Update and Reset
+[Timer]
+OnCalendar=*-*-* 23:00:00
+Unit=PindaNetUpdate.service
+[Install]
+WantedBy=multi-user.target
+EOF
+  sudo mv PindaNetUpdate.timer /etc/systemd/system/
+
+  cat > PindaNetUpdate.service <<EOF
+[Unit]
+Description=Update and Reset
+[Service]
+Type=simple
+ExecStart=/usr/sbin/PindaNetUpdate.sh
+EOF
+  sudo mv PindaNetUpdate.service /etc/systemd/system/
+
+  sudo systemctl daemon-reload
+  sudo systemctl enable PindaNetUpdate.timer
+  sudo systemctl start PindaNetUpdate.timer
+# systemctl list-timers
+
   # Webserver
   sudo apt-get install apache2 php libapache2-mod-php php-ssh2 php-gd php-xml php-curl php-mbstring -y
   #sudo a2enmod ssl
