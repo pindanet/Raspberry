@@ -2,21 +2,8 @@
   // ToDo
   // Sync $Dim with PindaNetMotion.sh
   function getWeather() {
-    $silent = true;
-    $wttrfile = fopen("/tmp/wttr", "w") or die("Unable to open file!");
-    exec("curl -s wttr.in/Brugge?lang=nl | head -7 | tail -5 | aha", $output);
-    foreach ($output as $line) {
-      if(strpos($line, "<pre>") !== false){
-        $silent = false;
-      }
-      if(strpos($line, "</pre>") !== false){
-        $silent = true;
-      }
-      if($silent === false) {
-        fwrite($wttrfile, "$line\n");
-      }
-    }
-    fclose($wttrfile);
+    exec("curl -s 'wttr.in/Brugge?lang=nl&format=j1'", $output);
+    file_put_contents("/tmp/wttr", $output);
   }
   if (file_exists("/tmp/wttr")) { // first time
     if ((time()-filectime("/tmp/wttr")) >= 3600) { // older than 1 hour or 3600 sec
