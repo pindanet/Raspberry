@@ -13,8 +13,28 @@ function weather(event) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200) {
+      const weatherObj = JSON.parse(this.responseText);
+      var HTMLCode = "<pre>"
+      HTMLCode += weatherObj.current_condition[0].lang_nl[0].value + "<br>";
+      HTMLCode += weatherObj.current_condition[0].temp_C + " °C<br>";
+      HTMLCode += weatherObj.current_condition[0].winddir16Point + " " + weatherObj.current_condition[0].windspeedKmph + " km/h<br>";
+      HTMLCode += weatherObj.current_condition[0].precipMM + " mm<br>";
+      HTMLCode += weatherObj.current_condition[0].pressure + " hPa<br>";
+
+//      var d = new Date();
+//      for (let period in weatherObj.weather[0].hourly) {
+//        if (weatherObj.weather[0].hourly[period].time / 100 >= d.getHours()) {
+//          var currentTime = weatherObj.current_condition[0].localObsDateTime;
+//          var currentTemp = weatherObj.current_condition[0].temp_C;
+//          var forecastTime = weatherObj.weather[0].hourly[period].time / 100;
+//          var forecastTemp = weatherObj.weather[0].hourly[period].tempC;
+//          console.log("Temp (" + currentTime + ") " + currentTemp + " > " + forecastTemp + " (" + forecastTime + "u)");
+//          break;
+//        }
+//      }
 //console.log(this.responseText);
-      document.getElementById("weather").innerHTML=this.responseText;
+      HTMLCode += "</pre>"
+      document.getElementById("weather").innerHTML = HTMLCode;
     }
   };
   xhr.send();
@@ -126,6 +146,7 @@ function startTime() {
   getRoomTemp();
   lightstatus();
   weather();
+
 //  irstatus(irSwitch["ir1"], "ir1");
 //  irstatus(irSwitch["ir2"], "ir2");
 
