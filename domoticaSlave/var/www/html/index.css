@@ -21,7 +21,7 @@ body::-webkit-scrollbar {
   text-align: center;
 }
 table img {
-  width: 20vw;
+  width: 19vw;
   padding-left: 1vw;
   padding-right: 1vw;
   padding-top: 1vw;
@@ -44,9 +44,3 @@ table img {
   font-size: 5vw;
   vertical-align: bottom;
 }
-/*
-#weather pre {
-  margin-left: -48vw;
-  clip-path:inset(0% 0% 0% 45vw);
-}
-*/
