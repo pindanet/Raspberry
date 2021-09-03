@@ -9,20 +9,20 @@ tempfact=0.97
 function relayGPIO () {
   _r1_pin=${1#*relayGPIO}
 
-  if [ ! -f /var/www/html/data/$1 ]; then # initialize
-    echo '{"POWER":"ON"}' > /var/www/html/data/$1
+  if [ ! -f /tmp/$1 ]; then # initialize
+    echo '{"POWER":"ON"}' > /tmp/$1
     echo "$(date -u +%s),off" >> /var/www/html/data/$1.log
   fi
-  if [ $2 == "on" ] && [ "$(cat /var/www/html/data/$1)" == '{"POWER":"OFF"}' ]; then
+  if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
     raspi-gpio set $_r1_pin op dl # Power on
-    echo '{"POWER":"ON"}' > /var/www/html/data/$1
+    echo '{"POWER":"ON"}' > /tmp/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ $2 == "off" ] && [ "$(cat /var/www/html/data/$1)" == '{"POWER":"ON"}' ]; then
+  elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
     raspi-gpio set $_r1_pin op dh # Power off
-    echo '{"POWER":"OFF"}' > /var/www/html/data/$1
+    echo '{"POWER":"OFF"}' > /tmp/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ "$(cat /var/www/html/data/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /var/www/html/data/$1)" != '{"POWER":"ON"}' ]; then
-    echo '{"POWER":"ON"}' > /var/www/html/data/$1
+  elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(/tmp/$1)" != '{"POWER":"ON"}' ]; then
+    echo '{"POWER":"ON"}' > /tmp/$1
     echo "$(date): Relay error. Heating $1" >> /tmp/PindaNetDebug.txt
   fi
 }
@@ -31,24 +31,24 @@ function tasmota () {
     relayGPIO $1 $2
     return
   fi
-  if [ ! -f /var/www/html/data/$1 ]; then # initialize
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /var/www/html/data/$1
+  if [ ! -f /tmp/$1 ]; then # initialize
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     two=$(wget -qO- http://$1/cm?cmnd=Power | awk -F"\"" '{print $4}')
     twolower=${two,,}
     if [ $twolower == "on" ] || [ $twolower == "off" ]; then
       echo "$(date -u +%s),$twolower" >> /var/www/html/data/$1.log
     fi
   fi
-  if [ $2 == "on" ] && [ "$(cat /var/www/html/data/$1)" == '{"POWER":"OFF"}' ]; then
+  if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
     dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /var/www/html/data/$1
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ $2 == "off" ] && [ "$(cat /var/www/html/data/$1)" == '{"POWER":"ON"}' ]; then
+  elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
     dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /var/www/html/data/$1
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ "$(cat /var/www/html/data/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /var/www/html/data/$1)" != '{"POWER":"ON"}' ]; then
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /var/www/html/data/$1
+  elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
+    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
     echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
   fi
 }
