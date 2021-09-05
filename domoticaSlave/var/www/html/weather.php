@@ -1,9 +1,10 @@
 <?php
   // ToDo
   // Alternatief: https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=51.20&lon=3.26
-  
+
   function getWeather() {
-    exec("curl -s 'wttr.in/Brugge?lang=nl&format=j1'", $output);
+//    exec("curl -s 'wttr.in/Brugge?lang=nl&format=j1'", $output);
+    exec("curl -s 'https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=51.20&lon=3.26'", $output);
     file_put_contents("/tmp/wttr", $output);
   }
   if (file_exists("/tmp/wttr")) { // first time
