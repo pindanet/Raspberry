@@ -123,28 +123,28 @@ function thermostat {
 
 . /var/www/html/data/thermostat
 # Calculated configs
-# domoOn
-today=$(date +%u)
-domoOn=${alarmtimes[$((today - 1))]}
-
-for alarmitem in "${alarmevent[@]}"; do
-  daytime=(${alarmitem})
-  recevent=$(date -u --date "${daytime[0]}" +%s)
-  todaySec=$(date -u +%s)
-  today=$((todaySec - (todaySec % 86400)))
-#  date -u -d @$today
-  if [[ "${#daytime[@]}" > "2" ]]; then # recurrent alarm event
-    timebetween=$((${daytime[2]} * 86400))
-    while  [ $recevent -lt $today ]; do
-      recevent=$((recevent + timebetween))
-    done
-  fi
-  if [ $today == $recevent ]; then
-    echo "Domoticasystem wakes up on $(date -u --date @$recevent +'%a %d %b %Y') at ${daytime[1]}"
-    domoOn=${daytime[1]}
-  fi
-done
-echo $domoOn > /var/www/html/data/domoOn
+## domoOn
+#today=$(date +%u)
+#domoOn=${alarmtimes[$((today - 1))]}
+#
+#for alarmitem in "${alarmevent[@]}"; do
+#  daytime=(${alarmitem})
+#  recevent=$(date -u --date "${daytime[0]}" +%s)
+#  todaySec=$(date -u +%s)
+#  today=$((todaySec - (todaySec % 86400)))
+##  date -u -d @$today
+#  if [[ "${#daytime[@]}" > "2" ]]; then # recurrent alarm event
+#    timebetween=$((${daytime[2]} * 86400))
+#    while  [ $recevent -lt $today ]; do
+#      recevent=$((recevent + timebetween))
+#    done
+#  fi
+#  if [ $today == $recevent ]; then
+#    echo "Domoticasystem wakes up on $(date -u --date @$recevent +'%a %d %b %Y') at ${daytime[1]}"
+#    domoOn=${daytime[1]}
+#  fi
+#done
+#echo $domoOn > /var/www/html/data/domoOn
 
 # get next alarm
 now=$(date +%H:%M)
@@ -181,7 +181,7 @@ echo "raspi-gpio set $diningLight op dl" | at -M $nextAlarm
 
 # Lights out in the morning
 # From UTC
-lightsOut=$(date -d "$domoOn" +"%s")
+lightsOut=$(date -d "$nextAlarm" +"%s")
 lightsOut=$((lightsOut + 60 * 60)) # 1 hour after wakeup
 lightsOut=$(date -d @$lightsOut +%H:%M)
 
