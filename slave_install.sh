@@ -254,6 +254,9 @@ EOF
   sudo apt-get install aha -y
   sudo wget -O /var/www/html/weather.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/weather.php
   sudo usermod -a -G gpio "www-data"
+  
+  sudo ln -s /var/www/html/weathericons/04.svg /var/www/html/weathericons/04d.svg
+  sudo ln -s /var/www/html/weathericons/04.svg /var/www/html/weathericons/04n.svg
 
   sudo mkdir /var/www/html/emoji
   sudo wget -O /var/www/html/emoji/infrared-off.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/emoji/infrared-off.svg
