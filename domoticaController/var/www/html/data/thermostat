@@ -1,8 +1,10 @@
+TVVolume=30
+
 tempComfort="20.00"
 tempOff="15.00"
 hysteresis="0.1"
 
-lightmorning="07:45"
+lightmorning="07:40"
 lightevening="22:50"
 eveningShutterDown="22:20"
 
@@ -39,7 +41,7 @@ thermostatdiningdefault+=("16:45 17:15")
 unset thermostatdiningevent
 thermostatdiningevent+=("2021-08-12 0 14:00 18:35 on") # Luc
 
-thermostatdiningevent+=("2021-08-28 0 09:00 16:10 off") # Opendeurdag
+thermostatdiningevent+=("2021-08-31 0 09:00 15:00 off") # Vergadering
 
 thermostatdiningevent+=("2021-09-15 14 07:00 12:15 on") # Laura
 
@@ -76,7 +78,7 @@ thermostatkitchenevent+=("2021-08-12 0 16:50 18:35 on") # Luc
 
 thermostatkitchenevent+=("2021-09-15 14 07:00 12:00 on") # Laura
 
-thermostatkitchenevent+=("2021-08-28 0 09:00 16:10 off") # Opendeurdag
+thermostatkitchenevent+=("2021-08-31 0 09:00 15:00 off") # Vergadering
 
 thermostatkitchenevent+=("2021-09-06 7 07:00 07:59 on") # SNT
 thermostatkitchenevent+=("2021-09-06 7 08:00 12:00 off") # SNT
@@ -110,9 +112,9 @@ thermostatlivingevent+=("2021-08-12 0 14:00 18:35 on") # Luc
 
 thermostatlivingevent+=("2021-09-15 14 07:45 11:45 on") # Laura
 
-#thermostatlivingevent+=("2021-08-13 14 09:00 20:10 off") # Test
+#thermostatlivingevent+=("2021-08-28 0 09:00 20:10 off") # Test
 
-thermostatlivingevent+=("2021-08-28 0 09:00 16:10 off") # Opendeurdag
+thermostatlivingevent+=("2021-08-31 0 09:00 15:00 off") # Vergadering
 
 thermostatlivingevent+=("2021-09-06 7 08:00 12:00 off") # SNT
 thermostatlivingevent+=("2021-09-06 7 13:00 17:00 off") # SNT
