@@ -210,6 +210,12 @@ echo "in" > /sys/class/gpio/gpio$_pir_pin/direction
 # Uncomment line below.
 #sleep 30
 
+. /var/www/html/data/thermostat
+# remove all alarms
+for i in `atq | awk '{print $1}'`;do atrm $i;done
+# Switch radio  off at 12h00
+echo "mpc stop; mpc volume $TVVolume; rm /var/www/html/data/mpc.txt" | at -M "12:00"
+
 while true
 do
   starttime=$(date +"%s") # complete cycle: 1 minute
@@ -397,6 +403,7 @@ do
     # Stop Musisc Player
     if [ -f /var/www/html/data/mpc.txt ]; then
       mpc stop
+      mpc volume $TVVolume
       rm /var/www/html/data/mpc.txt
     fi
     if (echo > /dev/tcp/rpiwall/22) >/dev/null 2>&1; then
