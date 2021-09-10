@@ -30,13 +30,13 @@ table img {
   padding: 0px;
 }
 #clockdate {
-  font-size: 14vw;
+  font-size: 12vw;
   text-align: center;
 }
 #clock {
   font-size: 32vw;   
   text-align: center;
-/*  line-height: 99%; */
+  line-height: 97%;
 }
 #temp {
   font-size: 28vw;
