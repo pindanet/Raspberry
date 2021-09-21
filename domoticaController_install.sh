@@ -100,7 +100,7 @@ else
 [Unit]
 Description=Update and Reset
 [Timer]
-OnCalendar=*-*-* 23:00:00
+OnCalendar=*-*-* 23:10:00
 Unit=PindaNetUpdate.service
 [Install]
 WantedBy=multi-user.target
