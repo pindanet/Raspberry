@@ -235,6 +235,16 @@ do
   fi
   . /var/www/html/data/thermostat
 
+  # Lightswitch
+  if [ -f /tmp/light ]; then
+    if [ "$(cat /tmp/light)" == 'on' ]; then
+      raspi-gpio set $diningLight op dl
+    else
+      raspi-gpio set $diningLight op dh
+    fi
+    rm /tmp/light
+  fi
+
   thermostatroomdefault=("${thermostatdiningdefault[@]}")
   thermostatroomevent=("${thermostatdiningevent[@]}")
   tempOffset=$diningTempOffset
