@@ -357,6 +357,8 @@ exit
   printf '\033[1;32;40mPress key to secure ssh.\033[0m' # Groene letters op zwarte achtergrond
   read Keypress
   sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
+  
+  ssh-copy-id pindadining
 
 # cd /var/www/html
 # sudo -u www-data php genkeys.php
