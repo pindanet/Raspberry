@@ -265,6 +265,8 @@ EOF
   sudo wget -O /var/www/html/emoji/light-bulb-on.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/emoji/light-bulb-on.svg
   sudo wget -O /var/www/html/emoji/weather.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/emoji/weather.svg
 
+  sudo wget -O /var/www/html/lightswitch.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaSlave/var/www/html/lightswitch.sh
+  sudo chmod +x /var/www/html/lightswitch.sh
 fi
 # Restart Raspberry Pi
 sudo shutdown -r now
