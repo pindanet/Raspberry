@@ -187,6 +187,19 @@ function weather(event) {
   }
 }
 
+function executeIfFileExist(src, callback) {
+  var xhrfe = new XMLHttpRequest()
+  xhrfe.responseType = 'text';
+  xhrfe.open('POST', src, true);
+  xhrfe.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhrfe.onload = function(e) {
+    if (this.status == 200) {
+      callback();
+    }
+  }
+  xhrfe.send();
+}
+
 function irstatus(irswitch, id) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "data/" + irswitch, true);
@@ -197,7 +210,10 @@ function irstatus(irswitch, id) {
       if (lines[lines.length - 2].includes("on")) {
         document.getElementById(id).src = "emoji/infrared-on.svg";
       } else {
-        document.getElementById(id).src = "emoji/infrared-off.svg";
+        document.getElementById(id).src = "emoji/infrared-auto.svg";
+        executeIfFileExist("data/thermostatManual", function () {
+          document.getElementById(id).src = "emoji/infrared-off.svg";
+        });
       }
     }
   };
