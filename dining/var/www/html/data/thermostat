@@ -1,8 +1,10 @@
+TVVolume=30
+
 tempComfort="20.00"
 tempOff="15.00"
 hysteresis="0.1"
 
-lightmorning="07:45"
+lightmorning="07:40"
 lightevening="22:50"
 eveningShutterDown="22:20"
 
@@ -13,13 +15,12 @@ heaters+=("DiningOost tasmota_4fdd94-7572")
 heaters+=("DiningWest tasmota_relayGPIO19")
 
 heaters+=("LivingTable tasmota_4bf311-4881")
-heaters+=("LivingZuid tasmota_8bbeod-7693")
+heaters+=("LivingZuid tasmota_8bbe0d-7693")
 heaters+=("LivingNoord tasmota_8bbe4d-7757")
 heaters+=("LivingZuidOost tasmota_a94717-1815")
 
-#heaters+=("KeukenNoord tasmota_c699b5-6581")
-heaters+=("KeukenWest tasmota_relayGPIO13")
-heaters+=("KeukenOost tasmota_relayGPIO19")
+heaters+=("KeukenWest tasmota_4fd8ee-6382")
+heaters+=("KeukenOost tasmota_a943fa-1018")
 
 # Dining
 # ======
@@ -30,7 +31,7 @@ diningLight="26"  # Relay on GPIO 26 (37)
 
 unset thermostatdiningdefault
 thermostatdiningdefault+=("07:30 08:30")
-thermostatdiningdefault+=("11:00 12:15")
+thermostatdiningdefault+=("11:00 12:20")
 thermostatdiningdefault+=("12:45 13:30")
 thermostatdiningdefault+=("16:45 17:15")
 #thermostatdiningdefault+=("19:00 20:15") # Test
@@ -40,39 +41,60 @@ thermostatdiningdefault+=("16:45 17:15")
 unset thermostatdiningevent
 thermostatdiningevent+=("2021-08-12 0 14:00 18:35 on") # Luc
 
-thermostatdiningevent+=("2021-08-18 14 07:00 12:15 on") # Laura
+thermostatdiningevent+=("2021-08-31 0 09:00 15:00 off") # Vergadering
 
-#thermostatdiningevent+=("2021-07-23 14 18:00 20:00 on") # Test
+thermostatdiningevent+=("2021-09-15 14 07:00 12:15 on") # Laura
 
+thermostatdiningevent+=("2021-09-06 7 07:00 07:59 on") # SNT
+thermostatdiningevent+=("2021-09-06 7 08:00 17:00 off") # SNT
+
+thermostatdiningevent+=("2021-09-16 7 11:30 17:31 off") # PCB
+thermostatdiningevent+=("2021-09-02 7 17:30 21:30 off") # SNT
+
+thermostatdiningevent+=("2021-09-03 7 07:00 07:59 on") # SNT
+thermostatdiningevent+=("2021-09-03 7 08:00 12:30 off") # SNT
+
+thermostatdiningevent+=("2021-09-04 7 07:00 07:59 on") # SNT
+thermostatdiningevent+=("2021-09-04 7 08:00 12:30 off") # SNT
+
+# Kitchen
+# =======
+# Compensate temperature sensor
+kitchenTempOffset=0
 
 # Default Kitchen
 # ===============
 unset thermostatkitchendefault
 thermostatkitchendefault+=("07:30 08:30")
-thermostatkitchendefault+=("11:00 13:30")
+thermostatkitchendefault+=("11:00 13:00")
 thermostatkitchendefault+=("16:45 17:35")
-thermostatkitchendefault+=("22:09 22:50")
+thermostatkitchendefault+=("22:20 22:50")
 
 # Exceptions Kitchen
 # ------------------
 unset thermostatkitchenevent
 thermostatkitchenevent+=("2021-08-12 0 16:50 18:35 on") # Luc
 
-thermostatkitchenevent+=("2021-08-18 14 07:00 12:00 on") # Laura
+thermostatkitchenevent+=("2021-09-15 14 07:00 12:00 on") # Laura
 
-#thermostatkitchenevent+=("2021-01-18 7 12:59 21:15 off") # SNT
+thermostatkitchenevent+=("2021-08-31 0 09:00 15:00 off") # Vergadering
 
-#thermostatkitchenevent+=("2021-01-19 7 07:00 07:59 on") # SNT
-#thermostatkitchenevent+=("2021-01-19 7 08:00 11:45 off") # SNT
-#thermostatkitchenevent+=("2021-01-19 7 13:00 16:45 off") # SNT
+thermostatkitchenevent+=("2021-09-06 7 07:00 07:59 on") # SNT
+thermostatkitchenevent+=("2021-09-06 7 08:00 17:00 off") # SNT
 
-#thermostatkitchenevent+=("2021-01-20 7 16:15 17:00 on") # SNT
-#thermostatkitchenevent+=("2021-01-20 7 17:01 21:15 off") # SNT
+thermostatkitchenevent+=("2021-09-16 7 11:30 17:31 off") # PCB
+thermostatkitchenevent+=("2021-09-02 7 17:30 21:30 off") # SNT
 
-#thermostatkitchenevent+=("2021-01-21 7 11:00 14:30 off") # PCB Peter
+thermostatkitchenevent+=("2021-09-03 7 07:00 07:59 on") # SNT
+thermostatkitchenevent+=("2021-09-03 7 08:00 12:30 off") # SNT
 
-#thermostatkitchenevent+=("2021-01-22 7 07:00 07:59 on") # SNT
-#thermostatkitchenevent+=("2021-01-22 7 08:00 11:45 off") # SNT
+thermostatkitchenevent+=("2021-09-04 7 07:00 07:59 on") # SNT
+thermostatkitchenevent+=("2021-09-04 7 08:00 12:30 off") # SNT
+
+# Living
+# ======
+# Compensate temperature sensor
+livingTempOffset=0
 
 # Default Living
 # ==============
@@ -86,18 +108,21 @@ thermostatlivingdefault+=("17:20 22:30")
 unset thermostatlivingevent
 thermostatlivingevent+=("2021-08-12 0 14:00 18:35 on") # Luc
 
-thermostatlivingevent+=("2021-08-18 14 07:45 11:45 on") # Laura
+thermostatlivingevent+=("2021-09-15 14 07:45 11:45 on") # Laura
 
-#thermostatlivingevent+=("2021-01-18 7 13:00 21:15 off") # SNT
+#thermostatlivingevent+=("2021-08-28 0 09:00 20:10 off") # Test
 
-#thermostatlivingevent+=("2021-01-19 7 08:00 17:00 off") # SNT
+thermostatlivingevent+=("2021-08-31 0 09:00 15:00 off") # Vergadering
 
-#thermostatlivingevent+=("2021-01-20 7 16:30 21:15 off") # SNT
+thermostatlivingevent+=("2021-09-06 7 08:00 12:00 off") # SNT
+thermostatlivingevent+=("2021-09-06 7 13:00 17:00 off") # SNT
 
-#thermostatlivingevent+=("2021-01-21 7 11:00 11:49 on") # PCB Peter
-#thermostatlivingevent+=("2021-01-21 7 11:50 14:25 off") # PCB Peter
+thermostatlivingevent+=("2021-09-16 7 11:30 17:31 off") # PCB
+thermostatlivingevent+=("2021-09-02 7 17:30 21:30 off") # SNT
 
-#thermostatlivingevent+=("2021-01-22 7 08:00 12:00 off") # SNT
+thermostatlivingevent+=("2021-09-03 7 08:00 12:30 off") # SNT
+
+thermostatlivingevent+=("2021-09-04 7 08:00 12:30 off") # SNT
 
 # Alarmclock
 # ==========
@@ -119,7 +144,12 @@ alarmtimes+=("07:30")
 alarmtimes+=("07:30")
 
 unset alarmevent
-alarmevent+=("2021-08-18 07:00 14") # Laura
+alarmevent+=("2021-09-15 07:00 14") # Laura
+
+alarmevent+=("2021-09-03 07:00 7") # SNT
+alarmevent+=("2021-09-04 07:00 7") # SNT
+alarmevent+=("2021-09-06 07:00 7") # SNT
+
 #alarmevent+=("2021-06-17 06:30") # Hepatitis Vaccinatie
 #alarmevent+=("2021-06-22 07:00") # Tandarts Liesbeth Donck
 
@@ -127,7 +157,7 @@ alarmevent+=("2021-08-18 07:00 14") # Laura
 #alarmevent+=("2021-06-27 06:00 7") # Test
 
 unset sleepevent
-sleepevent+=("2021-07-21 7 08:00 12:00 $radio2 1000") # Laura
-sleepevent+=("2021-06-03 7 14:00 21:00 $klara 1000") # Peter
+sleepevent+=("2021-08-25 7 08:00 12:00 $radio2 1000") # Laura
+sleepevent+=("2021-08-19 7 14:00 21:00 $klara 1000") # Peter
 
 #sleepevent+=("2021-05-24 7 17:00 21:00 $stubru 1000") # Test
