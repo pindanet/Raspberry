@@ -168,6 +168,9 @@ EOF
   sudo systemctl enable PindaNetDining.service
 
   sudo apt install at -y
+
+  sudo wget -O /var/www/html/lightswitch.sh https://github.com/pindanet/Raspberry/raw/master/dining/var/www/html/lightswitch.sh
+
 fi
 # Restart Raspberry Pi
 sudo shutdown -r now
