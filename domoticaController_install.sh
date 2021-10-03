@@ -359,6 +359,8 @@ exit
   sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
   
   ssh-copy-id pindadining
+  sudo cp .ssh/id_rsa /var/www/html/data/
+  sudo chown www-data:www-data /var/www/html/data/id_rsa
 
 # cd /var/www/html
 # sudo -u www-data php genkeys.php
