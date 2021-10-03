@@ -1158,9 +1158,14 @@ console.log(thermostat);
         document.getElementById('clockdate').style.display = '';
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', "tasmota.php", true);
+        xhr.open('POST', "ssh.php", true);
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.send("dev=e7b609-5641&cmd=Power%20toggle");
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+console.log(this.responseText);
+          }
+        };
+        xhr.send('host=pindadining&command=/var/www/html/lightswitch.sh toggle');
 
         event.stopPropagation();
       }
