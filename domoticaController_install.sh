@@ -362,6 +362,8 @@ exit
   sudo cp .ssh/id_rsa /var/www/html/data/
   sudo chown www-data:www-data /var/www/html/data/id_rsa
 
+  sudo wget -O /var/www/html/ssh.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/ssh.php
+
 # cd /var/www/html
 # sudo -u www-data php genkeys.php
 # sudo rm /var/www/html/genkeys.php
