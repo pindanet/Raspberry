@@ -359,6 +359,7 @@ exit
   sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
   
   ssh-copy-id pindadining
+  ssh-copy-id pindakeuken
   sudo cp .ssh/id_rsa /var/www/html/data/
   sudo chown www-data:www-data /var/www/html/data/id_rsa
 
