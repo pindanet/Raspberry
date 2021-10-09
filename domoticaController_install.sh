@@ -360,6 +360,7 @@ exit
   
   ssh-copy-id pindadining
   ssh-copy-id pindakeuken
+  ssh-copy-id localhost
   sudo cp .ssh/id_rsa /var/www/html/data/
   sudo chown www-data:www-data /var/www/html/data/id_rsa
 
