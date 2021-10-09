@@ -1,47 +1,46 @@
 // Configuration
 tempIncrDecr = 0.5;
 
-function getKitchenTemp(command) {
-/*
-  switch (command) {
-    case "on":
-      console.log("getKitchenTemp On");
-    case "displayTemp":
-      console.log("getKitchenTemp Display Temp");
-      break;
-    case "off":
-      console.log("getKitchenTemp Off");
-      break;
-  }
-*/
+function getDiningTemp() {
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', "thermostatcommand.php", true);
+  xhr.open('POST', "ssh.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function() {
     if (this.readyState === 4) {
-console.log(this.responseText);
+      var diningTemp = parseFloat(this.responseText).toFixed(1);
+      if (!isNaN(diningTemp)) { // change with valid temp
+        document.getElementById("diningRoomTemp").innerHTML = diningTemp + " °C";
+      }
+    }
+  };
+  xhr.send('host=pindadining&command=cat /home/dany/temp.txt');
+}
+function getKitchenTemp() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "ssh.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.readyState === 4) {
       var kitchenTemp = parseFloat(this.responseText).toFixed(1);
-      if (!isNaN(kitchenTemp)) {
-//        document.getElementById("kitchenRoomTemp").innerHTML = "--.- °C";
-//      } else {
+      if (!isNaN(kitchenTemp)) { // change with valid temp
         document.getElementById("kitchenRoomTemp").innerHTML = kitchenTemp + " °C";
       }
     }
   };
-  xhr.send("command=getKitchenTemp&status=" + command);
+  xhr.send('host=pindakeuken&command=cat /var/www/html/data/PresHumiTemp');
 }
 function thermostatUI (event, command, id) {
   switch (command) {
     case "Incr":
       var temp = parseFloat(document.getElementById(id).innerHTML);
       temp += tempIncrDecr;
-      temp = temp.toFixed(2);
+      temp = temp.toFixed(1);
       document.getElementById(id).innerHTML = temp;
       break;
     case "Decr":
       var temp = parseFloat(document.getElementById(id).innerHTML);
       temp -= tempIncrDecr;
-      temp = temp.toFixed(2);
+      temp = temp.toFixed(1);
       document.getElementById(id).innerHTML = temp;
       break;
     case "Manual":
@@ -83,10 +82,51 @@ function thermostatUI (event, command, id) {
   }
 }
 function setThermostatUI (event) {
-  thermostatIfFileExist("data/thermostatManualkitchen", "kitchen");
-  thermostatIfFileExist("data/thermostatManualliving", "living");
+// ssh dany@pindadining cat /tmp/thermostatManual
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "ssh.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.readyState === 4) {
+console.log("setThermostatUI ", this.responseText);
+//      var diningTemp = parseFloat(this.responseText).toFixed(1);
+//      if (!isNaN(diningTemp)) { // change with valid temp
+//        document.getElementById("diningRoomTemp").innerHTML = diningTemp + " °C";
+//      }
+    }
+  };
+  xhr.send('host=pindadining&command=cat /tmp/thermostatManual');
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "ssh.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.readyState === 4) {
+console.log("setThermostatUI 2 ", this.responseText.length, "." + this.responseText + ".");
+var id = "living";
+      if (this.responseText.length == 0) {
+        document.getElementById(id+"Auto").style.color = "lime";
+        document.getElementById(id+"Manual").style.color = "";
+        document.getElementById(id+"Off").style.color = "";
+      } else if (this.responseText == "off\n") {
+        document.getElementById(id+"Auto").style.color = "";
+        document.getElementById(id+"Manual").style.color = "";
+        document.getElementById(id+"Off").style.color = "lime";
+      } else {
+        document.getElementById(id+"Auto").style.color = "";
+        document.getElementById(id+"Manual").style.color = "lime";
+        document.getElementById(id+"Off").style.color = "";
+        document.getElementById(id+"temp").innerHTML = parseFloat(this.responseText).toFixed(1);
+      }
+    }
+  };
+  xhr.send('host=localhost&command=cat /tmp/thermostatManual');
+
+//  thermostatIfFileExist("data/thermostatManualkitchen", "kitchen");
+//  thermostatIfFileExist("data/thermostatManualliving", "living");
   document.getElementById('livingRoomTemp').innerHTML = roomTemp;
 }
+/*
 function thermostatIfFileExist(url, id) {
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'text';
@@ -112,7 +152,7 @@ function thermostatIfFileExist(url, id) {
   }
   xhr.send("id=" + id);
 }
-
+*/
 var radioStatusInterval;
 function radio(event) {
   radioCommand(event, 'getvol', 1);
@@ -189,19 +229,16 @@ function getApp(id) {
     if (window.pageYOffset > top + height) {
       if (app[id]) {
         app[id] = false;
-//console.log(id + " Off");
         return "off";
       }
     } else {
       if (!app[id]) {
         app[id]=true;
-//console.log(id + " On")
         return "on";
       }
     }
   } else if (app[id]) {
     app[id]=false;
-//console.log(id + " Off");
     return "off";
   }
 }
@@ -220,16 +257,15 @@ function startTime() {
   var radioApp = getApp("radio");
   if (radioApp == "on") {
     radio(event);
-//  } else if (radioApp == "off") {
   }
   var thermostatUIApp = getApp("thermostatUI");
   if (thermostatUIApp == "on") {
-//console.log(thermostatUIApp);
     setThermostatUI(event);
-    getKitchenTemp("on");
-  } else if (thermostatUIApp == "off") {
-//console.log(thermostatUIApp);
-    getKitchenTemp("off");
+    getKitchenTemp();
+    getDiningTemp();
+console.log("thermostatUIApp == on");
+//  } else if (thermostatUIApp == "off") {
+//    getKitchenTemp("off");
   }
   if (waitMinute++ > 59) {
     waitMinute = 0;
@@ -237,8 +273,10 @@ function startTime() {
       radio(event);
     }
     if (app["thermostatUI"]) {
+console.log("ThermostatUI / min");
       setThermostatUI(event);
-      getKitchenTemp("displayTemp");
+      getKitchenTemp();
+      getDiningTemp();
     }
   }
   startTimer = setTimeout(startTime, 1000); // elke seconde
