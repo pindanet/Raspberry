@@ -81,29 +81,14 @@ function thermostatUI (event, command, id) {
       break;
   }
 }
-function setThermostatUI (event) {
-// ssh dany@pindadining cat /tmp/thermostatManual
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "ssh.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function() {
-    if (this.readyState === 4) {
-console.log("setThermostatUI ", this.responseText);
-//      var diningTemp = parseFloat(this.responseText).toFixed(1);
-//      if (!isNaN(diningTemp)) { // change with valid temp
-//        document.getElementById("diningRoomTemp").innerHTML = diningTemp + " °C";
-//      }
-    }
-  };
-  xhr.send('host=pindadining&command=cat /tmp/thermostatManual');
-
+function getThermostatManual (id, host) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "ssh.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function() {
     if (this.readyState === 4) {
 console.log("setThermostatUI 2 ", this.responseText.length, "." + this.responseText + ".");
-var id = "living";
+//var id = "living";
       if (this.responseText.length == 0) {
         document.getElementById(id+"Auto").style.color = "lime";
         document.getElementById(id+"Manual").style.color = "";
@@ -120,7 +105,13 @@ var id = "living";
       }
     }
   };
-  xhr.send('host=localhost&command=cat /tmp/thermostatManual');
+  xhr.send('host=' + host + '&command=cat /tmp/thermostatManual');
+}
+
+function setThermostatUI (event) {
+  getThermostatManual("living", "localhost");
+  getThermostatManual("dining", "pindadining");
+  getThermostatManual("kitchen", "pindakeuken");
 
 //  thermostatIfFileExist("data/thermostatManualkitchen", "kitchen");
 //  thermostatIfFileExist("data/thermostatManualliving", "living");
