@@ -3,6 +3,7 @@ body {
   padding: 0;
   background-color: black;
   color: white;
+  font-family: sans-serif;
 }
 body::-webkit-scrollbar {
   display: none;
@@ -15,13 +16,13 @@ a {
   background-color: #00004d;
 }
 .menubutton {
-  height: 13vw; /* 100px; */
+  height: 23vw; /* 100px; */
 }
 button {
   background-color: rgba(128,128,128,0.5);
   border: 1px solid rgb(128,128,128);
   color: white;
-  padding: 1vw; /* 15px; */
+  padding: 0.5px 1vw; /* 15px; */
   margin-bottom: 1vw;
   margin-right: 1vw;;
   text-align: center;
@@ -33,26 +34,34 @@ button {
 /*  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); */
 }
 #clockday {
+  padding-top: 1vw;
   font-size: 10vw;
   text-align: center;
 }
 #clock {
-  font-size: 32vw;   
+  font-size: 35vw;   
   text-align: center;
-  line-height: 99%;
+  line-height: 100%;
 }
 #clockdate {
   font-size: 10vw;   
   text-align: center;
+  padding-bottom: 1vw;
 }
 #radio, #menu, #thermostatUI {
   text-align: center;
 }
+#menu, #thermostatUI {
+  height: 60vw;
+}
 h1 {
-  font-size: 12vw;
+  font-size: 11vw;
   margin-bottom: 0;
   margin-top: 0;
 }
 h1 img, #radio img {
-  height: 10vw;
+  height: 9vw;
+}
+.room {
+  width: 100vw;
 }
