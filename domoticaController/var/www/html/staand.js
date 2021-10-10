@@ -44,39 +44,32 @@ function thermostatUI (event, command, id) {
       document.getElementById(id).innerHTML = temp;
       break;
     case "Manual":
+    case "Auto":
     case "Off":
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', "thermostatcommand.php", true);
+      xhr.open('POST', "ssh.php", true);
       xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
       xhr.onload = function() {
         if (this.readyState === 4) {
           setThermostatUI(event);
+//console.log("thermostatUI", this.responseText);
         }
       };
       var temp = document.getElementById(id).innerHTML;
       if (command == "Off") {
         temp = "off";
-        command = "Manual";
       }
-      if (id == "kitchentemp") {
-        xhr.send("command=" + command + "&room=kitchen&temp=" + temp);
-      } else {
-        xhr.send("command=" + command + "&room=living&temp=" + temp);
+      sshcommand = 'echo ' + temp + ' > /tmp/thermostatManual';
+      if (command == "Auto") {
+        sshcommand = 'rm /tmp/thermostatManual';
       }
-      break;
-    case "Auto":
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', "thermostatcommand.php", true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.onload = function() {
-        if (this.readyState === 4) {
-          setThermostatUI(event);
-        }
-      };
-      if (id == "kitchentemp") {
-        xhr.send("command=" + command + "&room=kitchen&temp=auto");
+//console.log(command);
+    if (id == "kitchentemp") {
+        xhr.send("command=" + sshcommand + "&host=pindakeuken");
+      } else if (id == "diningtemp") {
+        xhr.send("command=" + sshcommand + "&host=pindadining");
       } else {
-        xhr.send("command=" + command + "&room=living&temp=auto");
+        xhr.send("command=" + sshcommand + "&host=localhost");
       }
       break;
   }
@@ -87,7 +80,7 @@ function getThermostatManual (id, host) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function() {
     if (this.readyState === 4) {
-console.log("setThermostatUI 2 ", this.responseText.length, "." + this.responseText + ".");
+//console.log("setThermostatUI 2 ", this.responseText.length, "." + this.responseText + ".");
 //var id = "living";
       if (this.responseText.length == 0) {
         document.getElementById(id+"Auto").style.color = "lime";
