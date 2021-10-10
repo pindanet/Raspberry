@@ -22,8 +22,9 @@ button {
   background-color: rgba(128,128,128,0.5);
   border: 1px solid rgb(128,128,128);
   color: white;
-  padding: 0.5px 1vw; /* 15px; */
-  margin-bottom: 1vw;
+  padding: 0.5vw 1vw; /* 15px; */
+  margin-bottom: 0.5vw;
+  margin-top: 0.5vw;
   margin-right: 1vw;;
   text-align: center;
   text-decoration: none;
@@ -50,17 +51,24 @@ button {
 }
 #radio, #menu, #thermostatUI {
   text-align: center;
-}
-#menu, #thermostatUI {
+  vertical-align: middle;
   height: 60vw;
 }
-h1 {
-  font-size: 11vw;
+#thermostatUI h1 {
+  font-size: 10vw;
   margin-bottom: 0;
   margin-top: 0;
+/*  padding-top: 1vw; */
+}
+#radio h1 {
+  font-size: 9vw;
+  margin-bottom: 0;
+  margin-top: 0;
+/*  padding-top: 1vw; */
 }
 h1 img, #radio img {
   height: 9vw;
+  vertical-align: -1.5vw;
 }
 .room {
   width: 100vw;
