@@ -11,9 +11,12 @@
 //}
 
 $command = htmlspecialchars($_POST["command"]);
+$command = str_replace(" &gt; /tmp/"," > /tmp/",$command);
 $host = htmlspecialchars($_POST["host"]);
 exec("ls /home/", $users);
-exec("ssh -i data/id_rsa -o StrictHostKeyChecking=no  -o 'UserKnownHostsFile /dev/null' " . $users[0] . "@" . $host . " " . $command, $output, $return);
+exec("ssh -v -i data/id_rsa -o StrictHostKeyChecking=no  -o 'UserKnownHostsFile /dev/null' " . $users[0] . "@" . $host . " '" . $command . "'", $output, $return);
+//exec("ssh -i data/id_rsa -o StrictHostKeyChecking=no  -o 'UserKnownHostsFile /dev/null' dany@localhost 'echo off > /tmp/thermostatManualTest'", $output, $return);
+
 
 foreach ($output as $line) {
   echo "$line\n";
