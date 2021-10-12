@@ -8,7 +8,7 @@
   <script src='staand.js'></script>
 </head>
 </body>
-<a href="#menu"><div onclick="radio();" id="content">
+<a href="#menu" onclick="document.getElementById('miniclock').style.display = '';"><div onclick="radio();" id="content">
   <div id="clockday">Zaterdag 19.4 °C</div>
   <div id="clock">20:23</div>
   <div id="clockdate">3 april 2021</div>
@@ -17,7 +17,7 @@
   <a href="#radio"><img class="menubutton" src="emoji/radio.svg"></a>
   <a href="#weather"><img class="menubutton" onclick="weather(event);" src="emoji/weather.svg"></a>
   <a href="#thermostatUI"><img class="menubutton" src="emoji/thermostat.svg"></a>
-  <a href="#radio"><img class="menubutton" onclick="lights(event);" src="emoji/light_bulb.svg"></a>
+  <a><img class="menubutton" onclick="lights(event);" src="emoji/light_bulb.svg"></a>
   <a href="#radio"><img class="menubutton" onclick="enterPIN(event);" src="emoji/keyring.svg"></a>
   <a href="#radio"><img class="menubutton" onclick="remoteCommand(event,'rpiwall');" src="emoji/monitor.svg"></a>
   <a href="index.html"><img class="menubutton" src="emoji/calendar.svg"></a>
@@ -75,9 +75,8 @@
     <button onclick="thermostatUI(event, 'Decr', 'kitchentemp');">-</button>
   </div>
 </div>
-<div id="weather">
-   <img style="width: 100%; height: auto;" src="data/weatheryr.png" alt="YR weather"> 
-   <img style="width: 100%; height: auto;" src="data/weather.png" alt="Time and Date"> 
-</div>
+<div id="weather"></div>
+
+<div id="miniclock" onclick="window.scrollTo(0,0); this.style.display = 'none';" style="display:none">20:00</div>
 </body>
 </html>
