@@ -137,6 +137,28 @@ function thermostatIfFileExist(url, id) {
   xhr.send("id=" + id);
 }
 */
+
+function lights(event) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "ssh.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send('host=pindadining&command=/var/www/html/lightswitch.sh toggle');
+  event.stopPropagation();
+}
+
+function weather(event) {
+  document.getElementById("weather").innerHTML = '<pre class="terminalbox">Bezig met het ophalen van het weerbericht...</pre>';
+  var xhrforecast = new XMLHttpRequest();
+  xhrforecast.open('POST', "weather.php", true);
+  xhrforecast.onload = function(e) {
+    if (this.status == 200) {
+      document.getElementById("weather").innerHTML = this.responseText;
+    }
+  };
+  xhrforecast.send();
+  event.stopPropagation();
+}
+
 var radioStatusInterval;
 function radio(event) {
   radioCommand(event, 'getvol', 1);
@@ -177,6 +199,7 @@ function radioCommand(event, command, options) {
     document.getElementById("radioinfo").innerHTML = "Even geduld, de zender wordt opgehaald...";
   } else if (command == "stop") {
     window.scrollTo(0, 0);
+    document.getElementById('miniclock').style.display = 'none';
   }
   if (typeof event !== 'undefined') {
     event.stopPropagation();
@@ -237,6 +260,7 @@ function startTime() {
   document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear();
   document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + roomTemp;
   document.getElementById('clock').innerHTML = h + ":" + m;
+  document.getElementById('miniclock').innerHTML = h + ":" + m;
   getRoomTemp();
   var radioApp = getApp("radio");
   if (radioApp == "on") {
