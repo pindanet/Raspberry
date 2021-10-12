@@ -12,9 +12,6 @@ a {
   text-decoration: none;
   color: white;
 }
-#menu, #thermostatUI {
-  background-color: #00004d;
-}
 .menubutton {
   height: 23vw; /* 100px; */
 }
@@ -49,7 +46,7 @@ button {
   text-align: center;
   padding-bottom: 1vw;
 }
-#radio, #menu, #thermostatUI {
+#radio, #menu, #thermostatUI, #weather {
   text-align: center;
   vertical-align: middle;
   height: 60vw;
@@ -61,7 +58,7 @@ button {
 /*  padding-top: 1vw; */
 }
 #radio h1 {
-  font-size: 9vw;
+  font-size: 8vw;
   margin-bottom: 0;
   margin-top: 0;
 /*  padding-top: 1vw; */
@@ -72,4 +69,13 @@ h1 img, #radio img {
 }
 .room {
   width: 100vw;
+}
+#miniclock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  font-size: 7vw;
+}
+.bme280 {
+  font-size: 3vw;
 }
