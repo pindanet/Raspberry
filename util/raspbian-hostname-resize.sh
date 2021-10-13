@@ -12,7 +12,7 @@ if [[ ! $(whoami) =~ "root" ]]; then
 fi
 
 if [[ -z $1 || -z $2 ]]; then
-  echo "Usage: sh raspbian--hostname-resize.sh /dev/mmcblk0 RPIDanPin"
+  echo "Usage: sh raspbian-hostname-resize.sh /dev/mmcblk0 RPIDanPin"
   exit
 fi
 
@@ -21,9 +21,16 @@ if [[ ! -e $1 || ! $(file $1) =~ "block special" ]]; then
   exit
 fi
 
-mount $1p2 /mnt/
+mount ${1}p2 /mnt/
+#sed -i "s/raspberrypi/$2/" /mnt/etc/samba/smb.conf
+#cat /mnt/etc/samba/smb.conf
 sed -i "s/raspberrypi/$2/" /mnt/etc/hostname
+sed -i "s/raspberrypi/$2/" /mnt/etc/hosts
+sync
 cat /mnt/etc/hostname
+cat /mnt/etc/hosts
+#sed -i "s/mirrordirector.raspbian.org/router/" /mnt/etc/apt/sources.list
+#cat /mnt/etc/apt/sources.list
 umount /mnt/
 
 # Get the starting offset of the root partition
@@ -44,5 +51,7 @@ $PART_START
 p
 w
 EOF
+partprobe $1
 e2fsck -f $1p2
 resize2fs $1p2
+sync
