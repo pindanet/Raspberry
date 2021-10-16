@@ -156,7 +156,7 @@ EOF
   echo "xset s noblank" >> $HOME/.config/openbox/autostart
 
   echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
-  echo "chromium-browser --incognito --kiosk --check-for-update-interval=31536000 http://localhost/ &" >> $HOME/.config/openbox/autostart
+  echo "chromium-browser --incognito --kiosk --check-for-update-interval=31536000 http://localhost/staand.html &" >> $HOME/.config/openbox/autostart
 
   sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.html
   sudo wget -O /var/www/html/index.css https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.css
