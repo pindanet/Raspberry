@@ -83,17 +83,17 @@ function getThermostatManual (id, host) {
 //console.log("setThermostatUI 2 ", this.responseText.length, "." + this.responseText + ".");
 //var id = "living";
       if (this.responseText.length == 0) {
-        document.getElementById(id+"Auto").style.color = "lime";
-        document.getElementById(id+"Manual").style.color = "";
-        document.getElementById(id+"Off").style.color = "";
+        document.getElementById(id+"Auto").className = "highlight";
+        document.getElementById(id+"Manual").className = "";
+        document.getElementById(id+"Off").className = "";
       } else if (this.responseText == "off\n") {
-        document.getElementById(id+"Auto").style.color = "";
-        document.getElementById(id+"Manual").style.color = "";
-        document.getElementById(id+"Off").style.color = "lime";
+        document.getElementById(id+"Auto").className = "";
+        document.getElementById(id+"Manual").className = "";
+        document.getElementById(id+"Off").className = "highlight";
       } else {
-        document.getElementById(id+"Auto").style.color = "";
-        document.getElementById(id+"Manual").style.color = "lime";
-        document.getElementById(id+"Off").style.color = "";
+        document.getElementById(id+"Auto").className = "";
+        document.getElementById(id+"Manual").className = "highlight";
+        document.getElementById(id+"Off").className = "";
         document.getElementById(id+"temp").innerHTML = parseFloat(this.responseText).toFixed(1);
       }
     }
@@ -146,13 +146,91 @@ function lights(event) {
   event.stopPropagation();
 }
 
+//var yrCodes = {
+//	"s01": "clear sky",
+//	"s02": "fair",
+//	"s03": "partly cloudy",
+//	"s04": "cloudy",
+//	"s40": "light rain showers",
+//	"s05": "rain showers",
+//	"s41": "heavy rain showers",
+//	"s24": "light rain showers and thunder",
+//	"s06": "rain showers and thunder",
+//	"s25": "heavy rain showers and thunder",
+//	"s42": "light sleet showers",
+//	"s07": "sleet showers",
+//	"s43": "heavy sleet showers",
+//	"s26": "light sleet showers and thunder",
+//	"s20": "sleet showers and thunder",
+//	"s27": "heavy sleet showers and thunder",
+//	"s44": "light snow showers",
+//	"s08": "snow showers",
+//	"s45": "heavy snow showers",
+//	"s28": "light snow showers and thunder",
+//	"s21": "snow showers and thunder",
+//	"s29": "heavy snow showers and thunder",
+//	"s46": "light rain",
+//	"s09": "rain",
+//	"s10": "heavy rain",
+//	"s30": "light rain and thunder",
+//	"s22": "rain and thunder",
+//	"s11": "heavy rain and thunder",
+//	"s47": "light sleet",
+//	"s12": "sleet",
+//	"s48": "heavy sleet",
+//	"s31": "light sleet and thunder",
+//	"s23": "sleet and thunder",
+//	"s32": "heavy sleet and thunder",
+//	"s49": "light snow",
+//	"s13": "snow",
+//	"s50": "heavy snow",
+//	"s33": "light snow and thunder",
+//	"s14": "snow and thunder",
+//	"s34": "heavy snow and thunder",
+//	"s15": "fog"
+//}
 function weather(event) {
-  document.getElementById("weather").innerHTML = '<pre class="terminalbox">Bezig met het ophalen van het weerbericht...</pre>';
+//  document.getElementById("weather").innerHTML = '<pre class="terminalbox">Bezig met het ophalen van het weerbericht...</pre>';
   var xhrforecast = new XMLHttpRequest();
   xhrforecast.open('POST', "weather.php", true);
   xhrforecast.onload = function(e) {
     if (this.status == 200) {
+//      var svg = this.responseText;
+//      svg.replace('xmlns="http://www.w3.org/2000/svg"','xmlns="http://www.w3.org/2000/svg"'+ "\n" + 'viewBox="0 105 500 250"');
+//console.log(svg);
       document.getElementById("weather").innerHTML = this.responseText;
+//      var d = new Date();
+//      var UTCHour = d.getUTCHours() + ":00";
+//      const weatherObj = JSON.parse(this.responseText);
+//      for (let x in weatherObj.properties.timeseries) {
+//	if (weatherObj.properties.timeseries[x].time.includes(UTCHour)) {
+//          for (let col = 1; col < 7; col++) {
+//            var ts = parseInt(x) + col - 1;
+//            var UTCTime = d;
+//            UTCTime.setUTCHours(weatherObj.properties.timeseries[ts].time.substr(11,2));
+//            document.getElementById("weatherTime" + col).innerHTML = UTCTime.getHours() + ":00"; 
+//            document.getElementById("weatherTemp" + col).innerHTML = weatherObj.properties.timeseries[ts].data.instant.details.air_temperature; 
+//            document.getElementById("weatherHumi" + col).innerHTML = weatherObj.properties.timeseries[ts].data.instant.details.relative_humidity; 
+//            document.getElementById("weatherWind" + col).innerHTML = '<span style="transform: rotate(' + weatherObj.properties.timeseries[ts].data.instant.details.wind_from_direction + 'deg);display: inline-block;">&darr;</span> ';
+//            document.getElementById("weatherWind" + col).innerHTML += weatherObj.properties.timeseries[ts].data.instant.details.wind_speed; 
+//            document.getElementById("weatherPrec" + col).innerHTML = weatherObj.properties.timeseries[ts].data.next_1_hours.details.precipitation_amount; 
+//            document.getElementById("weatherPres" + col).innerHTML = weatherObj.properties.timeseries[ts].data.instant.details.air_pressure_at_sea_level;
+//            var yrSymbol;
+//            for (let y in yrCodes) {
+//              if (weatherObj.properties.timeseries[ts].data.next_1_hours.summary.symbol_code.includes(yrCodes[y].replace(/\s/g, ''))) {
+//                yrSymbol = y;
+//                if (weatherObj.properties.timeseries[ts].data.next_1_hours.summary.symbol_code.includes("_day")) {
+//                  yrSymbol += "d";
+//                } else if (weatherObj.properties.timeseries[ts].data.next_1_hours.summary.symbol_code.includes("_night")) {
+//                  yrSymbol += "n";
+//                }
+//                break;
+//              }
+//            }
+//            document.getElementById("weatherImg" + col).src = "weathericons/" + yrSymbol.substring(1) + ".svg";
+//          }
+//        }
+//      }
     }
   };
   xhrforecast.send();
