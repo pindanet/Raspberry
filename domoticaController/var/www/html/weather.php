@@ -6,7 +6,18 @@ $forecastIMG = $forecastSVG . "?time=" . $date->getTimestamp();
 
 function getForecast() {
   global $forecastSVG;
-  file_put_contents($forecastSVG, file_get_contents("https://www.yr.no/en/content/2-2800931/meteogram.svg"));
+  $svg = file_get_contents("https://www.yr.no/en/content/2-2800931/meteogram.svg");
+//  $viewbox = str_replace('xmlns="http://www.w3.org/2000/svg"', 'xmlns="http://www.w3.org/2000/svg"' . "\n" . '  viewBox="0 105 500 250"', $svg);
+  $needle = 'xmlns="http://www.w3.org/2000/svg"';
+  $pos = strpos($svg, $needle);
+  if ($pos !== false) {
+    $viewbox = substr_replace($svg, 'xmlns="http://www.w3.org/2000/svg"' . "\n" . '  viewBox="0 105 500 250"', $pos, strlen($needle));
+    file_put_contents($forecastSVG, $viewbox);
+  } else {
+    file_put_contents($forecastSVG, $svg);
+  }
+
+//  file_put_contents($forecastSVG, file_get_contents("https://www.yr.no/en/content/2-2800931/meteogram.svg"));
 }
 
 if (file_exists($forecastSVG)) {
