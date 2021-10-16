@@ -79,3 +79,8 @@ h1 img, #radio img {
 .bme280 {
   font-size: 3vw;
 }
+.highlight {
+  background-color: #00BFFF00;
+  border: 1px solid DeepSkyBlue;
+  color: DeepSkyBlue;
+}
