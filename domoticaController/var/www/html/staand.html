@@ -27,20 +27,35 @@
 </div>
 <div id="radio">
   <h1><img src="emoji/radio.svg">His Master's Voice</h1>
-  <button onclick="radioCommand(event, 'play', 1);">Radio 1</button>
-  <button onclick="radioCommand(event, 'play', 2);">Radio 2</button>
-  <button onclick="radioCommand(event, 'play', 3);">Klara</button>
-  <button onclick="radioCommand(event, 'play', 4);">Klara continuo</button>
-  <button onclick="radioCommand(event, 'play', 5);">Studio Brussel</button>
-  <button onclick="radioCommand(event, 'play', 6);">MNM</button>
-  <button onclick="radioCommand(event, 'play', 7);">MNM Hits</button>
-  <button onclick="radioCommand(event, 'play', 8);">VRT NWS</button>
-  <button onclick="radioCommand(event, 'play', 9);">Ketnet Hits</button>
-  <button onclick="radioCommand(event, 'play', 10);">Crooze</button>
-  <button onclick="radioCommand(event, 'play', 11);">VBRO</button>
-  <button onclick="radioCommand(event, 'play', 12);">Joe FM</button>
-  <button onclick="radioCommand(event, 'play', 13);">Q-Music</button>
-  <button onclick="radioCommand(event, 'play', 14);">Willy</button>
+  <img onclick="radioCommand(event, 'play', 1);" src="radiologos/radio1.svg">
+  <img onclick="radioCommand(event, 'play', 2);" src="radiologos/radio2.svg">
+  <img onclick="radioCommand(event, 'play', 3);" src="radiologos/klara.svg">
+  <img onclick="radioCommand(event, 'play', 4);" src="radiologos/klara.svg">
+  <img onclick="radioCommand(event, 'play', 5);" src="radiologos/stubru.svg">
+  <img onclick="radioCommand(event, 'play', 6);" src="radiologos/mnm.svg">
+  <img onclick="radioCommand(event, 'play', 7);" src="radiologos/mnmhits.png">
+  <img onclick="radioCommand(event, 'play', 8);" src="radiologos/vrtnws.svg">
+  <img onclick="radioCommand(event, 'play', 9);" src="radiologos/ketnet.svg">
+  <img onclick="radioCommand(event, 'play', 10);" src="radiologos/crooze.png">
+  <img onclick="radioCommand(event, 'play', 11);" src="radiologos/vbro.png">
+  <img onclick="radioCommand(event, 'play', 12);" src="radiologos/joe.svg">
+  <img onclick="radioCommand(event, 'play', 13);" src="radiologos/qmusic.svg">
+  <img onclick="radioCommand(event, 'play', 14);" src="radiologos/willy.svg">
+
+<!--  <button onclick="radioCommand(event, 'play', 1);">Radio 1</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 2);">Radio 2</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 3);">Klara</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 4);">Klara continuo</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 5);">Studio Brussel</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 6);">MNM</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 7);">MNM Hits</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 8);">VRT NWS</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 9);">Ketnet Hits</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 10);">Crooze</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 11);">VBRO</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 12);">Joe FM</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 13);">Q-Music</button>-->
+<!--  <button onclick="radioCommand(event, 'play', 14);">Willy</button>-->
   <br>
   <button onclick="clearInterval(radioStatusInterval); radioCommand(event, 'stop', 1);">Stop</button>
   <button onclick="radioCommand(event, 'voldown', 1);">V-</button>
@@ -75,8 +90,72 @@
     <button onclick="thermostatUI(event, 'Decr', 'kitchentemp');">-</button>
   </div>
 </div>
-<div id="weather"></div>
-
+<div id="weather">
+  <table id="forecast">
+    <tr>
+      <td id="weatherTime1">17:00</td>
+      <td id="weatherTime2">18:00</td>
+      <td id="weatherTime3">18:00</td>
+      <td id="weatherTime4">17:00</td>
+      <td id="weatherTime5">18:00</td>
+      <td id="weatherTime6">18:00</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td id="weatherTemp1">17.0</td>
+      <td id="weatherTemp2">18.0</td>
+      <td id="weatherTemp3">18.0</td>
+      <td id="weatherTemp4">17.0</td>
+      <td id="weatherTemp5">18.0</td>
+      <td id="weatherTemp6">18.0</td>
+      <td>°C</td>
+    </tr>
+    <tr>
+      <td id="weatherHumi1">17.0</td>
+      <td id="weatherHumi2">18.0</td>
+      <td id="weatherHumi3">18.0</td>
+      <td id="weatherHumi4">17.0</td>
+      <td id="weatherHumi5">18.0</td>
+      <td id="weatherHumi6">18.0</td>
+      <td>%</td>
+    </tr>
+    <tr>
+      <td id="weatherWind1">&darr; 17.0</td>
+      <td id="weatherWind2">&darr; 18.0</td>
+      <td id="weatherWind3">&darr; 18.0</td>
+      <td id="weatherWind4">&darr; 17.0</td>
+      <td id="weatherWind5">&darr; 18.0</td>
+      <td id="weatherWind6">&darr; 18.0</td>
+      <td>m/s</td>
+    </tr>
+    <tr>
+      <td id="weatherPrec1">17.0</td>
+      <td id="weatherPrec2">18.0</td>
+      <td id="weatherPrec3">18.0</td>
+      <td id="weatherPrec4">17.0</td>
+      <td id="weatherPrec5">18.0</td>
+      <td id="weatherPrec6">18.0</td>
+      <td>mm</td>
+    </tr>
+    <tr>
+      <td id="weatherPres1">1013.0</td>
+      <td id="weatherPres2">1015.0</td>
+      <td id="weatherPres3">1015.0</td>
+      <td id="weatherPres4">1013.0</td>
+      <td id="weatherPres5">1015.0</td>
+      <td id="weatherPres6">1015.0</td>
+      <td>hPa</td>
+    </tr>
+    <tr>
+      <td><img id="weatherImg1" src="weathericons/04.svg"></td>
+      <td><img id="weatherImg2" src="weathericons/03d.svg"></td>
+      <td><img id="weatherImg3" src="weathericons/03d.svg"></td>
+      <td><img id="weatherImg4" src="weathericons/04.svg"></td>
+      <td><img id="weatherImg5" src="weathericons/03d.svg"></td>
+      <td><img id="weatherImg6" src="weathericons/03d.svg"></td>
+    </tr>
+  </table>
+</div>
 <div id="miniclock" onclick="window.scrollTo(0,0); this.style.display = 'none';" style="display:none">20:00</div>
 </body>
 </html>
