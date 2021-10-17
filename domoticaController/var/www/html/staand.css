@@ -25,11 +25,9 @@ button {
   margin-right: 1vw;;
   text-align: center;
   text-decoration: none;
-/*  display: inline-block; */
   font-size: 4vw; /* 30px; */
   font-weight: bold;
   border-radius: 12px;
-/*  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); */
 }
 #clockday {
   padding-top: 1vw;
@@ -55,15 +53,18 @@ button {
   font-size: 10vw;
   margin-bottom: 0;
   margin-top: 0;
-/*  padding-top: 1vw; */
 }
 #radio h1 {
   font-size: 8vw;
   margin-bottom: 0;
   margin-top: 0;
-/*  padding-top: 1vw; */
 }
-h1 img, #radio img {
+#radio img {
+  height: 12vw;
+  color: white;
+  padding: 0.5vw; /* 15px; */
+}
+h1 img, #radio h1 img {
   height: 9vw;
   vertical-align: -1.5vw;
 }
