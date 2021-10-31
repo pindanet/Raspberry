@@ -2,13 +2,12 @@
 . /var/www/html/data/alarmclock
 
 #mpg123 -f -$volume /var/www/html/data/bintro.mp3
+
 nohup mpg123 -f -$volume $(curl -s -i $radio | grep Location | awk '{ print $2 }') 2> /var/www/html/data/radio.log &
-#nohup mpg123 -f -$volume /var/www/html/data/Old-alarm-clock-sound.mp3 &
 sleep 180 # 3 minuten wakker worden
-#nohup mpg123 -f -$volume /var/www/html/data/Old-alarm-clock-sound.mp3 &
 sleep 180 # 3 minuten nekoefeningen
-#nohup mpg123 -f -$volume /var/www/html/data/Old-alarm-clock-sound.mp3 &
 sleep 300 # 5 minuten rechtop zitten
+
 #nohup mpg123 -f -$volume /var/www/html/data/Old-alarm-clock-sound.mp3 &
 
 # get next alarm
@@ -37,7 +36,7 @@ if [[ "$now" > "$nextAlarm" ]];then
   echo $nextAlarm > /var/www/html/data/nextalarm
   # remove all alarms
   for i in `atq | awk '{print $1}'`;do atrm $i;done
-  echo /var/www/html/alarmnow.sh | at -M $nextAlarm
+  echo /var/www/html/alarmnow.sh | at -M $nextAlarm $(date -u --date @$tomorrow +'%m%d%y')
 fi
 
 # update and reboot
