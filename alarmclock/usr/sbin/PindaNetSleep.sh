@@ -45,6 +45,10 @@ raspi-gpio set $_button_pin ip pu # input pull up
 #fi
 
 while true; do
+  # Received new configuration file
+  if [ -f /tmp/thermostat ]; then
+    mv -f /tmp/thermostat /var/www/html/data/alarmclock
+  fi
   . /var/www/html/data/alarmclock
 
   clock=$(date -u +"%H:%M")
