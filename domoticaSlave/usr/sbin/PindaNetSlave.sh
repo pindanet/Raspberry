@@ -4,7 +4,7 @@
 
 ## Compensate temperature sensor
 #tempOffset=-0.4
-tempfact=0.97
+tempfact=0.99
 
 function relayGPIO () {
   _r1_pin=${1#*relayGPIO}
