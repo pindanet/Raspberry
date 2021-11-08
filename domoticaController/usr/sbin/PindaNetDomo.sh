@@ -5,7 +5,7 @@
 
 # Compensate temperature sensor
 #tempOffset=0.5
-tempfact=0.93
+tempfact=0.94 # Zomer, omgevingstemp: 0.91, Winter, IR temp: 0.94
 
 function broadcast() {
   current="$(cat /var/www/html/data/thermostat)"
