@@ -1,5 +1,5 @@
 #!/bin/bash
-tempfact=1.02
+tempfact=1.03 # Zomer, omgevingstemp: 1.00, Winter, IR temp: 1.03
 function relayGPIO () {
   _r1_pin=${1#*relayGPIO}
 
