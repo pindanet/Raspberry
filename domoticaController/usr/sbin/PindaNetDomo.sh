@@ -288,7 +288,7 @@ do
       temp=${temp%% C*}
       temp="${temp#"${temp%%[![:space:]]*}"}"
       newtemp=$(awk "BEGIN {printf \"%0.2f\", ($temp * $tempfact)}")
-      PresHumiTempVar=${PresHumiTempVar/$temp/$newtemp}
+      PresHumiTempVar=${PresHumiTempVar/$temp C/$newtemp C}
       echo "$PresHumiTempVar" > $PresHumiTempfile
   fi
   rm $error_file
