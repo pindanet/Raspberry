@@ -1,5 +1,5 @@
 #!/bin/bash
-tempfact=1.03 # Zomer, omgevingstemp: 1.00, Winter, IR temp: 1.03
+tempfact=1.03  # Zomer, omgevingstemp: 1.00, Winter, IR temp: 1.03
 function relayGPIO () {
   _r1_pin=${1#*relayGPIO}
 
@@ -66,6 +66,7 @@ function thermostat {
     fi
   done
 # Exceptions with recurrent dates and times
+  eventTemp=$tempComfort
   for thermostatitem in "${thermostatroomevent[@]}"; do
     daytime=(${thermostatitem})
     recevent=$(date -u --date "${daytime[0]}" +%s)
@@ -82,12 +83,16 @@ function thermostat {
       if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
         echo "Between ${daytime[2]} and ${daytime[3]}: heating: ${daytime[4]}"
         heatingRoom=${daytime[4]}
+        if [[ -v "daytime[5]" ]] ; then
+          echo "eventTemp: ${daytime[5]}"
+          eventTemp=${daytime[5]}
+        fi
         break
       fi
     fi
   done
 
-  tempWanted=$tempComfort
+  tempWanted=$eventTemp
   roomtemp=$(cat /tmp/thermostatManual)
   if [ $? -gt 0 ]; then
     echo Auto
