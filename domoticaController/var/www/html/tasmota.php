@@ -9,4 +9,4 @@ if (!isset($_SERVER["HTTP_HOST"])) {
 $dev = htmlspecialchars($_POST["dev"]);
 $cmd = htmlspecialchars($_POST["cmd"]);
 
-exec("wget -qO- \"http://tasmota_$dev/cm?cmnd=$cmd\"");
+exec("wget -qO- \"http://tasmota$dev/cm?cmnd=$cmd\"");
