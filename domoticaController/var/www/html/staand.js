@@ -1,5 +1,6 @@
 // Configuration
 tempIncrDecr = 0.5;
+ChristmasLightDev = "-fb7b27-6951";
 
 function getDiningTemp() {
   var xhr = new XMLHttpRequest();
@@ -144,6 +145,11 @@ function lights(event) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.send('host=pindadining&command=/var/www/html/lightswitch.sh toggle');
   event.stopPropagation();
+// ChristmasLight
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "tasmota.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send('dev=' + ChristmasLightDev + '&cmd=Power%20Toggle');
 }
 
 //var yrCodes = {
