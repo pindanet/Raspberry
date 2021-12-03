@@ -6,6 +6,7 @@
 # Compensate temperature sensor
 #tempOffset=0.5
 tempfact=0.94 # Zomer, omgevingstemp: 0.91, Winter, IR temp: 0.94
+luxnight="10.0"
 
 function broadcast() {
   current="$(cat /var/www/html/data/thermostat)"
@@ -420,6 +421,7 @@ do
 
 # PIR detector for 1 minute
 #  starttime=$(date +"%s") # moved to start while true loop
+  lux=$(cat /var/www/html/data/luxtls)
   while [ $(($(date +"%s") - starttime)) -lt 56 ]; do
     _ret=$( cat /sys/class/gpio/gpio$_pir_pin/value )
     if [ $_ret -eq 1 ]; then
@@ -427,7 +429,11 @@ do
 
       find "$fotomap/" -mindepth 1 -maxdepth 1 -mtime +0 -exec rm {} \;
       DATE=$(date +"%Y %m %d %H:%M:%S") # 2020 05 05 07:05:03.jpg
-      raspistill --width 800 --height 480 --nopreview --rotation 90 -o "$fotomap/$DATE.jpg"
+      if [ ${lux%.*} -lt ${luxnight%.*} ]; then
+        raspistill --width 800 --height 480 --nopreview --rotation 90 --exposure night -o "$fotomap/$DATE.jpg"
+      else
+        raspistill --width 800 --height 480 --nopreview --rotation 90 -o "$fotomap/$DATE.jpg"
+      fi
     elif [ $_ret -eq 0 ]; then
 #       echo "Geen beweging"
        sleep 3 # time to reset PIR
