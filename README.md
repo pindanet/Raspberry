@@ -154,8 +154,12 @@ Based on: https://www.hackster.io/4803/i2c-port-expander-sample-0a6d4f
 ## RFXtrx433E
     wget https://github.com/ssjoholm/rfxcmd_gc/archive/master.zip
     unzip master.zip
-    Listen: python rfxcmd_gc-master/rfxcmd.py -l -v -d /dev/ttyUSB0
-    Send: python rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s Received (without spaces)
+    sudo apt install python2
+    sudo curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+    sudo python2 get-pip.py
+    sudo pip2 install serial pyserial
+    Listen: python2 rfxcmd_gc-master/rfxcmd.py -l -v -d /dev/ttyUSB0
+    Send: python2 rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s Received (without spaces)
     sudo adduser www-data dialout
 ## Thermostat
     sudo apt-get install jq
