@@ -5,6 +5,7 @@
 ## Compensate temperature sensor
 #tempOffset=-0.4
 tempfact=1 # Zomer, omgevingstemp: 0.97, Winter, IR temp: 1.00
+tempComfortLower=-2.5
 
 function relayGPIO () {
   _r1_pin=${1#*relayGPIO}
@@ -175,7 +176,7 @@ do
 
   # compensate position temperature sensor
 #  hysteresis=$(awk "BEGIN {print ($hysteresis * 2)}")
-  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset)}")
+  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset + $tempComfortLower)}")
 
   declare -A heater
   unset heaterRoom
