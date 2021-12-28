@@ -15,7 +15,7 @@ _pir_pin=4
 
 dim=0
 brightday=128
-brightnight=32
+brightnight=64
 bright=$brightday
 brightness=$(cat /sys/class/backlight/rpi_backlight/brightness)
 
