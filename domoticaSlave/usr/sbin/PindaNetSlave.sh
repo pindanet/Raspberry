@@ -1,10 +1,9 @@
 #!/bin/bash
 # ToDo
-# Tasmota dubbele wget wegwerken (zie PindaNetLightTimer.sh)
 
 ## Compensate temperature sensor
 #tempOffset=-0.4
-tempfact=1 # Zomer, omgevingstemp: 0.97, Winter, IR temp: 1.00
+tempfact=1  # Zomer, omgevingstemp: 0.97, Winter, IR temp: 1.00
 tempComfortLower=-2.5
 
 function relayGPIO () {
@@ -27,31 +26,51 @@ function relayGPIO () {
     echo "$(date): Relay error. Heating $1" >> /tmp/PindaNetDebug.txt
   fi
 }
+declare -A status=()
 function tasmota () {
   if [[ $1 == *"relayGPIO"* ]]; then
     relayGPIO $1 $2
     return
   fi
-  if [ ! -f /tmp/$1 ]; then # initialize
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
-    two=$(wget -qO- http://$1/cm?cmnd=Power | awk -F"\"" '{print $4}')
+  if [ -z ${status["$1"]} ]; then # initialize
+    status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power)
+    two=$(echo ${status["$1"]} | awk -F"\"" '{print $4}')
     twolower=${two,,}
     if [ $twolower == "on" ] || [ $twolower == "off" ]; then
       echo "$(date -u +%s),$twolower" >> /var/www/html/data/$1.log
     fi
   fi
-  if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
-    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+  if [ $2 == "on" ] && [ "${status["$1"]}" == '{"POWER":"OFF"}' ]; then
+    status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power%20On)
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
-    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+  elif [ $2 == "off" ] && [ "${status["$1"]}" == '{"POWER":"ON"}' ]; then
+    status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
-  elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
-    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+  elif [ "${status["$1"]}" != '{"POWER":"OFF"}' ] && [ "${status["$1"]}" != '{"POWER":"ON"}' ]; then
+    status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power)
     echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
   fi
+
+#  if [ ! -f /tmp/$1 ]; then # initialize
+#    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+#    two=$(wget -qO- http://$1/cm?cmnd=Power | awk -F"\"" '{print $4}')
+#    twolower=${two,,}
+#    if [ $twolower == "on" ] || [ $twolower == "off" ]; then
+#      echo "$(date -u +%s),$twolower" >> /var/www/html/data/$1.log
+#    fi
+#  fi
+#  if [ $2 == "on" ] && [ "$(cat /tmp/$1)" == '{"POWER":"OFF"}' ]; then
+#    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20On)
+#    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+#    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
+#  elif [ $2 == "off" ] && [ "$(cat /tmp/$1)" == '{"POWER":"ON"}' ]; then
+#    dummy=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
+#    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+#    echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
+#  elif [ "$(cat /tmp/$1)" != '{"POWER":"OFF"}' ] && [ "$(cat /tmp/$1)" != '{"POWER":"ON"}' ]; then
+#    echo $(wget -qO- http://$1/cm?cmnd=Power) > /tmp/$1
+#    echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
+#  fi
 }
 #function thermostatOff {
 #  for switch in "${!heater[@]}"
