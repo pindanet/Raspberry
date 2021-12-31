@@ -14,21 +14,22 @@ _pir_pin=4
 
 declare -A status=()
 status["$lightSwitch"]=$(wget -qO- http://$lightSwitch/cm?cmnd=Power)
-echo "${status["$lightSwitch"]}" > /var/www/html/data/light-bulb
-chown www-data:www-data /var/www/html/data/light-bulb
+echo "${status["$lightSwitch"]}" > /var/www/html/data/$lightSwitch
+chown www-data:www-data /var/www/html/data/$lightSwitch
+chown www-data:www-data /var/www/html/data/${lightSwitch}.log
 
 function tasmota () {
   if [ $2 == "on" ] && [ "${status["$1"]}" == '{"POWER":"OFF"}' ]; then
     status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power%20On)
-    echo "${status["$1"]}" > /var/www/html/data/light-bulb
+    echo "${status["$1"]}" > /var/www/html/data/$lightSwitch
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
   elif [ $2 == "off" ] && [ "${status["$1"]}" == '{"POWER":"ON"}' ]; then
     status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
-    echo "${status["$1"]}" > /var/www/html/data/light-bulb
+    echo "${status["$1"]}" > /var/www/html/data/$lightSwitch
     echo "$(date -u +%s),$2" >> /var/www/html/data/$1.log
   elif [ "${status["$1"]}" != '{"POWER":"OFF"}' ] && [ "${status["$1"]}" != '{"POWER":"ON"}' ]; then
     status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power)
-    echo "${status["$1"]}" > /var/www/html/data/light-bulb
+    echo "${status["$1"]}" > /var/www/html/data/$lightSwitch
     echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
   fi
 }
