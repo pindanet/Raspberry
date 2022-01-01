@@ -4,7 +4,6 @@
 ## Compensate temperature sensor
 #tempOffset=-0.4
 tempfact=1  # Zomer, omgevingstemp: 0.97, Winter, IR temp: 1.00
-tempComfortLower=-2.5
 
 function relayGPIO () {
   _r1_pin=${1#*relayGPIO}
@@ -105,7 +104,22 @@ function thermostat {
     echo "Min: $tempmin, Max: $tempmax" > /var/www/html/data/temp$(date +%A)
   fi
 
-  IFS=$'\n' thermostatroom=($(sort <<<"${thermostatroomdefault[*]}"))
+   unset thermostatdefault
+   DOW=$(date +%u)
+#   echo $DOW
+   for thermostatday in "${thermostatkitchenweek[@]}"; do
+     daytime=(${thermostatday})
+     if [ "$DOW" == "${daytime[0]}" ]; then
+       thermostatdefault+=("${daytime[1]} ${daytime[2]} ${daytime[3]} ")
+     fi
+   done
+ 
+#   for thermostatitem in "${thermostatdefault[@]}"; do
+#     daytime=(${thermostatitem})
+#     echo ${daytime[0]} ${daytime[1]} ${daytime[2]} ${daytime[3]}
+#   done
+
+  IFS=$'\n' thermostatroom=($(sort <<<"${thermostatdefault[*]}"))
   unset IFS
 
   heatingRoom="off"
@@ -114,6 +128,10 @@ function thermostat {
     daytime=(${thermostatitem})
     if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
       heatingRoom="on"
+      if [[ -v "daytime[2]" ]] ; then
+#        echo "tempComfort: ${daytime[2]}"
+        tempComfort=${daytime[2]}
+      fi
       break
     fi
   done
@@ -132,8 +150,11 @@ function thermostat {
     if [ $today == $recevent ]; then
       echo "Event in $room on $(date -u --date @$recevent)"
       if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
-        echo "Between ${daytime[2]} en ${daytime[3]}: heating: ${daytime[4]}"
         heatingRoom=${daytime[4]}
+        if [[ -v "daytime[5]" ]] ; then
+          tempComfort=${daytime[5]}
+        fi
+        echo "Between ${daytime[2]} en ${daytime[3]}: heating: ${daytime[4]}, temp: $tempComfort °C"
         break
       fi
     fi
@@ -143,7 +164,7 @@ function thermostat {
 
   roomtemp=$(cat /tmp/thermostatManual)
   if [ $? -gt 0 ]; then
-    echo Auto
+    echo "Auto"
   else
     if [ "$roomtemp" == "off" ]; then
       echo "Heating Manual Off"
@@ -195,7 +216,7 @@ do
 
   # compensate position temperature sensor
 #  hysteresis=$(awk "BEGIN {print ($hysteresis * 2)}")
-  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset + $tempComfortLower)}")
+  tempComfort=$(awk "BEGIN {print ($tempComfort + $tempOffset)}")
 
   declare -A heater
   unset heaterRoom
