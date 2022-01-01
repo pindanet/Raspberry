@@ -1,55 +1,157 @@
+TVVolume=30
+
 tempComfort="20.00"
+tempAux="17.50"
 tempOff="15.00"
 hysteresis="0.1"
 
-lightmorning="07:45"
+lightmorning="07:40"
 lightevening="22:50"
 eveningShutterDown="22:20"
 
+christmasLight="tasmota-fb7b27-6951"
+
 unset heaters
 heaters+=("DiningTable tasmota_relayGPIO13")
-heaters+=("DiningHaard tasmota_fb7b27-6951")
+heaters+=("DiningHaard tasmota_8be4af-1199")
 heaters+=("DiningOost tasmota_4fdd94-7572")
 heaters+=("DiningWest tasmota_relayGPIO19")
 
 heaters+=("LivingTable tasmota_4bf311-4881")
-heaters+=("LivingZuid tasmota_8bbeod-7693")
+heaters+=("LivingZuid tasmota_8bbe0d-7693")
 heaters+=("LivingNoord tasmota_8bbe4d-7757")
 heaters+=("LivingZuidOost tasmota_a94717-1815")
 
 heaters+=("KeukenWest tasmota_4fd8ee-6382")
-heaters+=("KeukenOost tasmota_a943fa-1018")
+heaters+=("KeukenOost tasmota-a943fa-1018")
 
 # Dining
 # ======
 # Compensate temperature sensor
 diningTempOffset=0
-#diningLight="tasmota_e7b609-5641"
 diningLight="26"  # Relay on GPIO 26 (37)
+
+unset thermostatdiningweek
+# maandag
+thermostatdiningweek+=("1 07:30 08:30 $tempComfort")
+thermostatdiningweek+=("1 08:30 11:00 $tempAux")
+thermostatdiningweek+=("1 11:00 13:30 $tempComfort")
+thermostatdiningweek+=("1 13:30 16:50 $tempAux")
+thermostatdiningweek+=("1 16:50 17:25 $tempComfort")
+thermostatdiningweek+=("1 17:25 22:30 $tempAux")
+# dinsdag
+thermostatdiningweek+=("2 07:30 08:30 $tempComfort")
+thermostatdiningweek+=("2 08:30 11:00 $tempAux")
+thermostatdiningweek+=("2 11:00 13:30 $tempComfort")
+thermostatdiningweek+=("2 13:30 16:50 $tempAux")
+thermostatdiningweek+=("2 16:50 17:25 $tempComfort")
+thermostatdiningweek+=("2 17:25 22:30 $tempAux")
+# woensdag
+thermostatdiningweek+=("3 07:30 08:30 $tempComfort")
+thermostatdiningweek+=("3 08:30 11:00 $tempAux")
+thermostatdiningweek+=("3 11:00 13:30 $tempComfort")
+thermostatdiningweek+=("3 13:30 16:50 $tempAux")
+thermostatdiningweek+=("3 16:50 17:25 $tempComfort")
+thermostatdiningweek+=("3 17:25 22:30 $tempAux")
+# donderdag
+thermostatdiningweek+=("4 07:30 08:30 $tempComfort")
+thermostatdiningweek+=("4 08:30 11:00 $tempAux")
+thermostatdiningweek+=("4 11:00 13:30 $tempComfort")
+thermostatdiningweek+=("4 13:30 16:50 $tempAux")
+thermostatdiningweek+=("4 16:50 17:25 $tempComfort")
+thermostatdiningweek+=("4 17:25 22:30 $tempAux")
+# vrijdag
+thermostatdiningweek+=("5 07:30 08:30 $tempComfort")
+thermostatdiningweek+=("5 08:30 11:00 $tempAux")
+thermostatdiningweek+=("5 11:00 13:30 $tempComfort")
+thermostatdiningweek+=("5 13:30 16:50 $tempAux")
+thermostatdiningweek+=("5 16:50 17:25 $tempComfort")
+thermostatdiningweek+=("5 17:25 22:30 $tempAux")
+# zaterdag
+thermostatdiningweek+=("6 07:30 08:30 $tempComfort")
+thermostatdiningweek+=("6 08:30 11:00 $tempAux")
+thermostatdiningweek+=("6 11:00 13:30 $tempComfort")
+thermostatdiningweek+=("6 13:30 16:50 $tempAux")
+thermostatdiningweek+=("6 16:50 17:25 $tempComfort")
+thermostatdiningweek+=("6 17:25 22:30 $tempAux")
+# zondag
+thermostatdiningweek+=("7 07:30 08:30 $tempComfort")
+thermostatdiningweek+=("7 08:30 11:00 $tempAux")
+thermostatdiningweek+=("7 11:00 13:30 $tempComfort")
+thermostatdiningweek+=("7 13:30 16:50 $tempAux")
+thermostatdiningweek+=("7 16:50 17:25 $tempComfort")
+thermostatdiningweek+=("7 17:25 22:30 $tempAux")
+
+# unset thermostatdiningdefault
+# DOW=$(date +%u)
+# echo $DOW
+# for thermostatday in "${thermostatdiningweek[@]}"; do
+#   daytime=(${thermostatday})
+#   if [ "$DOW" == "${daytime[0]}" ]; then
+#     thermostatdiningdefault+=("${daytime[1]} ${daytime[2]} ${daytime[3]} ")
+#   fi
+# done
+# 
+# for thermostatitem in "${thermostatdiningdefault[@]}"; do
+#   daytime=(${thermostatitem})
+#   echo ${daytime[0]} ${daytime[1]} ${daytime[2]} ${daytime[3]}
+# done
 
 unset thermostatdiningdefault
 thermostatdiningdefault+=("07:30 08:30")
-thermostatdiningdefault+=("11:00 12:20")
-thermostatdiningdefault+=("12:45 13:30")
-thermostatdiningdefault+=("16:45 17:15")
+#thermostatdiningdefault+=("11:00 12:20")
+thermostatdiningdefault+=("11:00 13:30")
+thermostatdiningdefault+=("16:50 17:25")
 #thermostatdiningdefault+=("19:00 20:15") # Test
 
 # Exceptions Dining
 # -----------------
 unset thermostatdiningevent
-thermostatdiningevent+=("2021-08-12 0 14:00 18:35 on") # Luc
+# thermostatdiningevent+=("2021-08-12 0 14:00 18:35 on") # Luc
 
-thermostatdiningevent+=("2021-09-15 14 07:00 12:15 on") # Laura
+# thermostatdiningevent+=("2021-08-31 0 09:00 15:00 off") # Vergadering
 
-thermostatdiningevent+=("2021-09-06 7 08:00 12:00 off") # SNT
-thermostatdiningevent+=("2021-09-06 7 13:00 17:00 off") # SNT
+thermostatdiningevent+=("2022-01-05 14 07:00 11:00 on $tempComfort") # Laura
 
-thermostatdiningevent+=("2021-09-16 7 11:30 17:31 off") # PCB
-thermostatdiningevent+=("2021-09-02 7 17:30 21:30 off") # SNT
+#thermostatdiningevent+=("2021-11-28 7 08:29 11:01 on 17.5") # Zondag
+#thermostatdiningevent+=("2021-11-28 7 13:29 16:51 on 17.5") # Zondag
+#thermostatdiningevent+=("2021-11-28 7 17:24 22:30 on 17.5") # Zondag
 
-thermostatdiningevent+=("2021-09-03 7 08:00 12:00 off") # SNT
+# thermostatdiningevent+=("2022-01-17 7 07:00 07:59 on") # SNT
+# thermostatdiningevent+=("2022-01-17 7 08:00 12:30 off") # SNT
+# thermostatdiningevent+=("2022-01-17 7 13:15 13:45 on") # SNT
+# thermostatdiningevent+=("2021-11-08 7 17:06 17:45 on") # SNT
+#thermostatdiningevent+=("2021-12-20 7 08:29 11:01 on 17.5") # Maandag
+#thermostatdiningevent+=("2021-12-20 7 13:29 16:51 on 17.5") # Maandag
+#thermostatdiningevent+=("2021-12-20 7 17:24 22:30 on 17.5") # Maandag
 
-thermostatdiningevent+=("2021-09-04 7 08:00 12:00 off") # SNT
+#thermostatdiningevent+=("2021-12-21 7 08:29 11:01 on 17.5") # Dinsdag
+#thermostatdiningevent+=("2021-12-21 7 13:29 16:51 on 17.5") # Dinsdag
+#thermostatdiningevent+=("2021-12-21 7 17:24 22:30 on 17.5") # Dinsdag
+#
+#thermostatdiningevent+=("2021-12-22 7 08:29 11:01 on 17.5") # Woensdag
+#thermostatdiningevent+=("2021-12-22 7 13:29 16:51 on 17.5") # Woensdag
+#thermostatdiningevent+=("2021-12-22 7 17:24 22:30 on 17.5") # Woensdag
+#
+#thermostatdiningevent+=("2021-12-23 7 08:29 11:01 on 17.5") # Donderdag
+#thermostatdiningevent+=("2021-12-23 7 13:29 16:51 on 17.5") # Donderdag
+#thermostatdiningevent+=("2021-12-23 7 17:24 22:30 on 17.5") # Donderdag
+# thermostatdiningevent+=("2022-01-13 7 11:30 17:31 off") # PCB
+# thermostatdiningevent+=("2022-01-20 7 17:30 21:30 off") # SNT
+# thermostatdiningevent+=("2022-01-20 7 21:29 22:30 on 17.5") # Donderdag
+#
+#thermostatdiningevent+=("2021-12-24 7 08:29 11:01 on 17.5") # Vrijdag
+#thermostatdiningevent+=("2021-12-24 7 13:29 16:51 on 17.5") # Vrijdag
+#thermostatdiningevent+=("2021-12-24 7 17:24 22:30 on 17.5") # Vrijdag
+# thermostatdiningevent+=("2021-11-12 7 07:00 07:59 on") # SNT
+# thermostatdiningevent+=("2021-11-12 7 08:00 12:30 off") # SNT
+
+# thermostatdiningevent+=("2021-11-13 7 07:00 07:59 on") # SNT
+# thermostatdiningevent+=("2021-11-13 7 08:00 12:30 off") # SNT
+# thermostatdiningevent+=("2021-11-13 7 13:15 13:45 on") # SNT
+#thermostatdiningevent+=("2021-12-25 7 08:29 11:01 on 17.5") # Zaterdag
+#thermostatdiningevent+=("2021-12-25 7 13:44 16:51 on 17.5") # Zaterdag
+#thermostatdiningevent+=("2021-12-25 7 17:24 22:30 on 17.5") # Zaterdag
 
 # Kitchen
 # =======
@@ -58,54 +160,69 @@ kitchenTempOffset=0
 
 # Default Kitchen
 # ===============
-unset thermostatkitchendefault
-thermostatkitchendefault+=("07:30 08:30")
-thermostatkitchendefault+=("11:00 13:00")
-thermostatkitchendefault+=("16:45 17:35")
-thermostatkitchendefault+=("22:20 22:50")
+unset thermostatkitchenweek
+# maandag
+thermostatkitchenweek+=("1 07:30 08:30 $tempAux")
+# dinsdag
+thermostatkitchenweek+=("2 07:30 08:30 $tempAux")
+# woensdag
+thermostatkitchenweek+=("3 07:30 08:30 $tempAux")
+# donderdag
+thermostatkitchenweek+=("4 07:30 08:30 $tempAux")
+# vrijdag
+thermostatkitchenweek+=("5 07:30 08:30 $tempAux")
+# zaterdag
+thermostatkitchenweek+=("6 07:30 08:30 $tempAux")
+# zondag
+thermostatkitchenweek+=("7 07:30 08:30 $tempAux")
+
+#unset thermostatkitchendefault
+#thermostatkitchendefault+=("07:30 08:30")
 
 # Exceptions Kitchen
 # ------------------
 unset thermostatkitchenevent
-thermostatkitchenevent+=("2021-08-12 0 16:50 18:35 on") # Luc
+# thermostatkitchenevent+=("2021-08-12 0 16:50 18:35 on") # Luc
 
-thermostatkitchenevent+=("2021-09-15 14 07:00 12:00 on") # Laura
+thermostatkitchenevent+=("2022-01-05 14 07:00 11:00 on $tempAux") # Laura
 
-#thermostatkitchenevent+=("2021-07-30 7 20:00 21:00 on") # Test
+# thermostatkitchenevent+=("2021-08-31 0 09:00 15:00 off") # Vergadering
 
-thermostatkitchenevent+=("2021-09-06 7 08:00 12:00 off") # SNT
-thermostatkitchenevent+=("2021-09-06 7 13:00 17:00 off") # SNT
-
-thermostatkitchenevent+=("2021-09-16 7 11:30 17:31 off") # PCB
-thermostatkitchenevent+=("2021-09-02 7 17:30 21:30 off") # SNT
-
-thermostatkitchenevent+=("2021-09-03 7 08:00 12:00 off") # SNT
-
-thermostatkitchenevent+=("2021-09-04 7 08:00 12:00 off") # SNT
+# Living
+# ======
+# Compensate temperature sensor
+livingTempOffset=0
 
 # Default Living
 # ==============
 unset thermostatlivingdefault
-thermostatlivingdefault+=("08:15 11:15")
+thermostatlivingdefault+=("08:15 11:05")
 thermostatlivingdefault+=("13:15 17:00")
-thermostatlivingdefault+=("17:20 22:30")
+thermostatlivingdefault+=("17:30 22:30")
 
 # Exceptions Living
 # -----------------
 unset thermostatlivingevent
-thermostatlivingevent+=("2021-08-12 0 14:00 18:35 on") # Luc
+# thermostatlivingevent+=("2021-08-12 0 14:00 18:35 on") # Luc
 
-thermostatlivingevent+=("2021-09-15 14 07:45 11:45 on") # Laura
+thermostatlivingevent+=("2022-01-05 14 07:45 11:00 on") # Laura
 
-thermostatlivingevent+=("2021-09-06 7 08:00 12:00 off") # SNT
-thermostatlivingevent+=("2021-09-06 7 13:00 17:00 off") # SNT
+thermostatlivingevent+=("2021-10-24 7 16:00 17:00 off") # Zondag Bad
 
-thermostatlivingevent+=("2021-09-16 7 11:30 17:31 off") # PCB
-thermostatlivingevent+=("2021-09-02 7 17:30 21:30 off") # SNT
+# thermostatlivingevent+=("2021-11-02 0 14:00 16:00 off") # Kapper
 
-thermostatlivingevent+=("2021-09-03 7 08:00 12:00 off") # SNT
+# thermostatlivingevent+=("2021-12-10 0 17:29 21:00 off") # Vergadering
 
-thermostatlivingevent+=("2021-09-04 7 08:00 12:00 off") # SNT
+thermostatlivingevent+=("2022-01-14 0 16:30 17:30 off") # Oogarts
+
+# thermostatlivingevent+=("2021-11-08 7 08:00 17:45 off") # SNT
+
+thermostatlivingevent+=("2022-01-13 7 11:30 17:31 off") # PCB
+thermostatlivingevent+=("2022-01-20 7 17:30 21:30 off") # SNT
+
+# thermostatlivingevent+=("2021-11-12 7 08:00 12:30 off") # SNT
+
+# thermostatlivingevent+=("2021-11-13 7 08:00 14:00 off") # SNT
 
 # Alarmclock
 # ==========
@@ -127,11 +244,11 @@ alarmtimes+=("07:30")
 alarmtimes+=("07:30")
 
 unset alarmevent
-alarmevent+=("2021-09-15 07:00 14") # Laura
+alarmevent+=("2022-01-05 07:00 14") # Laura
 
-alarmevent+=("2021-09-03 07:00 7") # SNT
-alarmevent+=("2021-09-04 07:00 7") # SNT
-alarmevent+=("2021-09-06 07:00 7") # SNT
+# alarmevent+=("2021-11-08 07:00 7") # SNT
+# alarmevent+=("2021-11-12 07:00 7") # SNT
+# alarmevent+=("2021-11-13 07:00 7") # SNT
 
 #alarmevent+=("2021-06-17 06:30") # Hepatitis Vaccinatie
 #alarmevent+=("2021-06-22 07:00") # Tandarts Liesbeth Donck
