@@ -135,11 +135,21 @@ function thermostat {
   # remove leading whitespace characters
   temp="${temp#"${temp%%[![:space:]]*}"}"
 
-  IFS=$'\n' thermostatroom=($(sort <<<"${thermostatroomdefault[*]}"))
+  unset thermostatdefault
+  DOW=$(date +%u)
+# echo $DOW
+  for thermostatday in "${thermostatlivingweek[@]}"; do
+    daytime=(${thermostatday})
+    if [ "$DOW" == "${daytime[0]}" ]; then
+      thermostatdefault+=("${daytime[1]} ${daytime[2]} ${daytime[3]} ")
+    fi
+  done
+ 
+  IFS=$'\n' thermostatroom=($(sort <<<"${thermostatdefault[*]}"))
   unset IFS
 
 #  printf "%s\n" "${thermostatroom[@]}"
-  echo $now
+#  echo $now
 
   heatingRoom="off"
 # Default times for heating
@@ -147,6 +157,10 @@ function thermostat {
     daytime=(${thermostatitem})
     if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
       heatingRoom="on"
+       if [[ -v "daytime[2]" ]] ; then
+#        echo "tempComfort: ${daytime[2]}"
+        tempComfort=${daytime[2]}
+      fi
       break
     fi
   done
@@ -165,8 +179,11 @@ function thermostat {
     if [ $today == $recevent ]; then
       echo "Event in $room on $(date -u --date @$recevent)"
       if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
-        echo "Between ${daytime[2]} and ${daytime[3]}: heating: ${daytime[4]}"
         heatingRoom=${daytime[4]}
+        if [[ -v "daytime[5]" ]] ; then
+          tempComfort=${daytime[5]}
+        fi
+        echo "Between ${daytime[2]} and ${daytime[3]}: heating: ${daytime[4]}, temp: $tempComfort °C"
         break
       fi
     fi
