@@ -15,7 +15,7 @@
 </div></a>
 <div id="menu">
   <a href="#radio"><img class="menubutton" src="emoji/radio.svg"></a>
-  <a href="#weather"><img class="menubutton" onclick="weather(event);" src="emoji/weather.svg"></a>
+  <a href="#weather"><img class="menubutton" onclick="document.getElementById('weather').contentDocument.location.reload(true);" src="emoji/weather.svg"></a>
   <a href="#thermostatUI"><img class="menubutton" src="emoji/thermostat.svg"></a>
   <a><img class="menubutton" onclick="lights(event);" src="emoji/light_bulb.svg"></a>
   <a href="#radio"><img class="menubutton" onclick="enterPIN(event);" src="emoji/keyring.svg"></a>
@@ -75,7 +75,7 @@
     <button onclick="thermostatUI(event, 'Decr', 'kitchentemp');">-</button>
   </div>
 </div>
-<div id="weather"></div>
+<iframe id="weather" src="meteogram/meteogram.html" height="480" width="800" style="border:none; padding: 0; margin: 0;"></iframe>
 <div id="miniclock" onclick="window.scrollTo(0,0); this.style.display = 'none';" style="display:none">20:00</div>
 </body>
 </html>
