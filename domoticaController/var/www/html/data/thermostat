@@ -14,7 +14,7 @@ christmasLight="tasmota-fb7b27-6951"
 unset heaters
 heaters+=("DiningTable tasmota_relayGPIO13")
 heaters+=("DiningHaard tasmota_8be4af-1199")
-heaters+=("DiningOost tasmota_4fdd94-7572")
+heaters+=("DiningOost tasmota-4fdd94-7572")
 heaters+=("DiningWest tasmota_relayGPIO19")
 
 heaters+=("LivingTable tasmota_4bf311-4881")
@@ -39,6 +39,13 @@ thermostatdiningweek+=("1 11:00 13:30 $tempComfort")
 thermostatdiningweek+=("1 13:30 16:50 $tempAux")
 thermostatdiningweek+=("1 16:50 17:25 $tempComfort")
 thermostatdiningweek+=("1 17:25 22:30 $tempAux")
+# # SNT
+# thermostatdiningweek+=("1 07:00 08:00 $tempComfort")
+# # Internet MaVm
+# thermostatdiningweek+=("1 12:15 13:30 $tempComfort")
+# thermostatdiningweek+=("1 13:30 16:50 $tempAux")
+# thermostatdiningweek+=("1 16:50 17:25 $tempComfort")
+# thermostatdiningweek+=("1 17:25 22:30 $tempAux")
 # dinsdag
 thermostatdiningweek+=("2 07:30 08:30 $tempComfort")
 thermostatdiningweek+=("2 08:30 11:00 $tempAux")
@@ -46,6 +53,13 @@ thermostatdiningweek+=("2 11:00 13:30 $tempComfort")
 thermostatdiningweek+=("2 13:30 16:50 $tempAux")
 thermostatdiningweek+=("2 16:50 17:25 $tempComfort")
 thermostatdiningweek+=("2 17:25 22:30 $tempAux")
+# # SNT
+# thermostatdiningweek+=("2 07:30 08:30 $tempComfort")
+# thermostatdiningweek+=("2 08:30 11:00 $tempAux")
+# thermostatdiningweek+=("2 11:00 12:30 $tempComfort")
+# # macOS DiNm
+# # Raspberry 1 DiAv
+# thermostatdiningweek+=("2 21:30 22:30 $tempAux")
 # woensdag
 thermostatdiningweek+=("3 07:30 08:30 $tempComfort")
 thermostatdiningweek+=("3 08:30 11:00 $tempAux")
@@ -53,6 +67,13 @@ thermostatdiningweek+=("3 11:00 13:30 $tempComfort")
 thermostatdiningweek+=("3 13:30 16:50 $tempAux")
 thermostatdiningweek+=("3 16:50 17:25 $tempComfort")
 thermostatdiningweek+=("3 17:25 22:30 $tempAux")
+# # SNT
+# thermostatdiningweek+=("3 07:00 08:00 $tempComfort")
+# # Windows 11 WoVm
+# thermostatdiningweek+=("3 12:15 13:30 $tempComfort")
+# thermostatdiningweek+=("3 13:30 16:50 $tempAux")
+# thermostatdiningweek+=("3 16:50 17:25 $tempComfort")
+# thermostatdiningweek+=("3 17:25 22:30 $tempAux")
 # donderdag
 thermostatdiningweek+=("4 07:30 08:30 $tempComfort")
 thermostatdiningweek+=("4 08:30 11:00 $tempAux")
@@ -60,6 +81,13 @@ thermostatdiningweek+=("4 11:00 13:30 $tempComfort")
 thermostatdiningweek+=("4 13:30 16:50 $tempAux")
 thermostatdiningweek+=("4 16:50 17:25 $tempComfort")
 thermostatdiningweek+=("4 17:25 22:30 $tempAux")
+# # SNT
+# thermostatdiningweek+=("4 07:30 08:30 $tempComfort")
+# thermostatdiningweek+=("4 08:30 11:00 $tempAux")
+# thermostatdiningweek+=("4 11:00 11:30 $tempComfort")
+# # PCB
+# thermostatdiningweek+=("4 16:30 17:25 $tempComfort") # Raspberry 2 DoAv
+# thermostatdiningweek+=("4 17:25 22:30 $tempAux") # Raspberry 2 DoAv
 # vrijdag
 thermostatdiningweek+=("5 07:30 08:30 $tempComfort")
 thermostatdiningweek+=("5 08:30 11:00 $tempAux")
@@ -67,6 +95,13 @@ thermostatdiningweek+=("5 11:00 13:30 $tempComfort")
 thermostatdiningweek+=("5 13:30 16:50 $tempAux")
 thermostatdiningweek+=("5 16:50 17:25 $tempComfort")
 thermostatdiningweek+=("5 17:25 22:30 $tempAux")
+# # SNT
+# thermostatdiningweek+=("5 07:30 08:30 $tempComfort")
+# thermostatdiningweek+=("5 08:30 11:00 $tempAux")
+# thermostatdiningweek+=("5 11:00 12:30 $tempComfort")
+# # macOS VrNm
+# thermostatdiningweek+=("5 17:00 17:40 $tempComfort")
+# thermostatdiningweek+=("5 17:40 22:30 $tempAux")
 # zaterdag
 thermostatdiningweek+=("6 07:30 08:30 $tempComfort")
 thermostatdiningweek+=("6 08:30 11:00 $tempAux")
@@ -86,7 +121,7 @@ thermostatdiningweek+=("7 17:25 22:30 $tempAux")
 # -----------------
 unset thermostatdiningevent
 
-thermostatdiningevent+=("2022-01-05 14 07:00 11:00 on $tempAux") # Laura
+thermostatdiningevent+=("2022-01-05 14 07:00 12:00 on $tempAux") # Laura
 
 # Kitchen
 # =======
@@ -98,10 +133,14 @@ kitchenTempOffset=0
 unset thermostatkitchenweek
 # maandag
 thermostatkitchenweek+=("1 07:30 08:30 $tempAux")
+# # SNT
+# thermostatkitchenweek+=("1 07:00 08:00 $tempAux") # Internet MaVm
 # dinsdag
 thermostatkitchenweek+=("2 07:30 08:30 $tempAux")
 # woensdag
 thermostatkitchenweek+=("3 07:30 08:30 $tempAux")
+# # SNT
+# thermostatkitchenweek+=("3 07:00 08:00 $tempAux") # Windows 11 WoVm
 # donderdag
 thermostatkitchenweek+=("4 07:30 08:30 $tempAux")
 # vrijdag
@@ -115,7 +154,7 @@ thermostatkitchenweek+=("7 07:30 08:30 $tempAux")
 # ------------------
 unset thermostatkitchenevent
 
-thermostatkitchenevent+=("2022-01-05 14 07:00 11:00 on $tempAux") # Laura
+thermostatkitchenevent+=("2022-01-05 14 07:00 12:00 on $tempAux") # Laura
 
 # Living
 # ======
@@ -129,22 +168,43 @@ unset thermostatlivingweek
 thermostatlivingweek+=("1 08:15 11:05 $tempComfort")
 thermostatlivingweek+=("1 13:15 17:00 $tempComfort")
 thermostatlivingweek+=("1 17:30 22:30 $tempComfort")
+# # SNT
+# # Internet MaVm
+# thermostatlivingweek+=("1 13:15 17:00 $tempComfort")
+# thermostatlivingweek+=("1 17:30 22:30 $tempComfort")
 # dinsdag
 thermostatlivingweek+=("2 08:15 11:05 $tempComfort")
 thermostatlivingweek+=("2 13:15 17:00 $tempComfort")
 thermostatlivingweek+=("2 17:30 22:30 $tempComfort")
+# # SNT
+# thermostatlivingweek+=("2 08:15 11:05 $tempComfort")
+# # macOS DiNm
+# # Raspberry DiAv
+# thermostatlivingweek+=("2 21:30 22:30 $tempComfort")
 # woensdag
 thermostatlivingweek+=("3 08:15 11:05 $tempComfort")
 thermostatlivingweek+=("3 13:15 17:00 $tempComfort")
 thermostatlivingweek+=("3 17:30 22:30 $tempComfort")
+# # SNT
+# # Windows 11 WoVm
+# thermostatlivingweek+=("3 13:15 17:00 $tempComfort")
+# thermostatlivingweek+=("3 17:30 22:30 $tempComfort")
 # donderdag
 thermostatlivingweek+=("4 08:15 11:05 $tempComfort")
 thermostatlivingweek+=("4 13:15 17:00 $tempComfort")
 thermostatlivingweek+=("4 17:30 22:30 $tempComfort")
+# # SNT
+# thermostatlivingweek+=("4 08:15 11:05 $tempComfort")
+# # PCB
+# thermostatlivingweek+=("4 17:30 22:30 $tempComfort") # Raspberry 2 DoAv
 # vrijdag
 thermostatlivingweek+=("5 08:15 11:05 $tempComfort")
 thermostatlivingweek+=("5 13:15 17:00 $tempComfort")
 thermostatlivingweek+=("5 17:30 22:30 $tempComfort")
+# # SNT
+# thermostatlivingweek+=("5 08:15 11:05 $tempComfort")
+# # macOS VrNm
+# thermostatlivingweek+=("5 17:30 22:30 $tempComfort")
 # zaterdag
 thermostatlivingweek+=("6 08:15 11:05 $tempComfort")
 thermostatlivingweek+=("6 13:15 17:00 $tempComfort")
@@ -163,7 +223,7 @@ thermostatlivingweek+=("7 17:30 22:30 $tempComfort")
 # -----------------
 unset thermostatlivingevent
 thermostatlivingevent+=("2022-01-03 0 09:30 11:15 off $tempOff") # Vaccinatie
-thermostatlivingevent+=("2022-01-05 14 07:45 11:00 on $tempComfort") # Laura
+thermostatlivingevent+=("2022-01-05 14 07:45 12:00 on $tempComfort") # Laura
 thermostatlivingevent+=("2022-01-14 0 16:30 17:30 off $tempOff") # Oogarts
 
 # Alarmclock
@@ -187,19 +247,12 @@ alarmtimes+=("07:30")
 
 unset alarmevent
 alarmevent+=("2022-01-05 07:00 14") # Laura
-
-# alarmevent+=("2021-11-08 07:00 7") # SNT
-# alarmevent+=("2021-11-12 07:00 7") # SNT
-# alarmevent+=("2021-11-13 07:00 7") # SNT
+alarmevent+=("2022-01-17 07:00 7") # SNT Internet MaVm
+alarmevent+=("2022-01-19 07:00 7") # SNT Windows 11 WoVm
 
 #alarmevent+=("2021-06-17 06:30") # Hepatitis Vaccinatie
 #alarmevent+=("2021-06-22 07:00") # Tandarts Liesbeth Donck
 
-#alarmevent+=("2021-07-11 06:30") # Test
-#alarmevent+=("2021-06-27 06:00 7") # Test
-
 unset sleepevent
 sleepevent+=("2021-08-25 7 08:00 12:00 $radio2 1000") # Laura
 sleepevent+=("2021-08-19 7 14:00 21:00 $klara 1000") # Peter
-
-#sleepevent+=("2021-05-24 7 17:00 21:00 $stubru 1000") # Test
