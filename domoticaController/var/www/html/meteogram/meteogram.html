@@ -8,7 +8,7 @@
 <script src="pattern-fill.js"></script>
 <script src="data.js"></script>
 <!--script src="exporting.js"></script-->
-<script src="accessibility.js"></script>
+<!--script src="accessibility.js"></script-->
 <link href="font-awesome.css" rel="stylesheet">
 <style>
 body {
@@ -341,8 +341,8 @@ Meteogram.prototype.drawWeatherSymbols = function (chart) {
  * Draw blocks around wind arrows, below the plot area
  */
 Meteogram.prototype.drawBlocksForWindArrows = function (chart) {
+    textPlotY =  chart.plotHeight + chart.plotTop + 42;
     const xAxis = chart.xAxis[0];
-
     for (
         let pos = xAxis.min, max = xAxis.max, i = 0;
         pos <= max + 36e5; pos += 36e5,
@@ -351,6 +351,26 @@ Meteogram.prototype.drawBlocksForWindArrows = function (chart) {
         // Get the X position
         const isLast = pos === max + 36e5,
             x = Math.round(xAxis.toPixels(pos)) + (isLast ? 0.5 : -0.5);
+
+        if (i < this.winds.length) {
+          windSpeed = Math.round(this.winds[i].value * 3.6);
+        } else {
+          windSpeed = "";
+        }
+        chart.renderer
+            .text(
+                windSpeed,
+                x * 2 - 10,
+                textPlotY
+            )
+            .css({
+                color: 'white',
+                fontSize: '16px',
+            })
+            .attr({
+                zIndex: 5,
+            })
+            .add()
 
         // Draw the vertical dividers and ticks
         const isLong = this.resolution > 36e5 ?
@@ -374,7 +394,6 @@ Meteogram.prototype.drawBlocksForWindArrows = function (chart) {
     chart.get('windbarbs').markerGroup.attr({
         translateX: chart.get('windbarbs').markerGroup.translateX + 16
     });
-
 };
 
 /**
@@ -394,7 +413,7 @@ Meteogram.prototype.getChartOptions = function () {
             alignTicks: false,
             scrollablePlotArea: {
                 minWidth: 720
-            }
+            },
         },
 
         defs: {
@@ -438,14 +457,15 @@ Meteogram.prototype.getChartOptions = function () {
             }
         },
 
-        tooltip: {
-            shared: true,
-            useHTML: true,
-            headerFormat:
-                '<small>{point.x:%A, %b %e, %H:%M} - {point.point.to:%H:%M}</small><br>' +
-                '<b>{point.point.symbolName}</b><br>'
-
-        },
+        tooltip: { enabled: false },
+//         tooltip: {
+//             shared: true,
+//             useHTML: true,
+//             headerFormat:
+//                 '<small>{point.x:%A, %b %e, %H:%M} - {point.point.to:%H:%M}</small><br>' +
+//                 '<b>{point.point.symbolName}</b><br>'
+// 
+//         },
 
         xAxis: [{ // Bottom X axis
             type: 'datetime',
@@ -467,7 +487,7 @@ Meteogram.prototype.getChartOptions = function () {
                   color: 'white'
                 }
             },
-            crosshair: true
+            crosshair: false
         }, { // Top X axis
             linkedTo: 0,
             type: 'datetime',
@@ -555,6 +575,14 @@ Meteogram.prototype.getChartOptions = function () {
 
         plotOptions: {
             series: {
+                states: {
+                  inactive: {
+                      opacity: 1
+                  },
+                  hover: {
+                    enabled: false,
+                  }
+                },
                 pointPlacement: 'between'
             }
         },
@@ -568,7 +596,7 @@ Meteogram.prototype.getChartOptions = function () {
                 enabled: false,
                 states: {
                     hover: {
-                        enabled: true
+                        enabled: false
                     }
                 }
             },
@@ -629,9 +657,9 @@ Meteogram.prototype.getChartOptions = function () {
                 }
             },
             borderWidth: 0,
-            tooltip: {
-                valueSuffix: ' mm'
-            }
+//             tooltip: {
+//                 valueSuffix: ' mm'
+//             }
         }, {
             name: 'Luchtdruk',
             color: Highcharts.getOptions().colors[2],
@@ -640,9 +668,9 @@ Meteogram.prototype.getChartOptions = function () {
                 enabled: false
             },
             shadow: false,
-            tooltip: {
-                valueSuffix: ' hPa'
-            },
+//             tooltip: {
+//                 valueSuffix: ' hPa'
+//             },
             dashStyle: 'spline',
             lineWidth: 4,
             yAxis: 2
@@ -670,7 +698,6 @@ Meteogram.prototype.onChartLoad = function (chart) {
 
     this.drawWeatherSymbols(chart);
     this.drawBlocksForWindArrows(chart);
-
 };
 
 /**
