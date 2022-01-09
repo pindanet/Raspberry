@@ -155,7 +155,7 @@ function thermostat {
 # Default times for heating
   for thermostatitem in "${thermostatroom[@]}"; do
     daytime=(${thermostatitem})
-    if [[ "${daytime[0]}" < "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
+    if [[ "${daytime[0]}" < "$now" || "${daytime[0]}" == "$now" ]] && [[ "${daytime[1]}" > "$now" ]]; then
       heatingRoom="on"
        if [[ -v "daytime[2]" ]] ; then
 #        echo "tempComfort: ${daytime[2]}"
@@ -178,7 +178,7 @@ function thermostat {
     fi
     if [ $today == $recevent ]; then
       echo "Event in $room on $(date -u --date @$recevent)"
-      if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
+      if [[ "${daytime[2]}" < "$now" || "${daytime[2]}" == "$now"  ]] && [[ "${daytime[3]}" > "$now" ]]; then
         heatingRoom=${daytime[4]}
         if [[ -v "daytime[5]" ]] ; then
           tempComfort=${daytime[5]}
