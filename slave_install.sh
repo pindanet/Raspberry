@@ -90,7 +90,7 @@ if [ $USER == "pi" ]; then
   
   # rotate LCD screen 90°
   echo "display_rotate=1 90" | sudo tee -a /boot/config.txt
-  sed '/.*MatchIsTouchscreen "on".*/a\ \ \ \ \ \ \ \ Option "TransformationMatrix" "0 1 0 -1 0 1 0 0 1"' /usr/share/X11/xorg.conf.d/40-libinput.conf
+  sudo sed -i '/.*MatchIsTouchscreen "on".*/a\ \ \ \ \ \ \ \ Option "TransformationMatrix" "0 1 0 -1 0 1 0 0 1"' /usr/share/X11/xorg.conf.d/40-libinput.conf
   # echo "dtoverlay=rpi-ft5406,touchscreen-swapped-x-y=1,touchscreen-inverted-x=1,touchscreen-inverted-y=1" | sudo tee -a /boot/config.txt
   
   # Continue after reboot
