@@ -1,7 +1,7 @@
-var lightSwitch="tasmota_15dd89-7561";
+var lightSwitch="tasmota-15dd89-7561";
 var irSwitch = [];
-irSwitch["ir1"] = "tasmota_4fd8ee-6382.log";
-irSwitch["ir2"] = "tasmota_a943fa-1018.log";
+irSwitch["ir1"] = "tasmota-4fd8ee-6382.log";
+irSwitch["ir2"] = "tasmota-a943fa-1018.log";
 
 var startTimer;
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
