@@ -8,7 +8,7 @@ eveningShutterDown="22:20"
 eveningShutterUp="23:00"
 
 lighttimer=180 #in seconds
-lightSwitch="tasmota_15dd89-7561"
+lightSwitch="tasmota-15dd89-7561"
 
 _pir_pin=4
 #_pir_2_pin=7
