@@ -215,7 +215,9 @@ for i in `atq | awk '{print $1}'`;do atrm $i;done
 
 # Lights on in the morning 
 echo "raspi-gpio set $diningLight op dl" | at -M $nextAlarm
-echo "sleep 660; wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at -M $nextAlarm
+if [ ! -z ${christmasLight+x} ]; then
+  echo "sleep 660; wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at -M $nextAlarm
+fi
 
 # Lights out in the morning
 # From UTC
@@ -236,7 +238,9 @@ else # still dark
   echo "raspi-gpio set $diningLight op dh" | at $sunrise
 #  echo "wget -qO- http://$diningLight/cm?cmnd=Power%20Off" | at $sunrise
 fi
-echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20Off" | at -M $sunrise
+if [ ! -z ${christmasLight+x} ]; then
+  echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20Off" | at -M $sunrise
+fi
 
 # Lights on in the evening
 # From UTC
@@ -247,14 +251,20 @@ sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
 sunset=$(date -d @$sunsetLocalSec +"%H:%M")
 if [[ $eveningShutterDown > $sunset ]]; then # already dark
   echo "raspi-gpio set $diningLight op dl" | at $sunset
-  echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at $sunset
+  if [ ! -z ${christmasLight+x} ]; then
+    echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at $sunset
+  fi
 else # still daylight
   echo "raspi-gpio set $diningLight op dl" | at $eveningShutterDown
-  echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at $eveningShutterDown
+  if [ ! -z ${christmasLight+x} ]; then
+    echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at $eveningShutterDown
+  fi
 fi
 # All lights out
 echo "raspi-gpio set $diningLight op dh" | at $lightevening
-echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20Off" | at $lightevening
+if [ ! -z ${christmasLight+x} ]; then
+  echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20Off" | at $lightevening
+fi
 # Update and reboot, 1 minute later
 echo "apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at $(date -d @$(($(date -d $lightevening +"%s") + 60)) +"%H:%M")
 
