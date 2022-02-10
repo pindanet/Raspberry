@@ -118,9 +118,9 @@ function weather(event) {
           document.getElementById("weatherTemp" + col).innerHTML = weatherObj.properties.timeseries[ts].data.instant.details.air_temperature; 
           document.getElementById("weatherHumi" + col).innerHTML = weatherObj.properties.timeseries[ts].data.instant.details.relative_humidity; 
           document.getElementById("weatherWind" + col).innerHTML = '<span style="transform: rotate(' + weatherObj.properties.timeseries[ts].data.instant.details.wind_from_direction + 'deg);display: inline-block;">&darr;</span> ';
-          document.getElementById("weatherWind" + col).innerHTML += weatherObj.properties.timeseries[ts].data.instant.details.wind_speed; 
+          document.getElementById("weatherWind" + col).innerHTML += Math.round(weatherObj.properties.timeseries[ts].data.instant.details.wind_speed * 3.6); 
           document.getElementById("weatherPrec" + col).innerHTML = weatherObj.properties.timeseries[ts].data.next_1_hours.details.precipitation_amount; 
-          document.getElementById("weatherPres" + col).innerHTML = weatherObj.properties.timeseries[ts].data.instant.details.air_pressure_at_sea_level;
+          document.getElementById("weatherPres" + col).innerHTML = Math.round(weatherObj.properties.timeseries[ts].data.instant.details.air_pressure_at_sea_level);
           var yrSymbol;
           for (let y in yrCodes) {
             if (weatherObj.properties.timeseries[ts].data.next_1_hours.summary.symbol_code.includes(yrCodes[y].replace(/\s/g, ''))) {
@@ -188,16 +188,16 @@ function weather(event) {
 }
 
 function executeIfFileExist(src, callback) {
-  var xhrfe = new XMLHttpRequest()
-  xhrfe.responseType = 'text';
-  xhrfe.open('POST', src, true);
-  xhrfe.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhrfe.onload = function(e) {
+  var xhr = new XMLHttpRequest()
+  xhr.responseType = 'text';
+  xhr.open('POST', src, true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
     if (this.status == 200) {
       callback();
     }
   }
-  xhrfe.send();
+  xhr.send();
 }
 
 function irstatus(irswitch, id) {
@@ -268,7 +268,7 @@ function lights(event) {
     }
   };
   xhr.send("dev=" + lightSwitch + "&cmd=Power%20toggle");
-
+console.log("dev=" + lightSwitch + "&cmd=Power%20toggle");
   event.stopPropagation();
 }
 
