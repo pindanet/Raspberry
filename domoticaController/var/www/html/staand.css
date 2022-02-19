@@ -44,9 +44,13 @@ button {
   text-align: center;
   padding-bottom: 1vw;
 }
-#radio, #menu, #thermostatUI, #weather {
+#radio, #menu, #thermostatUI, #weather, PINform {
   text-align: center;
   vertical-align: middle;
+  height: 60vw;
+  margin: 0;
+}
+#photoframe {
   height: 60vw;
 }
 #thermostatUI h1 {
@@ -85,3 +89,79 @@ h1 img, #radio h1 img {
   border: 1px solid DeepSkyBlue;
   color: DeepSkyBlue;
 }
+/* PinPad */
+#PINform input:focus,
+#PINform select:focus,
+#PINform textarea:focus,
+#PINform button:focus {
+  outline: none;
+}
+#PINform {
+  text-align: center;
+/*
+  position: absolute;
+  width: 300px; height: 400px;
+  left: 50%;
+  margin-left: -180px;
+  top: 50%;
+  margin-top: -215px;
+  padding: 30px;
+*/
+}
+#PINbox {
+  background-color: rgba(128,128,128,0.5);
+  border: 1px solid rgb(128,128,128);
+  border-radius: 12px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  margin: 3.5%;
+  width: 92%;
+  font-size: 3em;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 2px black;
+}
+.PINbutton {
+  background-color: rgba(128,128,128,0.5);
+  border: 1px solid rgb(128,128,128);
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  color: #fff;
+  text-shadow: 0 0 2px black;
+  font-weight: bold;
+  border-radius: 50%;
+  font-size: 2em;
+  text-align: center;
+  width: 14vw;
+  height: 14vw;
+  margin: 7px 20px;
+  padding: 0;
+}
+.clear, .enter {
+/*
+  display: inline-block;
+*/
+  font-size: 1.5em;
+  width: 30vw;
+  margin: 2vh 5vw;
+}
+.PINbutton:hover {
+  box-shadow: #506CE8 0 0 1px 1px;
+}
+.PINbutton:active {
+  background: rgba(80,108,232,0.5);
+  color: #fff;
+}
+.clear:hover {
+  box-shadow: #ff3c41 0 0 1px 1px;
+}
+.clear:active {
+  background: rgba(255,60,65,0.5);
+  color: #fff;
+}
+.enter:hover {
+  box-shadow: #47cf73 0 0 1px 1px;
+}
+.enter:active {
+  background: rgba(71,207,115,0.5);
+  color: #fff;
+}
+/* End PinPad */
