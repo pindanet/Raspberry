@@ -2,6 +2,65 @@
 tempIncrDecr = 0.5;
 ChristmasLightDev = "-fb7b27-6951";
 
+function photoframe(event) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "system.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.readyState === 4) {
+      var img = new Image();
+      img.src = this.responseText;
+      document.getElementById("photoframe").src = this.responseText;
+    }
+  };
+  xhr.send("command=photoframe");
+  event.stopPropagation();
+}
+function os(event, command) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "system.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("command=" + command);
+  event.stopPropagation();
+}
+// PinPad
+function addNumber(event, element){
+  document.getElementById('PINbox').value = document.getElementById('PINbox').value+element.value;
+  event.stopPropagation();
+}
+function clearForm(event){
+  document.getElementById('PINbox').value = "";
+  event.stopPropagation();
+}
+function submitForm(event) {
+  if (document.getElementById('PINbox').value != "") {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "openssl.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        if (! this.responseText.includes("Password hash:")) {
+          document.getElementById("hiddenmenu").style.display = "";
+          document.getElementById("pinpadmenubutton").style.display = "none";
+          location.href = "#menu";
+        } else {
+          document.getElementById("hiddenmenu").style.display = "none";
+          document.getElementById("pinpadmenubutton").style.display = "";
+          location.href = "#menu";
+        }
+        event.stopPropagation();
+      }
+    };
+    xhr.send("IGTzbhSjRf=" + btoa(document.getElementById('PINbox').value));
+  } else {
+    document.getElementById("hiddenmenu").style.display = "none";
+    document.getElementById("pinpadmenubutton").style.display = "";
+    location.href = "#menu";
+  }
+  event.stopPropagation();
+}
+// End PinPad
+
 function getDiningTemp() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "ssh.php", true);
