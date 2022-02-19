@@ -1,6 +1,6 @@
 <?php
 
-// Use terminal arg as POST en GET arg, example: php openssl.php password=12345678 message=Hello
+// Use terminal arg as POST en GET arg, example: php openssl.php IGTzbhSjRf=12345678 message=Hello
 if (!isset($_SERVER["HTTP_HOST"])) {
   parse_str(implode('&', array_slice($argv, 1)), $_GET);
   parse_str(implode('&', array_slice($argv, 1)), $_POST);
@@ -50,6 +50,7 @@ if (password_verify(base64_decode($password), $hash)) {
 <img style="height: 100px;" onclick="clearTimeout(startTimer);remoteCommand(event,'halt');" src="emoji/shutdown.svg">
 <img style="height: 100px;" onclick="clearTimeout(startTimer);calendar(event);" src="emoji/calendar.svg">
 <img style="height: 100px;" onclick="clearTimeout(startTimer);thermometer(event);" src="emoji/thermometer.svg">
+<!--a href="index.html"><img class="menubutton" src="emoji/calendar.svg"></a-->
 EOT;
   echo base64_encode($original_plaintext);
 } else {
