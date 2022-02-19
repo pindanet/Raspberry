@@ -3,13 +3,13 @@
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
 //Post data als argumenten bij php cli
-/*
+
 // php system.php command=update
 if (!isset($_SERVER["HTTP_HOST"])) {
   parse_str($argv[1], $_GET);
   parse_str($argv[1], $_POST);
 }
-*/
+
 function checkWall() {
   $fp = fsockopen("udp://rpiwall.local", 22, $errno, $errstr);
   if (!$fp) {
@@ -27,7 +27,7 @@ case "system": ?>
   <button onclick="remoteCommand(event,'halt');">Uitschakelen</button>
   <button onclick="remoteCommand(event,'rpiwall');">Wall</button>
 <?php break;
-case "softap": 
+case "softap":
   exec("/bin/systemctl is-active hostapd.service", $output, $return);
   if ($output[0] == "inactive") {
     exec("sudo /bin/systemctl start hostapd.service");
@@ -37,23 +37,27 @@ case "softap":
     echo "WiFi AP uitgeschakeld";
   }
   break;
-case "reboot": 
+case "reboot":
   echo "Domoticacontroller herstart.\n";
   exec("sudo /sbin/shutdown -r now");
   break;
-case "halt": 
+case "halt":
   exec("sudo /sbin/shutdown -h now");
   break;
-case "rsync": 
+case "rsync":
   exec("sudo /bin/bash remote.sh rsync");
   break;
-case "update": 
+case "update":
   exec("sudo /bin/bash remote.sh update");
   break;
-case "clean": 
+case "clean":
   exec("sudo /bin/bash remote.sh clean");
   break;
-case "rpiwall": 
+case "photoframe":
+  exec("/bin/bash photoframe.sh", $output, $return);
+  echo $output[0];
+  break;
+case "rpiwall":
   if (checkWall()) {
 //    $connection = ssh2_connect("rpiwall.local", 22,  array('hostkey'=>'ssh-rsa'));
 //    ssh2_auth_pubkey_file($connection, 'dany',
