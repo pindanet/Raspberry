@@ -179,6 +179,7 @@ EOF
   sudo wget -O /var/www/html/emoji/light_bulb.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/light_bulb.svg
   sudo wget -O /var/www/html/background.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/background.php
   sudo wget -O /var/www/html/openssl.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/openssl.php
+  sudo wget -O /var/www/html/photoframe.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/photoframe.sh
 
 # Fetch background images
   sudo apt-get install imagemagick -y
