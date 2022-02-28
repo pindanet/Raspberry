@@ -2,6 +2,21 @@
 tempIncrDecr = 0.5;
 ChristmasLightDev = "-fb7b27-6951";
 
+function getThermostatVar(varname) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "data/thermostat", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    var position = this.responseText.search(varname + "=");
+    if (position > -1) {
+      var thermostatVar = parseFloat(this.responseText.substring(position + varname.length + 1));
+      if (varname == "TVVolume") {
+        radioCommand(event, 'setvol', thermostatVar);
+      }
+    }
+  };
+  xhr.send();
+}
 function photoframe(event) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "system.php", true);
@@ -343,6 +358,7 @@ function radioCommand(event, command, options) {
   } else if (command == "stop") {
     window.scrollTo(0, 0);
     document.getElementById('miniclock').style.display = 'none';
+    getThermostatVar("TVVolume");
   }
   if (typeof event !== 'undefined') {
     event.stopPropagation();
