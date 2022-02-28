@@ -1,5 +1,6 @@
 <?php
 $command = htmlspecialchars($_POST["command"]);
+$options = htmlspecialchars($_POST["options"]);
 
 //ob_flush();
 //ob_start();
@@ -17,7 +18,7 @@ function status($output) {
 
 switch ($command) {
   case "play":
-    $options = htmlspecialchars($_POST["options"]);
+//    $options = htmlspecialchars($_POST["options"]);
     exec("mpc stop");
     sleep(5);
     exec("mpc play $options", $output, $return);
@@ -57,7 +58,13 @@ switch ($command) {
     status($output);
     exit();
     break;
-  case "status":
+  case "setvol":
+//    $volume = htmlspecialchars($_POST["volume"]);
+    exec("mpc volume " . $options, $output, $return);
+    status($output);
+    exit();
+    break;
+   case "status":
     exec("mpc status", $output, $return);
     status($output);
     exit();
