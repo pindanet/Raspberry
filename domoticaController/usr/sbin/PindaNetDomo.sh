@@ -209,8 +209,13 @@ function thermostat {
   fi
   if [ "$heatingRoom" == "off" ]; then
 #    tempWanted=$(awk "BEGIN {print ($tempComfort - 5)}")
-    echo "Heating: off, $tempOff °C"
-    tempWanted=$tempOff
+    if [[ "$tempNightTime" > "$now" ]]; then
+      echo "Heating: off at night, $tempNight °C"
+      tempWanted=$tempNight
+    else
+      echo "Heating: off, $tempOff °C"
+      tempWanted=$tempOff
+    fi
   fi
   total=${#heaterRoom[@]}
   for (( i=0; i<$total; i++ )); do
