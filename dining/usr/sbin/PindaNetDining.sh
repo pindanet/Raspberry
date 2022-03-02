@@ -139,8 +139,13 @@ function thermostat {
     fi
   fi
   if [ "$heatingRoom" == "off" ]; then
-    echo "Heating: Off, $tempOff °C"
-    tempWanted=$tempOff
+    if [[ "$tempNightTime" > "$now" ]]; then
+      echo "Heating: off at night, $tempNight °C"
+      tempWanted=$tempNight
+    else
+      echo "Heating: Off, $tempOff °C"
+      tempWanted=$tempOff
+    fi
   fi
   total=${#heaterRoom[@]}
   for (( i=0; i<$total; i++ )); do
