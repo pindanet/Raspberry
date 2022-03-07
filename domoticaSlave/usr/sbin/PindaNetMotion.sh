@@ -3,7 +3,7 @@
 # ToDo
 
 morningShutterDown="05:00"
-morningShutterUp="08:00"
+morningShutterUp="08:30"
 eveningShutterDown="22:20"
 eveningShutterUp="23:00"
 
