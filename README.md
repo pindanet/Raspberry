@@ -373,7 +373,8 @@ iface br0 inet dhcp
     arecord --device=hw:3,0 --format S16_LE --rate 44100 -V mono -c1 sample.wav
     
 ### FFMPEG video recorder
-    #Capture to an image file, continually overwriting it with new contents
+    # Capture to an image file, continually overwriting it with new contents
+    # https://stegard.net/2021/07/capture-images-from-a-webcam-using-ffmpeg/
     v4l2-ctl --list-device
     ffmpeg -y -f v4l2 -video_size 1280x720 -i /dev/video1 -r 0.2 -qscale:v 2 -update 1 /tmp/webcam.jpg
 
