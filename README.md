@@ -377,6 +377,8 @@ iface br0 inet dhcp
     # https://stegard.net/2021/07/capture-images-from-a-webcam-using-ffmpeg/
     v4l2-ctl --list-device
     ffmpeg -y -f v4l2 -video_size 1280x720 -i /dev/video1 -r 0.2 -qscale:v 2 -update 1 /tmp/webcam.jpg
+    # https://wiki.archlinux.org/title/FFmpeg#Recording_webcam
+    ffmpeg -f v4l2 -video_size 640x480 -i /dev/video1 -c:v libx264 -preset ultrafast webcam.mp4
 
 ## Bluetooth OBEX Push file transfer
 ### Bluetooth Raspberry Pi Receiver
