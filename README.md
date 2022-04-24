@@ -368,6 +368,14 @@ iface br0 inet dhcp
     libcamera-vid -o - -t 0 -n --width 1280 --height 720 --framerate 25 --bitrate 6000000 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://a.rtmp.youtube.com/live2/<SESSIE>
     sudo apt-get install ffmpeg
     raspivid -o - -t 0 -fps 25 -b 6000000 -w 1280 -h 720 | ffmpeg -re -ar 44100 -ac 2 -acodec pcm_s16le -f s16le -ac 2 -i /dev/zero -f h264 -i - -vcodec copy -acodec aac -ab 128k -g 50 -strict experimental -f flv rtmp://a.rtmp.youtube.com/live2/<SESSIE>
+    
+### Audio recorder
+    arecord --device=hw:3,0 --format S16_LE --rate 44100 -V mono -c1 sample.wav
+    
+### FFMPEG video recorder
+    #Capture to an image file, continually overwriting it with new contents
+    v4l2-ctl --list-device
+    ffmpeg -y -f v4l2 -video_size 1280x720 -i /dev/video1 -r 0.2 -qscale:v 2 -update 1 /tmp/webcam.jpg
 
 ## Bluetooth OBEX Push file transfer
 ### Bluetooth Raspberry Pi Receiver
