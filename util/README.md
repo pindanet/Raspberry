@@ -1,5 +1,6 @@
 ## Make a image of a noresised SD-card
       dd bs=4M count=1247 of=basisimage.img if=/dev/mmcblk0 status=progress conv=fsync
+      dd bs=4M count=1287 of=basisimage.img if=/dev/mmcblk0 status=progress conv=fsync (32-bit)
 # Local Repository
 ## Create, Update local repository
     sudo mkdir /run/media/dany/0c1b4552-03cb-409b-9c8c-61c19bdd2723/raspbian.org
