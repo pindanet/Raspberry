@@ -358,6 +358,7 @@ function radioCommand(event, command, options) {
   } else if (command == "stop") {
     window.scrollTo(0, 0);
     document.getElementById('miniclock').style.display = 'none';
+    document.getElementById('minitemp').style.display = 'none';
     getThermostatVar("TVVolume");
   }
   if (typeof event !== 'undefined') {
@@ -420,6 +421,7 @@ function startTime() {
   document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + roomTemp;
   document.getElementById('clock').innerHTML = h + ":" + m;
   document.getElementById('miniclock').innerHTML = h + ":" + m;
+  document.getElementById('minitemp').innerHTML = roomTemp;
   getRoomTemp();
   var radioApp = getApp("radio");
   if (radioApp == "on") {
