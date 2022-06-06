@@ -81,6 +81,12 @@ h1 img, #radio h1 img {
   left: 0;
   font-size: 7vw;
 }
+#minitemp {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-size: 7vw;
+}
 .bme280 {
   font-size: 3vw;
 }
