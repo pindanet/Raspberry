@@ -219,8 +219,8 @@ fi
 for i in `atq | awk '{print $1}'`;do atrm $i;done
 
 # Lights on in the morning 
-echo "raspi-gpio set $diningLight op dl" | at -M $nextAlarm
-#echo "sleep 660; wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M $nextAlarm
+#echo "raspi-gpio set $diningLight op dl" | at -M $nextAlarm
+echo "sleep 660; wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M $nextAlarm
 if [ ! -z ${christmasLight+x} ]; then
   echo "sleep 660; wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at -M $nextAlarm
 fi
