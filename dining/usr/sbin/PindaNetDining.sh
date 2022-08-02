@@ -1,5 +1,5 @@
 #!/bin/bash
-tempfact=1.08  # Zomer, omgevingstemp: 1.05, Winter, IR temp: 1.08
+tempfact=1.08  # Zomer, omgevingstemp: 1.00, Winter, IR temp: 1.03
 function relayGPIO () {
   _r1_pin=${1#*relayGPIO}
 
@@ -260,12 +260,18 @@ sunset=$(date -d @$sunsetLocalSec +"%H:%M")
 if [[ $eveningShutterDown > $sunset ]]; then # already dark
 #  echo "raspi-gpio set $diningLight op dl" | at $sunset
   echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M $sunset
+  if [ ! -z ${TVlamp+x} ]; then
+    echo "wget -qO- http://$TVlamp/cm?cmnd=Power%20On" | at $sunset
+  fi
   if [ ! -z ${christmasLight+x} ]; then
     echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at $sunset
   fi
 else # still daylight
 #  echo "raspi-gpio set $diningLight op dl" | at $eveningShutterDown
   echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M $eveningShutterDown
+  if [ ! -z ${TVlamp+x} ]; then
+    echo "wget -qO- http://$TVlamp/cm?cmnd=Power%20On" | at $eveningShutterDown
+  fi
   if [ ! -z ${christmasLight+x} ]; then
     echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at $eveningShutterDown
   fi
@@ -350,8 +356,8 @@ do
   thermostat
 
   sudo pkill -9 pngview
-#  convert -size 1920x70 xc:none -font Bookman-DemiItalic -pointsize 32 -fill black -stroke white -gravity center -draw "text 0,0 '$(date +"%A, %e %B %Y   %k:%M")   $(cat /home/*/temp.txt)'" /home/*/image.png
-  convert -size 1920x70 xc:none -font /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf -pointsize 32 -fill white -gravity center -draw "text 0,0 '$(date +"%A, %e %B %Y   %k:%M")   $(cat /home/*/temp.txt)'" /home/*/image.png
+#  convert -size 1920x70 xc:none -font /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf -pointsize 32 -fill black -gravity center -draw "text 0,0 '$(date +"%A, %e %B %Y   %k:%M")   $(cat /home/*/temp.txt)'" /home/*/image.png
+  convert -size 1920x70 xc:none -font /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf -pointsize 48 -fill black -gravity center -draw "text 0,0 '$(date +"%A, %e %B %Y   %k:%M")   $(cat /home/*/temp.txt)'" /home/*/image.png
   /home/*/raspidmx-master/pngview/pngview -b 0 -l 3 -y 1130 /home/*/image.png &
 
   sleepSec=$((60 - ($(date +"%s") - starttime)))
