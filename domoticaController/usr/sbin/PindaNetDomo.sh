@@ -446,20 +446,22 @@ do
     # disable status led's
     echo 0 > /sys/class/leds/led0/brightness
     echo 0 > /sys/class/leds/led1/brightness
+    # TV Lamp out
+    dummy=$(wget -qO- http://$TVlamp/cm?cmnd=Power%20Off)
     # Stop Musisc Player
     if [ -f /var/www/html/data/mpc.txt ]; then
       mpc stop
       mpc volume $TVVolume
       rm /var/www/html/data/mpc.txt
     fi
-    if (echo > /dev/tcp/rpiwall/22) >/dev/null 2>&1; then
-      # shutdown RPIWall
-      wget --post-data="command=halt" --quiet http://rpiwall/remote.php
-      sleep 30
-      # Power off RPIWall
-      dummy=$(wget -qO- http://tasmota_4fd8ee-6382/cm?cmnd=Power%20Off)
+#    if (echo > /dev/tcp/rpiwall/22) >/dev/null 2>&1; then
+#      # shutdown RPIWall
+#      wget --post-data="command=halt" --quiet http://rpiwall/remote.php
+#      sleep 30
+#      # Power off RPIWall
+#      dummy=$(wget -qO- http://tasmota_4fd8ee-6382/cm?cmnd=Power%20Off)
 #      python /var/www/html/rfxcmd_gc-master/rfxcmd.py -d /dev/ttyUSB0 -s "0B 11 00 00 01 25 4A AE 0D 00 00 80"
-    fi
+#    fi
 #    thermostatOff
 #    thermostatManualReset
   fi
