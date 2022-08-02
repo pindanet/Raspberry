@@ -1,4 +1,5 @@
 TVVolume=30
+TVlamp="tasmota-a94717-1815"
 
 tempComfort="20.00"
 tempAux="17.50"
@@ -14,17 +15,16 @@ eveningShutterDown="22:20"
 # christmasLight="tasmota-fb7b27-6951"
 
 unset heaters
-heaters+=("DiningTable tasmota_relayGPIO13")
-#heaters+=("DiningHaard tasmota-8be4af-1199")
-#heaters+=("DiningOost tasmota-4fdd94-7572")
-heaters+=("DiningWest tasmota_relayGPIO19")
+heaters+=("DiningZonsondergang tasmota-fb7b27-6951")
+heaters+=("DiningTafel tasmota-8be4af-1199")
+heaters+=("DiningEekhoorn tasmota-4fdd94-7572")
+#heaters+=("DiningWest tasmota_relayGPIO19")
 
-heaters+=("LivingTable tasmota-4bf311-4881")
-heaters+=("LivingZuid tasmota-8bbe0d-7693")
-heaters+=("LivingNoord tasmota-8bbe4d-7757")
-heaters+=("LivingZuidOost tasmota-a94717-1815")
+heaters+=("LivingTafel tasmota-4bf311-4881")
+heaters+=("LivingSchilderij tasmota-8bbe0d-7693")
+heaters+=("LivingCanyon tasmota-8bbe4d-7757")
 
-heaters+=("KeukenWest tasmota-4fd8ee-6382")
+heaters+=("KeukenTropen tasmota-4fd8ee-6382")
 #heaters+=("KeukenOost tasmota-a943fa-1018")
 
 # Dining
@@ -92,8 +92,8 @@ thermostatdiningevent+=("2022-03-19 0 11:00 11:45 on $tempCompfort") # Luc
 thermostatdiningevent+=("2022-03-19 0 11:45 14:00 on $tempAux") # Luc
 thermostatdiningevent+=("2022-03-19 0 14:00 19:45 on $tempCompfort") # Luc
 
-thermostatdiningevent+=("2022-07-06 14 07:00 08:00 on $tempCompfort") # Laura
-thermostatdiningevent+=("2022-07-06 14 08:00 11:00 on $tempAux") # Laura
+thermostatdiningevent+=("2022-08-03 14 07:00 08:00 on $tempCompfort") # Laura
+thermostatdiningevent+=("2022-08-03 14 08:00 11:00 on $tempAux") # Laura
 
 # thermostatdiningevent+=("2022-05-30 0 07:00 08:00 on $tempCompfort") # SNT Moodle Workshop
 # thermostatdiningevent+=("2022-06-02 0 07:00 08:00 on $tempCompfort") # SNT Moodle Workshop
@@ -137,7 +137,7 @@ unset thermostatkitchenevent
 thermostatkitchenevent+=("2022-03-19 0 11:00 11:45 on $tempAux") # Luc
 thermostatkitchenevent+=("2022-03-19 0 14:00 19:45 on $tempAux") # Luc
 
-thermostatkitchenevent+=("2022-07-06 14 07:00 12:00 on $tempAux") # Laura
+thermostatkitchenevent+=("2022-08-03 14 07:00 12:00 on $tempAux") # Laura
 
 # thermostatkitchenevent+=("2022-05-30 0 07:00 08:00 on $tempAux") # SNT Moodle Workshop
 # thermostatkitchenevent+=("2022-06-02 0 07:00 08:00 on $tempAux") # SNT Moodle Workshop
@@ -191,7 +191,7 @@ thermostatlivingweek+=("7 17:30 22:30 $tempComfort")
 # -----------------
 unset thermostatlivingevent
 # thermostatlivingevent+=("2022-01-03 0 09:30 11:15 off $tempOff") # Vaccinatie
-thermostatlivingevent+=("2022-07-06 14 07:15 11:00 on $tempComfort") # Laura
+thermostatlivingevent+=("2022-08-03 14 07:15 11:00 on $tempComfort") # Laura
 
 thermostatlivingevent+=("2022-03-19 0 11:00 11:45 on $tempComfort") # Luc
 thermostatlivingevent+=("2022-03-19 0 11:45 14:00 on $tempAux") # Luc
@@ -225,7 +225,7 @@ alarmtimes+=("07:30")
 alarmtimes+=("07:30")
 
 unset alarmevent
-alarmevent+=("2022-07-06 07:00 14") # Laura
+alarmevent+=("2022-08-03 07:00 14") # Laura
 # alarmevent+=("2022-05-30 07:00") # SNT Moodle Workshop
 # alarmevent+=("2022-06-02 07:00") # SNT Moodle Workshop
 # alarmevent+=("2022-06-03 07:00") # SNT Moodle Workshop
