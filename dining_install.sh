@@ -145,7 +145,7 @@ else
   make
   cd
 # get random video (must exist) from array
-  randomvideo=$(cat << EOF
+  randomvideo=$(cat << 'EOF'
 videos+=("aquarium.mp4")
 videos+=("haardvuur.mp4")
 videos+=("lente.mp4")
