@@ -5,7 +5,8 @@
 
 # ToDo
 # ====
-# Copy large video files directly on SDCard and check with md5sum
+# Copy large video files directly on SDCard and check with md5sum of sha256sum
+# Werkt ook (desnoods meermaals): rsync -Pa --checksum --inplace --no-whole-file /mnt/lente.mp4 lente.mp4
 # raspi-config configure WiFi connection
 
 # Hardware
