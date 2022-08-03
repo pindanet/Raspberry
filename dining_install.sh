@@ -135,6 +135,7 @@ else
   sudo apt install omxplayer imagemagick -y
   sudo wget -O Amapola.mp4 https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/Amapola.mp4
 # Copy large video files directly on SDCard and check with md5sum
+# Werkt ook (desnoods meermaals): rsync -Pa --checksum --inplace --no-whole-file /mnt/lente.mp4 lente.mp4
   ln -s Amapola.mp4 video.mp4
   
   wget https://github.com/AndrewFromMelbourne/raspidmx/archive/refs/heads/master.zip
@@ -143,7 +144,18 @@ else
   cd raspidmx-master/
   make
   cd
+# get random video (must exist) from array
+  randomvideo=$(cat << EOF
+videos+=("aquarium.mp4")
+videos+=("haardvuur.mp4")
+videos+=("lente.mp4")
+video=${videos[$(( $RANDOM % ${#videos[@]} ))]}
+rm /home/dany/video.mp4
+ln -s /home/dany/$video /home/dany/video.mp4
+EOF
+)
   sudo sed -i "/^exit 0/i# Start video" /etc/rc.local
+  sudo sed -i "/^exit 0/i$randomvideo" /etc/rc.local
   sudo sed -i "/^exit 0/iomxplayer --aspect-mode fill --loop /home/dany/video.mp4 &" /etc/rc.local
 
   sudo apt-get install hdate -y
