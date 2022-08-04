@@ -1,5 +1,6 @@
 #!/bin/bash
 # ToDo
+# SSL communication LMI_261-22 p62
 # Activate Serial Hardware
 # replace /home/dany by search default user
 
