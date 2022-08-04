@@ -4,6 +4,7 @@
 # bash domoticaController_install.sh
 
 # ToDo
+# SSL communication LMI_261-22 p62
 # Activate Serial Hardware
 # Activate PiCamera
 
