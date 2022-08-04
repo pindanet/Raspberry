@@ -136,7 +136,10 @@ else
   sudo wget -O Amapola.mp4 https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/Amapola.mp4
 # Copy large video files directly on SDCard and check with md5sum
 # Werkt ook (desnoods meermaals): rsync -Pa --checksum --inplace --no-whole-file /mnt/lente.mp4 lente.mp4
-  ln -s Amapola.mp4 video.mp4
+  cp Amapola.mp4 aquarium.mp4
+  cp Amapola.mp4 haardvuur.mp4
+  mv Amapola.mp4 lente.mp4
+  ln -s lente.mp4 video.mp4
   
   wget https://github.com/AndrewFromMelbourne/raspidmx/archive/refs/heads/master.zip
   unzip master.zip
