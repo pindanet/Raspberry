@@ -144,8 +144,8 @@ else
   cd raspidmx-master/
   make
   cd
-# get random video (must exist) from array
-  randomvideo=$(cat << 'EOF'
+# get random video (videofiles must exist) from array
+  cat > randomvideo.sh << 'EOF'
 videos+=("aquarium.mp4")
 videos+=("haardvuur.mp4")
 videos+=("lente.mp4")
@@ -153,9 +153,10 @@ video=${videos[$(( $RANDOM % ${#videos[@]} ))]}
 rm /home/dany/video.mp4
 ln -s /home/dany/$video /home/dany/video.mp4
 EOF
-)
+  sudo mv randomvideo.sh /var/www/html/
+
   sudo sed -i "/^exit 0/i# Start video" /etc/rc.local
-  sudo sed -i "/^exit 0/i$randomvideo" /etc/rc.local
+  sudo sed -i "/^exit 0/ibash /var/www/html/randomvideo.sh" /etc/rc.local
   sudo sed -i "/^exit 0/iomxplayer --aspect-mode fill --loop /home/dany/video.mp4 &" /etc/rc.local
 
   sudo apt-get install hdate -y
