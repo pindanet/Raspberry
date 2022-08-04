@@ -32,6 +32,7 @@ heaters+=("KeukenTropen tasmota-4fd8ee-6382")
 # Compensate temperature sensor
 diningTempOffset=0
 diningLight="26"  # Relay on GPIO 26 (37)
+subtitleColor="black"
 
 unset thermostatdiningweek
 # maandag
