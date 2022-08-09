@@ -148,20 +148,7 @@ else
   make
   cd
 # get random video (videofiles must exist) from array
-  cat > randomvideo.sh << 'EOF'
-videos+=("aquarium.mp4")
-videos+=("haardvuur.mp4")
-videos+=("lente.mp4")
-video=${videos[$(( $RANDOM % ${#videos[@]} ))]}
-rm /home/dany/video.mp4
-ln -s /home/dany/$video /home/dany/video.mp4
-if [ $video == "haardvuur.mp4" ]; then
-  sed -i 's/\(^subtitleColor=\).*/\1"white"/' /var/www/html/data/thermostat
-else
-  sed -i 's/\(^subtitleColor=\).*/\1"black"/' /var/www/html/data/thermostat
-fi
-EOF
-  sudo mv randomvideo.sh /var/www/html/
+  sudo wget -O /var/www/html/randomvideo.sh https://github.com/pindanet/Raspberry/raw/master/dining/var/www/html/randomvideo.sh
 
   sudo sed -i "/^exit 0/i# Start video" /etc/rc.local
   sudo sed -i "/^exit 0/ibash /var/www/html/randomvideo.sh" /etc/rc.local
