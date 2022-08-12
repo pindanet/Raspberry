@@ -42,7 +42,14 @@ if [ $USER == "pi" ]; then
   # rotate Touchscreen
   #echo 'lcd_rotate=2' | sudo tee -a /boot/config.txt
   
-  # Change keyboard
+  # disable ethernet LED's (Raspberry Pi 3B+)
+#  echo 'dtparam=eth_led0=14' | sudo tee -a /boot/config.txt
+#  echo 'dtparam=eth_led1=14' | sudo tee -a /boot/config.txt
+  # disable ethernet LED's (Raspberry Pi 4B)
+  echo 'dtparam=eth_led0=4' | sudo tee -a /boot/config.txt
+  echo 'dtparam=eth_led1=4' | sudo tee -a /boot/config.txt
+
+# Change keyboard
   sudo raspi-config nonint do_configure_keyboard "$KEYMAP"
 
   # Change locale
