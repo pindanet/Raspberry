@@ -12,6 +12,8 @@
 ## Make a image of a SD-card
       dd if=/dev/mmcblk0 bs=4M | gzip -c > basisimage.img.gz
       gunzip -c basisimage.img.gz | dd of=/dev/mmcblk0 bs=4M status=progress conv=fsync
+      xzcat /home/dany/Downloads/2022-09-22-raspios-bullseye-armhf.img.xz | dd of=/dev/mmcblk0 bs=4M status=progress conv=fsync
+
 ## Make a image of a noresised SD-card
       dd bs=4M count=1273 of=basisimage.img if=/dev/mmcblk0 status=progress conv=fsync
       dd bs=4M count=1287 of=basisimage.img if=/dev/mmcblk0 status=progress conv=fsync (32-bit)
