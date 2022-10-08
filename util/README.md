@@ -1,3 +1,14 @@
+## Make a image of a SD-card and shrink it
+       wget https://raw.githubusercontent.com/Drewsif/PiShrink/master/pishrink.sh
+       mv pishrink.sh Documenten/SNT/Raspberry\ Pi/
+       su
+       cd Documenten/SNT/Raspberry\ Pi/
+       chmod +x pishrink.sh
+       
+       dd bs=4M of=basisimage.img if=/dev/mmcblk0 status=progress conv=fsync
+       ./pishrink.sh basisimage.img basisimage.shrunk.img
+       dd bs=4M if=basisimage.shrunk.img of=/dev/mmcblk0 status=progress conv=fsync
+
 ## Make a image of a SD-card
       dd if=/dev/mmcblk0 bs=4M | gzip -c > basisimage.img.gz
       gunzip -c basisimage.img.gz | dd of=/dev/mmcblk0 bs=4M status=progress conv=fsync
