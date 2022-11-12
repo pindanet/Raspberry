@@ -252,6 +252,7 @@ fi
 
 # Lights on in the evening
 # From UTC
+echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M 22:24
 sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
 sunsetSec=$(date -d "$sunset" +"%s")
 sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
@@ -259,7 +260,7 @@ sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
 sunset=$(date -d @$sunsetLocalSec +"%H:%M")
 if [[ $eveningShutterDown > $sunset ]]; then # already dark
 #  echo "raspi-gpio set $diningLight op dl" | at $sunset
-  echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M $sunset
+  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $sunset
   if [ ! -z ${TVlamp+x} ]; then
     echo "wget -qO- http://$TVlamp/cm?cmnd=Power%20On" | at $sunset
   fi
@@ -268,7 +269,7 @@ if [[ $eveningShutterDown > $sunset ]]; then # already dark
   fi
 else # still daylight
 #  echo "raspi-gpio set $diningLight op dl" | at $eveningShutterDown
-  echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M $eveningShutterDown
+  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $eveningShutterDown
   if [ ! -z ${TVlamp+x} ]; then
     echo "wget -qO- http://$TVlamp/cm?cmnd=Power%20On" | at $eveningShutterDown
   fi
@@ -279,6 +280,7 @@ fi
 # All lights out
 #echo "raspi-gpio set $diningLight op dh" | at $lightevening
 echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20Off" | at -M $lightevening
+echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off" | at -M $lightevening
 if [ ! -z ${christmasLight+x} ]; then
   echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20Off" | at $lightevening
 fi
