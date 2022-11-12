@@ -221,6 +221,7 @@ for i in `atq | awk '{print $1}'`;do atrm $i;done
 # Lights on in the morning 
 #echo "raspi-gpio set $diningLight op dl" | at -M $nextAlarm
 echo "sleep 660; wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M $nextAlarm
+echo "sleep 660; wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $nextAlarm
 if [ ! -z ${christmasLight+x} ]; then
   echo "sleep 660; wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at -M $nextAlarm
 fi
@@ -240,10 +241,12 @@ sunrise=$(date -d @$sunriseLocalSec +"%H:%M")
 if [[ $lightsOut > $sunrise ]]; then # sun shines
 #  echo "raspi-gpio set $diningLight op dh" | at $lightsOut
   echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20Off" | at -M $lightsOut
+  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off" | at -M $lightsOut
 #  echo "wget -qO- http://$diningLight/cm?cmnd=Power%20Off" | at $lightsOut
 else # still dark
 #  echo "raspi-gpio set $diningLight op dh" | at $sunrise
   echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20Off" | at -M $sunrise
+  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off" | at -M $sunrise
 #  echo "wget -qO- http://$diningLight/cm?cmnd=Power%20Off" | at $sunrise
 fi
 if [ ! -z ${christmasLight+x} ]; then
