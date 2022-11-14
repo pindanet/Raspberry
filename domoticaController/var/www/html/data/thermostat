@@ -38,52 +38,52 @@ subtitleColor="white"
 unset thermostatdiningweek
 # maandag
 thermostatdiningweek+=("1 07:30 08:30 $tempComfort")
-thermostatdiningweek+=("1 08:30 11:00 $tempAux")
-thermostatdiningweek+=("1 11:00 13:30 $tempComfort")
-thermostatdiningweek+=("1 13:30 16:50 $tempAux")
-thermostatdiningweek+=("1 16:50 17:30 $tempComfort")
+thermostatdiningweek+=("1 08:30 10:55 $tempAux")
+thermostatdiningweek+=("1 10:55 13:30 $tempComfort")
+thermostatdiningweek+=("1 13:30 16:55 $tempAux")
+thermostatdiningweek+=("1 16:55 17:30 $tempComfort")
 thermostatdiningweek+=("1 17:30 22:30 $tempAux")
 # dinsdag
 thermostatdiningweek+=("2 07:30 08:30 $tempComfort")
-thermostatdiningweek+=("2 08:30 11:00 $tempAux")
-thermostatdiningweek+=("2 11:00 13:30 $tempComfort")
-thermostatdiningweek+=("2 13:30 16:50 $tempAux")
-thermostatdiningweek+=("2 16:50 17:30 $tempComfort")
+thermostatdiningweek+=("2 08:30 10:55 $tempAux")
+thermostatdiningweek+=("2 10:55 13:30 $tempComfort")
+thermostatdiningweek+=("2 13:30 16:55 $tempAux")
+thermostatdiningweek+=("2 16:55 17:30 $tempComfort")
 thermostatdiningweek+=("2 17:30 22:30 $tempAux")
 # woensdag
 thermostatdiningweek+=("3 07:30 08:30 $tempComfort")
-thermostatdiningweek+=("3 08:30 11:00 $tempAux")
-thermostatdiningweek+=("3 11:00 13:30 $tempComfort")
-thermostatdiningweek+=("3 13:30 16:50 $tempAux")
-thermostatdiningweek+=("3 16:50 17:30 $tempComfort")
+thermostatdiningweek+=("3 08:30 10:55 $tempAux")
+thermostatdiningweek+=("3 10:55 13:30 $tempComfort")
+thermostatdiningweek+=("3 13:30 16:55 $tempAux")
+thermostatdiningweek+=("3 16:55 17:30 $tempComfort")
 thermostatdiningweek+=("3 17:30 22:30 $tempAux")
 # donderdag
 thermostatdiningweek+=("4 07:30 08:30 $tempComfort")
-thermostatdiningweek+=("4 08:30 11:00 $tempAux")
-thermostatdiningweek+=("4 11:00 13:30 $tempComfort")
-thermostatdiningweek+=("4 13:30 16:50 $tempAux")
-thermostatdiningweek+=("4 16:50 17:30 $tempComfort")
+thermostatdiningweek+=("4 08:30 10:55 $tempAux")
+thermostatdiningweek+=("4 10:55 13:30 $tempComfort")
+thermostatdiningweek+=("4 13:30 16:55 $tempAux")
+thermostatdiningweek+=("4 16:55 17:30 $tempComfort")
 thermostatdiningweek+=("4 17:30 22:30 $tempAux")
 # vrijdag
 thermostatdiningweek+=("5 07:30 08:30 $tempComfort")
-thermostatdiningweek+=("5 08:30 11:00 $tempAux")
-thermostatdiningweek+=("5 11:00 13:30 $tempComfort")
-thermostatdiningweek+=("5 13:30 16:50 $tempAux")
-thermostatdiningweek+=("5 16:50 17:30 $tempComfort")
+thermostatdiningweek+=("5 08:30 10:55 $tempAux")
+thermostatdiningweek+=("5 10:55 13:30 $tempComfort")
+thermostatdiningweek+=("5 13:30 16:55 $tempAux")
+thermostatdiningweek+=("5 16:55 17:30 $tempComfort")
 thermostatdiningweek+=("5 17:30 22:30 $tempAux")
 # zaterdag
 thermostatdiningweek+=("6 07:30 08:30 $tempComfort")
-thermostatdiningweek+=("6 08:30 11:00 $tempAux")
-thermostatdiningweek+=("6 11:00 13:30 $tempComfort")
-thermostatdiningweek+=("6 13:30 16:50 $tempAux")
-thermostatdiningweek+=("6 16:50 17:30 $tempComfort")
+thermostatdiningweek+=("6 08:30 10:55 $tempAux")
+thermostatdiningweek+=("6 10:55 13:30 $tempComfort")
+thermostatdiningweek+=("6 13:30 16:55 $tempAux")
+thermostatdiningweek+=("6 16:55 17:30 $tempComfort")
 thermostatdiningweek+=("6 17:30 22:30 $tempAux")
 # zondag
 thermostatdiningweek+=("7 07:30 08:30 $tempComfort")
-thermostatdiningweek+=("7 08:30 11:00 $tempAux")
-thermostatdiningweek+=("7 11:00 13:30 $tempComfort")
-thermostatdiningweek+=("7 13:30 16:50 $tempAux")
-thermostatdiningweek+=("7 16:50 17:30 $tempComfort")
+thermostatdiningweek+=("7 08:30 10:55 $tempAux")
+thermostatdiningweek+=("7 10:55 13:30 $tempComfort")
+thermostatdiningweek+=("7 13:30 16:55 $tempAux")
+thermostatdiningweek+=("7 16:55 17:30 $tempComfort")
 thermostatdiningweek+=("7 17:30 22:30 $tempAux")
 
 # Exceptions Dining
@@ -175,32 +175,46 @@ livingTempOffset=0
 # ==============
 unset thermostatlivingweek
 # maandag
-thermostatlivingweek+=("1 08:15 11:05 $tempComfort")
-thermostatlivingweek+=("1 13:15 17:00 $tempComfort")
+thermostatlivingweek+=("1 08:15 11:00 $tempComfort")
+thermostatlivingweek+=("1 11:00 13:25 $tempAux")
+thermostatlivingweek+=("1 13:25 17:00 $tempComfort")
+thermostatlivingweek+=("1 17:00 17:30 $tempAux")
 thermostatlivingweek+=("1 17:30 22:50 $tempComfort")
 # dinsdag
-thermostatlivingweek+=("2 08:15 11:05 $tempComfort")
-thermostatlivingweek+=("2 13:15 17:00 $tempComfort")
+thermostatlivingweek+=("2 08:15 11:00 $tempComfort")
+thermostatlivingweek+=("2 11:00 13:25 $tempAux")
+thermostatlivingweek+=("2 13:25 17:00 $tempComfort")
+thermostatlivingweek+=("2 17:00 17:30 $tempAux")
 thermostatlivingweek+=("2 17:30 22:50 $tempComfort")
 # woensdag
-thermostatlivingweek+=("3 08:15 11:05 $tempComfort")
-thermostatlivingweek+=("3 13:15 17:00 $tempComfort")
+thermostatlivingweek+=("3 08:15 11:00 $tempComfort")
+thermostatlivingweek+=("3 11:00 13:25 $tempAux")
+thermostatlivingweek+=("3 13:25 17:00 $tempComfort")
+thermostatlivingweek+=("3 17:00 17:30 $tempAux")
 thermostatlivingweek+=("3 17:30 22:50 $tempComfort")
 # donderdag
-thermostatlivingweek+=("4 08:15 11:05 $tempComfort")
-thermostatlivingweek+=("4 13:15 17:00 $tempComfort")
+thermostatlivingweek+=("4 08:15 11:00 $tempComfort")
+thermostatlivingweek+=("4 11:00 13:25 $tempAux")
+thermostatlivingweek+=("4 13:25 17:00 $tempComfort")
+thermostatlivingweek+=("4 17:00 17:30 $tempAux")
 thermostatlivingweek+=("4 17:30 22:50 $tempComfort")
 # vrijdag
-thermostatlivingweek+=("5 08:15 11:05 $tempComfort")
-thermostatlivingweek+=("5 13:15 17:00 $tempComfort")
+thermostatlivingweek+=("5 08:15 11:00 $tempComfort")
+thermostatlivingweek+=("5 11:00 13:25 $tempAux")
+thermostatlivingweek+=("5 13:25 17:00 $tempComfort")
+thermostatlivingweek+=("5 17:00 17:30 $tempAux")
 thermostatlivingweek+=("5 17:30 22:50 $tempComfort")
 # zaterdag
-thermostatlivingweek+=("6 08:15 11:05 $tempComfort")
-thermostatlivingweek+=("6 13:15 17:00 $tempComfort")
+thermostatlivingweek+=("6 08:15 11:00 $tempComfort")
+thermostatlivingweek+=("6 11:00 13:25 $tempAux")
+thermostatlivingweek+=("6 13:25 17:00 $tempComfort")
+thermostatlivingweek+=("6 17:00 17:30 $tempAux")
 thermostatlivingweek+=("6 17:30 22:50 $tempComfort")
 # zondag
-thermostatlivingweek+=("7 08:15 11:05 $tempComfort")
-thermostatlivingweek+=("7 13:15 16:00 $tempComfort")
+thermostatlivingweek+=("7 08:15 11:00 $tempComfort")
+thermostatlivingweek+=("7 11:00 13:25 $tempAux")
+thermostatlivingweek+=("7 13:25 16:00 $tempComfort")
+thermostatlivingweek+=("7 16:00 17:30 $tempAux")
 thermostatlivingweek+=("7 17:30 22:50 $tempComfort")
 
 # unset thermostatlivingdefault
@@ -219,8 +233,8 @@ unset thermostatlivingevent
 # thermostatlivingevent+=("2022-03-19 0 14:00 19:45 on $tempComfort") # Luc
 
 thermostatlivingevent+=("2022-11-07 7 08:00 12:50 off $tempOff") # MaVm macOS
-thermostatlivingevent+=("2022-11-14 7 12:10 16:50 off $tempOff") # MaNm Blankenberge
-# thermostatlivingevent+=("2022-09-12 0 12:10 16:50 off $tempOff") # MaNm Teams
+thermostatlivingevent+=("2022-11-14 7 12:10 17:00 off $tempOff") # MaNm Blankenberge
+# thermostatlivingevent+=("2022-09-12 0 12:10 17:00 off $tempOff") # MaNm Teams
 # thermostatlivingevent+=("2022-09-19 0 16:50 21:35 off $tempOff") # MaAv Teams
 # thermostatlivingevent+=("2022-09-26 0 16:50 21:35 off $tempOff") # MaAv Teams
 
