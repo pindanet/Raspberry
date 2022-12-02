@@ -59,7 +59,8 @@
     <h1><img src="emoji/thermostat.svg"> Living <span id="livingRoomTemp">--.- °C</span></h1>
     <button id="livingAuto" onclick="thermostatUI(event, 'Auto', 'livingtemp');">Auto</button>
     <button id="livingOff" onclick="thermostatUI(event, 'Off', 'livingtemp');">Uit</button>
-    <button id="livingManual" onclick="thermostatUI(event, 'Manual', 'livingtemp');"><span id="livingtemp">17.5</span> °C</button>
+    <button id="livingManualAux" onclick="thermostatUI(event, 'Manual', 'livingaux');"><span id="livingaux">17.5</span> °C</button>
+    <button id="livingManual" onclick="thermostatUI(event, 'Manual', 'livingtemp');"><span id="livingtemp">20.0</span> °C</button>
     <button onclick="thermostatUI(event, 'Incr', 'livingtemp');">+</button>
     <button onclick="thermostatUI(event, 'Decr', 'livingtemp');">-</button>
   </div>
@@ -67,6 +68,7 @@
     <h1><img src="emoji/thermostat.svg"> Dining <span id="diningRoomTemp">--.- °C</span></h1>
     <button id="diningAuto" onclick="thermostatUI(event, 'Auto', 'diningtemp');">Auto</button>
     <button id="diningOff" onclick="thermostatUI(event, 'Off', 'diningtemp');">Uit</button>
+    <button id="diningManualAux" onclick="thermostatUI(event, 'Manual', 'diningaux');"><span id="diningaux">17.5</span> °C</button>
     <button id="diningManual" onclick="thermostatUI(event, 'Manual', 'diningtemp');"><span id="diningtemp">20.0</span> °C</button>
     <button onclick="thermostatUI(event, 'Incr', 'diningtemp');">+</button>
     <button onclick="thermostatUI(event, 'Decr', 'diningtemp');">-</button>
