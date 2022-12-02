@@ -138,10 +138,11 @@ function thermostatUI (event, command, id) {
       if (command == "Auto") {
         sshcommand = 'rm /tmp/thermostatManual';
       }
-//console.log(command);
+//console.log(id.substr(0, 6));
     if (id == "kitchentemp") {
         xhr.send("command=" + sshcommand + "&host=pindakeuken");
-      } else if (id == "diningtemp") {
+//      } else if (id == "diningtemp") {
+      } else if (id.substr(0, 6) == "dining") {
         xhr.send("command=" + sshcommand + "&host=pindadining");
       } else {
         xhr.send("command=" + sshcommand + "&host=localhost");
@@ -160,16 +161,34 @@ function getThermostatManual (id, host) {
       if (this.responseText.length == 0) {
         document.getElementById(id+"Auto").className = "highlight";
         document.getElementById(id+"Manual").className = "";
+        if (id != "kitchen") {
+          document.getElementById(id+"ManualAux").className = "";
+        }
         document.getElementById(id+"Off").className = "";
       } else if (this.responseText == "off\n") {
         document.getElementById(id+"Auto").className = "";
         document.getElementById(id+"Manual").className = "";
+        if (id != "kitchen") {
+          document.getElementById(id+"ManualAux").className = "";
+        }
         document.getElementById(id+"Off").className = "highlight";
       } else {
         document.getElementById(id+"Auto").className = "";
-        document.getElementById(id+"Manual").className = "highlight";
         document.getElementById(id+"Off").className = "";
-        document.getElementById(id+"temp").innerHTML = parseFloat(this.responseText).toFixed(1);
+        if (parseFloat(this.responseText).toFixed(1) == document.getElementById(id+"temp").innerHTML) {
+//          console.log("TEMP");
+          if (id != "kitchen") {
+            document.getElementById(id+"ManualAux").className = "";
+          }
+          document.getElementById(id+"Manual").className = "highlight";
+          document.getElementById(id+"temp").innerHTML = parseFloat(this.responseText).toFixed(1);
+        } else {
+//          console.log("AUX");
+          document.getElementById(id+"Manual").className = "";
+          document.getElementById(id+"ManualAux").className = "highlight";
+          document.getElementById(id+"aux").innerHTML = parseFloat(this.responseText).toFixed(1);
+        }
+//console.log(parseFloat(this.responseText).toFixed(1), document.getElementById(id+"temp").innerHTML, document.getElementById(id+"aux").innerHTML);
       }
     }
   };
