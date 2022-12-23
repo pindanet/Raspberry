@@ -8,14 +8,16 @@ sleep 180 # 3 minuten wakker worden
 sleep 180 # 3 minuten nekoefeningen
 sleep 300 # 5 minuten rechtop zitten
 
-#nohup mpg123 -f -$volume /var/www/html/data/Old-alarm-clock-sound.mp3 &
+nohup mpg123 -f -$volume /var/www/html/data/Old-alarm-clock-sound.mp3 &
 
 # get next alarm
 now=$(date +%H:%M)
 nextAlarm=$(cat /var/www/html/data/nextalarm)
+tomorrowSec=$(date -u --date="next day" +%s)
+tomorrow=$((tomorrowSec - (tomorrowSec % 86400)))
 if [[ "$now" > "$nextAlarm" ]];then
-  tomorrow=$(date --date="next day" +%u)
-  nextAlarm=${alarmtimes[$((tomorrow - 1))]}
+  nextDay=$(date --date="next day" +%u)
+  nextAlarm=${alarmtimes[$((nextDay - 1))]}
   # Exceptions with recurrent dates
   for alarmitem in "${alarmevent[@]}"; do
     daytime=(${alarmitem})
@@ -38,7 +40,6 @@ if [[ "$now" > "$nextAlarm" ]];then
   for i in `atq | awk '{print $1}'`;do atrm $i;done
   echo /var/www/html/alarmnow.sh | at -M $nextAlarm $(date -u --date @$tomorrow +'%m%d%y')
 fi
-
 # update and reboot
 apt-get clean
 apt-get update
