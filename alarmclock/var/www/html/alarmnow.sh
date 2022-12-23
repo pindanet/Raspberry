@@ -8,7 +8,7 @@ sleep 180 # 3 minuten wakker worden
 sleep 180 # 3 minuten nekoefeningen
 sleep 300 # 5 minuten rechtop zitten
 
-nohup mpg123 -f -$volume /var/www/html/data/Old-alarm-clock-sound.mp3 &
+#nohup mpg123 -f -$volume /var/www/html/data/Old-alarm-clock-sound.mp3 &
 
 # get next alarm
 now=$(date +%H:%M)
