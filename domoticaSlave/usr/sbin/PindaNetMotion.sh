@@ -70,7 +70,7 @@ while true; do
 #shutter="down" # Test
     if [[ $clock < $sunrise ]] || [[ $clock > $sunset ]] || [[ $shutter == "down" ]]; then # Night
       bright=$brightnight
-      if [ "${status["$lightSwitch"]}" == '{"POWER":"OFF"}' ]; then
+      if [ "${status["$lightSwitch"]}" != '{"POWER":"ON"}' ]; then
 #        echo "$(date): Motion: Light on"
         tasmota "$lightSwitch" "on"
       fi
