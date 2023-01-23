@@ -84,7 +84,7 @@ while true; do
       echo $dim > /sys/class/backlight/rpi_backlight/brightness
       brightness=$dim
     fi
-    if [ "${status["$lightSwitch"]}" == '{"POWER":"ON"}' ]; then
+    if [ "${status["$lightSwitch"]}" != '{"POWER":"OFF"}' ]; then
       tasmota "$lightSwitch" "off"
     fi
   fi
