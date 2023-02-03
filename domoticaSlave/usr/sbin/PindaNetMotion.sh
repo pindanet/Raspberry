@@ -56,8 +56,8 @@ while true; do
       brightness=$bright
     fi
     timer=$(date +"%s")
-    sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
-    sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
+#    sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
+#    sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
     localclock=$(date +"%H:%M")
     clock=$(date -u +"%H:%M")
     if [[ $localclock > $morningShutterDown ]] && [[ $localclock < $morningShutterUp ]]; then # Morning and shutters down
