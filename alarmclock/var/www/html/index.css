@@ -2,11 +2,11 @@ body {
   margin: 0;
   padding: 0;
   background-color: black;
-  color: #2F4F2F;
+  color: #dFfFdF;
   font-family: sans-serif;
 }
 a {
-  color: #2F4F2F;
+  color: #dFfFdF;
   text-decoration: none;
 }
 body::-webkit-scrollbar {
