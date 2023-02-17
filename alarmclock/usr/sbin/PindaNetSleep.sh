@@ -3,6 +3,8 @@
 
 # ToDo
 
+echo 15 > /sys/class/backlight/rpi_backlight/brightness
+
 _button_pin=5
 
 function playRadio () {
