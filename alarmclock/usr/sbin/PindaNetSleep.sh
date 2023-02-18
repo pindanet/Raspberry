@@ -79,13 +79,13 @@ while true; do
             if [ $today == $recevent ]; then
               if [[ "${daytime[2]}" < "$now" ]] && [[ "${daytime[3]}" > "$now" ]]; then
                 echo "Sleep Event on $(date -u --date @$recevent +'%a %d %b %Y') between ${daytime[2]} and ${daytime[3]}: Radio: ${daytime[4]}, Volume: ${daytime[5]}"
-                radio=${daytime[4]}
+                sleepradio=${daytime[4]}
                 volume=${daytime[5]}
                 break
               fi
             fi
           done
-	  playRadio $radio $volume
+	  playRadio $sleepradio $volume
         fi
       fi
     fi
