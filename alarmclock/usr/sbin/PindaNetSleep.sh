@@ -3,7 +3,7 @@
 
 # ToDo
 
-echo 30 > /sys/class/backlight/rpi_backlight/brightness
+echo 20 > /sys/class/backlight/rpi_backlight/brightness
 
 _button_pin=5
 
