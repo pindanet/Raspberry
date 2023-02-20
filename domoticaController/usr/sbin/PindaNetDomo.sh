@@ -475,13 +475,13 @@ do
     if [ $_ret -eq 1 ]; then
       echo "[!] PIR is tripped, Smile ..."
 
-      find "$fotomap/" -mindepth 1 -maxdepth 1 -mtime +0 -exec rm {} \;
-      DATE=$(date +"%Y %m %d %H:%M:%S") # 2020 05 05 07:05:03.jpg
-      if [ ${lux%.*} -lt ${luxnight%.*} ]; then
-        raspistill --width 800 --height 480 --nopreview --rotation 90 --exposure night -o "$fotomap/$DATE.jpg"
-      else
-        raspistill --width 800 --height 480 --nopreview --rotation 90 -o "$fotomap/$DATE.jpg"
-      fi
+#      find "$fotomap/" -mindepth 1 -maxdepth 1 -mtime +0 -exec rm {} \;
+#      DATE=$(date +"%Y %m %d %H:%M:%S") # 2020 05 05 07:05:03.jpg
+#      if [ ${lux%.*} -lt ${luxnight%.*} ]; then
+#        raspistill --width 800 --height 480 --nopreview --rotation 90 --exposure night -o "$fotomap/$DATE.jpg"
+#      else
+#        raspistill --width 800 --height 480 --nopreview --rotation 90 -o "$fotomap/$DATE.jpg"
+#      fi
     elif [ $_ret -eq 0 ]; then
 #       echo "Geen beweging"
        sleep 3 # time to reset PIR
