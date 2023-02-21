@@ -3,7 +3,13 @@
 
 # ToDo
 
-echo 20 > /sys/class/backlight/rpi_backlight/brightness
+echo 15 > /sys/class/backlight/rpi_backlight/brightness
+# disable status led's
+echo 0 > /sys/class/leds/led0/brightness
+echo 0 > /sys/class/leds/led1/brightness
+sleep 1
+echo 0 > /sys/class/leds/led1/brightness
+echo 0 > /sys/class/leds/led0/brightness
 
 _button_pin=5
 
