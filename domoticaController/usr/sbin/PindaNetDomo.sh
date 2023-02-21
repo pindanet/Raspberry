@@ -482,6 +482,7 @@ do
 #      else
 #        raspistill --width 800 --height 480 --nopreview --rotation 90 -o "$fotomap/$DATE.jpg"
 #      fi
+      sleep 3
     elif [ $_ret -eq 0 ]; then
 #       echo "Geen beweging"
        sleep 3 # time to reset PIR
