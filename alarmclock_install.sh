@@ -143,6 +143,7 @@ EOF
   
   sudo apt-get install mpg123 -y
   sudo apt install at -y
+  sudo apt install hdate -y
   sudo mkdir -p /var/www/html/data
   sudo wget -O /var/www/html/data/alarmclock https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/var/www/html/data/alarmclock
   sudo chmod +x /var/www/html/data/alarmclock
