@@ -2,8 +2,18 @@
 # GPIO 5 (29) > Button > Gnd (34)
 
 # ToDo
+# Backlight LCD by day
+echo 64 > /sys/class/backlight/rpi_backlight/brightness
 
-echo 15 > /sys/class/backlight/rpi_backlight/brightness
+# Calculate sunset for adjusting Backlight LCD by night
+sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
+sunsetSec=$(date -d "$sunset" +"%s")
+localToUTC=$(($(date +"%k") - $(date -u +"%k")))
+sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
+# to Local
+sunset=$(date -d @$sunsetLocalSec +"%H:%M")
+echo "echo 15 > /sys/class/backlight/rpi_backlight/brightness" | at -M $sunset
+
 # disable status led's
 echo 0 > /sys/class/leds/led0/brightness
 echo 0 > /sys/class/leds/led1/brightness
