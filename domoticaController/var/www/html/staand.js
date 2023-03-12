@@ -1,18 +1,20 @@
 // Configuration
-tempIncrDecr = 0.5;
-ChristmasLightDev = "-15d8a8-6312";
-TVlampDev = "-a94717-1815";
-HaardlampDev = "-1539f2-6642";
+var tempIncrDecr = 0.5;
+var ChristmasLightDev = "-15d8a8-6312";
+var TVlampDev = "-a94717-1815";
+var HaardlampDev = "-1539f2-6642";
 
 function getThermostatVar(varname) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "data/thermostat", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function() {
+  xhr.onload = function () {
     var position = this.responseText.search(varname + "=");
     if (position > -1) {
       var thermostatVar = parseFloat(this.responseText.substring(position + varname.length + 1));
       if (varname == "TVVolume") {
+        radioCommand(event, 'setvol', thermostatVar);
+      } else if (varname == "RadioVolume") {
         radioCommand(event, 'setvol', thermostatVar);
       }
     }
