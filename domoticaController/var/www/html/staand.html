@@ -17,7 +17,8 @@
   <a href="#radio"><img class="menubutton" onclick="getThermostatVar('RadioVolume');" src="emoji/radio.svg"></a>
   <a href="#weather"><img class="menubutton" onclick="document.getElementById('weather').contentDocument.location.reload(true);" src="emoji/weather.svg"></a>
   <a href="#thermostatUI"><img class="menubutton" src="emoji/thermostat.svg"></a>
-  <a><img class="menubutton" onclick="lights(event);" src="emoji/light_bulb.svg"></a>
+  <a href="#lights"><img class="menubutton" src="emoji/light_bulb.svg"></a>
+  <!--a><img class="menubutton" onclick="lights(event);" src="emoji/light_bulb.svg"></a-->
   <a href="#PINform" id="pinpadmenubutton"><img class="menubutton" src="emoji/keyring.svg"></a>
   <a href="#photoframe"><img class="menubutton" onclick="photoframe(event);" src="emoji/monitor.svg"></a>
   <!--a href="index.html"><img class="menubutton" src="emoji/calendar.svg"></a-->
@@ -98,6 +99,47 @@
   <input class="button clear" name="-" value="Clear" id="-" onclick="clearForm(event);" type="button">&nbsp;&nbsp;&nbsp;
   <input class="button enter" name="+" value="Enter" id="+" onclick="submitForm(event);" type="button">
 </form>
+<div id="lights">
+  <h1><img src="emoji/light_bulb.svg">Verlichting</h1>
+  <figure>
+    <img onclick="lights(event,HaardlampDev);" src="emoji/light_bulb.svg">
+    <figcaption>Haard</figcaption>
+  </figure>
+  <figure>
+    <img onclick="lights(event,TVlampDev);" src="emoji/light_bulb.svg">
+    <figcaption>TV</figcaption>
+  </figure>
+   <figure>
+    <img onclick="lights(event,KitchenLightDev);" src="emoji/light_bulb.svg">
+     <figcaption>Keuken</figcaption>
+  </figure>
+  </figure>
+   <figure>
+    <img onclick="lights(event,ChristmasLightDev);" src="emoji/light_bulb.svg">
+     <figcaption>Kerst</figcaption>
+  </figure>
+  <!--img onclick="radioCommand(event, 'play', 2);" src="radiologos/radio2.svg">
+  <img onclick="radioCommand(event, 'play', 3);" src="radiologos/klara.svg">
+  <img onclick="radioCommand(event, 'play', 4);" src="radiologos/klaracontinuo.png">
+  <img onclick="radioCommand(event, 'play', 5);" src="radiologos/stubru.svg">
+  <img onclick="radioCommand(event, 'play', 6);" src="radiologos/mnm.svg">
+  <img onclick="radioCommand(event, 'play', 7);" src="radiologos/mnmhits.svg">
+  <img onclick="radioCommand(event, 'play', 8);" src="radiologos/vrtnws.svg">
+  <img onclick="radioCommand(event, 'play', 9);" src="radiologos/ketnet.svg">
+  <img onclick="radioCommand(event, 'play', 10);" src="radiologos/crooze.png">
+  <img onclick="radioCommand(event, 'play', 11);" src="radiologos/vbro.png">
+  <img onclick="radioCommand(event, 'play', 12);" src="radiologos/joe.svg">
+  <img onclick="radioCommand(event, 'play', 13);" src="radiologos/qmusic.svg">
+  <img onclick="radioCommand(event, 'play', 14);" src="radiologos/willy.svg">
+  <br>
+  <button onclick="clearInterval(radioStatusInterval); radioCommand(event, 'stop', 1);">Stop</button>
+  <button onclick="radioCommand(event, 'voldown', 1);">V-</button>
+  <span class="terminalbox" style="text-align: center; font-size: 30px; padding: 15px; font-weight: bold; margin-right: 5px;" id="volu$
+  <button onclick="radioCommand(event, 'volup', 1);">V+</button>
+  <br>
+  <p class="terminalbox" style="text-align: center; display: inline-block; max-width: 736px;" id="radioinfo"></p-->
+</div>
+
 <img id="photoframe" onload="location.href = "#photoframe";">
 <div id="miniclock" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('minitemp').style.display = 'none';" style="display:none">20:00</div>
 <div id="minitemp" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('miniclock').style.display = 'none';" style="display:none">20.0</div>
