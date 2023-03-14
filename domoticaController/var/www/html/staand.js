@@ -3,6 +3,7 @@ var tempIncrDecr = 0.5;
 var ChristmasLightDev = "-15d8a8-6312";
 var TVlampDev = "-a94717-1815";
 var HaardlampDev = "-1539f2-6642";
+var KitchenLightDev = "-15dd89-7561"
 
 function getThermostatVar(varname) {
   var xhr = new XMLHttpRequest();
@@ -236,18 +237,19 @@ function thermostatIfFileExist(url, id) {
 }
 */
 
-function lights(event) {
+function lights(event, tasmotaDev) {
 /*
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "ssh.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.send('host=pindadining&command=/var/www/html/lightswitch.sh toggle');
 */
-// ChristmasLight
+console.log('dev=' + tasmotaDev + '&cmd=Power%20Toggle');
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "tasmota.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send('dev=' + ChristmasLightDev + '&cmd=Power%20Toggle');
+  xhr.send('dev=' + tasmotaDev + '&cmd=Power%20Toggle');
+/*
 // Haardlamp
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "tasmota.php", true);
@@ -258,7 +260,7 @@ function lights(event) {
   xhr.open('POST', "tasmota.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.send('dev=' + TVlampDev + '&cmd=Power%20Toggle');
-
+*/
   event.stopPropagation();
 }
 
