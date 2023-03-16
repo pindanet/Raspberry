@@ -169,6 +169,11 @@ EOF
   sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.html
   sudo wget -O /var/www/html/index.css https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.css
   sudo mkdir /var/www/html/emoji/
+  sudo wget -O /var/www/html/emoji/medicinecabinet.png https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/medicinecabinet.png
+  sudo wget -O /var/www/html/emoji/christmassspheres.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/christmassspheres.svg
+  sudo wget -O /var/www/html/emoji/fireplace.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/fireplace.svg
+  sudo wget -O /var/www/html/emoji/kitchen.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/kitchen.svg
+  sudo wget -O /var/www/html/emoji/lcdmonitor.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/lcdmonitor.svg
   sudo wget -O /var/www/html/emoji/calendar.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/calendar.svg
   sudo wget -O /var/www/html/emoji/framed_picture.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/framed_picture.svg
   sudo wget -O /var/www/html/emoji/logout.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/logout.svg
