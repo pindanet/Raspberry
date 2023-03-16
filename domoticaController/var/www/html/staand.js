@@ -4,6 +4,7 @@ var ChristmasLightDev = "-15d8a8-6312";
 var TVlampDev = "-a94717-1815";
 var HaardlampDev = "-1539f2-6642";
 var KitchenLightDev = "-15dd89-7561"
+var PharmacyLightDev = "-c699b5-6581"
 
 function getThermostatVar(varname) {
   var xhr = new XMLHttpRequest();
