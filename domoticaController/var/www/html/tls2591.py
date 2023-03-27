@@ -183,7 +183,7 @@ class Tsl2591(object):
 if __name__ == '__main__':
 
     tsl = Tsl2591()  # initialize
-    tsl.set_gain(GAIN_MED)
+    tsl.set_gain(GAIN_LOW)
     tsl.set_timing(INTEGRATIONTIME_300MS)
     full, ir = tsl.get_full_luminosity()  # read raw values (full spectrum and ir spectrum)
     lux = tsl.calculate_lux(full, ir)  # convert raw values to lux
