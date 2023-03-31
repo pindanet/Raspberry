@@ -235,6 +235,10 @@ function thermostat {
   done
 }
 
+if [ -f "/root/thermostatManual" ]; then
+  mv /root/thermostatManual /tmp/thermostatManual
+fi
+
 _pir_pin=4 # BCM4
  
 # https://raspberrypi-aa.github.io/session2/bash.html
