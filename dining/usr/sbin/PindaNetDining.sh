@@ -296,7 +296,8 @@ echo "wget -qO- http://tasmota-a943fa-1018/cm?cmnd=Power%20On" | at -M 16:00
 echo "wget -qO- http://tasmota-a943fa-1018/cm?cmnd=Power%20Off" | at -M 22:15
 
 # Update and reboot, 1 minute later
-echo "apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at $(date -d @$(($(date -d $lightevening +"%s") + 60)) +"%H:%M")
+#echo "apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at $(date -d @$(($(date -d $lightevening +"%s") + 60)) +"%H:%M")
+echo "if [ -f '/tmp/thermostatManual' ]; then   mv /tmp/thermostatManual /root/thermostatManual; fi; apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at $(date -d @$(($(date -d $lightevening +"%s") + 60)) +"%H:%M")
 
 while true
 do
