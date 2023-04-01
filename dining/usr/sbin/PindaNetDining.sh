@@ -164,6 +164,10 @@ function thermostat {
   done
 }
 
+if [ -f "/root/thermostatManual" ]; then
+  mv /root/thermostatManual /tmp/thermostatManual
+fi
+
 . /var/www/html/data/thermostat
 # Calculated configs
 ## domoOn
