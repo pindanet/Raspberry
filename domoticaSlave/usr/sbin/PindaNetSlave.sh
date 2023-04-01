@@ -201,6 +201,10 @@ function thermostat {
   done
 }
 
+if [ -f "/root/thermostatManual" ]; then
+  mv /root/thermostatManual /tmp/thermostatManual
+fi
+
 while true
 do
 #  timerfile="/var/www/html/data/timer"
