@@ -291,6 +291,24 @@ EOF
   sudo systemctl daemon-reload
   sudo systemctl enable PindaNetDomo.service
 
+  sudo wget -O /usr/sbin/PindaNetLights.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetLights.sh
+  sudo chmod +x /usr/sbin/PindaNetLights.sh
+  cat > PindaNetLights.service <<EOF
+[Unit]
+Description=PindaNetDomotica Lights
+Wants=network-online.target
+After=network.target network-online.target
+[Service]
+ExecStart=/usr/sbin/PindaNetLights.sh
+Restart=always
+RestartSec=60
+[Install]
+WantedBy=multi-user.target
+EOF
+  sudo mv PindaNetLights.service /etc/systemd/system/
+  sudo systemctl daemon-reload
+  sudo systemctl enable PindaNetLights.service
+
   sudo wget -O /var/www/html/daylymotion.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/daylymotion.php
 
   sudo apt install -y python3-gpiozero
