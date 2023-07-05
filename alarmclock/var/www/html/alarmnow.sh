@@ -3,7 +3,8 @@
 
 #mpg123 -f -$volume /var/www/html/data/bintro.mp3
 
-nohup mpg123 -f -$volume $(curl -s -i $radio | grep Location | awk '{ print $2 }') 2> /var/www/html/data/radio.log &
+url=$(curl --location --head --silent --write-out "%{url_effective}" --output /dev/null "$radio")
+nohup mpg123 -f -$volume $url 2> /var/www/html/data/radio.log &
 sleep 180 # 3 minuten wakker worden
 sleep 180 # 3 minuten nekoefeningen
 sleep 300 # 5 minuten rechtop zitten
