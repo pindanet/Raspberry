@@ -2,6 +2,7 @@
 # GPIO 5 (29) > Button > Gnd (34)
 
 # ToDo
+
 # Backlight LCD by day
 echo 64 > /sys/class/backlight/rpi_backlight/brightness
 
@@ -12,7 +13,7 @@ localToUTC=$(($(date +"%k") - $(date -u +"%k")))
 sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
 # to Local
 sunset=$(date -d @$sunsetLocalSec +"%H:%M")
-echo "echo 15 > /sys/class/backlight/rpi_backlight/brightness" | at -M $sunset
+echo "echo 20 > /sys/class/backlight/rpi_backlight/brightness" | at -M $sunset
 
 # disable status led's
 echo 0 > /sys/class/leds/led0/brightness
@@ -52,7 +53,8 @@ _button_pin=5
 function playRadio () {
   # $1 = radio URL
   # $2 = volume
-  nohup mpg123 -f -$2 $(curl -s -i $1 | grep Location | awk '{ print $2 }') 2> /var/www/html/data/radio.log &
+  url=$(curl --location --head --silent --write-out "%{url_effective}" --output /dev/null "$1")
+  nohup mpg123 -f -$volume $url 2> /var/www/html/data/radio.log &
   sleep 5
 }
 
