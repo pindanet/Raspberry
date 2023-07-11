@@ -317,6 +317,8 @@ EOF
   sudo usermod -a -G audio www-data
   sudo wget -O /var/www/html/mpc.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/mpc.php
   sudo wget -O /var/www/html/playRadio.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/playRadio.sh
+  sudo chmod +x /var/www/html/playRadio.sh
+
   # Set Volume manually
   # alsamixer
 
