@@ -313,38 +313,10 @@ EOF
 
   sudo apt install -y python3-gpiozero
 
-  sudo apt install mpc mpd at -y
+  sudo apt install mpg123 at -y
   sudo usermod -a -G audio www-data
   sudo wget -O /var/www/html/mpc.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/mpc.php
-  mpc add http://icecast.vrtcdn.be/radio1-high.mp3
-  mpc add http://icecast.vrtcdn.be/ra2wvl-high.mp3
-  mpc add http://icecast.vrtcdn.be/klara-high.mp3
-  mpc add http://icecast.vrtcdn.be/klaracontinuo-high.mp3
-  mpc add http://icecast.vrtcdn.be/stubru-high.mp3
-  mpc add http://icecast.vrtcdn.be/mnm-high.mp3
-  mpc add http://icecast.vrtcdn.be/mnm_hits-high.mp3
-  mpc add http://progressive-audio.lwc.vrtcdn.be/content/fixed/11_11niws-snip_hi.mp3 
-  mpc add http://icecast.vrtcdn.be/ketnetradio-high.mp3
-  mpc add http://streams.crooze.fm:8000
-  mpc add http://stream.vbro.be:9100/vbro
-  mpc add http://icecast-qmusic.cdp.triple-it.nl/JOEfm_be_live_128.mp3
-  mpc add http://icecast-qmusic.cdp.triple-it.nl/Qmusic_be_live_128.mp3
-  mpc add https://playerservices.streamtheworld.com/api/livestream-redirect/WILLY.mp3
-  # USB sound
-  sudo mv /etc/mpd.conf /etc/mpd.conf.ori
-  sudo chmod +r /etc/mpd.conf.ori
-  while IFS='' read -r LINE || [ -n "${LINE}" ]; do
-    echo "${LINE}" | sudo tee -a /etc/mpd.conf
-    if [ "${LINE}" == "audio_output {" ]; then
-#      echo "        device          \"hw:1,0\""  | sudo tee -a /etc/mpd.conf
-#      echo "        mixer_type      \"software\""  | sudo tee -a /etc/mpd.conf
-      echo "        type          \"alsa\""  | sudo tee -a /etc/mpd.conf
-      echo "        name          \"ALSADevice\""  | sudo tee -a /etc/mpd.conf
-      echo "        mixer_control      \"Digital\""  | sudo tee -a /etc/mpd.conf
-    fi
-  done < /etc/mpd.conf.ori
-  sudo chmod +r /etc/mpd.conf
-  
+  sudo wget -O /var/www/html/playRadio.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/playRadio.sh
   # Set Volume manually
   # alsamixer
 
