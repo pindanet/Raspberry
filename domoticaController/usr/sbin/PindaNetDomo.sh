@@ -1,6 +1,5 @@
 #!/bin/bash
 # ToDo
-# SSL communication LMI_261-22 p62
 # Activate Serial Hardware
 # replace /home/dany by search default user
 
@@ -265,7 +264,7 @@ echo "in" > /sys/class/gpio/gpio$_pir_pin/direction
 # remove all alarms
 for i in `atq | awk '{print $1}'`;do atrm $i;done
 # Switch radio  off at 12h00
-echo "mpc stop; mpc volume $TVVolume; rm /var/www/html/data/mpc.txt" | at -M "12:00"
+#echo "mpc stop; mpc volume $TVVolume; rm /var/www/html/data/mpc.txt" | at -M "12:00"
 
 while true
 do
@@ -440,7 +439,7 @@ do
     state="awake"
   fi
 
-  echo $state
+  echo "$state, $heatingRoom || ($now < $lightevening && $now > $lightmorning)"
   if [ $state == "awake" ]; then
     echo 0 > /sys/class/backlight/rpi_backlight/bl_power
   #  echo 255 > /sys/class/leds/led0/brightness
@@ -454,11 +453,16 @@ do
     # TV Lamp out
     dummy=$(wget -qO- http://$TVlamp/cm?cmnd=Power%20Off)
     # Stop Musisc Player
-    if [ -f /var/www/html/data/mpc.txt ]; then
-      mpc stop
-      mpc volume $TVVolume
-      rm /var/www/html/data/mpc.txt
+    if [ -f /var/www/html/data/radio.log ]; then
+      killall mpg123 curl
+#      mpc volume $TVVolume
+      rm /var/www/html/data/radio.log
     fi
+#    if [ -f /var/www/html/data/mpc.txt ]; then
+#      mpc stop
+#      mpc volume $TVVolume
+#      rm /var/www/html/data/mpc.txt
+#    fi
 #    if (echo > /dev/tcp/rpiwall/22) >/dev/null 2>&1; then
 #      # shutdown RPIWall
 #      wget --post-data="command=halt" --quiet http://rpiwall/remote.php
@@ -486,7 +490,7 @@ do
 #      else
 #        raspistill --width 800 --height 480 --nopreview --rotation 90 -o "$fotomap/$DATE.jpg"
 #      fi
-      sleep 3
+       sleep 3
     elif [ $_ret -eq 0 ]; then
 #       echo "Geen beweging"
        sleep 3 # time to reset PIR
