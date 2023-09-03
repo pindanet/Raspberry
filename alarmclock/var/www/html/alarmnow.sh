@@ -1,7 +1,8 @@
 #!/bin/bash
 . /var/www/html/data/alarmclock
 
-#mpg123 -f -$volume /var/www/html/data/bintro.mp3
+mpg123 -f -$volume /var/www/html/data/bintro.mp3
+#mpg123 -f -$volume /var/www/html/data/Old-alarm-clock-sound.mp3
 
 url=$(curl --location --head --silent --write-out "%{url_effective}" --output /dev/null "$radio")
 nohup mpg123 -f -$volume $url 2> /var/www/html/data/radio.log &
