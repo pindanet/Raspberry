@@ -173,6 +173,8 @@ EOF
   sudo wget -O /var/www/html/alarmnow.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/var/www/html/alarmnow.sh
   sudo chmod +x /var/www/html/alarmnow.sh
   sudo /var/www/html/pindaalarmclock
+  sudo wget -O /var/www/html/playRadio.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/alarmclock/var/www/html/playRadio.sh
+  sudo chmod +x /var/www/html/playRadio.sh
   
 fi
 # Restart Raspberry Pi
