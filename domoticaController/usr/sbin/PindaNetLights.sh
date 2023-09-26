@@ -17,9 +17,19 @@ sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
 # to Local
 sunset=$(date -d @$sunsetLocalSec +"%H:%M")
 
+lightevening="22:50"
+eveningShutterDown="22:20"
+
 unset lights
 # Name URL Power On Off
 lights+=("Apotheek tasmota-c699b5-6581 20 $sunset $(date -d "$sunset 15 minutes" +'%H:%M')")
+
+if [[ $eveningShutterDown > $sunset ]]; then # already dark
+  lights+=("Haardlamp tasmota-1539f2-6642 20 $sunset bedtime")
+else # still daylight
+  lights+=("Haardlamp tasmota-1539f2-6642 20 $eveningShutterDown bedtime")
+fi
+
 #lights+=("Apotheek tasmota-c699b5-6581 20 10:37 10:39")
 
 declare -A status=()
@@ -48,8 +58,16 @@ while true
 do
   starttime=$(date +"%s") # complete cycle: 1 minute
   now=$(date +%H:%M)
+  # Get bedtime
+  bedtime="24:30"
+  if [[ $(cat /sys/class/backlight/rpi_backlight/bl_power) == "1" ]]; then # LCD backlight off
+    bedtime="$now"
+  fi
   for light in "${lights[@]}"; do
     lightProperties=(${light})
+    if [[ "${lightProperties[4]}" == "bedtime" ]]; then
+      lightProperties[4]="$bedtime"
+    fi
     if [[ "${lightProperties[3]}" < "$now" ]] && [[ "$now" < "${lightProperties[4]}" ]]; then
       tasmota ${lightProperties[1]} on ${lightProperties[2]}
     else
