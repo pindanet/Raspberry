@@ -5,7 +5,7 @@
 
 # Compensate temperature sensor
 #tempOffset=0.5
-tempfact=0.94 # Zomer, omgevingstemp: 0.91, Winter, IR temp: 0.94
+tempfact=0.91 # Zomer, omgevingstemp: 0.91, Winter, IR temp: 0.94
 luxnight="10.0"
 
 function broadcast() {
@@ -452,6 +452,8 @@ do
     echo 0 > /sys/class/leds/led1/brightness
     # TV Lamp out
     dummy=$(wget -qO- http://$TVlamp/cm?cmnd=Power%20Off)
+    # Haard Lamp out
+    dummy=$(wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off)
     # Stop Musisc Player
     if [ -f /var/www/html/data/radio.log ]; then
       killall mpg123 curl
