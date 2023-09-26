@@ -1,5 +1,5 @@
 #!/bin/bash
-tempfact=1.08  # Zomer, omgevingstemp: 1.00, Winter, IR temp: 1.03
+tempfact=1.03  # Zomer, omgevingstemp: 1.00, Winter, IR temp: 1.08
 function relayGPIO () {
   _r1_pin=${1#*relayGPIO}
 
@@ -233,7 +233,7 @@ fi
 # Lights out in the morning
 # From UTC
 lightsOut=$(date -d "$nextAlarm" +"%s")
-lightsOut=$((lightsOut + 74 * 60)) # 1 hour 14 minutes after wakeup
+lightsOut=$((lightsOut + 74 * 60)) # 1 hour 14 min after wakeup
 lightsOut=$(date -d @$lightsOut +%H:%M)
 
 sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
@@ -267,7 +267,7 @@ sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
 sunset=$(date -d @$sunsetLocalSec +"%H:%M")
 if [[ $eveningShutterDown > $sunset ]]; then # already dark
 #  echo "raspi-gpio set $diningLight op dl" | at $sunset
-  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $sunset
+#  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $sunset
   if [ ! -z ${TVlamp+x} ]; then
     echo "wget -qO- http://$TVlamp/cm?cmnd=Power%20On" | at $sunset
   fi
@@ -276,7 +276,7 @@ if [[ $eveningShutterDown > $sunset ]]; then # already dark
   fi
 else # still daylight
 #  echo "raspi-gpio set $diningLight op dl" | at $eveningShutterDown
-  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $eveningShutterDown
+#  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $eveningShutterDown
   if [ ! -z ${TVlamp+x} ]; then
     echo "wget -qO- http://$TVlamp/cm?cmnd=Power%20On" | at $eveningShutterDown
   fi
@@ -287,7 +287,7 @@ fi
 # All lights out
 #echo "raspi-gpio set $diningLight op dh" | at $lightevening
 echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20Off" | at -M $lightevening
-echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off" | at -M $lightevening
+#echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off" | at -M $lightevening
 if [ ! -z ${christmasLight+x} ]; then
   echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20Off" | at $lightevening
 fi
