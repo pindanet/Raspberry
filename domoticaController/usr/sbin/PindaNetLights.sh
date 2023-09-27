@@ -24,6 +24,7 @@ unset lights
 # Name URL Power On Off
 lights+=("Tandenborstel tasmota-a943fa-1018 20 16:00 22:15")
 lights+=("Apotheek tasmota-c699b5-6581 20 $sunset $(date -d "$sunset 15 minutes" +'%H:%M')")
+lights+=("Apotheek tasmota-c699b5-6581 20 22:24 bedtime")
 
 # in the evening
 if [[ $eveningShutterDown > $sunset ]]; then # already dark
