@@ -265,35 +265,35 @@ sunsetSec=$(date -d "$sunset" +"%s")
 sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
 # to Local
 sunset=$(date -d @$sunsetLocalSec +"%H:%M")
-if [[ $eveningShutterDown > $sunset ]]; then # already dark
+#if [[ $eveningShutterDown > $sunset ]]; then # already dark
 #  echo "raspi-gpio set $diningLight op dl" | at $sunset
 #  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $sunset
-  if [ ! -z ${TVlamp+x} ]; then
-    echo "wget -qO- http://$TVlamp/cm?cmnd=Power%20On" | at $sunset
-  fi
-  if [ ! -z ${christmasLight+x} ]; then
-    echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at $sunset
-  fi
-else # still daylight
+#  if [ ! -z ${TVlamp+x} ]; then
+#    echo "wget -qO- http://$TVlamp/cm?cmnd=Power%20On" | at $sunset
+#  fi
+#  if [ ! -z ${christmasLight+x} ]; then
+#    echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at $sunset
+#  fi
+#else # still daylight
 #  echo "raspi-gpio set $diningLight op dl" | at $eveningShutterDown
 #  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $eveningShutterDown
-  if [ ! -z ${TVlamp+x} ]; then
-    echo "wget -qO- http://$TVlamp/cm?cmnd=Power%20On" | at $eveningShutterDown
-  fi
-  if [ ! -z ${christmasLight+x} ]; then
-    echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at $eveningShutterDown
-  fi
-fi
+#  if [ ! -z ${TVlamp+x} ]; then
+#    echo "wget -qO- http://$TVlamp/cm?cmnd=Power%20On" | at $eveningShutterDown
+#  fi
+#  if [ ! -z ${christmasLight+x} ]; then
+#    echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at $eveningShutterDown
+#  fi
+#fi
 # All lights out
 #echo "raspi-gpio set $diningLight op dh" | at $lightevening
-echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20Off" | at -M $lightevening
+#echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20Off" | at -M $lightevening
 #echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off" | at -M $lightevening
-if [ ! -z ${christmasLight+x} ]; then
-  echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20Off" | at $lightevening
-fi
+#if [ ! -z ${christmasLight+x} ]; then
+#  echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20Off" | at $lightevening
+#fi
 # Tandenborstel opladen
-echo "wget -qO- http://tasmota-a943fa-1018/cm?cmnd=Power%20On" | at -M 16:00
-echo "wget -qO- http://tasmota-a943fa-1018/cm?cmnd=Power%20Off" | at -M 22:15
+#echo "wget -qO- http://tasmota-a943fa-1018/cm?cmnd=Power%20On" | at -M 16:00
+#echo "wget -qO- http://tasmota-a943fa-1018/cm?cmnd=Power%20Off" | at -M 22:15
 
 # Update and reboot, 1 minute later
 #echo "apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at $(date -d @$(($(date -d $lightevening +"%s") + 60)) +"%H:%M")
