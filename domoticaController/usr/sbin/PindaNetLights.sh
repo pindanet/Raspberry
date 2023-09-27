@@ -24,10 +24,13 @@ unset lights
 # Name URL Power On Off
 lights+=("Apotheek tasmota-c699b5-6581 20 $sunset $(date -d "$sunset 15 minutes" +'%H:%M')")
 
+# in the evening
 if [[ $eveningShutterDown > $sunset ]]; then # already dark
   lights+=("Haardlamp tasmota-1539f2-6642 20 $sunset bedtime")
+  lights+=("TVlamp tasmota-a94717-1815 20 $sunset bedtime")
 else # still daylight
   lights+=("Haardlamp tasmota-1539f2-6642 20 $eveningShutterDown bedtime")
+  lights+=("TVlamp tasmota-a94717-1815 20 $eveningShutterDown bedtime")
 fi
 
 #lights+=("Apotheek tasmota-c699b5-6581 20 10:37 10:39")
@@ -39,15 +42,15 @@ function tasmota () {
     two=$(echo ${status["$1"]} | awk -F"\"" '{print $4}')
     twolower=${two,,}
     if [ $twolower == "on" ] || [ $twolower == "off" ]; then
-      echo "$(date -u +%s),$twolower,$3" >> /var/www/html/data/$1.$logExt
+      echo "$(date),$twolower,$3" >> /var/www/html/data/$1.$logExt
     fi
   fi
   if [ $2 == "on" ] && [ "${status["$1"]}" == '{"POWER":"OFF"}' ]; then
     status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power%20On)
-    echo "$(date -u +%s),$2,$3" >> /var/www/html/data/$1.$logExt
+    echo "$(date),$2,$3" >> /var/www/html/data/$1.$logExt
   elif [ $2 == "off" ] && [ "${status["$1"]}" == '{"POWER":"ON"}' ]; then
     status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
-    echo "$(date -u +%s),$2,$3" >> /var/www/html/data/$1.$logExt
+    echo "$(date),$2,$3" >> /var/www/html/data/$1.$logExt
   elif [ "${status["$1"]}" != '{"POWER":"OFF"}' ] && [ "${status["$1"]}" != '{"POWER":"ON"}' ]; then
     status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power)
     echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
