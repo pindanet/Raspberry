@@ -2,7 +2,7 @@
 # ToDo
 # .source functions, config
 
-logExt="log.test"
+logExt="log"
 
 sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
 sunriseSec=$(date -d "$sunrise" +"%s")
@@ -22,6 +22,7 @@ eveningShutterDown="22:20"
 
 unset lights
 # Name URL Power On Off
+lights+=("Tandenborstel tasmota-a943fa-1018 20 16:00 22:15")
 lights+=("Apotheek tasmota-c699b5-6581 20 $sunset $(date -d "$sunset 15 minutes" +'%H:%M')")
 
 # in the evening
@@ -33,8 +34,6 @@ else # still daylight
   lights+=("TVlamp tasmota-a94717-1815 20 $eveningShutterDown bedtime")
 fi
 
-#lights+=("Apotheek tasmota-c699b5-6581 20 10:37 10:39")
-
 declare -A status=()
 function tasmota () {
   if [ -z ${status["$1"]} ]; then # initialize
@@ -42,15 +41,15 @@ function tasmota () {
     two=$(echo ${status["$1"]} | awk -F"\"" '{print $4}')
     twolower=${two,,}
     if [ $twolower == "on" ] || [ $twolower == "off" ]; then
-      echo "$(date),$twolower,$3" >> /var/www/html/data/$1.$logExt
+      echo "$(date),$twolower,$3" >> /var/www/html/data/$4.$logExt
     fi
   fi
   if [ $2 == "on" ] && [ "${status["$1"]}" == '{"POWER":"OFF"}' ]; then
     status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power%20On)
-    echo "$(date),$2,$3" >> /var/www/html/data/$1.$logExt
+    echo "$(date),$2,$3" >> /var/www/html/data/$4.$logExt
   elif [ $2 == "off" ] && [ "${status["$1"]}" == '{"POWER":"ON"}' ]; then
     status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power%20Off)
-    echo "$(date),$2,$3" >> /var/www/html/data/$1.$logExt
+    echo "$(date),$2,$3" >> /var/www/html/data/$4.$logExt
   elif [ "${status["$1"]}" != '{"POWER":"OFF"}' ] && [ "${status["$1"]}" != '{"POWER":"ON"}' ]; then
     status["$1"]=$(wget -qO- http://$1/cm?cmnd=Power)
     echo "$(date): Communication error. Heating $1" >> /tmp/PindaNetDebug.txt
@@ -72,9 +71,9 @@ do
       lightProperties[4]="$bedtime"
     fi
     if [[ "${lightProperties[3]}" < "$now" ]] && [[ "$now" < "${lightProperties[4]}" ]]; then
-      tasmota ${lightProperties[1]} on ${lightProperties[2]}
+      tasmota ${lightProperties[1]} on ${lightProperties[2]} ${lightProperties[0]}
     else
-      tasmota ${lightProperties[1]} off ${lightProperties[2]}
+      tasmota ${lightProperties[1]} off ${lightProperties[2]} ${lightProperties[0]}
     fi
 #    echo ${lightProperties[@]}
   done
