@@ -259,7 +259,7 @@ fi
 
 # Lights on in the evening
 # From UTC
-echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M 22:24
+#echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M 22:24
 sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
 sunsetSec=$(date -d "$sunset" +"%s")
 sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
