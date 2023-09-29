@@ -1,6 +1,7 @@
 #!/bin/bash
 # ToDo
 # .source functions, config
+# split PindaNetSwitches - PindaNetLights
 
 logExt="log"
 
@@ -35,6 +36,8 @@ else # still daylight
   lights+=("TVlamp tasmota-a94717-1815 20 $eveningShutterDown bedtime")
 fi
 
+#lights+=("TVlamp tasmota-a94717-1815 20 15:50 16:06")
+
 declare -A status=()
 function tasmota () {
   if [ -z ${status["$1"]} ]; then # initialize
@@ -59,6 +62,8 @@ function tasmota () {
 
 while true
 do
+  declare -A process=()
+  declare -A processed=()
   starttime=$(date +"%s") # complete cycle: 1 minute
   now=$(date +%H:%M)
   # Get bedtime
@@ -68,16 +73,28 @@ do
   fi
   for light in "${lights[@]}"; do
     lightProperties=(${light})
-    if [[ "${lightProperties[4]}" == "bedtime" ]]; then
-      lightProperties[4]="$bedtime"
-    fi
-    if [[ "${lightProperties[3]}" < "$now" ]] && [[ "$now" < "${lightProperties[4]}" ]]; then
-      tasmota ${lightProperties[1]} on ${lightProperties[2]} ${lightProperties[0]}
-    else
-      tasmota ${lightProperties[1]} off ${lightProperties[2]} ${lightProperties[0]}
+    if [ -z ${processed["${lightProperties[0]}"]} ]; then # not yet processed
+      if [[ "${lightProperties[4]}" == "bedtime" ]]; then
+        lightProperties[4]="$bedtime"
+      fi
+      if [[ "${lightProperties[3]}" < "$now" ]] && [[ "$now" < "${lightProperties[4]}" ]]; then
+#        tasmota ${lightProperties[1]} on ${lightProperties[2]} ${lightProperties[0]}
+        process["${lightProperties[0]}"]="${lightProperties[0]} ${lightProperties[1]} ${lightProperties[2]} on"
+        processed["${lightProperties[0]}"]="on"
+      else
+#        tasmota ${lightProperties[1]} off ${lightProperties[2]} ${lightProperties[0]}
+        process["${lightProperties[0]}"]="${lightProperties[0]} ${lightProperties[1]} ${lightProperties[2]} off"
+      fi
     fi
 #    echo ${lightProperties[@]}
   done
+  for key in "${!process[@]}"; do
+    lightProperties=(${process[$key]})
+    tasmota ${lightProperties[1]} ${lightProperties[3]} ${lightProperties[2]} ${lightProperties[0]}
+    echo "$key: ${lightProperties[3]}"
+  done
+#  echo ${process[@]}
+#  echo ${!process[@]}
 
   sleepSec=$((60 - ($(date +"%s") - starttime)))
   sleep $sleepSec
