@@ -295,9 +295,10 @@ sunset=$(date -d @$sunsetLocalSec +"%H:%M")
 #echo "wget -qO- http://tasmota-a943fa-1018/cm?cmnd=Power%20On" | at -M 16:00
 #echo "wget -qO- http://tasmota-a943fa-1018/cm?cmnd=Power%20Off" | at -M 22:15
 
-# Update and reboot, 1 minute later
+# Update and reboot at 03:30 (winter/zomeruur)
 #echo "apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at $(date -d @$(($(date -d $lightevening +"%s") + 60)) +"%H:%M")
-echo "if [ -f '/tmp/thermostatManual' ]; then   mv /tmp/thermostatManual /root/thermostatManual; fi; apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at $(date -d @$(($(date -d $lightevening +"%s") + 60)) +"%H:%M")
+#echo "if [ -f '/tmp/thermostatManual' ]; then   mv /tmp/thermostatManual /root/thermostatManual; fi; apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at $(date -d @$(($(date -d $lightevening +"%s") + 60)) +"%H:%M")
+echo "if [ -f '/tmp/thermostatManual' ]; then   mv /tmp/thermostatManual /root/thermostatManual; fi; apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at -M 03:30
 
 while true
 do
