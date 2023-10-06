@@ -35,7 +35,7 @@ else # still daylight
   lights+=("TVlamp tasmota-a94717-1815 20 $eveningShutterDown bedtime")
 fi
 
-#lights+=("TVlamp tasmota-a94717-1815 20 18:17 18:19")
+#lights+=("TVlamp tasmota-a94717-1815 20 18:58 19:00")
 
 declare -A status=()
 function tasmota () {
@@ -67,6 +67,8 @@ do
   now=$(date +'%Y%m%d%H%M')
   if [[ $(cat /sys/class/backlight/rpi_backlight/bl_power) == "1" ]]; then # LCD backlight off
     bedtime="$now"
+  else
+    bedtime=$(date -d "2 minutes" +'%Y%m%d%H%M')
   fi
   for light in "${lights[@]}"; do
     lightProperties=(${light})
@@ -74,7 +76,7 @@ do
       if [[ "${lightProperties[4]}" == "bedtime" ]]; then
         endDate="$bedtime"
       else
-        endDate=$(date -d "2 minutes" +'%Y%m%d%H%M')
+        endDate=$(date -d "${lightProperties[4]}" +'%Y%m%d%H%M')
       fi
       startDate=$(date -d "${lightProperties[3]}" +'%Y%m%d%H%M')
       if [[ "$startDate" < "$now" ]] && [[ "$now" < "$endDate" ]]; then
