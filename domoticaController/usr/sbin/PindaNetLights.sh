@@ -18,7 +18,6 @@ sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
 # to Local
 sunset=$(date -d @$sunsetLocalSec +"%H:%M")
 
-lightevening="22:50"
 eveningShutterDown="22:20"
 
 unset lights
@@ -36,7 +35,7 @@ else # still daylight
   lights+=("TVlamp tasmota-a94717-1815 20 $eveningShutterDown bedtime")
 fi
 
-#lights+=("TVlamp tasmota-a94717-1815 20 15:50 16:06")
+#lights+=("TVlamp tasmota-a94717-1815 20 18:17 18:19")
 
 declare -A status=()
 function tasmota () {
@@ -65,9 +64,7 @@ do
   declare -A process=()
   declare -A processed=()
   starttime=$(date +"%s") # complete cycle: 1 minute
-  now=$(date +%H:%M)
-  # Get bedtime
-  bedtime="24:30"
+  now=$(date +'%Y%m%d%H%M')
   if [[ $(cat /sys/class/backlight/rpi_backlight/bl_power) == "1" ]]; then # LCD backlight off
     bedtime="$now"
   fi
@@ -75,9 +72,12 @@ do
     lightProperties=(${light})
     if [ -z ${processed["${lightProperties[0]}"]} ]; then # not yet processed
       if [[ "${lightProperties[4]}" == "bedtime" ]]; then
-        lightProperties[4]="$bedtime"
+        endDate="$bedtime"
+      else
+        endDate=$(date -d "2 minutes" +'%Y%m%d%H%M')
       fi
-      if [[ "${lightProperties[3]}" < "$now" ]] && [[ "$now" < "${lightProperties[4]}" ]]; then
+      startDate=$(date -d "${lightProperties[3]}" +'%Y%m%d%H%M')
+      if [[ "$startDate" < "$now" ]] && [[ "$now" < "$endDate" ]]; then
 #        tasmota ${lightProperties[1]} on ${lightProperties[2]} ${lightProperties[0]}
         process["${lightProperties[0]}"]="${lightProperties[0]} ${lightProperties[1]} ${lightProperties[2]} on"
         processed["${lightProperties[0]}"]="on"
