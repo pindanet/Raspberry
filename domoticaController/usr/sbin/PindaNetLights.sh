@@ -27,7 +27,7 @@ lights+=("Apotheek tasmota-c699b5-6581 20 $sunset $(date -d "$sunset 15 minutes"
 lights+=("Apotheek tasmota-c699b5-6581 20 22:24 bedtime")
 
 # in the evening
-if [[ $eveningShutterDown > $sunset ]]; then # already dark
+if [[ $(date -d "$eveningShutterDown" +'%Y%m%d%H%M') > $(date -d "$sunset" +'%Y%m%d%H%M') ]]; then # already dark
   lights+=("Haardlamp tasmota-1539f2-6642 20 $sunset bedtime")
   lights+=("TVlamp tasmota-a94717-1815 20 $sunset bedtime")
 else # still daylight
