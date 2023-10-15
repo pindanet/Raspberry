@@ -35,7 +35,31 @@ else # still daylight
   lights+=("TVlamp tasmota-a94717-1815 20 $eveningShutterDown bedtime")
 fi
 
-#lights+=("TVlamp tasmota-a94717-1815 20 18:58 19:00")
+#lights+=("TVlamp tasmota-a94717-1815 20 18:36 18:38")
+
+# convert to comparable dates
+sunrise=$(date -d "$sunrise" +'%Y%m%d%H%M')
+sunset=$(date -d "$sunset" +'%Y%m%d%H%M')
+eveningShutterDown=$(date -d "$eveningShutterDown" +'%Y%m%d%H%M')
+toprocess=("${lights[@]}")
+unset lights
+for light in "${toprocess[@]}"; do
+  lightProperties=(${light})
+  date -d "${lightProperties[3]}" &> /dev/null
+  if [ $? == 0 ]; then
+    lightProperties[3]=$(date -d "${lightProperties[3]}" +'%Y%m%d%H%M')
+  fi
+  date -d "${lightProperties[4]}" &>/dev/null
+  if [ $? == 0 ]; then 
+    lightProperties[4]=$(date -d "${lightProperties[4]}" +'%Y%m%d%H%M')
+  fi
+  lights+=("${lightProperties[0]} ${lightProperties[1]} ${lightProperties[2]} ${lightProperties[3]} ${lightProperties[4]}")
+done
+
+# debug conversion
+for light in "${lights[@]}"; do
+  echo $light
+done
 
 declare -A status=()
 function tasmota () {
@@ -76,15 +100,13 @@ do
       if [[ "${lightProperties[4]}" == "bedtime" ]]; then
         endDate="$bedtime"
       else
-        endDate=$(date -d "${lightProperties[4]}" +'%Y%m%d%H%M')
+        endDate="${lightProperties[4]}"
       fi
-      startDate=$(date -d "${lightProperties[3]}" +'%Y%m%d%H%M')
+      startDate="${lightProperties[3]}"
       if [[ "$startDate" < "$now" ]] && [[ "$now" < "$endDate" ]]; then
-#        tasmota ${lightProperties[1]} on ${lightProperties[2]} ${lightProperties[0]}
         process["${lightProperties[0]}"]="${lightProperties[0]} ${lightProperties[1]} ${lightProperties[2]} on"
         processed["${lightProperties[0]}"]="on"
       else
-#        tasmota ${lightProperties[1]} off ${lightProperties[2]} ${lightProperties[0]}
         process["${lightProperties[0]}"]="${lightProperties[0]} ${lightProperties[1]} ${lightProperties[2]} off"
       fi
     fi
