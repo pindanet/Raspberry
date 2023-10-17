@@ -1,5 +1,6 @@
 #!/bin/bash
 # ToDo
+# date +'%Y%m%d%H%M%S'
 # .source functions, config
 # split PindaNetSwitches - PindaNetLights
 
@@ -22,20 +23,20 @@ eveningShutterDown="22:20"
 
 unset lights
 # Name URL Power On Off
-lights+=("Tandenborstel tasmota-a943fa-1018 20 16:00 22:15")
-lights+=("Apotheek tasmota-c699b5-6581 20 $sunset $(date -d "$sunset 15 minutes" +'%H:%M')")
-lights+=("Apotheek tasmota-c699b5-6581 20 22:24 bedtime")
+lights+=("Tandenborstel 192.168.129.7 20 16:00 22:15")
+lights+=("Apotheek 192.168.129.19 20 $sunset $(date -d "$sunset 15 minutes" +'%H:%M')")
+lights+=("Apotheek 192.168.129.19 20 22:24 bedtime")
 
 # in the evening
 if [[ $(date -d "$eveningShutterDown" +'%Y%m%d%H%M') > $(date -d "$sunset" +'%Y%m%d%H%M') ]]; then # already dark
-  lights+=("Haardlamp tasmota-1539f2-6642 20 $sunset bedtime")
-  lights+=("TVlamp tasmota-a94717-1815 20 $sunset bedtime")
+  lights+=("Haardlamp 192.168.129.18 20 $sunset bedtime")
+  lights+=("TVlamp 192.168.129.11 20 $sunset bedtime")
 else # still daylight
-  lights+=("Haardlamp tasmota-1539f2-6642 20 $eveningShutterDown bedtime")
-  lights+=("TVlamp tasmota-a94717-1815 20 $eveningShutterDown bedtime")
+  lights+=("Haardlamp 192.168.129.18 20 $eveningShutterDown bedtime")
+  lights+=("TVlamp 192.168.129.11 20 $eveningShutterDown bedtime")
 fi
 
-#lights+=("TVlamp tasmota-a94717-1815 20 18:36 18:38")
+#lights+=("TVlamp 192.168.129.11 20 18:36 18:38")
 
 # convert to comparable dates
 sunrise=$(date -d "$sunrise" +'%Y%m%d%H%M')
