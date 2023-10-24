@@ -46,3 +46,6 @@ table img {
   font-size: 5vw;
   vertical-align: bottom;
 }
+#weather td {
+  text-align: right;
+}
