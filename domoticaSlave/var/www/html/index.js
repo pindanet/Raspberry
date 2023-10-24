@@ -110,7 +110,7 @@ function weather(event) {
       const weatherObj = JSON.parse(this.responseText);
       for (let x in weatherObj.properties.timeseries) {
 	if (weatherObj.properties.timeseries[x].time.includes(UTCHour)) {
-        for (let col = 1; col < 4; col++) {
+        for (let col = 1; col < 5; col++) {
           var ts = parseInt(x) + col - 1;
           var UTCTime = d;
           UTCTime.setUTCHours(weatherObj.properties.timeseries[ts].time.substr(11,2));
@@ -208,18 +208,21 @@ function irstatus(irswitch, id) {
     if (this.status == 200) {
       var lines = this.responseText.split('\n');
       if (lines[lines.length - 2].includes("on")) {
-        document.getElementById(id).src = "emoji/infrared-on.svg";
+        document.getElementById("light").style.display = "none";
+        document.getElementById(id).style.display = "";
       } else {
-        document.getElementById(id).src = "emoji/infrared-auto.svg";
-        executeIfFileExist("data/thermostatManual", function () {
-          document.getElementById(id).src = "emoji/infrared-off.svg";
-        });
+        document.getElementById(id).style.display = "none";
+//        document.getElementById(id).src = "emoji/infrared-auto.svg";
+//        executeIfFileExist("data/thermostatManual", function () {
+//          document.getElementById(id).src = "emoji/infrared-off.svg";
+//        });
       }
     }
   };
   xhr.send();
 }
 
+/*
 function ir(event, el) {
   var id = el.id;
   if (document.getElementById(id).src.includes("infrared-off.svg")) {
@@ -241,6 +244,7 @@ function ir(event, el) {
 
   event.stopPropagation();
 }
+*/
 
 function lightstatus() {
   var xhr = new XMLHttpRequest();
@@ -249,15 +253,17 @@ function lightstatus() {
   xhr.onload = function(e) {
     if (this.status == 200) {
       if (this.responseText.includes("ON")) {
-        document.getElementById("light").src = "emoji/light-bulb-on.svg";
+        document.getElementById("ir1").style.display = "none";
+        document.getElementById("light").style.display = "";
       } else {
-        document.getElementById("light").src = "emoji/light-bulb-off.svg";
+        document.getElementById("light").style.display = "none";
       }
     }
   };
   xhr.send();
 }
 
+/*
 function lights(event) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "tasmota.php", true);
@@ -271,6 +277,7 @@ function lights(event) {
 console.log("dev=" + lightSwitch + "&cmd=Power%20toggle");
   event.stopPropagation();
 }
+*/
 
 var roomTemp="20.0";
 function getRoomTemp() {
@@ -308,8 +315,9 @@ function startTime() {
   lightstatus();
   weather();
 
-  irstatus(irSwitch["ir1"], "ir1");
-  irstatus(irSwitch["ir2"], "ir2");
+  setTimeout(irstatus, 2500, irSwitch["ir1"], "ir1");
+//  irstatus(irSwitch["ir1"], "ir1");
+//  irstatus(irSwitch["ir2"], "ir2");
 
   startTimer = setTimeout(startTime, 5000); // elke 5 seconden
 }
