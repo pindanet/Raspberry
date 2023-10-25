@@ -233,7 +233,7 @@ fi
 # Lights out in the morning
 # From UTC
 lightsOut=$(date -d "$nextAlarm" +"%s")
-lightsOut=$((lightsOut + 74 * 60)) # 1 hour 14 min after wakeup
+lightsOut=$((lightsOut + 79 * 60)) # 1 hour 19 min after wakeup
 lightsOut=$(date -d @$lightsOut +%H:%M)
 
 sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
