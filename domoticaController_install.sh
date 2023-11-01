@@ -311,6 +311,7 @@ EOF
 
   sudo wget -O /var/www/html/sun.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/sun.sh
   sudo wget -O /var/www/html/nextalarm.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/nextalarm.sh
+  sudo wget -O /var/www/html/dateconvert.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/dateconvert.sh
   sudo wget -O /var/www/html/daylymotion.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/daylymotion.php
 
   sudo apt install -y python3-gpiozero
