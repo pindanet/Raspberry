@@ -194,77 +194,77 @@ fi
 #echo $domoOn > /var/www/html/data/domoOn
 
 # get next alarm
-now=$(date +%H:%M)
-nextAlarm=$(cat /var/www/html/data/nextalarm)
-if [[ "$now" > "$nextAlarm" ]];then
-  tomorrow=$(date --date="next day" +%u)
-  nextAlarm=${alarmtimes[$((tomorrow - 1))]}
-  # Exceptions with recurrent dates
-  for alarmitem in "${alarmevent[@]}"; do
-    daytime=(${alarmitem})
-    recevent=$(date -u --date "${daytime[0]}" +%s)
-    tomorrowSec=$(date -u --date="next day" +%s)
-    tomorrow=$((tomorrowSec - (tomorrowSec % 86400)))
-    if [[ "${#daytime[@]}" > "2" ]]; then # recurrent alarm event
-       timebetween=$((${daytime[2]} * 86400))
-       while  [ $recevent -lt $tomorrow ]; do
-         recevent=$((recevent + timebetween))
-       done
-    fi
-    if [ $tomorrow == $recevent ]; then
-      echo "Alarm Event on $(date -u --date @$recevent +'%a %d %b %Y'): ${daytime[1]}"
-      nextAlarm=${daytime[1]}
-    fi
-  done
-  echo $nextAlarm > /var/www/html/data/nextalarm
-fi
+#now=$(date +%H:%M)
+#nextAlarm=$(cat /var/www/html/data/nextalarm)
+#if [[ "$now" > "$nextAlarm" ]];then
+#  tomorrow=$(date --date="next day" +%u)
+#  nextAlarm=${alarmtimes[$((tomorrow - 1))]}
+#  # Exceptions with recurrent dates
+#  for alarmitem in "${alarmevent[@]}"; do
+#    daytime=(${alarmitem})
+#    recevent=$(date -u --date "${daytime[0]}" +%s)
+#    tomorrowSec=$(date -u --date="next day" +%s)
+#    tomorrow=$((tomorrowSec - (tomorrowSec % 86400)))
+#    if [[ "${#daytime[@]}" > "2" ]]; then # recurrent alarm event
+#       timebetween=$((${daytime[2]} * 86400))
+#       while  [ $recevent -lt $tomorrow ]; do
+#         recevent=$((recevent + timebetween))
+#       done
+#    fi
+#    if [ $tomorrow == $recevent ]; then
+#      echo "Alarm Event on $(date -u --date @$recevent +'%a %d %b %Y'): ${daytime[1]}"
+#      nextAlarm=${daytime[1]}
+#    fi
+#  done
+#  echo $nextAlarm > /var/www/html/data/nextalarm
+#fi
 
 # remove all alarms
 for i in `atq | awk '{print $1}'`;do atrm $i;done
 
 # Lights on in the morning 
 #echo "raspi-gpio set $diningLight op dl" | at -M $nextAlarm
-echo "sleep 660; wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M $nextAlarm
-echo "sleep 660; wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $nextAlarm
-if [ ! -z ${christmasLight+x} ]; then
-  echo "sleep 660; wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at -M $nextAlarm
-fi
+#echo "sleep 660; wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M $nextAlarm
+#echo "sleep 660; wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $nextAlarm
+#if [ ! -z ${christmasLight+x} ]; then
+#  echo "sleep 660; wget -qO- http://$christmasLight/cm?cmnd=Power%20On" | at -M $nextAlarm
+#fi
 
 # Lights out in the morning
 # From UTC
-lightsOut=$(date -d "$nextAlarm" +"%s")
-lightsOut=$((lightsOut + 79 * 60)) # 1 hour 19 min after wakeup
-lightsOut=$(date -d @$lightsOut +%H:%M)
-
-sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
-sunriseSec=$(date -d "$sunrise" +"%s")
-localToUTC=$(($(date +"%k") - $(date -u +"%k")))
-sunriseLocalSec=$((sunriseSec + localToUTC * 3600))
+#lightsOut=$(date -d "$nextAlarm" +"%s")
+#lightsOut=$((lightsOut + 79 * 60)) # 1 hour 19 min after wakeup
+#lightsOut=$(date -d @$lightsOut +%H:%M)
+#
+#sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
+#sunriseSec=$(date -d "$sunrise" +"%s")
+#localToUTC=$(($(date +"%k") - $(date -u +"%k")))
+#sunriseLocalSec=$((sunriseSec + localToUTC * 3600))
 # to Local
-sunrise=$(date -d @$sunriseLocalSec +"%H:%M")
-if [[ $lightsOut > $sunrise ]]; then # sun shines
+#sunrise=$(date -d @$sunriseLocalSec +"%H:%M")
+#if [[ $lightsOut > $sunrise ]]; then # sun shines
 #  echo "raspi-gpio set $diningLight op dh" | at $lightsOut
-  echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20Off" | at -M $lightsOut
-  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off" | at -M $lightsOut
+#  echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20Off" | at -M $lightsOut
+#  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off" | at -M $lightsOut
 #  echo "wget -qO- http://$diningLight/cm?cmnd=Power%20Off" | at $lightsOut
-else # still dark
+#else # still dark
 #  echo "raspi-gpio set $diningLight op dh" | at $sunrise
-  echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20Off" | at -M $sunrise
-  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off" | at -M $sunrise
+#  echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20Off" | at -M $sunrise
+#  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off" | at -M $sunrise
 #  echo "wget -qO- http://$diningLight/cm?cmnd=Power%20Off" | at $sunrise
-fi
-if [ ! -z ${christmasLight+x} ]; then
-  echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20Off" | at -M $sunrise
-fi
+#fi
+#if [ ! -z ${christmasLight+x} ]; then
+#  echo "wget -qO- http://$christmasLight/cm?cmnd=Power%20Off" | at -M $sunrise
+#fi
 
 # Lights on in the evening
 # From UTC
 #echo "wget -qO- http://tasmota-c699b5-6581/cm?cmnd=Power%20On" | at -M 22:24
-sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
-sunsetSec=$(date -d "$sunset" +"%s")
-sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
+#sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
+#sunsetSec=$(date -d "$sunset" +"%s")
+#sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
 # to Local
-sunset=$(date -d @$sunsetLocalSec +"%H:%M")
+#sunset=$(date -d @$sunsetLocalSec +"%H:%M")
 #if [[ $eveningShutterDown > $sunset ]]; then # already dark
 #  echo "raspi-gpio set $diningLight op dl" | at $sunset
 #  echo "wget -qO- http://$Haardlamp/cm?cmnd=Power%20On" | at -M $sunset
@@ -295,7 +295,7 @@ sunset=$(date -d @$sunsetLocalSec +"%H:%M")
 #echo "wget -qO- http://tasmota-a943fa-1018/cm?cmnd=Power%20On" | at -M 16:00
 #echo "wget -qO- http://tasmota-a943fa-1018/cm?cmnd=Power%20Off" | at -M 22:15
 
-# Update and reboot at 03:30 (winter/zomeruur)
+# Update and reboot, 1 minute later
 #echo "apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at $(date -d @$(($(date -d $lightevening +"%s") + 60)) +"%H:%M")
 #echo "if [ -f '/tmp/thermostatManual' ]; then   mv /tmp/thermostatManual /root/thermostatManual; fi; apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at $(date -d @$(($(date -d $lightevening +"%s") + 60)) +"%H:%M")
 echo "if [ -f '/tmp/thermostatManual' ]; then   mv /tmp/thermostatManual /root/thermostatManual; fi; apt-get clean; apt-get update; apt-get upgrade -y; sudo apt-get autoremove -y; shutdown -r now" | at -M 03:30
