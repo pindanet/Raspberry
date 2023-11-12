@@ -5,18 +5,7 @@
 
 logExt="log"
 
-sunrise=$(hdate -s -l N51 -L E3 -z0 -q | grep sunrise | tail -c 6)
-sunriseSec=$(date -d "$sunrise" +"%s")
-localToUTC=$(($(date +"%k") - $(date -u +"%k")))
-sunriseLocalSec=$((sunriseSec + localToUTC * 3600))
-# to Local
-sunrise=$(date -d @$sunriseLocalSec +"%H:%M")
-
-sunset=$(hdate -s -l N51 -L E3 -z0 -q | tail -c 6)
-sunsetSec=$(date -d "$sunset" +"%s")
-sunsetLocalSec=$((sunsetSec + localToUTC * 3600))
-# to Local
-sunset=$(date -d @$sunsetLocalSec +"%H:%M")
+. /var/www/html/sun.sh
 
 eveningShutterDown="22:20"
 
@@ -39,31 +28,7 @@ alarmevent+=("2023-06-20 07:00") # PCB
 # alarmevent+=("2021-06-17 06:30") # Hepatitis Vaccinatie
 alarmevent+=("2024-05-24 07:00") # Tandarts Fanny Decloedt
 
-# get next alarm
-now=$(date +%H:%M)
-alarmDay=$(date +%u)
-nextAlarm="${alarmtimes[$alarmDay-1]}"
-if [[ "$now" > "$nextAlarm" ]];then
-  tomorrow=$(date --date="next day" +%u)
-  nextAlarm=${alarmtimes[$((tomorrow - 1))]}
-  # Exceptions with recurrent dates
-  for alarmitem in "${alarmevent[@]}"; do
-    daytime=(${alarmitem})
-    recevent=$(date -u --date "${daytime[0]}" +%s)
-    tomorrowSec=$(date -u --date="next day" +%s)
-    tomorrow=$((tomorrowSec - (tomorrowSec % 86400)))
-    if [[ "${#daytime[@]}" > "2" ]]; then # recurrent alarm event
-       timebetween=$((${daytime[2]} * 86400))
-       while  [ $recevent -lt $tomorrow ]; do
-         recevent=$((recevent + timebetween))
-       done
-    fi
-    if [ $tomorrow == $recevent ]; then
-      echo "Alarm Event on $(date -u --date @$recevent +'%a %d %b %Y'): ${daytime[1]}"
-      nextAlarm=${daytime[1]}
-    fi
-  done
-fi
+. /var/www/html/nextalarm.sh
 
 lightsOut=$(date -d "$nextAlarm" +"%s")
 lightsOut=$((lightsOut + 74 * 60)) # 1 hour 14 min after wakeup
@@ -76,6 +41,7 @@ IPs[Haardlamp]="192.168.129.18"
 IPs[Tandenborstel]="192.168.129.7"
 IPs[Apotheek]="192.168.129.19"
 IPs[TVlamp]="192.168.129.11"
+IPs[SwitchBacklight]="192.168.129.41"
 
 # echo ${IPs["Tandenborstel"]}
 
@@ -84,6 +50,14 @@ Watts[Haardlamp]="20"
 Watts[Tandenborstel]="10"
 Watts[Apotheek]="20"
 Watts[TVlamp]="20"
+Watts[SwitchBacklight]="1"
+
+declare -A Cmnds
+Cmnds[Haardlamp]="Power"
+Cmnds[Tandenborstel]="Power"
+Cmnds[Apotheek]="Power"
+Cmnds[TVlamp]="Power"
+Cmnds[SwitchBacklight]="Power3"
 
 unset lights
 # Name URL Power On Off
@@ -92,9 +66,11 @@ unset lights
 if [[ $(date -d "$lightsOut" +'%Y%m%d%H%M%S') > $(date -d "$sunrise" +'%Y%m%d%H%M%S') ]]; then # sun shines
   lights+=("Haardlamp $(date -d "$nextAlarm 11 minutes" +'%H:%M') $lightsOut")
   lights+=("Apotheek $(date -d "$nextAlarm 11 minutes" +'%H:%M') $lightsOut")
+  lights+=("SwitchBacklight $(date -d "$nextAlarm 11 minutes" +'%H:%M') $lightsOut")
 else # still dark
   lights+=("Haardlamp $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
   lights+=("Apotheek $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
+  lights+=("SwitchBacklight $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
 fi
 lights+=("Tandenborstel 16:00 22:15")
 #lights+=("Apotheek $sunset $(date -d "$sunset 15 minutes" +'%H:%M')")
@@ -104,63 +80,23 @@ lights+=("Apotheek 22:24 bedtime")
 if [[ $(date -d "$eveningShutterDown" +'%Y%m%d%H%M%S') > $(date -d "$sunset" +'%Y%m%d%H%M%S') ]]; then # already dark
   lights+=("Haardlamp $sunset bedtime")
   lights+=("TVlamp $sunset bedtime")
+  lights+=("SwitchBacklight $sunset bedtime")
 else # still daylight
   lights+=("Haardlamp $eveningShutterDown bedtime")
   lights+=("TVlamp $eveningShutterDown bedtime")
+  lights+=("SwitchBacklight $eveningShutterDown bedtime")
 fi
 
-#lights+=("TVlamp 16:19 16:20")
+#lights+=("TVlamp 18:45 18:46")
 
 # debug
 #for light in "${lights[@]}"; do
 #  echo $light
 #done
 
-# convert to comparable dates
-sunrise=$(date -d "$sunrise" +'%Y%m%d%H%M%S')
-sunset=$(date -d "$sunset" +'%Y%m%d%H%M%S')
-eveningShutterDown=$(date -d "$eveningShutterDown" +'%Y%m%d%H%M%S')
-toprocess=("${lights[@]}")
-unset lights
-for light in "${toprocess[@]}"; do
-  lightProperties=(${light})
-  date -d "${lightProperties[1]}" &> /dev/null
-  if [ $? == 0 ]; then
-    lightProperties[1]=$(date -d "${lightProperties[1]}" +'%Y%m%d%H%M%S')
-  fi
-  date -d "${lightProperties[2]}" &>/dev/null
-  if [ $? == 0 ]; then 
-    lightProperties[2]=$(date -d "${lightProperties[2]}" +'%Y%m%d%H%M%S')
-  fi
-  lights+=("${lightProperties[0]} ${lightProperties[1]} ${lightProperties[2]}")
-done
+. /var/www/html/dateconvert.sh
 
-declare -A status=()
-function tasmota () { # power name
-  power=$1
-  name=$2
-  url=${IPs["$name"]}
-  watt=${Watts["$name"]}
-#  echo "Power: $power, Name: $name, Url: $url, Watt: $watt"
-  if [ -z ${status["$name"]} ]; then # initialize
-    status["$name"]=$(wget -qO- http://$url/cm?cmnd=Power)
-    two=$(echo ${status["$name"]} | awk -F"\"" '{print $4}')
-    twolower=${two,,}
-    if [ $twolower == "on" ] || [ $twolower == "off" ]; then
-      echo "$(date),$twolower,$watt" >> /var/www/html/data/$name.$logExt
-    fi
-  fi
-  if [ $power == "on" ] && [ "${status["$name"]}" == '{"POWER":"OFF"}' ]; then
-    status["$name"]=$(wget -qO- http://$url/cm?cmnd=Power%20On)
-    echo "$(date),$power,$watt" >> /var/www/html/data/$name.$logExt
-  elif [ $power == "off" ] && [ "${status["$name"]}" == '{"POWER":"ON"}' ]; then
-    status["$name"]=$(wget -qO- http://$url/cm?cmnd=Power%20Off)
-    echo "$(date),$power,$watt" >> /var/www/html/data/$name.$logExt
-  elif [ "${status["$name"]}" != '{"POWER":"OFF"}' ] && [ "${status["$name"]}" != '{"POWER":"ON"}' ]; then
-    status["$name"]=$(wget -qO- http://$url/cm?cmnd=Power)
-    echo "$(date): Communication error. Tasmota $name" >> /tmp/PindaNetDebug.txt
-  fi
-}
+. /var/www/html/tasmota.sh
 
 while true
 do
