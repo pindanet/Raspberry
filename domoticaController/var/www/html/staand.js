@@ -1,10 +1,10 @@
 // Configuration
 var tempIncrDecr = 0.5;
-var ChristmasLightDev = "-15d8a8-6312";
-var TVlampDev = "-a94717-1815";
-var HaardlampDev = "-1539f2-6642";
-var KitchenLightDev = "-15dd89-7561"
-var PharmacyLightDev = "-c699b5-6581"
+var ChristmasLightDev = "192.168.129.44";
+var TVlampDev = "192.168.129.11";
+var HaardlampDev = "192.168.129.18";
+var KitchenLightDev = "192.168.129.14"
+var PharmacyLightDev = "192.168.129.19"
 
 function getThermostatVar(varname) {
   var xhr = new XMLHttpRequest();
