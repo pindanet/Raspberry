@@ -5,6 +5,8 @@ var TVlampDev = "192.168.129.11";
 var HaardlampDev = "192.168.129.18";
 var KitchenLightDev = "192.168.129.14"
 var PharmacyLightDev = "192.168.129.19"
+var LivingVoorDev = "192.168.129.41:2"
+var LivingZijDev = "192.168.129.41"
 
 function getThermostatVar(varname) {
   var xhr = new XMLHttpRequest();
@@ -249,7 +251,11 @@ console.log('dev=' + tasmotaDev + '&cmd=Power%20Toggle');
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "tasmota.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send('dev=' + tasmotaDev + '&cmd=Power%20Toggle');
+  if (tasmotaDev == LivingVoorDev) {
+    xhr.send('dev=' + tasmotaDev.split(":")[0] + '&cmd=Power2%20Toggle');
+  } else {
+    xhr.send('dev=' + tasmotaDev + '&cmd=Power%20Toggle');
+  }
 /*
 // Haardlamp
   var xhr = new XMLHttpRequest();
