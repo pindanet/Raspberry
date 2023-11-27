@@ -10,3 +10,4 @@ $dev = htmlspecialchars($_POST["dev"]);
 $cmd = htmlspecialchars($_POST["cmd"]);
 
 exec("wget -qO- \"http://$dev/cm?cmnd=$cmd\"");
+//exec("wget -qO- \"http://tasmota$dev/cm?cmnd=$cmd\"");
