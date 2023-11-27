@@ -190,6 +190,8 @@ EOF
   sudo wget -O /var/www/html/emoji/weather.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/weather.svg
   sudo wget -O /var/www/html/emoji/keyring.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/keyring.svg
   sudo wget -O /var/www/html/emoji/light_bulb.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/light_bulb.svg
+  sudo wget -O /var/www/html/emoji/ledlamp.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/ledlamp.svg
+  sudo wget -O /var/www/html/emoji/ledlampzij.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/ledlampzij.svg
   sudo wget -O /var/www/html/background.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/background.php
   sudo wget -O /var/www/html/openssl.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/openssl.php
   sudo wget -O /var/www/html/photoframe.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/photoframe.sh
