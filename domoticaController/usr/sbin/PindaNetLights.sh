@@ -31,7 +31,7 @@ alarmevent+=("2024-05-24 07:00") # Tandarts Fanny Decloedt
 . /var/www/html/nextalarm.sh
 
 lightsOut=$(date -d "$nextAlarm" +"%s")
-lightsOut=$((lightsOut + 74 * 60)) # 1 hour 14 min after wakeup
+lightsOut=$((lightsOut + 79 * 60)) # 1 hour 19 min after wakeup
 lightsOut=$(date -d @$lightsOut +%H:%M)
 
 #echo "NextAlarm: $nextAlarm, LightsOut: $lightsOut"
@@ -42,6 +42,8 @@ IPs[Tandenborstel]="192.168.129.7"
 IPs[Apotheek]="192.168.129.19"
 IPs[TVlamp]="192.168.129.11"
 IPs[SwitchBacklight]="192.168.129.41"
+IPs[Kerst]="192.168.129.44"
+IPs[LivingVoor]="192.168.129.41"
 
 # echo ${IPs["Tandenborstel"]}
 
@@ -51,6 +53,8 @@ Watts[Tandenborstel]="10"
 Watts[Apotheek]="20"
 Watts[TVlamp]="20"
 Watts[SwitchBacklight]="1"
+Watts[Kerst]="15"
+Watts[LivingVoor]="16"
 
 declare -A Cmnds
 Cmnds[Haardlamp]="Power"
@@ -58,11 +62,15 @@ Cmnds[Tandenborstel]="Power"
 Cmnds[Apotheek]="Power"
 Cmnds[TVlamp]="Power"
 Cmnds[SwitchBacklight]="Power3"
+Cmnds[Kerst]="Power"
+Cmnds[LivingVoor]="Power2"
 
 unset lights
 # Name URL Power On Off
 
 # Lights in the morning
+lights+=("Kerst $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
+lights+=("LivingVoor $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
 if [[ $(date -d "$lightsOut" +'%Y%m%d%H%M%S') > $(date -d "$sunrise" +'%Y%m%d%H%M%S') ]]; then # sun shines
   lights+=("Haardlamp $(date -d "$nextAlarm 11 minutes" +'%H:%M') $lightsOut")
   lights+=("Apotheek $(date -d "$nextAlarm 11 minutes" +'%H:%M') $lightsOut")
@@ -77,6 +85,8 @@ lights+=("Tandenborstel 16:00 22:15")
 lights+=("Apotheek 22:24 bedtime")
 
 # in the evening
+lights+=("Kerst $sunset bedtime")
+lights+=("LivingVoor $sunset bedtime")
 if [[ $(date -d "$eveningShutterDown" +'%Y%m%d%H%M%S') > $(date -d "$sunset" +'%Y%m%d%H%M%S') ]]; then # already dark
   lights+=("Haardlamp $sunset bedtime")
   lights+=("TVlamp $sunset bedtime")
