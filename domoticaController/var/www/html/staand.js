@@ -1,4 +1,8 @@
 // Configuration
+var available = {};
+available["absent"] = "Afwezig";
+available["sleep"] = "Slapen";
+
 var tempIncrDecr = 0.5;
 var ChristmasLightDev = "192.168.129.44";
 var TVlampDev = "192.168.129.11";
@@ -455,6 +459,39 @@ function getApp(id) {
   }
 }
 waitMinute=0;
+var now = new Date();
+var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 22, 49, 0, 0) - now;
+if (millisTill10 < 0) {
+     millisTill10 += 86400000;
+}
+//setTimeout(sleepAvailable, millisTill10);
+function sleepAvailable() {
+  if (available == "present") {
+    available = "sleep";
+    document.getElementById("clockyear").innerHTML = "Slapen";
+    document.getElementById("clockyear").style.fontSize = "70%";
+    thermostatUI(event, 'Manual', 'livingtemp');
+  }
+}
+function toggleAvailable(event) {
+  var elem = document.getElementById("clockyear");
+  if (elem.innerHTML != available["absent"]) {
+    elem.innerHTML = available["absent"];
+    elem.style.fontSize = "64%";
+    thermostatUI(event, 'Manual', 'livingaux');
+    thermostatUI(event, 'Manual', 'diningaux');
+    thermostatUI(event, 'Off', 'kitchentemp');
+  } else {
+    var today = new Date();
+    elem.innerHTML = today.getFullYear();
+    elem.style.fontSize = "";
+    thermostatUI(event, 'Auto', 'livingtemp');
+    thermostatUI(event, 'Auto', 'diningtemp');
+    thermostatUI(event, 'Auto', 'kitchentemp');
+  }
+  event.stopPropagation();
+  event.preventDefault();
+}
 function startTime() {
   clearTimeout(startTimer);
   var today = new Date();
@@ -462,7 +499,10 @@ function startTime() {
   var m = today.getMinutes();
   m = checkTime(m);
 
-  document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()] + '&nbsp;' + today.getFullYear();
+  document.getElementById("clockdaymonth").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
+  if (document.getElementById("clockyear").innerHTML != available["absent"]) {
+    document.getElementById("clockyear").innerHTML = today.getFullYear();
+  }
   document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + roomTemp;
   document.getElementById('clock').innerHTML = h + ":" + m;
   document.getElementById('miniclock').innerHTML = h + ":" + m;
