@@ -1,7 +1,79 @@
 // Configuration
+var conf = {
+  "available": [
+    {
+      "absent": "Afwezig",
+      "sleep": "Slapen",
+      "sleeptime": "22:24"
+    }
+  ],
+  "tempIncrDecr": 0.5,
+  "switch": [
+    {
+      "name": "Haardlamp",
+      "IP": "192.168.129.18",
+      "Watt": "20",
+      "Cmnd": "Power"
+    },
+    {
+      "name": "Tandenborstel",
+      "IP": "192.168.129.7",
+      "Watt": "10",
+      "Cmnd": "Power"
+    },
+    {
+      "name": "Apotheek",
+      "IP": "192.168.129.19",
+      "Watt": "20",
+      "Cmnd": "Power"
+    },
+    {
+      "name": "TVlamp",
+      "IP": "92.168.129.11",
+      "Watt": "20",
+      "Cmnd": "Power"
+    },
+    {
+      "name": "SwitchBacklight",
+      "IP": "192.168.129.41",
+      "Watt": "1",
+      "Cmnd": "Power3"
+    },
+    {
+      "name": "Kerst",
+      "IP": "192.168.129.44",
+      "Watt": "15",
+      "Cmnd": "Power"
+    },
+    {
+      "name": "LivingVoor",
+      "IP": "192.168.129.41",
+      "Watt": "16",
+      "Cmnd": "Power2"
+    }
+  ]
+};
+console.log(conf);
+
+function tasmotaLedFadeInOut() {
+  for(let i = 4; i < 256; i++) {
+console.log(i.toString(16).padStart(2, '0')+i.toString(16).padStart(2, '0')+i.toString(16).padStart(2, '0'));
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', "http://192.168.129.41/cm", true);
+//    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+ console.log(this.responseText);
+      }
+    };
+    xhr.send("cmnd=led");
+  }
+}
+//tasmotaLedFadeInOut();
 var available = {};
 available["absent"] = "Afwezig";
 available["sleep"] = "Slapen";
+available["sleeptime"] = "22:24";
 
 var tempIncrDecr = 0.5;
 var ChristmasLightDev = "192.168.129.44";
@@ -12,6 +84,10 @@ var PharmacyLightDev = "192.168.129.19"
 var LivingVoorDev = "192.168.129.41:2"
 var LivingZijDev = "192.168.129.41"
 
+// Calculated Configuration
+var now = new Date();
+var hourMin = available["sleeptime"].split(":");
+available["sleepdate"] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourMin[0], hourMin[1], 0, 0);
 function getThermostatVar(varname) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "data/thermostat", true);
@@ -459,28 +535,36 @@ function getApp(id) {
   }
 }
 waitMinute=0;
-var now = new Date();
-var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 22, 49, 0, 0) - now;
-if (millisTill10 < 0) {
-     millisTill10 += 86400000;
-}
-//setTimeout(sleepAvailable, millisTill10);
-function sleepAvailable() {
-  if (available == "present") {
-    available = "sleep";
-    document.getElementById("clockyear").innerHTML = "Slapen";
-    document.getElementById("clockyear").style.fontSize = "70%";
-    thermostatUI(event, 'Manual', 'livingtemp');
-  }
-}
 function toggleAvailable(event) {
   var elem = document.getElementById("clockyear");
+  switch(elem.innerHTML) {
+    case available["sleep"]:
+      available["sleepdate"].setDate(available["sleepdate"].getDate()+1);
+console.log(available["sleepdate"]);
+    case available["absent"]:
+      var today = new Date(); 
+      elem.innerHTML = today.getFullYear();
+      elem.style.fontSize = "";
+      thermostatUI(event, 'Auto', 'livingtemp');
+      thermostatUI(event, 'Auto', 'diningtemp');
+      thermostatUI(event, 'Auto', 'kitchentemp');
+      break;
+    default:
+      elem.innerHTML = available["absent"];
+      elem.style.fontSize = "64%";
+      thermostatUI(event, 'Manual', 'livingaux');
+      thermostatUI(event, 'Manual', 'diningaux');
+      thermostatUI(event, 'Off', 'kitchentemp');
+  }
+/*
   if (elem.innerHTML != available["absent"]) {
-    elem.innerHTML = available["absent"];
-    elem.style.fontSize = "64%";
-    thermostatUI(event, 'Manual', 'livingaux');
-    thermostatUI(event, 'Manual', 'diningaux');
-    thermostatUI(event, 'Off', 'kitchentemp');
+    if (elem.innerHTML != available["sleep"]) {
+      elem.innerHTML = available["absent"];
+      elem.style.fontSize = "64%";
+      thermostatUI(event, 'Manual', 'livingaux');
+      thermostatUI(event, 'Manual', 'diningaux');
+      thermostatUI(event, 'Off', 'kitchentemp');
+    }
   } else {
     var today = new Date();
     elem.innerHTML = today.getFullYear();
@@ -489,6 +573,7 @@ function toggleAvailable(event) {
     thermostatUI(event, 'Auto', 'diningtemp');
     thermostatUI(event, 'Auto', 'kitchentemp');
   }
+*/
   event.stopPropagation();
   event.preventDefault();
 }
@@ -501,7 +586,16 @@ function startTime() {
 
   document.getElementById("clockdaymonth").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
   if (document.getElementById("clockyear").innerHTML != available["absent"]) {
-    document.getElementById("clockyear").innerHTML = today.getFullYear();
+    if (available["sleepdate"] - today < 0) {
+      var elem = document.getElementById("clockyear");
+      if (elem.innerHTML != available["sleep"]) {
+        elem.innerHTML = available["sleep"];
+        elem.style.fontSize = "70%";
+        thermostatUI(event, 'Manual', 'livingtemp');
+      }
+    } else {
+      document.getElementById("clockyear").innerHTML = today.getFullYear();
+    }
   }
   document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + roomTemp;
   document.getElementById('clock').innerHTML = h + ":" + m;
