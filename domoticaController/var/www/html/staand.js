@@ -74,6 +74,7 @@ var available = {};
 available["absent"] = "Afwezig";
 available["sleep"] = "Slapen";
 available["sleeptime"] = "22:24";
+available["absenttime"] = "13:30";  // Wandeling, Fietstocht
 
 var tempIncrDecr = 0.5;
 var ChristmasLightDev = "192.168.129.44";
@@ -88,6 +89,8 @@ var LivingZijDev = "192.168.129.41"
 var now = new Date();
 var hourMin = available["sleeptime"].split(":");
 available["sleepdate"] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourMin[0], hourMin[1], 0, 0);
+hourMin = available["absenttime"].split(":");
+available["absentdate"] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourMin[0], hourMin[1], 0, 0);
 function getThermostatVar(varname) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "data/thermostat", true);
@@ -593,6 +596,9 @@ function startTime() {
         elem.style.fontSize = "70%";
         thermostatUI(event, 'Manual', 'livingtemp');
       }
+    } else if (available["absentdate"] - today < 0) {
+        available["absentdate"].setDate(available["absentdate"].getDate()+1);
+        document.getElementById("clockyear").click();
     } else {
       document.getElementById("clockyear").innerHTML = today.getFullYear();
     }
