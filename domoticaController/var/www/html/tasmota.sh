@@ -19,29 +19,32 @@ function tasmota () { # power name
   elif [ $power == "off" ] && [ "${status["$name"]}" == '{"'$cmnd'":"on"}' ]; then
     if [ $name == "SwitchBacklight" ]; then
       # fade leds to max and back
-      (for i in {4..255}
-      do
-        color="%20$(printf '%02x%02x%02x\n' $i $i $i)"
-        allcolor=""
-        for ii in {0..27}
-        do
-          allcolor=$allcolor$color
-        done
+      status["$name"]='{"POWER3":"OFF"}'
+      # wget -qO- http://192.168.129.41/cm?cmnd=Backlog Fade On; Speed 20; Color FFFFFF; Delay 600; Color 040300; Power3 Off
+      wget -qO- http://192.168.129.41/cm?cmnd=Backlog%20Fade%20On%3B%20Speed%2020%3B%20Color%20FFFFFF%3B%20Delay%20600%3B%20Color%20040300%3B%20Power3%20Off
+#      (for i in {4..255}
+#      do
+#        color="%20$(printf '%02x%02x%02x\n' $i $i $i)"
+#        allcolor=""
+#        for ii in {0..27}
+#        do
+#          allcolor=$allcolor$color
+#        done
 #  echo http://192.168.129.41/cm?cmnd=Led$allcolor
-        wget -qO- http://192.168.129.41/cm?cmnd=Led$allcolor
-      done
-      for i in {255..4}
-      do
-        color="%20$(printf '%02x%02x%02x\n' $i $((i-1)) $((i-4)))"
-        allcolor=""
-        for ii in {0..27}
-        do
-          allcolor=$allcolor$color
-        done
+#        wget -qO- http://192.168.129.41/cm?cmnd=Led$allcolor
+#      done
+#      for i in {255..4}
+#      do
+#        color="%20$(printf '%02x%02x%02x\n' $i $((i-1)) $((i-4)))"
+#        allcolor=""
+#        for ii in {0..27}
+#        do
+#          allcolor=$allcolor$color
+#        done
 #  echo http://192.168.129.41/cm?cmnd=Led$allcolor
-        wget -qO- http://192.168.129.41/cm?cmnd=Led$allcolor
-      done
-      status["$name"]=$(wget -qO- http://$url/cm?cmnd=$cmnd%20Off)) &
+#        wget -qO- http://192.168.129.41/cm?cmnd=Led$allcolor
+#      done
+#      status["$name"]=$(wget -qO- http://$url/cm?cmnd=$cmnd%20Off)) &
     else
       status["$name"]=$(wget -qO- http://$url/cm?cmnd=$cmnd%20Off)
     fi
