@@ -104,8 +104,16 @@ var LivingZijDev = "192.168.129.41"
 var now = new Date();
 var hourMin = available["sleeptime"].split(":");
 available["sleepdate"] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourMin[0], hourMin[1], 0, 0);
+if (available["sleepdate"] - now < 0) {
+  available["sleepdate"].setDate(available["sleepdate"].getDate()+1);
+console.log("Reset Expired SleepDate: " + available["sleepdate"]);
+}
 hourMin = available["absenttime"].split(":");
 available["absentdate"] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourMin[0], hourMin[1], 0, 0);
+if (available["absentdate"] - now < 0) {
+  available["absentdate"].setDate(available["absentdate"].getDate()+1);
+console.log("Reset Expired AbsentDate: " + available["absentdate"]);
+}
 function getThermostatVar(varname) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "data/thermostat", true);
