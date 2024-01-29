@@ -69,8 +69,8 @@ unset lights
 # Name URL Power On Off
 
 # Lights in the morning
-lights+=("Kerst $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
-lights+=("LivingVoor $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
+# lights+=("Kerst $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
+# lights+=("LivingVoor $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
 if [[ $(date -d "$lightsOut" +'%Y%m%d%H%M%S') > $(date -d "$sunrise" +'%Y%m%d%H%M%S') ]]; then # sun shines
   lights+=("Haardlamp $(date -d "$nextAlarm 11 minutes" +'%H:%M') $lightsOut")
   lights+=("Apotheek $(date -d "$nextAlarm 11 minutes" +'%H:%M') $lightsOut")
@@ -85,8 +85,8 @@ lights+=("Tandenborstel 16:00 22:15")
 lights+=("Apotheek 22:24 bedtime")
 
 # in the evening
-lights+=("Kerst $sunset bedtime")
-lights+=("LivingVoor $sunset bedtime")
+# lights+=("Kerst $sunset bedtime")
+# lights+=("LivingVoor $sunset bedtime")
 if [[ $(date -d "$eveningShutterDown" +'%Y%m%d%H%M%S') > $(date -d "$sunset" +'%Y%m%d%H%M%S') ]]; then # already dark
   lights+=("Haardlamp $sunset bedtime")
   lights+=("TVlamp $sunset bedtime")
@@ -139,7 +139,7 @@ do
   for key in "${!process[@]}"; do
     lightProperties=(${process[$key]})
     tasmota ${lightProperties[1]} ${lightProperties[0]}
-    echo "$key: ${lightProperties[1]}"
+#    echo "$key: ${lightProperties[1]}"
   done
 #  echo ${process[@]}
 #  echo ${!process[@]}
