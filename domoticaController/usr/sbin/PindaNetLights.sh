@@ -41,7 +41,7 @@ IPs[Haardlamp]="192.168.129.18"
 IPs[Tandenborstel]="192.168.129.7"
 IPs[Apotheek]="192.168.129.19"
 IPs[TVlamp]="192.168.129.11"
-IPs[SwitchBacklight]="192.168.129.41"
+#IPs[SwitchBacklight]="192.168.129.41"
 IPs[Kerst]="192.168.129.44"
 IPs[LivingVoor]="192.168.129.41"
 
@@ -52,7 +52,7 @@ Watts[Haardlamp]="20"
 Watts[Tandenborstel]="10"
 Watts[Apotheek]="20"
 Watts[TVlamp]="20"
-Watts[SwitchBacklight]="1"
+#Watts[SwitchBacklight]="1"
 Watts[Kerst]="15"
 Watts[LivingVoor]="16"
 
@@ -61,7 +61,7 @@ Cmnds[Haardlamp]="Power"
 Cmnds[Tandenborstel]="Power"
 Cmnds[Apotheek]="Power"
 Cmnds[TVlamp]="Power"
-Cmnds[SwitchBacklight]="Power3"
+#Cmnds[SwitchBacklight]="Power3"
 Cmnds[Kerst]="Power"
 Cmnds[LivingVoor]="Power2"
 
@@ -74,11 +74,11 @@ unset lights
 if [[ $(date -d "$lightsOut" +'%Y%m%d%H%M%S') > $(date -d "$sunrise" +'%Y%m%d%H%M%S') ]]; then # sun shines
   lights+=("Haardlamp $(date -d "$nextAlarm 11 minutes" +'%H:%M') $lightsOut")
   lights+=("Apotheek $(date -d "$nextAlarm 11 minutes" +'%H:%M') $lightsOut")
-  lights+=("SwitchBacklight $(date -d "$nextAlarm 11 minutes" +'%H:%M') $lightsOut")
+#  lights+=("SwitchBacklight $(date -d "$nextAlarm 11 minutes" +'%H:%M') $lightsOut")
 else # still dark
   lights+=("Haardlamp $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
   lights+=("Apotheek $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
-  lights+=("SwitchBacklight $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
+#  lights+=("SwitchBacklight $(date -d "$nextAlarm 11 minutes" +'%H:%M') $sunrise")
 fi
 lights+=("Tandenborstel 16:00 22:15")
 #lights+=("Apotheek $sunset $(date -d "$sunset 15 minutes" +'%H:%M')")
@@ -90,11 +90,11 @@ lights+=("Apotheek 22:24 bedtime")
 if [[ $(date -d "$eveningShutterDown" +'%Y%m%d%H%M%S') > $(date -d "$sunset" +'%Y%m%d%H%M%S') ]]; then # already dark
   lights+=("Haardlamp $sunset bedtime")
   lights+=("TVlamp $sunset bedtime")
-  lights+=("SwitchBacklight $sunset bedtime")
+#  lights+=("SwitchBacklight $sunset bedtime")
 else # still daylight
   lights+=("Haardlamp $eveningShutterDown bedtime")
   lights+=("TVlamp $eveningShutterDown bedtime")
-  lights+=("SwitchBacklight $eveningShutterDown bedtime")
+#  lights+=("SwitchBacklight $eveningShutterDown bedtime")
 fi
 
 #lights+=("TVlamp 18:45 18:46")
