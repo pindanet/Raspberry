@@ -1,59 +1,147 @@
 // Configuration
 var conf = {
-  "available": [
+  available: [
     {
-      "absent": "Afwezig",
-      "sleep": "Slapen",
-      "sleeptime": "22:24"
+      absent: "Afwezig",
+      sleep: "Slapen",
+      sleeptime: "22:24"
     }
   ],
-  "tempIncrDecr": 0.5,
-  "switch": [
+  tempIncrDecr: 0.5,
+  tempComfort: 20.00,
+  tempAux: 17.50,
+  tempOff: 15.00,
+  tempNight: 10.00,
+  tempNightTime: "06:30",
+  bedTime: "22:50",
+  hysteresis: 0.1,
+  switch: [
     {
-      "name": "Haardlamp",
-      "IP": "192.168.129.18",
-      "Watt": "20",
-      "Cmnd": "Power"
+      name: "Haardlamp",
+      IP: "192.168.129.18",
+      Watt: "20",
+      Cmnd: "Power"
     },
     {
-      "name": "Tandenborstel",
-      "IP": "192.168.129.7",
-      "Watt": "10",
-      "Cmnd": "Power"
+      name: "Tandenborstel",
+      IP: "192.168.129.7",
+      Watt: "10",
+      Cmnd: "Power"
     },
     {
-      "name": "Apotheek",
-      "IP": "192.168.129.19",
-      "Watt": "20",
-      "Cmnd": "Power"
+      name: "Apotheek",
+      IP: "192.168.129.19",
+      Watt: "20",
+      Cmnd: "Power"
     },
     {
-      "name": "TVlamp",
-      "IP": "92.168.129.11",
-      "Watt": "20",
-      "Cmnd": "Power"
+      name: "TVlamp",
+      IP: "92.168.129.11",
+      Watt: "20",
+      Cmnd: "Power"
     },
     {
-      "name": "SwitchBacklight",
-      "IP": "192.168.129.41",
-      "Watt": "1",
-      "Cmnd": "Power3"
+      name: "SwitchBacklight",
+      IP: "192.168.129.41",
+      Watt: "1",
+      Cmnd: "Power3"
     },
     {
-      "name": "Kerst",
-      "IP": "192.168.129.44",
-      "Watt": "15",
-      "Cmnd": "Power"
+      name: "Kerst",
+      IP: "192.168.129.44",
+      Watt: "15",
+      Cmnd: "Power"
     },
     {
-      "name": "LivingVoor",
-      "IP": "192.168.129.41",
-      "Watt": "16",
-      "Cmnd": "Power2"
+      name: "LivingVoor",
+      IP: "192.168.129.41",
+      Watt: "16",
+      Cmnd: "Power2"
     }
-  ]
+  ],
+  Dining: {
+      tempOffset: "0",
+      subtitleColor: "white",
+      thermostat: [
+        {
+          begin: "07:30",
+          end: "08:50",
+          temp: "tempComfort"
+	},
+        {
+          begin: "08:50",
+          end: "10:55",
+          temp: "tempAux"
+	},
+        {
+          begin: "10:55",
+          end: "12:20",
+          temp: "tempComfort"
+	},
+        {
+          begin: "12:20",
+          end: "12:55",
+          temp: "tempAux"
+	},
+        {
+          begin: "12:55",
+          end: "13:30",
+          temp: "tempComfort"
+	},
+        {
+          begin: "13:30",
+          end: "16:55",
+          temp: "tempAux"
+	},
+        {
+          begin: "16:55",
+          end: "17:30",
+          temp: "tempComfort"
+	},
+        {
+          begin: "17:30",
+          end: "22:30",
+          temp: "tempAux"
+	},
+      ],
+      event: [
+        {
+          date: "2024-02-02",
+          repeat: 0,
+          begin: "19:45",
+          end: "bedTime",
+          temp: "tempAux",
+          comment: "MCCB"
+        },
+        {
+          date: "2024-02-07",
+          repeat: 0,
+          begin: "19:45",
+          end: "bedTime",
+          temp: "tempAux",
+          comment: "ACCB"
+        }
+      ]
+  }
 };
-console.log(conf);
+//          "temp": conf["tempComfort"]
+
+console.log(conf.Dining.event[0]);
+//console.log(JSON.stringify(conf));
+function sendJason(obj) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "sendJason.php", true);
+//    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        const output = JSON.parse(this.responseText);
+console.log(output);
+      }
+    };
+    xhr.send("json="+JSON.stringify(obj));
+}
+
 
 // define a function that converts a string to hex
 const stringToHex = (str) => {
