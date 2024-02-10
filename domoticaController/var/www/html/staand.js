@@ -126,20 +126,46 @@ var conf = {
 };
 //          "temp": conf["tempComfort"]
 
-console.log(conf.Dining.event[0]);
+//console.log(conf.Dining.event[0]);
 //console.log(JSON.stringify(conf));
-function sendJason(obj) {
+sendConf(conf);
+function tempAdjustment(room, temp) {
+console.log(temp, room);
+
+//  document.getElementById("clockdate").style.color = "red";
+} 
+function tempController(room) {
+  var temp;
+  var thermostatdefault;
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "data/PresHumiTemp", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function () {
+    if (this.status == 200) {
+      var PresHumiTemp = this.responseText.split('\n');
+      temp = parseFloat(PresHumiTemp[2]).toFixed(2);
+      tempAdjustment(room, temp);
+    }
+  };
+  xhr.send();
+}
+function thermostat() {
+//  tempController(conf.Living);
+  tempController(conf.Dining);
+//  tempController(conf.Kitchen);
+  setTimeout(thermostat, 60000); // Every minute
+}
+function sendConf(obj) {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', "sendJason.php", true);
-//    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.open('POST', "sendConf.php", true);
     xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
     xhr.onload = function(e) {
       if (this.status == 200) {
-        const output = JSON.parse(this.responseText);
-console.log(output);
+        conf = JSON.parse(this.responseText);
+//console.log(this.responseText);
       }
     };
-    xhr.send("json="+JSON.stringify(obj));
+    xhr.send(JSON.stringify(obj));
 }
 
 
@@ -746,4 +772,8 @@ console.log("ThermostatUI / min");
   }
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
-window.onload = startTime;
+function startOnload () {
+  startTime();
+  thermostat();
+}
+window.onload = startOnload;
