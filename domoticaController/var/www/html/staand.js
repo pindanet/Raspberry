@@ -130,29 +130,54 @@ var conf = {
 //console.log(JSON.stringify(conf));
 sendConf(conf);
 function tempAdjustment(room, temp) {
-console.log(temp, room);
+  var today = new Date();
+  now = Date.now(); 
+//today.getHours().toString().padStart(2, "0") + ":" + today.getMinutes().toString().padStart(2, "0");
+// begin = new Date("2022-03-25");
+//  begin = new Date(today.getYear(), today.getMonth(), today.getDay(), 7, 30);
+// https://www.w3schools.com/js/js_date_methods_set.asp
+console.log(now);
+//console.log(begin);
+  heatingRoom = "off";
+  for (let i = 0; i < room.thermostat.length; i++) {
+console.log(room.thermostat[i]);
+  }
 
-//  document.getElementById("clockdate").style.color = "red";
-} 
-function tempController(room) {
-  var temp;
-  var thermostatdefault;
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "data/PresHumiTemp", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function () {
-    if (this.status == 200) {
-      var PresHumiTemp = this.responseText.split('\n');
-      temp = parseFloat(PresHumiTemp[2]).toFixed(2);
-      tempAdjustment(room, temp);
-    }
-  };
-  xhr.send();
+//console.log(temp, room.thermostat);
+
+//  if (heatingRoom = "off") {
+//    document.getElementById("clockdate").style.color = "blue";
+//  }
 }
 function thermostat() {
-//  tempController(conf.Living);
-  tempController(conf.Dining);
-//  tempController(conf.Kitchen);
+  var temp;
+  var thermostatdefault;
+// Get temp Living
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "data/PresHumiTemp", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function () {
+//    if (this.status == 200) {
+//      var PresHumiTemp = this.responseText.split('\n');
+//      temp = parseFloat(PresHumiTemp[2]).toFixed(2);
+//      tempAdjustment(conf.Living, temp);
+//    }
+//  };
+//  xhr.send();
+// Get temp Dining
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "ssh.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.readyState === 4) {
+      temp = parseFloat(this.responseText).toFixed(2);
+      if (!isNaN(temp)) { // If valid temp
+        tempAdjustment(conf.Dining, temp);
+      }
+    }
+  };
+  xhr.send('host=pindadining&command=cat /home/dany/temp.txt');
+// Get temp Kitchen
   setTimeout(thermostat, 60000); // Every minute
 }
 function sendConf(obj) {
@@ -167,7 +192,7 @@ function sendConf(obj) {
     };
     xhr.send(JSON.stringify(obj));
 }
-
+// End of Thermostat
 
 // define a function that converts a string to hex
 const stringToHex = (str) => {
