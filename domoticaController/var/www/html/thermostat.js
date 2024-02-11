@@ -1,0 +1,217 @@
+// Configuration
+var conf = {
+  available: [
+    {
+      absent: "Afwezig",
+      sleep: "Slapen",
+      sleeptime: "22:24"
+    }
+  ],
+  tempIncrDecr: 0.5,
+  tempComfort: 20.00,
+  tempAux: 17.50,
+  tempOff: 15.00,
+  tempNight: 10.00,
+  tempNightTime: "06:30",
+  bedTime: "22:50",
+  hysteresis: 0.1,
+  switch: [
+    {
+      name: "Haardlamp",
+      IP: "192.168.129.18",
+      Watt: "20",
+      Cmnd: "Power"
+    },
+    {
+      name: "Tandenborstel",
+      IP: "192.168.129.7",
+      Watt: "10",
+      Cmnd: "Power"
+    },
+    {
+      name: "Apotheek",
+      IP: "192.168.129.19",
+      Watt: "20",
+      Cmnd: "Power"
+    },
+    {
+      name: "TVlamp",
+      IP: "92.168.129.11",
+      Watt: "20",
+      Cmnd: "Power"
+    },
+    {
+      name: "SwitchBacklight",
+      IP: "192.168.129.41",
+      Watt: "1",
+      Cmnd: "Power3"
+    },
+    {
+      name: "Kerst",
+      IP: "192.168.129.44",
+      Watt: "15",
+      Cmnd: "Power"
+    },
+    {
+      name: "LivingVoor",
+      IP: "192.168.129.41",
+      Watt: "16",
+      Cmnd: "Power2"
+    }
+  ],
+  Dining: {
+      tempOffset: "0",
+      subtitleColor: "white",
+      thermostat: [
+        {
+          begin: "07:30",
+          end: "08:50",
+          temp: "tempComfort"
+	},
+        {
+          begin: "08:50",
+          end: "10:55",
+          temp: "tempAux"
+	},
+        {
+          begin: "10:55",
+          end: "12:20",
+          temp: "tempComfort"
+	},
+        {
+          begin: "12:20",
+          end: "12:55",
+          temp: "tempAux"
+	},
+        {
+          begin: "12:55",
+          end: "13:30",
+          temp: "tempComfort"
+	},
+        {
+          begin: "13:30",
+          end: "16:55",
+          temp: "tempAux"
+	},
+        {
+          begin: "16:55",
+          end: "17:30",
+          temp: "tempComfort"
+	},
+        {
+          begin: "17:30",
+          end: "22:30",
+          temp: "tempAux"
+	},
+      ],
+      event: [
+        {
+          date: "2024-02-02",
+          repeat: 0,
+          begin: "19:45",
+          end: "bedTime",
+          temp: "tempAux",
+          comment: "MCCB"
+        },
+        {
+          date: "2024-02-07",
+          repeat: 0,
+          begin: "19:45",
+          end: "bedTime",
+          temp: "tempAux",
+          comment: "ACCB"
+        }
+      ]
+  }
+};
+//          "temp": conf["tempComfort"]
+
+//console.log(conf.Dining.event[0]);
+//console.log(JSON.stringify(conf));
+sendConf(conf);
+function tempAdjustment(room, temp) {
+  var today = new Date();
+  var now = today.getTime();
+  var heatingRoom = "off";
+  var tempTarget = conf.tempOff;
+  for (let i = 0; i < room.thermostat.length; i++) {
+    var beginTime = room.thermostat[i].begin.split(':');
+    var beginDate = new Date();
+    beginDate.setHours(beginTime[0]);
+    beginDate.setMinutes(beginTime[1]);
+    beginDate.setSeconds(0);
+    var begin = beginDate.getTime();
+    var endTime = room.thermostat[i].end.split(':');
+    var endDate = new Date();
+    endDate.setHours(endTime[0]);
+    endDate.setMinutes(endTime[1]);
+    endDate.setSeconds(0);
+    var end = endDate.getTime();
+    if (begin <= now && end > now) {
+      heatingRoom = "on";
+      tempTarget = conf[room.thermostat[i].temp];
+      break;
+    }
+  }
+console.log(beginDate.toString(), endDate.toString(), tempTarget);
+
+  switch (tempTarget) {
+    case conf.tempOff:
+      document.getElementById("clockdate").style.color = "blue";
+      break;
+    case conf.tempAux:
+      document.getElementById("clockdate").style.color = "orange";
+      break;
+    case conf.tempComfort:
+      document.getElementById("clockdate").style.color = "red";
+      break;
+    default:
+      document.getElementById("clockdate").style.color = "";
+      break;
+  }
+}
+function thermostat() {
+  var temp;
+  var thermostatdefault;
+// Get temp Living
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "data/PresHumiTemp", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function () {
+//    if (this.status == 200) {
+//      var PresHumiTemp = this.responseText.split('\n');
+//      temp = parseFloat(PresHumiTemp[2]).toFixed(2);
+//      tempAdjustment(conf.Living, temp);
+//    }
+//  };
+//  xhr.send();
+// Get temp Dining
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "ssh.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.readyState === 4) {
+      temp = parseFloat(this.responseText).toFixed(2);
+      if (!isNaN(temp)) { // If valid temp
+        tempAdjustment(conf.Dining, temp);
+      }
+    }
+  };
+  xhr.send('host=pindadining&command=cat /home/dany/temp.txt');
+// Get temp Kitchen
+  setTimeout(thermostat, 60000); // Every minute
+}
+function sendConf(obj) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "sendConf.php", true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        conf = JSON.parse(this.responseText);
+//console.log(this.responseText);
+      }
+    };
+    xhr.send(JSON.stringify(obj));
+}
+setTimeout(thermostat, 60000);
+// Every minute// End of Thermostat
