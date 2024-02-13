@@ -106,17 +106,28 @@ var conf = {
       ],
       event: [
         {
-          date: "2024-02-02",
           repeat: 0,
+          begindate: "2024-02-02",
           begin: "19:45",
+          enddate: "2024-02-02",
           end: "bedTime",
           temp: "tempAux",
           comment: "MCCB"
         },
         {
-          date: "2024-02-07",
+          repeat: 1,
+          begindate: "2024-02-10",
+          begin: "14:45",
+          enddate: "2024-02-10",
+          end: "bedTime",
+          temp: "tempAux",
+          comment: "Test"
+        },
+        {
           repeat: 0,
+          begindate: "2024-02-07",
           begin: "19:45",
+          enddate: "2024-02-07",
           end: "bedTime",
           temp: "tempAux",
           comment: "ACCB"
@@ -153,20 +164,65 @@ function tempAdjustment(room, temp) {
       break;
     }
   }
-console.log(beginDate.toString(), endDate.toString(), tempTarget);
+  for (let i = 0; i < room.event.length; i++) {
+    var nowDateOnly = new Date(now);
+    nowDateOnly.setHours(0);
+    nowDateOnly.setMinutes(0);
+    nowDateOnly.setSeconds(0);
+    nowDateOnly.setMilliseconds(0);
+    var dateOnly = nowDateOnly.getTime();
+    var beginDate = new Date(room.event[i].begindate);
+    beginDate.setHours(0);
+//    beginDate.setMinutes(0);
+//    beginDate.setSeconds(0);
+    var begin = beginDate.getTime();
+    if (room.event[i].repeat > 0) { // repeating event
+      while (begin < dateOnly) {
+        begin += 86400000;
+      }
+      if (begin == dateOnly) {
+        var expired = begin - beginDate.getTime();
+        var endDate = new Date(room.event[i].enddate);
+        var end = endDate.getTime();
+        endDate.setTime(end + expired);
+        if (room.event[i].end.indexOf(":")) {
+          var endTime = conf[room.event[i].end].split(':');
+        } else {
+          var endTime = room.event[i].end.split(':');
+        }
+        endDate.setHours(endTime[0]);
+        endDate.setMinutes(endTime[1]);
+        endDate.setSeconds(0);
+        end = endDate.getTime();
+
+        beginDate.setTime(begin);
+console.log("Event on " + beginDate.toString());
+console.log("Until " + endDate.toString());
+      }
+    }
+    var beginTime = room.event[i].begin.split(':');
+    beginDate.setHours(beginTime[0]);
+    beginDate.setMinutes(beginTime[1]);
+    var begin = beginDate.getTime();
+
+console.log(beginDate.toString());
+console.log(endDate.toString());
+  }
+
+//console.log(beginDate.toString(), endDate.toString(), tempTarget);
 
   switch (tempTarget) {
     case conf.tempOff:
-      document.getElementById("clockdate").style.color = "blue";
+      document.getElementById("clockmonth").style.color = "blue";
       break;
     case conf.tempAux:
-      document.getElementById("clockdate").style.color = "orange";
+      document.getElementById("clockmonth").style.color = "orange";
       break;
     case conf.tempComfort:
-      document.getElementById("clockdate").style.color = "red";
+      document.getElementById("clockmonth").style.color = "red";
       break;
     default:
-      document.getElementById("clockdate").style.color = "";
+      document.getElementById("clockmonth").style.color = "";
       break;
   }
 }
@@ -213,5 +269,7 @@ function sendConf(obj) {
     };
     xhr.send(JSON.stringify(obj));
 }
-setTimeout(thermostat, 60000);
+setTimeout(thermostat, 6000);
 // Every minute// End of Thermostat
+
+
