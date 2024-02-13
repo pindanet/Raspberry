@@ -553,7 +553,8 @@ function startTime() {
   var m = today.getMinutes();
   m = checkTime(m);
 
-  document.getElementById("clockdaymonth").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
+  document.getElementById("clockmonthday").innerHTML = today.getDate();
+  document.getElementById("clockmonth").innerHTML = monthNames[today.getMonth()];
   if (document.getElementById("clockyear").innerHTML != available["absent"]) {
     if (available["sleepdate"] - today < 0) {
       var elem = document.getElementById("clockyear");
