@@ -60,6 +60,7 @@ var conf = {
     }
   ],
   Dining: {
+      id: "dining",
       tempOffset: "0",
       subtitleColor: "white",
       thermostat: [
@@ -103,37 +104,49 @@ var conf = {
           end: "22:30",
           temp: "tempAux"
 	},
-      ],
-      event: [
-        {
-          repeat: 0,
-          begindate: "2024-02-02",
-          begin: "19:45",
-          enddate: "2024-02-02",
-          end: "bedTime",
-          temp: "tempAux",
-          comment: "MCCB"
-        },
-        {
-          repeat: 1,
-          begindate: "2024-02-10",
-          begin: "14:45",
-          enddate: "2024-02-10",
-          end: "bedTime",
-          temp: "tempAux",
-          comment: "Test"
-        },
-        {
-          repeat: 0,
-          begindate: "2024-02-07",
-          begin: "19:45",
-          enddate: "2024-02-07",
-          end: "bedTime",
-          temp: "tempAux",
-          comment: "ACCB"
-        }
       ]
-  }
+  },
+  event: [
+    {
+      repeat: 0,
+      begindate: "2024-02-02",
+      begin: "19:45",
+      enddate: "2024-02-02",
+      end: "bedTime",
+      temp: {
+        living: "tempAux",
+        dining: "tempAux",
+        kitchen: "tempOff"
+      },
+      comment: "MCCB"
+    },
+    {
+      repeat: 1,
+      begindate: "2024-02-13",
+      begin: "14:45",
+      enddate: "2024-02-13",
+      end: "bedTime",
+      temp: {
+        living: "tempAux",
+        dining: "tempComfort",
+        kitchen: "tempOff"
+      },
+      comment: "Test"
+    },
+    {
+      repeat: 0,
+      begindate: "2024-02-07",
+      begin: "19:45",
+      enddate: "2024-02-07",
+      end: "bedTime",
+      temp: {
+        living: "tempAux",
+        dining: "tempAux",
+        kitchen: "tempOff"
+      },
+      comment: "ACCB"
+    }
+  ]
 };
 //          "temp": conf["tempComfort"]
 
@@ -144,7 +157,7 @@ function tempAdjustment(room, temp) {
   var today = new Date();
   var now = today.getTime();
   var heatingRoom = "off";
-  var tempTarget = conf.tempOff;
+  var tempWanted = conf.tempOff;
   for (let i = 0; i < room.thermostat.length; i++) {
     var beginTime = room.thermostat[i].begin.split(':');
     var beginDate = new Date();
@@ -160,58 +173,58 @@ function tempAdjustment(room, temp) {
     var end = endDate.getTime();
     if (begin <= now && end > now) {
       heatingRoom = "on";
-      tempTarget = conf[room.thermostat[i].temp];
+      tempWanted = conf[room.thermostat[i].temp];
       break;
     }
   }
-  for (let i = 0; i < room.event.length; i++) {
+  for (let i = 0; i < conf.event.length; i++) {
     var nowDateOnly = new Date(now);
     nowDateOnly.setHours(0);
     nowDateOnly.setMinutes(0);
     nowDateOnly.setSeconds(0);
     nowDateOnly.setMilliseconds(0);
     var dateOnly = nowDateOnly.getTime();
-    var beginDate = new Date(room.event[i].begindate);
+    var beginDate = new Date(conf.event[i].begindate);
     beginDate.setHours(0);
-//    beginDate.setMinutes(0);
-//    beginDate.setSeconds(0);
     var begin = beginDate.getTime();
-    if (room.event[i].repeat > 0) { // repeating event
+    if (conf.event[i].repeat > 0) { // repeating event
       while (begin < dateOnly) {
         begin += 86400000;
       }
-      if (begin == dateOnly) {
-        var expired = begin - beginDate.getTime();
-        var endDate = new Date(room.event[i].enddate);
-        var end = endDate.getTime();
-        endDate.setTime(end + expired);
-        if (room.event[i].end.indexOf(":")) {
-          var endTime = conf[room.event[i].end].split(':');
-        } else {
-          var endTime = room.event[i].end.split(':');
-        }
-        endDate.setHours(endTime[0]);
-        endDate.setMinutes(endTime[1]);
-        endDate.setSeconds(0);
-        end = endDate.getTime();
+    }
+    if (begin == dateOnly) {
+      var expired = begin - beginDate.getTime();
+      var endDate = new Date(conf.event[i].enddate);
+      var end = endDate.getTime();
+      endDate.setTime(end + expired);
+      if (conf.event[i].end.indexOf(":")) {
+        var endTime = conf[conf.event[i].end].split(':');
+      } else {
+        var endTime = conf.event[i].end.split(':');
+      }
+      endDate.setHours(endTime[0]);
+      endDate.setMinutes(endTime[1]);
+      endDate.setSeconds(0);
+      end = endDate.getTime();
 
-        beginDate.setTime(begin);
+      beginDate.setTime(begin);
+      var beginTime = conf.event[i].begin.split(':');
+      beginDate.setHours(beginTime[0]);
+      beginDate.setMinutes(beginTime[1]);
 console.log("Event on " + beginDate.toString());
 console.log("Until " + endDate.toString());
+      if (begin <= now && end > now) {
+        heatingRoom = "on";
+        tempWanted = conf[conf.event[i].temp[room.id]];
+console.log("Temp wanted: " + tempWanted);
+        break;
       }
     }
-    var beginTime = room.event[i].begin.split(':');
-    beginDate.setHours(beginTime[0]);
-    beginDate.setMinutes(beginTime[1]);
-    var begin = beginDate.getTime();
-
-console.log(beginDate.toString());
-console.log(endDate.toString());
   }
 
-//console.log(beginDate.toString(), endDate.toString(), tempTarget);
+console.log(beginDate.toString(), endDate.toString(), tempWanted);
 
-  switch (tempTarget) {
+  switch (tempWanted) {
     case conf.tempOff:
       document.getElementById("clockmonth").style.color = "blue";
       break;
