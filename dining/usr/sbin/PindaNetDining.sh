@@ -306,7 +306,7 @@ do
 
   temp=$(python /home/*/ds18b20.py)
   newtemp=$(awk "BEGIN {printf \"%0.2f\", ($temp * $tempfact)}")
-  LC_ALL=C printf "%.1f °C" "$newtemp" > /home/*/temp.txt
+  LC_ALL=C printf "%.2f °C" "$newtemp" > /home/*/temp.txt
 
   room="Dining"
   PresHumiTempfile="/home/*/temp.txt"
