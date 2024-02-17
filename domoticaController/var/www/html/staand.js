@@ -147,20 +147,20 @@ function submitForm(event) {
 //  };
 //  xhr.send('host=pindadining&command=cat /home/dany/temp.txt');
 //}
-function getKitchenTemp() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "ssh.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function() {
-    if (this.readyState === 4) {
-      var kitchenTemp = parseFloat(this.responseText).toFixed(1);
-      if (!isNaN(kitchenTemp)) { // change with valid temp
-        document.getElementById("kitchenRoomTemp").innerHTML = kitchenTemp + " °C";
-      }
-    }
-  };
-  xhr.send('host=pindakeuken&command=cat /var/www/html/data/PresHumiTemp');
-}
+//function getKitchenTemp() {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "ssh.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function() {
+//    if (this.readyState === 4) {
+//      var kitchenTemp = parseFloat(this.responseText).toFixed(1);
+//      if (!isNaN(kitchenTemp)) { // change with valid temp
+//        document.getElementById("kitchenRoomTemp").innerHTML = kitchenTemp + " °C";
+//      }
+//    }
+//  };
+//  xhr.send('host=pindakeuken&command=cat /var/www/html/data/PresHumiTemp');
+//}
 function thermostatUI (event, command, id) {
   switch (command) {
     case "Incr":
@@ -197,14 +197,20 @@ function thermostatUI (event, command, id) {
       }
 //console.log(id.substr(0, 6));
     if (id == "kitchentemp") {
-        xhr.send("command=" + sshcommand + "&host=pindakeuken");
+      xhr.send("command=" + sshcommand + "&host=pindakeuken");
+      conf.Kitchen.mode = command;
+      conf.Kitchen.ManualId = id;
 //      } else if (id == "diningtemp") {
-      } else if (id.substr(0, 6) == "dining") {
-        xhr.send("command=" + sshcommand + "&host=pindadining");
-      } else {
-        xhr.send("command=" + sshcommand + "&host=localhost");
-      }
-      break;
+    } else if (id.substr(0, 6) == "dining") {
+      xhr.send("command=" + sshcommand + "&host=pindadining");
+      conf.Dining.mode = command;
+      conf.Dining.ManualId = id;
+    } else {
+      xhr.send("command=" + sshcommand + "&host=localhost");
+      conf.Living.mode = command;
+      conf.Living.ManualId = id;
+    }
+    break;
   }
 }
 function getThermostatManual (id, host) {
@@ -582,7 +588,7 @@ function startTime() {
   var thermostatUIApp = getApp("thermostatUI");
   if (thermostatUIApp == "on") {
     setThermostatUI(event);
-    getKitchenTemp();
+//    getKitchenTemp();
 //    getDiningTemp();
 console.log("thermostatUIApp == on");
 //  } else if (thermostatUIApp == "off") {
@@ -596,7 +602,7 @@ console.log("thermostatUIApp == on");
     if (app["thermostatUI"]) {
 console.log("ThermostatUI / min");
       setThermostatUI(event);
-      getKitchenTemp();
+//      getKitchenTemp();
 //      getDiningTemp();
     }
   }
