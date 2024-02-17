@@ -133,20 +133,20 @@ function submitForm(event) {
 }
 // End PinPad
 
-function getDiningTemp() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "ssh.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function() {
-    if (this.readyState === 4) {
-      var diningTemp = parseFloat(this.responseText).toFixed(1);
-      if (!isNaN(diningTemp)) { // change with valid temp
-        document.getElementById("diningRoomTemp").innerHTML = diningTemp + " °C";
-      }
-    }
-  };
-  xhr.send('host=pindadining&command=cat /home/dany/temp.txt');
-}
+//function getDiningTemp() {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "ssh.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function() {
+//    if (this.readyState === 4) {
+//      var diningTemp = parseFloat(this.responseText).toFixed(1);
+//      if (!isNaN(diningTemp)) { // change with valid temp
+//        document.getElementById("diningRoomTemp").innerHTML = diningTemp + " °C";
+//      }
+//    }
+//  };
+//  xhr.send('host=pindadining&command=cat /home/dany/temp.txt');
+//}
 function getKitchenTemp() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "ssh.php", true);
@@ -583,7 +583,7 @@ function startTime() {
   if (thermostatUIApp == "on") {
     setThermostatUI(event);
     getKitchenTemp();
-    getDiningTemp();
+//    getDiningTemp();
 console.log("thermostatUIApp == on");
 //  } else if (thermostatUIApp == "off") {
 //    getKitchenTemp("off");
@@ -597,7 +597,7 @@ console.log("thermostatUIApp == on");
 console.log("ThermostatUI / min");
       setThermostatUI(event);
       getKitchenTemp();
-      getDiningTemp();
+//      getDiningTemp();
     }
   }
   startTimer = setTimeout(startTime, 1000); // elke seconde
