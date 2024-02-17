@@ -1,6 +1,3 @@
-// ToDo
-// Manual temp
-
 // Configuration
 var conf = {
   available: [
@@ -66,6 +63,8 @@ var conf = {
       id: "living",
       htmlElementId: "clockmonthday",
       temp: 20.0,
+      mode: "Auto",
+      ManualId : "",
       tempOffset: "0",
       heater: [
         {
@@ -118,6 +117,8 @@ var conf = {
       htmlElementId: "clockmonth",
       status: "undefined",
       temp: 20.00,
+      mode: "Auto",
+      ManualId : "",
       tempOffset: "0",
       subtitleColor: "white",
       heater: [
@@ -182,6 +183,46 @@ var conf = {
         {
           begin: "17:30",
           end: "22:30",
+          temp: "tempAux"
+	}
+      ]
+  },
+  Kitchen: {
+      id: "kitchen",
+      htmlElementId: "clockyear",
+      status: "undefined",
+      temp: 20.00,
+      mode: "Auto",
+      ManualId : "",
+      tempOffset: "0",
+      heater: [
+        {
+          name: "Tropen",
+          color: "Red",
+          status: "undefined",
+          IP: "192.168.129.8",
+          Watt: "650"
+        }
+      ],
+      thermostat: [
+        {
+          begin: "07:30",
+          end: "11:00",
+          temp: "tempAux"
+	},
+        {
+          begin: "12:15",
+          end: "13:00",
+          temp: "tempAux"
+	},
+        {
+          begin: "16:55",
+          end: "17:45",
+          temp: "tempAux"
+	},
+        {
+          begin: "22:25",
+          end: "22:50",
           temp: "tempAux"
 	}
       ]
@@ -264,6 +305,21 @@ function getDiningTemp() {
   };
   xhr.send('host=pindadining&command=cat /home/dany/temp.txt');
 }
+function getKitchenTemp() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "ssh.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function() {
+    if (this.readyState === 4) {
+      conf.Kitchen.temp = parseFloat(this.responseText);
+      var kitchenTemp = parseFloat(this.responseText).toFixed(1);
+      if (!isNaN(kitchenTemp)) { // change with valid temp
+        document.getElementById("kitchenRoomTemp").innerHTML = kitchenTemp + " °C";
+      }
+    }
+  };
+  xhr.send('host=pindakeuken&command=cat /var/www/html/data/PresHumiTemp');
+}
 function tempAdjustment(room) {
   if (isNaN(room.temp)) {
     return;
@@ -328,14 +384,18 @@ console.log("Event on " + beginDate.toString());
 console.log("Until " + endDate.toString());
       if (begin <= now && end > now) {
         tempWanted = conf[conf.event[i].temp[room.id]];
-console.log("Temp wanted: " + tempWanted);
+console.log("Event Temp wanted: " + tempWanted);
         break;
       }
     }
   }
 
-// ToDo
 // Manual temp
+  if (room.mode == "Manual") {
+    tempWanted = parseFloat(document.getElementById(room.ManualId).innerHTML);
+  } else if (room.mode == "Off") {
+    tempWanted = conf.tempOff;
+  }
 
   if (tempWanted == conf.tempOff) {
     var nightTime = today.getHours().toString().padStart(2, '0') + ":" + today.getMinutes().toString().padStart(2, '0');
@@ -373,9 +433,9 @@ function thermostat() {
   getRoomTemp();
   tempAdjustment(conf.Dining);
   getDiningTemp();
-//  tempAdjustment(conf.Kitchen, temp);
-//  getKitchenTemp();
-  setTimeout(thermostat, 6000); // Every minute
+  tempAdjustment(conf.Kitchen);
+  getKitchenTemp();
+  setTimeout(thermostat, 60000); // Every minute
 }
 function sendConf(obj) {
     var xhr = new XMLHttpRequest();
@@ -388,4 +448,4 @@ function sendConf(obj) {
     };
     xhr.send(JSON.stringify(obj));
 }
-setTimeout(thermostat, 6000); // Every minute
+setTimeout(thermostat, 60000); // Every minute
