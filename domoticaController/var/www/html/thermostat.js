@@ -228,19 +228,6 @@ var conf = {
       ]
   },
   event: [
-    {
-      repeat: 0,
-      begindate: "2024-02-02",
-      begin: "19:45",
-      enddate: "2024-02-02",
-      end: "bedTime",
-      temp: {
-        living: "tempAux",
-        dining: "tempAux",
-        kitchen: "tempOff"
-      },
-      comment: "MCCB"
-    },
 //    {
 //      repeat: 1,
 //      begindate: "2024-02-16",
@@ -255,7 +242,46 @@ var conf = {
 //      comment: "Test"
 //    },
     {
-      repeat: 0,
+      repeat: 14,
+      begindate: "2024-02-02",
+      begin: "16:00",
+      enddate: "2024-02-02",
+      end: "17:00",
+      temp: {
+        living: "tempAux",
+        dining: "tempAux",
+        kitchen: "tempOff"
+      },
+      comment: "Bad"
+    },
+     {
+      repeat: 14,
+      begindate: "2024-02-02",
+      begin: "19:45",
+      enddate: "2024-02-02",
+      end: "bedTime",
+      temp: {
+        living: "tempAux",
+        dining: "tempAux",
+        kitchen: "tempOff"
+      },
+      comment: "MCCB"
+    },
+    {
+      repeat: 14,
+      begindate: "2024-02-07",
+      begin: "16:00",
+      enddate: "2024-02-07",
+      end: "17:00",
+      temp: {
+        living: "tempAux",
+        dining: "tempAux",
+        kitchen: "tempOff"
+      },
+      comment: "Bad"
+    },
+     {
+      repeat: 14,
       begindate: "2024-02-07",
       begin: "19:45",
       enddate: "2024-02-07",
@@ -273,6 +299,22 @@ var conf = {
 //console.log(JSON.stringify(conf));
 sendConf(conf);
 
+function tasmota (dev, cmd, heater) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        const output = JSON.parse(this.responseText);
+        if (output[0] == '{"POWER":"OFF"}') {
+          heater.status = "off";
+        } else if (output[0] == '{"POWER":"ON"}') {
+          heater.status = "on";
+        }
+      }
+    };
+    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
+}
 function getRoomTemp() { // Living
   var xhrthermometer = new XMLHttpRequest();
   xhrthermometer.responseType = 'text';
@@ -405,12 +447,23 @@ console.log("Event Temp wanted: " + tempWanted);
   }
 
   for (let i = 0; i < room.heater.length; i++) {
-    var tempOn = (tempWanted - conf.hysteresis - conf.hysteresis * (2 * i)).toFixed(2);
-    var tempOff = (tempWanted + conf.hysteresis - conf.hysteresis * (2 * i)).toFixed(2);
-    if (room.temp > tempOff) { // Heater Off
-      room.heater[i].status = "off";
-    } else if (room.temp < tempOn) { //Heater On
-      room.heater[i].status = "on";
+    if (room.heater[i].status != "off" && room.heater[i].status != "on") { // Initialise heater status
+      tasmota (room.heater[i].IP, "Power", room.heater[i]);
+    } else {
+      var tempOn = (tempWanted - conf.hysteresis - conf.hysteresis * (2 * i)).toFixed(2);
+      var tempOff = (tempWanted + conf.hysteresis - conf.hysteresis * (2 * i)).toFixed(2);
+      if (room.temp > tempOff) { // Heater Off
+        if (room.heater[i].status != "off") {
+console.log("wget -qO- http://" + room.heater[i].IP  + "/cm?cmnd=Power%20Off");
+          tasmota (room.heater[i].IP, "Power%20Off", room.heater[i]);
+//          room.heater[i].status = "off";
+        }
+      } else if (room.temp < tempOn) { //Heater On
+        if (room.heater[i].status != "on") {
+console.log("wget -qO- http://" + room.heater[i].IP  + "/cm?cmnd=Power%20On");
+          tasmota (room.heater[i].IP, "Power%20On", room.heater[i]);
+        }
+      }
     }
 //console.log("On: " + tempOn, "Off: " + tempOff, "Room.temp: " + room.temp, room.heater[i].name + ": " + room.heater[i].status);
   }
