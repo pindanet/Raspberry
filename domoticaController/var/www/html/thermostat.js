@@ -298,8 +298,21 @@ var conf = {
 //console.log(conf.Dining.event[0]);
 //console.log(JSON.stringify(conf));
 sendConf(conf);
+function activeHeaters(room) {
+  var activeHeaters = -1;
+  for (let i = 0; i < room.heater.length; i++) {
+    if (room.heater[i].status == "on") {
+      activeHeaters++;
+    }
+  }
+  if (activeHeaters > -1) {
+    document.getElementById(room.htmlElementId).style.color = room.heater[activeHeaters].color;
+  } else {
+    document.getElementById(room.htmlElementId).style.color = "";
+  }
+}
 
-function tasmota (dev, cmd, heater) {
+function tasmotaHeater (dev, cmd, room, heater) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', "cli.php", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -307,9 +320,11 @@ function tasmota (dev, cmd, heater) {
       if (this.status == 200) {
         const output = JSON.parse(this.responseText);
         if (output[0] == '{"POWER":"OFF"}') {
-          heater.status = "off";
+          room.heater[heater].status = "off";
+          activeHeaters(room);
         } else if (output[0] == '{"POWER":"ON"}') {
-          heater.status = "on";
+          room.heater[heater].status = "on";
+          activeHeaters(room);
         }
       }
     };
@@ -438,46 +453,31 @@ console.log("Event Temp wanted: " + tempWanted);
   } else if (room.mode == "Off") {
     tempWanted = conf.tempOff;
   }
-
+// Night temp
   if (tempWanted == conf.tempOff) {
     var nightTime = today.getHours().toString().padStart(2, '0') + ":" + today.getMinutes().toString().padStart(2, '0');
     if (conf.tempNightTime > nightTime) {
       tempWanted = conf.tempNight;
     }
   }
-
+// Heaters On/Off
   for (let i = 0; i < room.heater.length; i++) {
     if (room.heater[i].status != "off" && room.heater[i].status != "on") { // Initialise heater status
-      tasmota (room.heater[i].IP, "Power", room.heater[i]);
+      tasmotaHeater (room.heater[i].IP, "Power", room, i);
     } else {
       var tempOn = (tempWanted - conf.hysteresis - conf.hysteresis * (2 * i)).toFixed(2);
       var tempOff = (tempWanted + conf.hysteresis - conf.hysteresis * (2 * i)).toFixed(2);
       if (room.temp > tempOff) { // Heater Off
         if (room.heater[i].status != "off") {
-console.log("wget -qO- http://" + room.heater[i].IP  + "/cm?cmnd=Power%20Off");
-          tasmota (room.heater[i].IP, "Power%20Off", room.heater[i]);
-//          room.heater[i].status = "off";
+          tasmotaHeater (room.heater[i].IP, "Power%20Off", room, i);
         }
       } else if (room.temp < tempOn) { //Heater On
         if (room.heater[i].status != "on") {
-console.log("wget -qO- http://" + room.heater[i].IP  + "/cm?cmnd=Power%20On");
-          tasmota (room.heater[i].IP, "Power%20On", room.heater[i]);
+          tasmotaHeater (room.heater[i].IP, "Power%20On", room, i);
         }
       }
     }
 //console.log("On: " + tempOn, "Off: " + tempOff, "Room.temp: " + room.temp, room.heater[i].name + ": " + room.heater[i].status);
-  }
-
-  var activeHeaters = -1;
-  for (let i = 0; i < room.heater.length; i++) {
-    if (room.heater[i].status == "on") {
-      activeHeaters++;
-    }
-  }
-  if (activeHeaters > -1) {
-    document.getElementById(room.htmlElementId).style.color = room.heater[activeHeaters].color;
-  } else {
-    document.getElementById(room.htmlElementId).style.color = "";
   }
 }
 function thermostat() {
