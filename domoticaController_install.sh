@@ -259,6 +259,7 @@ EOF
   sudo wget -O /var/www/html/thermostatcommand.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/thermostatcommand.php
   sudo apt-get -y install python-pip
   sudo pip install bme280
+  #echo 'dtoverlay=i2c-sensor,bme280,addr=0x77' | sudo tee -a /boot/config.txt
   
   sudo wget -O /var/www/html/tls2591.py https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/tls2591.py
   
