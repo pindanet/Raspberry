@@ -3,7 +3,7 @@
 
 ## Compensate temperature sensor
 #tempOffset=-0.4
-tempfact=1  # Zomer, omgevingstemp: 0.97, Winter, IR temp: 1.00
+tempfact=0.99  # Zomer, omgevingstemp: 0.97, Winter, IR temp: 1.00
 
 function relayGPIO () {
   _r1_pin=${1#*relayGPIO}
@@ -184,21 +184,21 @@ function thermostat {
       tempWanted=$tempOff
     fi
   fi
-  total=${#heaterRoom[@]}
-  for (( i=0; i<$total; i++ )); do
-    tempToggle=$(awk "BEGIN {print ($tempWanted - $hysteresis - $hysteresis * (2 * $i))}")
-    echo "${heaterRoom[$i]} switch on at $tempToggle °C."
-    if (( $(awk "BEGIN {print ($temp < $tempToggle)}") )); then
-      echo "${heaterRoom[$i]} on at $temp °C."
-      tasmota ${heater[${heaterRoom[$i]}]} on
-    fi
-    tempToggle=$(awk "BEGIN {print ($tempWanted + $hysteresis - $hysteresis * (2 * $i))}")
-    echo "${heaterRoom[$i]} switch off at $tempToggle °C."
-    if (( $(awk "BEGIN {print ($temp > $tempToggle)}") )); then
-      echo "${heaterRoom[$i]} off at $temp °C."
-      tasmota ${heater[${heaterRoom[$i]}]} off
-    fi
-  done
+#  total=${#heaterRoom[@]}
+#  for (( i=0; i<$total; i++ )); do
+#    tempToggle=$(awk "BEGIN {print ($tempWanted - $hysteresis - $hysteresis * (2 * $i))}")
+#    echo "${heaterRoom[$i]} switch on at $tempToggle °C."
+#    if (( $(awk "BEGIN {print ($temp < $tempToggle)}") )); then
+#      echo "${heaterRoom[$i]} on at $temp °C."
+#      tasmota ${heater[${heaterRoom[$i]}]} on
+#    fi
+#    tempToggle=$(awk "BEGIN {print ($tempWanted + $hysteresis - $hysteresis * (2 * $i))}")
+#    echo "${heaterRoom[$i]} switch off at $tempToggle °C."
+#    if (( $(awk "BEGIN {print ($temp > $tempToggle)}") )); then
+#      echo "${heaterRoom[$i]} off at $temp °C."
+#      tasmota ${heater[${heaterRoom[$i]}]} off
+#    fi
+#  done
 }
 
 if [ -f "/root/thermostatManual" ]; then
