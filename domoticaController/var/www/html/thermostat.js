@@ -392,6 +392,13 @@ function getKitchenTemp() {
   };
   xhr.send('host=pindakeuken&command=cat /var/www/html/data/PresHumiTemp');
 }
+function splitTime (time) { // convert time variable to time and split hours and minutes
+  if (time.indexOf(":") > -1) {
+    return time.split(':');
+  } else {
+    return conf[time].split(':');
+  }
+}
 function tempAdjustment(room) {
   if (isNaN(room.temp)) {
     return;
@@ -400,13 +407,15 @@ function tempAdjustment(room) {
   var now = today.getTime();
   var tempWanted = conf.tempOff;
   for (let i = 0; i < room.thermostat.length; i++) {
-    var beginTime = room.thermostat[i].begin.split(':');
+//    var beginTime = room.thermostat[i].begin.split(':');
+    var beginTime = splitTime(room.thermostat[i].begin);
     var beginDate = new Date();
     beginDate.setHours(beginTime[0]);
     beginDate.setMinutes(beginTime[1]);
     beginDate.setSeconds(0);
     var begin = beginDate.getTime();
-    var endTime = room.thermostat[i].end.split(':');
+//    var endTime = room.thermostat[i].end.split(':');
+    var endTime = splitTime(room.thermostat[i].end);
     var endDate = new Date();
     endDate.setHours(endTime[0]);
     endDate.setMinutes(endTime[1]);
@@ -437,20 +446,24 @@ function tempAdjustment(room) {
       var endDate = new Date(conf.event[i].enddate);
       var end = endDate.getTime();
       endDate.setTime(end + expired);
-console.log(conf.event[i].end, conf.event[i].end.indexOf(":"));
-      if (conf.event[i].end.indexOf(":") > -1) {
-        var endTime = conf.event[i].end.split(':');
-      } else {
-        var endTime = conf[conf.event[i].end].split(':');
-      }
-console.log(endTime);
+//      if (conf.event[i].end.indexOf(":") > -1) {
+//        var endTime = conf.event[i].end.split(':');
+//      } else {
+//        var endTime = conf[conf.event[i].end].split(':');
+//      }
+      var endTime = splitTime(conf.event[i].end);
       endDate.setHours(endTime[0]);
       endDate.setMinutes(endTime[1]);
       endDate.setSeconds(0);
       end = endDate.getTime();
 
       beginDate.setTime(begin);
-      var beginTime = conf.event[i].begin.split(':');
+//      if (conf.event[i].begin.indexOf(":") > -1) {
+//        var beginTime = conf.event[i].begin.split(':');
+//      } else {
+//        var beginTime = conf[conf.event[i].begin].split(':');
+//      }
+      var beginTime = splitTime(conf.event[i].begin);
       beginDate.setHours(beginTime[0]);
       beginDate.setMinutes(beginTime[1]);
       begin = beginDate.getTime();
@@ -505,7 +518,7 @@ function thermostat() {
   getDiningTemp();
   tempAdjustment(conf.Kitchen);
   getKitchenTemp();
-  setTimeout(thermostat, 60000); // Every minute
+  setTimeout(thermostat, 6000); // Every minute
 }
 function sendConf(obj) {
     var xhr = new XMLHttpRequest();
@@ -518,4 +531,4 @@ function sendConf(obj) {
     };
     xhr.send(JSON.stringify(obj));
 }
-setTimeout(thermostat, 60000); // Every minute
+setTimeout(thermostat, 6000); // Every minute
