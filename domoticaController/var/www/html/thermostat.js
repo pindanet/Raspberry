@@ -328,38 +328,44 @@ function activeHeaters(room) {
 }
 
 function tasmotaHeater (dev, cmd, room, heater) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', "cli.php", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onload = function(e) {
-      if (this.status == 200) {
-        const output = JSON.parse(this.responseText);
-        if (output[0] == '{"POWER":"OFF"}') {
-          room.heater[heater].status = "off";
-          activeHeaters(room);
-        } else if (output[0] == '{"POWER":"ON"}') {
-          room.heater[heater].status = "on";
-          activeHeaters(room);
-        }
-      }
-    };
-    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
-}
-function getRoomTemp() { // Living
-  var xhrthermometer = new XMLHttpRequest();
-  xhrthermometer.responseType = 'text';
-  xhrthermometer.open('POST', "data/PresHumiTemp", true);
-  xhrthermometer.onload = function(e) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
     if (this.status == 200) {
-      var PresHumiTemp = this.responseText.split('\n');
-      roomTemp = parseFloat(PresHumiTemp[2]).toFixed(1) + " °C";
-      conf.Living.temp = parseFloat(PresHumiTemp[2]);
+      const output = JSON.parse(this.responseText);
+      if (output[0] == '{"POWER":"OFF"}') {
+        room.heater[heater].status = "off";
+        activeHeaters(room);
+      } else if (output[0] == '{"POWER":"ON"}') {
+        room.heater[heater].status = "on";
+        activeHeaters(room);
+      }
     }
   };
-  xhrthermometer.send();
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
+}
+function getTemp(host, cmd, room) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "ssh.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      room.temp = (parseFloat(this.responseText) - 2500) / 1000;
+      if (room.id == "living") {
+        roomTemp = room.temp.toFixed(1) + " °C";
+      }
+console.log(room.id, room.temp, roomTemp);
+    }
+  };
+  xhr.send('host=' + host + '&command=' + cmd);
+}
+function getLivingTemp() {
+  getTemp("localhost", "cat /sys/bus/iio/devices/iio\:device0/in_temp_input", conf.Living);
 }
 //var testTemp = 17.81;
 function getDiningTemp() {
+//  getTemp("pindadining", "cat /home/dany/temp.txt", conf.Dining);
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "ssh.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -446,11 +452,6 @@ function tempAdjustment(room) {
       var endDate = new Date(conf.event[i].enddate);
       var end = endDate.getTime();
       endDate.setTime(end + expired);
-//      if (conf.event[i].end.indexOf(":") > -1) {
-//        var endTime = conf.event[i].end.split(':');
-//      } else {
-//        var endTime = conf[conf.event[i].end].split(':');
-//      }
       var endTime = splitTime(conf.event[i].end);
       endDate.setHours(endTime[0]);
       endDate.setMinutes(endTime[1]);
@@ -458,11 +459,6 @@ function tempAdjustment(room) {
       end = endDate.getTime();
 
       beginDate.setTime(begin);
-//      if (conf.event[i].begin.indexOf(":") > -1) {
-//        var beginTime = conf.event[i].begin.split(':');
-//      } else {
-//        var beginTime = conf[conf.event[i].begin].split(':');
-//      }
       var beginTime = splitTime(conf.event[i].begin);
       beginDate.setHours(beginTime[0]);
       beginDate.setMinutes(beginTime[1]);
@@ -513,12 +509,12 @@ console.log("Event Temp wanted: " + tempWanted);
 function thermostat() {
   var thermostatdefault;
   tempAdjustment(conf.Living);
-  getRoomTemp();
+  getLivingTemp();
   tempAdjustment(conf.Dining);
   getDiningTemp();
   tempAdjustment(conf.Kitchen);
   getKitchenTemp();
-  setTimeout(thermostat, 6000); // Every minute
+  setTimeout(thermostat, 60000); // Every minute
 }
 function sendConf(obj) {
     var xhr = new XMLHttpRequest();
@@ -531,4 +527,4 @@ function sendConf(obj) {
     };
     xhr.send(JSON.stringify(obj));
 }
-setTimeout(thermostat, 6000); // Every minute
+setTimeout(thermostat, 60000); // Every minute
