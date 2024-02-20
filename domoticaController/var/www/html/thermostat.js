@@ -13,6 +13,7 @@ var conf = {
   tempOff: 15.00,
   tempNight: 10.00,
   tempNightTime: "06:30",
+//  wakeupTime: "07:30",
   bedTime: "22:50",
   hysteresis: 0.1,
   switch: [
@@ -228,6 +229,20 @@ var conf = {
       ]
   },
   event: [
+    {
+      repeat: 0,
+      begindate: "2024-02-20",
+//      begin: "wakeupTime",
+      begin: "11:45",
+      enddate: "2024-02-20",
+      end: "14:00",
+      temp: {
+        living: "tempAux",
+        dining: "tempAux",
+        kitchen: "tempOff"
+      },
+      comment: "Kapper"
+    },
 //    {
 //      repeat: 1,
 //      begindate: "2024-02-16",
@@ -422,11 +437,13 @@ function tempAdjustment(room) {
       var endDate = new Date(conf.event[i].enddate);
       var end = endDate.getTime();
       endDate.setTime(end + expired);
-      if (conf.event[i].end.indexOf(":")) {
-        var endTime = conf[conf.event[i].end].split(':');
-      } else {
+console.log(conf.event[i].end, conf.event[i].end.indexOf(":"));
+      if (conf.event[i].end.indexOf(":") > -1) {
         var endTime = conf.event[i].end.split(':');
+      } else {
+        var endTime = conf[conf.event[i].end].split(':');
       }
+console.log(endTime);
       endDate.setHours(endTime[0]);
       endDate.setMinutes(endTime[1]);
       endDate.setSeconds(0);
