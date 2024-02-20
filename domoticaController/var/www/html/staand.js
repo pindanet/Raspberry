@@ -467,18 +467,18 @@ function radioCommand(event, command, options) {
 }
 
 var roomTemp="20.0 °C";
-function getRoomTemp() {
-  var xhrthermometer = new XMLHttpRequest();
-  xhrthermometer.responseType = 'text';
-  xhrthermometer.open('POST', "data/PresHumiTemp", true);
-  xhrthermometer.onload = function(e) {
-    if (this.status == 200) {
-      var PresHumiTemp = this.responseText.split('\n');
-      roomTemp = parseFloat(PresHumiTemp[2]).toFixed(1) + " °C";
-    }
-  };
-  xhrthermometer.send();
-}
+//function getRoomTemp() {
+//  var xhrthermometer = new XMLHttpRequest();
+//  xhrthermometer.responseType = 'text';
+//  xhrthermometer.open('POST', "data/PresHumiTemp", true);
+//  xhrthermometer.onload = function(e) {
+//    if (this.status == 200) {
+//      var PresHumiTemp = this.responseText.split('\n');
+//      roomTemp = parseFloat(PresHumiTemp[2]).toFixed(1) + " °C";
+//    }
+//  };
+//  xhrthermometer.send();
+//}
 var startTimer;
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
@@ -580,7 +580,7 @@ function startTime() {
   document.getElementById('clock').innerHTML = h + ":" + m;
   document.getElementById('miniclock').innerHTML = h + ":" + m;
   document.getElementById('minitemp').innerHTML = roomTemp;
-  getRoomTemp();
+//  getRoomTemp();
   var radioApp = getApp("radio");
   if (radioApp == "on") {
     radio(event);
