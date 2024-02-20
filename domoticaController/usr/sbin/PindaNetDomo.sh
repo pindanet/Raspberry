@@ -328,17 +328,23 @@ do
   # BCM 2 (SDA) - SDI (Brown)
   # read pressure, humididy and temperature from sensor
   error_file=$(mktemp)
-  PresHumiTempVar=$(read_bme280 --i2c-address 0x77 2>$error_file)
+#1027.52 hPa
+#  56.18 %
+#  19.53 C
+  temp=$(echo "scale=2; ($(cat /sys/bus/iio/devices/iio\:device0/in_temp_input) - 2500) / 1000" | bc)
+  PresHumiTempVar=$(echo "1027.52 hPa"; echo "  56.18 %"; echo "  $temp C")
+#  PresHumiTempVar=$(read_bme280 --i2c-address 0x77 2>$error_file)
   if [ "$?" -ne 0 ]; then # skip faulty reading
       echo "___________________________" >> $stderrLogfile
       echo "$(date)" >> $stderrLogfile
       echo "$(< $error_file)" >> $stderrLogfile
     else
-      temp=${PresHumiTempVar##*$'\n'}
-      temp=${temp%% C*}
-      temp="${temp#"${temp%%[![:space:]]*}"}"
-      newtemp=$(awk "BEGIN {printf \"%0.2f\", ($temp * $tempfact)}")
-      PresHumiTempVar=${PresHumiTempVar/$temp C/$newtemp C}
+#      temp=${PresHumiTempVar##*$'\n'}
+#      temp=${temp%% C*}
+#      temp="${temp#"${temp%%[![:space:]]*}"}"
+#      newtemp=$(awk "BEGIN {printf \"%0.2f\", ($temp * $tempfact)}")
+#      PresHumiTempVar=${PresHumiTempVar/$temp C/$newtemp C}
+#      PresHumiTempVar=${PresHumiTempVar/$temp C/$newtemp C}
       echo "$PresHumiTempVar" > $PresHumiTempfile
   fi
   rm $error_file
