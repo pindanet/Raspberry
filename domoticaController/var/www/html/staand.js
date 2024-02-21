@@ -265,7 +265,7 @@ function setThermostatUI (event) {
 
 //  thermostatIfFileExist("data/thermostatManualkitchen", "kitchen");
 //  thermostatIfFileExist("data/thermostatManualliving", "living");
-  document.getElementById('livingRoomTemp').innerHTML = roomTemp;
+  document.getElementById('livingRoomTemp').innerHTML = conf.Living.temp.toFixed(1) + " °C";
 }
 /*
 function thermostatIfFileExist(url, id) {
@@ -466,7 +466,7 @@ function radioCommand(event, command, options) {
   }
 }
 
-var roomTemp="20.0 °C";
+//var roomTemp="20.0 °C";
 //function getRoomTemp() {
 //  var xhrthermometer = new XMLHttpRequest();
 //  xhrthermometer.responseType = 'text';
@@ -576,10 +576,10 @@ function startTime() {
       document.getElementById("clockyear").innerHTML = today.getFullYear();
     }
   }
-  document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + roomTemp;
+  document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + conf.Living.temp.toFixed(1) + " °C";;
   document.getElementById('clock').innerHTML = h + ":" + m;
   document.getElementById('miniclock').innerHTML = h + ":" + m;
-  document.getElementById('minitemp').innerHTML = roomTemp;
+  document.getElementById('minitemp').innerHTML = conf.Living.temp.toFixed(1) + " °C";;
 //  getRoomTemp();
   var radioApp = getApp("radio");
   if (radioApp == "on") {
