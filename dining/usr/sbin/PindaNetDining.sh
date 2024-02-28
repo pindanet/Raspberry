@@ -304,9 +304,11 @@ while true
 do
   starttime=$(date +"%s") # complete cycle: 1 minute
 
-  temp=$(python /home/*/ds18b20.py)
-  newtemp=$(awk "BEGIN {printf \"%0.2f\", ($temp * $tempfact)}")
-  LC_ALL=C printf "%.2f °C" "$newtemp" > /home/*/temp.txt
+#  temp=$(python /home/*/ds18b20.py)
+#  newtemp=$(awk "BEGIN {printf \"%0.2f\", ($temp * $tempfact)}")
+#  LC_ALL=C printf "%.2f °C" "$newtemp" > /home/*/temp.txt
+  temp=$(echo "scale=2; ($(cat /sys/bus/w1/devices/28-*/temperature) + 500) / 1000" | bc)
+  LC_ALL=C printf "%.2f °C" "$temp" > /home/*/temp.txt
 
   room="Dining"
   PresHumiTempfile="/home/*/temp.txt"
