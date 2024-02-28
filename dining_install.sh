@@ -156,6 +156,13 @@ else
 
   sudo apt-get install hdate bc -y
 #  sudo wget -O ds18b20.py https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/ds18b20.py
+
+sudo nano /boot/config.txt
+  # dtoverlay=w1-gpio
+# sudo nano /etc/modules # testen of dit noodzakelijk is
+  # w1-gpio
+  # w1-therm
+
   sudo touch $HOME/temp.txt
   sudo touch $HOME/image.png
   sudo wget -O /usr/sbin/PindaNetDining.sh https://github.com/pindanet/Raspberry/raw/master/dining/usr/sbin/PindaNetDining.sh
