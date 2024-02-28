@@ -154,8 +154,8 @@ else
   sudo sed -i "/^exit 0/ibash /var/www/html/randomvideo.sh" /etc/rc.local
   sudo sed -i "/^exit 0/iomxplayer --aspect-mode fill --loop /home/dany/video.mp4 &" /etc/rc.local
 
-  sudo apt-get install hdate -y
-  sudo wget -O ds18b20.py https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/ds18b20.py
+  sudo apt-get install hdate bc -y
+#  sudo wget -O ds18b20.py https://raw.githubusercontent.com/pindanet/Raspberry/master/dining/ds18b20.py
   sudo touch $HOME/temp.txt
   sudo touch $HOME/image.png
   sudo wget -O /usr/sbin/PindaNetDining.sh https://github.com/pindanet/Raspberry/raw/master/dining/usr/sbin/PindaNetDining.sh
