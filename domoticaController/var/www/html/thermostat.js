@@ -64,9 +64,9 @@ var conf = {
       id: "living",
       htmlElementId: "clockmonthday",
       temp: 20.0,
+      tempCorrection : -2.5,
       mode: "Auto",
       ManualId : "",
-      tempOffset: "0",
       heater: [
         {
           name: "Schilderij",
@@ -118,6 +118,7 @@ var conf = {
       htmlElementId: "clockmonth",
       status: "undefined",
       temp: 20.00,
+      tempCorrection : 0.5,
       mode: "Auto",
       ManualId : "",
       tempOffset: "0",
@@ -193,6 +194,7 @@ var conf = {
       htmlElementId: "clockyear",
       status: "undefined",
       temp: 20.00,
+      tempCorrection : 0,
       mode: "Auto",
       ManualId : "",
       tempOffset: "0",
@@ -258,6 +260,19 @@ var conf = {
 //    },
     {
       repeat: 14,
+      begindate: "2024-02-26",
+      begin: "16:00",
+      enddate: "2024-02-26",
+      end: "17:00",
+      temp: {
+        living: "tempAux",
+        dining: "tempAux",
+        kitchen: "tempOff"
+      },
+      comment: "Bad Maandag"
+    },
+     {
+      repeat: 14,
       begindate: "2024-02-02",
       begin: "16:00",
       enddate: "2024-02-02",
@@ -267,7 +282,7 @@ var conf = {
         dining: "tempAux",
         kitchen: "tempOff"
       },
-      comment: "Bad"
+      comment: "Bad Vrijdag"
     },
      {
       repeat: 14,
@@ -293,7 +308,7 @@ var conf = {
         dining: "tempAux",
         kitchen: "tempOff"
       },
-      comment: "Bad"
+      comment: "Bad Woensdag"
     },
      {
       repeat: 14,
@@ -351,37 +366,22 @@ function getTemp(host, cmd, room) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
-      room.temp = (parseFloat(this.responseText) - 2500) / 1000;
+      room.temp = parseFloat(this.responseText) / 1000 + room.tempCorrection;
+      document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
       if (room.id == "living") {
         roomTemp = room.temp.toFixed(1) + " °C";
       }
-console.log(room.id, room.temp, roomTemp);
+console.log(room.id, room.temp, roomTemp, room.tempCorrection, parseFloat(this.responseText) / 1000 + room.tempCorrection);
     }
   };
   xhr.send('host=' + host + '&command=' + cmd);
 }
 function getLivingTemp() {
-  getTemp("localhost", "cat /sys/bus/iio/devices/iio\:device0/in_temp_input", conf.Living);
+  getTemp("pindadomo", "cat /sys/bus/iio/devices/iio\:device0/in_temp_input", conf.Living);
 }
 //var testTemp = 17.81;
 function getDiningTemp() {
-//  getTemp("pindadining", "cat /home/dany/temp.txt", conf.Dining);
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "ssh.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function() {
-    if (this.readyState === 4) {
-      conf.Dining.temp = parseFloat(this.responseText);
-//conf.Dining.temp = parseFloat(testTemp);
-//testTemp -= 0.1;
-//console.log(parseFloat(conf.Dining.temp));
-      var diningTemp = parseFloat(this.responseText).toFixed(1);
-      if (!isNaN(diningTemp)) { // change with valid temp
-        document.getElementById("diningRoomTemp").innerHTML = diningTemp + " °C";
-      }
-    }
-  };
-  xhr.send('host=pindadining&command=cat /home/dany/temp.txt');
+  getTemp("pindadining", "cat /sys/bus/w1/devices/28-*/temperature", conf.Dining);
 }
 function getKitchenTemp() {
   var xhr = new XMLHttpRequest();
@@ -527,4 +527,13 @@ function sendConf(obj) {
     };
     xhr.send(JSON.stringify(obj));
 }
+//function getConf() {
+//  const requestURL = "data/conf.json";
+//  const request = new Request(requestURL);
+//
+//  const response = await fetch(request);
+//  const confText = await response.text();
+//
+//  conf = JSON.parse(confText);
+//}
 setTimeout(thermostat, 60000); // Every minute
