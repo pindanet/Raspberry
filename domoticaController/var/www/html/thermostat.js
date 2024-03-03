@@ -1,333 +1,3 @@
-// Configuration
-var conf = {
-  available: [
-    {
-      absent: "Afwezig",
-      sleep: "Slapen",
-      sleeptime: "22:24"
-    }
-  ],
-  tempIncrDecr: 0.5,
-  tempComfort: 20.00,
-  tempAux: 17.50,
-  tempOff: 15.00,
-  tempNight: 10.00,
-  tempNightTime: "06:30",
-//  wakeupTime: "07:30",
-  bedTime: "22:50",
-  hysteresis: 0.1,
-  switch: [
-    {
-      name: "Haardlamp",
-      IP: "192.168.129.18",
-      Watt: "20",
-      Cmnd: "Power"
-    },
-    {
-      name: "Tandenborstel",
-      IP: "192.168.129.7",
-      Watt: "10",
-      Cmnd: "Power"
-    },
-    {
-      name: "Apotheek",
-      IP: "192.168.129.19",
-      Watt: "20",
-      Cmnd: "Power"
-    },
-    {
-      name: "TVlamp",
-      IP: "92.168.129.11",
-      Watt: "20",
-      Cmnd: "Power"
-    },
-    {
-      name: "SwitchBacklight",
-      IP: "192.168.129.41",
-      Watt: "1",
-      Cmnd: "Power3"
-    },
-    {
-      name: "Kerst",
-      IP: "192.168.129.44",
-      Watt: "15",
-      Cmnd: "Power"
-    },
-    {
-      name: "LivingVoor",
-      IP: "192.168.129.41",
-      Watt: "16",
-      Cmnd: "Power2"
-    }
-  ],
-  Living: {
-      id: "living",
-      htmlElementId: "clockmonthday",
-      temp: 20.0,
-      tempCorrection : -2.5,
-      mode: "Auto",
-      ManualId : "",
-      heater: [
-        {
-          name: "Schilderij",
-          color: "Yellow",
-          status: "undefined",
-          IP: "192.168.129.12",
-          Watt: "650"
-        },
-        {
-          name: "Computertafel",
-          color: "Orange",
-          status: "undefined",
-          IP: "192.168.129.0",
-          Watt: "300"
-        },
-        {
-          name: "Canyon",
-          color: "Red",
-          status: "undefined",
-          IP: "192.168.129.4",
-          Watt: "650"
-        }
-      ],
-      thermostat: [
-        {
-          begin: "07:30",
-          end: "13:30",
-          temp: "tempAux"
-	},
-        {
-          begin: "13:30",
-          end: "17:00",
-          temp: "tempComfort"
-	},
-        {
-          begin: "17:00",
-          end: "17:30",
-          temp: "tempAux"
-	},
-        {
-          begin: "17:30",
-          end: "22:50",
-          temp: "tempComfort"
-	}
-      ]
-  },
-  Dining: {
-      id: "dining",
-      htmlElementId: "clockmonth",
-      status: "undefined",
-      temp: 20.00,
-      tempCorrection : 0.5,
-      mode: "Auto",
-      ManualId : "",
-      tempOffset: "0",
-      subtitleColor: "white",
-      heater: [
-        {
-          name: "Zonsondergang",
-          color: "Yellow",
-          status: "undefined",
-          IP: "192.168.129.20",
-          Watt: "650"
-        },
-        {
-          name: "Tafel",
-          color: "Orange",
-          status: "undefined",
-          IP: "192.168.129.5",
-          Watt: "300"
-        },
-        {
-          name: "Eekhoorn",
-          color: "Red",
-          status: "undefined",
-          IP: "192.168.129.3",
-          Watt: "650"
-        }
-      ],
-      thermostat: [
-        {
-          begin: "07:30",
-          end: "08:50",
-          temp: "tempComfort"
-	},
-        {
-          begin: "08:50",
-          end: "10:55",
-          temp: "tempAux"
-	},
-        {
-          begin: "10:55",
-          end: "12:20",
-          temp: "tempComfort"
-	},
-        {
-          begin: "12:20",
-          end: "12:55",
-          temp: "tempAux"
-	},
-        {
-          begin: "12:55",
-          end: "13:30",
-          temp: "tempComfort"
-	},
-        {
-          begin: "13:30",
-          end: "16:55",
-          temp: "tempAux"
-	},
-        {
-          begin: "16:55",
-          end: "17:30",
-          temp: "tempComfort"
-	},
-        {
-          begin: "17:30",
-          end: "22:30",
-          temp: "tempAux"
-	}
-      ]
-  },
-  Kitchen: {
-      id: "kitchen",
-      htmlElementId: "clockyear",
-      status: "undefined",
-      temp: 20.00,
-      tempCorrection : 0,
-      mode: "Auto",
-      ManualId : "",
-      tempOffset: "0",
-      heater: [
-        {
-          name: "Tropen",
-          color: "Red",
-          status: "undefined",
-          IP: "192.168.129.8",
-          Watt: "650"
-        }
-      ],
-      thermostat: [
-        {
-          begin: "07:30",
-          end: "11:00",
-          temp: "tempAux"
-	},
-        {
-          begin: "12:15",
-          end: "13:00",
-          temp: "tempAux"
-	},
-        {
-          begin: "16:55",
-          end: "17:45",
-          temp: "tempAux"
-	},
-        {
-          begin: "22:25",
-          end: "22:50",
-          temp: "tempAux"
-	}
-      ]
-  },
-  event: [
-    {
-      repeat: 0,
-      begindate: "2024-02-20",
-//      begin: "wakeupTime",
-      begin: "11:45",
-      enddate: "2024-02-20",
-      end: "14:00",
-      temp: {
-        living: "tempAux",
-        dining: "tempAux",
-        kitchen: "tempOff"
-      },
-      comment: "Kapper"
-    },
-//    {
-//      repeat: 1,
-//      begindate: "2024-02-16",
-//      begin: "15:30",
-//      enddate: "2024-02-16",
-//      end: "bedTime",
-//      temp: {
-//        living: "tempAux",
-//        dining: "tempOff",
-//        kitchen: "tempOff"
-//      },
-//      comment: "Test"
-//    },
-    {
-      repeat: 14,
-      begindate: "2024-02-26",
-      begin: "16:00",
-      enddate: "2024-02-26",
-      end: "17:00",
-      temp: {
-        living: "tempAux",
-        dining: "tempAux",
-        kitchen: "tempOff"
-      },
-      comment: "Bad Maandag"
-    },
-     {
-      repeat: 14,
-      begindate: "2024-02-02",
-      begin: "16:00",
-      enddate: "2024-02-02",
-      end: "17:00",
-      temp: {
-        living: "tempAux",
-        dining: "tempAux",
-        kitchen: "tempOff"
-      },
-      comment: "Bad Vrijdag"
-    },
-     {
-      repeat: 14,
-      begindate: "2024-02-02",
-      begin: "19:45",
-      enddate: "2024-02-02",
-      end: "bedTime",
-      temp: {
-        living: "tempAux",
-        dining: "tempAux",
-        kitchen: "tempOff"
-      },
-      comment: "MCCB"
-    },
-    {
-      repeat: 14,
-      begindate: "2024-02-07",
-      begin: "16:00",
-      enddate: "2024-02-07",
-      end: "17:00",
-      temp: {
-        living: "tempAux",
-        dining: "tempAux",
-        kitchen: "tempOff"
-      },
-      comment: "Bad Woensdag"
-    },
-     {
-      repeat: 14,
-      begindate: "2024-02-07",
-      begin: "19:45",
-      enddate: "2024-02-07",
-      end: "bedTime",
-      temp: {
-        living: "tempAux",
-        dining: "tempAux",
-        kitchen: "tempOff"
-      },
-      comment: "ACCB"
-    }
-  ]
-};
-//console.log(conf.Dining.event[0]);
-//console.log(JSON.stringify(conf));
-sendConf(conf);
 function activeHeaters(room) {
   var activeHeaters = -1;
   for (let i = 0; i < room.heater.length; i++) {
@@ -367,6 +37,7 @@ function getTemp(host, cmd, room) {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       room.temp = parseFloat(this.responseText) / 1000 + room.tempCorrection;
+console.log(this.responseText);
       document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
       if (room.id == "living") {
         roomTemp = room.temp.toFixed(1) + " °C";
@@ -384,6 +55,9 @@ function getDiningTemp() {
   getTemp("pindadining", "cat /sys/bus/w1/devices/28-*/temperature", conf.Dining);
 }
 function getKitchenTemp() {
+//  getTemp("pindakeuken", 'echo "scale = 0; ($(/usr/sbin/mcp9808.py) * 1000) / 1" | bc', conf.Kitchen);
+//  getTemp("pindakeuken", '/usr/sbin/mcp9808.py', conf.Kitchen);
+
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "ssh.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -506,16 +180,6 @@ console.log("Event Temp wanted: " + tempWanted);
 //console.log("On: " + tempOn, "Off: " + tempOff, "Room.temp: " + room.temp, room.heater[i].name + ": " + room.heater[i].status);
   }
 }
-function thermostat() {
-  var thermostatdefault;
-  tempAdjustment(conf.Living);
-  getLivingTemp();
-  tempAdjustment(conf.Dining);
-  getDiningTemp();
-  tempAdjustment(conf.Kitchen);
-  getKitchenTemp();
-  setTimeout(thermostat, 60000); // Every minute
-}
 function sendConf(obj) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', "sendConf.php", true);
@@ -525,15 +189,24 @@ function sendConf(obj) {
         conf = JSON.parse(this.responseText);
       }
     };
-    xhr.send(JSON.stringify(obj));
+    xhr.send(JSON.stringify(obj, null, 2));
 }
-//function getConf() {
-//  const requestURL = "data/conf.json";
-//  const request = new Request(requestURL);
-//
-//  const response = await fetch(request);
-//  const confText = await response.text();
-//
-//  conf = JSON.parse(confText);
-//}
-setTimeout(thermostat, 60000); // Every minute
+function thermostat() {
+  // Get configuration
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function(e) {
+    if (this.status == 200) {
+      conf = JSON.parse(this.responseText);
+      tempAdjustment(conf.Living);
+      getLivingTemp();
+      tempAdjustment(conf.Dining);
+      getDiningTemp();
+      tempAdjustment(conf.Kitchen);
+      getKitchenTemp();
+      setTimeout(thermostat, 60000); // Every minute
+    }
+  }
+  xhttp.open("POST", "data/conf.json");
+  xhttp.send();
+}
+thermostat();
