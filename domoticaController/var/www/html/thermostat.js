@@ -37,12 +37,11 @@ function getTemp(host, cmd, room) {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       room.temp = parseFloat(this.responseText) / 1000 + room.tempCorrection;
-console.log(this.responseText);
       document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
       if (room.id == "living") {
         roomTemp = room.temp.toFixed(1) + " °C";
       }
-console.log(room.id, room.temp, roomTemp, room.tempCorrection, parseFloat(this.responseText) / 1000 + room.tempCorrection);
+//console.log(room.id, room.temp, roomTemp, room.tempCorrection, parseFloat(this.responseText) / 1000 + room.tempCorrection);
     }
   };
   xhr.send('host=' + host + '&command=' + cmd);
@@ -55,22 +54,7 @@ function getDiningTemp() {
   getTemp("pindadining", "cat /sys/bus/w1/devices/28-*/temperature", conf.Dining);
 }
 function getKitchenTemp() {
-//  getTemp("pindakeuken", 'echo "scale = 0; ($(/usr/sbin/mcp9808.py) * 1000) / 1" | bc', conf.Kitchen);
-//  getTemp("pindakeuken", '/usr/sbin/mcp9808.py', conf.Kitchen);
-
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "ssh.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function() {
-    if (this.readyState === 4) {
-      conf.Kitchen.temp = parseFloat(this.responseText);
-      var kitchenTemp = parseFloat(this.responseText).toFixed(1);
-      if (!isNaN(kitchenTemp)) { // change with valid temp
-        document.getElementById("kitchenRoomTemp").innerHTML = kitchenTemp + " °C";
-      }
-    }
-  };
-  xhr.send('host=pindakeuken&command=cat /var/www/html/data/PresHumiTemp');
+  getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
 }
 function splitTime (time) { // convert time variable to time and split hours and minutes
   if (time.indexOf(":") > -1) {
@@ -192,21 +176,31 @@ function sendConf(obj) {
     xhr.send(JSON.stringify(obj, null, 2));
 }
 function thermostat() {
-  // Get configuration
+  tempAdjustment(conf.Living);
+  getLivingTemp();
+  tempAdjustment(conf.Dining);
+  getDiningTemp();
+  tempAdjustment(conf.Kitchen);
+  getKitchenTemp();
+  setTimeout(getConf, 60000); // Every minute
+}
+function getConf() { // Get configuration
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function(e) {
     if (this.status == 200) {
-      conf = JSON.parse(this.responseText);
-      tempAdjustment(conf.Living);
-      getLivingTemp();
-      tempAdjustment(conf.Dining);
-      getDiningTemp();
-      tempAdjustment(conf.Kitchen);
-      getKitchenTemp();
-      setTimeout(thermostat, 60000); // Every minute
+      if (typeof conf === 'undefined') {
+        conf = JSON.parse(this.responseText);
+        conf.lastModified = this.getResponseHeader('Last-Modified');
+console.log("Init " + conf.lastModified);
+      } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
+        conf = JSON.parse(this.responseText);
+        conf.lastModified = this.getResponseHeader('Last-Modified');
+console.log("Modified " + conf.lastModified);
+      }
+      thermostat();
     }
   }
   xhttp.open("POST", "data/conf.json");
   xhttp.send();
 }
-thermostat();
+getConf();
