@@ -235,6 +235,8 @@ EOF
   echo "www-data ALL = NOPASSWD: /bin/systemctl stop hostapd.service" | sudo tee -a /etc/sudoers
   echo "www-data ALL = NOPASSWD: /usr/bin/tee /sys/class/backlight/rpi_backlight/bl_power" | sudo tee -a /etc/sudoers
 
+  echo "www-data ALL = NOPASSWD: /usr/bin/killall roc-recv" | sudo tee -a /etc/sudoers
+
   sudo wget -O /var/www/html/system.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/system.php
   sudo wget -O /var/www/html/remote.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/remote.sh
   sudo wget -O /var/www/html/upload.php https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/upload.php
