@@ -24,6 +24,7 @@ switch ($command) {
 //    exec("mpc play $options", $output, $return);
 //    status($output);
     exec("killall mpg123 curl");
+    exec("sudo killall roc-recv");
 //    sleep(1);
     exec("/var/www/html/playRadio.sh $options 2> /var/www/html/data/radio.log &");
     exit();
