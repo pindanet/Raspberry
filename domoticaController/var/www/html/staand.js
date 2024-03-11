@@ -295,6 +295,27 @@ function thermostatIfFileExist(url, id) {
 }
 */
 
+function lightSwitch(event, name, cmd) {
+  var tasmotaSwitch = conf.switch.filter(obj => {
+    return obj.name === name
+  })
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+console.log(this.responseText);
+      const output = JSON.parse(this.responseText);
+      if (output[0] == '{"POWER":"OFF"}') {
+        tasmotaSwitch[0].status = "off";
+      } else if (output[0] == '{"POWER":"ON"}') {
+        tasmotaSwitch[0].status = "on";
+      }
+    }
+  };
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch[0].IP + "/cm?cmnd=Power%20" + cmd));
+}
+
 function lights(event, tasmotaDev) {
 /*
   var xhr = new XMLHttpRequest();
