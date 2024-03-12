@@ -294,8 +294,25 @@ function thermostatIfFileExist(url, id) {
   xhr.send("id=" + id);
 }
 */
+function powerLog(dev) {
+console.log(dev);
+  const d = new Date();
+  const logLine = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), time: d.getTime(), Watt: dev.Watt, status: dev.status};
+//  var logLine = [];
+//  logLine.year = d.getFullYear();
+//  logLine.month = d.getMonth() + 1;
+//  logLine.day = d.getDate();
+//  logLine.time = d.getTime();
+//  logLine.Watt = dev.Watt;
+//  logLine.status = dev.status;
+//  var logLine = "{'year': '" + d.getFullYear() + "', month: '" + (d.getMonth()+1) + "', day: '" + d.getDate() + "', time: '" + d.getTime() + "', Watt: '" + dev.Watt + "', status: '" + dev.status + "'}";
+console.log(logLine);
+var test = JSON.stringify(logLine);
+console.log(test);
+console.log(JSON.parse(test));
+}
 
-function lightSwitch(event, name, cmd) {
+function lightSwitch(name, cmd) {
   var tasmotaSwitch = conf.switch.filter(obj => {
     return obj.name === name
   })
@@ -304,48 +321,34 @@ function lightSwitch(event, name, cmd) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200) {
-console.log(this.responseText);
       const output = JSON.parse(this.responseText);
-      if (output[0] == '{"POWER":"OFF"}') {
+      if (output[0].includes(':"OFF"}')) {
         tasmotaSwitch[0].status = "off";
-      } else if (output[0] == '{"POWER":"ON"}') {
+      } else if (output[0].includes(':"ON"}')) {
         tasmotaSwitch[0].status = "on";
       }
+      powerLog(tasmotaSwitch[0]);
     }
   };
-  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch[0].IP + "/cm?cmnd=Power%20" + cmd));
+  if (typeof tasmotaSwitch[0].Channel !== 'undefined') {
+    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch[0].IP + "/cm?cmnd=Power"+ tasmotaSwitch[0].Channel + "%20" + cmd));
+  } else {
+    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch[0].IP + "/cm?cmnd=Power%20" + cmd));
+  }
 }
 
-function lights(event, tasmotaDev) {
-/*
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "ssh.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send('host=pindadining&command=/var/www/html/lightswitch.sh toggle');
-*/
-console.log('dev=' + tasmotaDev + '&cmd=Power%20Toggle');
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "tasmota.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  if (tasmotaDev == LivingVoorDev) {
-    xhr.send('dev=' + tasmotaDev.split(":")[0] + '&cmd=Power2%20Toggle');
-  } else {
-    xhr.send('dev=' + tasmotaDev + '&cmd=Power%20Toggle');
-  }
-/*
-// Haardlamp
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "tasmota.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send('dev=' + HaardlampDev + '&cmd=Power%20Toggle');
-// TVlamp
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "tasmota.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send('dev=' + TVlampDev + '&cmd=Power%20Toggle');
-*/
-  event.stopPropagation();
-}
+//function lights(event, tasmotaDev) {
+//console.log('dev=' + tasmotaDev + '&cmd=Power%20Toggle');
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "tasmota.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  if (tasmotaDev == LivingVoorDev) {
+//    xhr.send('dev=' + tasmotaDev.split(":")[0] + '&cmd=Power2%20Toggle');
+//  } else {
+//    xhr.send('dev=' + tasmotaDev + '&cmd=Power%20Toggle');
+//  }
+//  event.stopPropagation();
+//}
 
 //var yrCodes = {
 //	"s01": "clear sky",
