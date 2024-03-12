@@ -1,4 +1,5 @@
 {
+  "lastModified": "auto",
   "available": [
     {
       "absent": "Afwezig",
@@ -18,44 +19,43 @@
     {
       "name": "Haardlamp",
       "IP": "192.168.129.18",
-      "Watt": "20",
-      "Cmnd": "Power"
+      "Watt": "20"
     },
     {
       "name": "Tandenborstel",
       "IP": "192.168.129.7",
-      "Watt": "10",
-      "Cmnd": "Power"
+      "Watt": "10"
     },
     {
       "name": "Apotheek",
       "IP": "192.168.129.19",
-      "Watt": "20",
-      "Cmnd": "Power"
+      "Watt": "20"
     },
     {
       "name": "TVlamp",
-      "IP": "92.168.129.11",
-      "Watt": "20",
-      "Cmnd": "Power"
+      "IP": "192.168.129.11",
+      "Watt": "20"
     },
     {
-      "name": "SwitchBacklight",
-      "IP": "192.168.129.41",
-      "Watt": "1",
-      "Cmnd": "Power3"
+      "name": "Keukenlamp",
+      "IP": "192.168.129.14",
+      "Watt": "8"
     },
     {
       "name": "Kerst",
       "IP": "192.168.129.44",
-      "Watt": "15",
-      "Cmnd": "Power"
+      "Watt": "15"
+    },
+    {
+      "name": "LivingZij",
+      "IP": "192.168.129.41",
+      "Watt": "8"
     },
     {
       "name": "LivingVoor",
       "IP": "192.168.129.41",
-      "Watt": "16",
-      "Cmnd": "Power2"
+      "Channel": "2",
+      "Watt": "16"
     }
   ],
   "Living": {
@@ -192,7 +192,7 @@
     "htmlElementId": "clockyear",
     "status": "undefined",
     "temp": 20,
-    "tempCorrection": 0,
+    "tempCorrection": -0.2,
     "mode": "Auto",
     "ManualId": "",
     "tempOffset": "0",
