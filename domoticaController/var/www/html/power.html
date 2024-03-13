@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PindaDomo Power log</title>
+</head>
+<body style="font-family: monospace;">
+<div id="log"></div>
+<div id="errors"></div>
+<script>
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function(e) {
+    if (this.status == 200) {
+      const lines = this.responseText.split('\n');
+      for (let index = lines.length - 2; index >= 0; index--) {
+        try {
+          const powerLine = JSON.parse(lines[index]);
+console.log(powerLine);
+          const event = new Date(powerLine.time);
+          var HTMLline = event.toLocaleString();
+          HTMLline += powerLine.name.padStart(12, '\u00A0');
+          HTMLline += powerLine.Watt.padStart(5, '\u00A0');
+
+          HTMLline += "</br>";
+          document.getElementById("log").innerHTML += HTMLline;
+        } catch {
+          document.getElementById("errors").innerHTML += 'Invalid logLine ' + index + "</br>"
+        }
+      }
+    }
+  }
+  xhttp.open("POST", "data/power.log");
+  xhttp.send();
+</script>
+</body>
+</html>
