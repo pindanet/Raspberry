@@ -9,6 +9,8 @@ if (!isset($_SERVER["HTTP_HOST"])) {
 $params = hex2bin(htmlspecialchars($_POST["params"]));
 $cmd = htmlspecialchars($_POST["cmd"]);
 
+//file_put_contents("data/debug.txt", $cmd . " " . $params);
+
 // Filter op toegelaten opdrachten
 
 //echo $cmd." ".$params;
