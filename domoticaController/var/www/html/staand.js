@@ -295,21 +295,17 @@ function thermostatIfFileExist(url, id) {
 }
 */
 function powerLog(dev) {
-console.log(dev);
   const d = new Date();
   const logLine = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), time: d.getTime(), Watt: dev.Watt, status: dev.status};
-//  var logLine = [];
-//  logLine.year = d.getFullYear();
-//  logLine.month = d.getMonth() + 1;
-//  logLine.day = d.getDate();
-//  logLine.time = d.getTime();
-//  logLine.Watt = dev.Watt;
-//  logLine.status = dev.status;
-//  var logLine = "{'year': '" + d.getFullYear() + "', month: '" + (d.getMonth()+1) + "', day: '" + d.getDate() + "', time: '" + d.getTime() + "', Watt: '" + dev.Watt + "', status: '" + dev.status + "'}";
-console.log(logLine);
-var test = JSON.stringify(logLine);
-console.log(test);
-console.log(JSON.parse(test));
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function(e) {
+//    if (this.status == 200) {
+//console.log(this.responseText);
+//    }
+//  };
+  xhr.send("cmd=echo&params="+stringToHex("'" + JSON.stringify(logLine) + "' >> data/power.log"));
 }
 
 function lightSwitch(name, cmd) {
