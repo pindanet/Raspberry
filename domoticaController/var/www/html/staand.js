@@ -296,7 +296,7 @@ function thermostatIfFileExist(url, id) {
 */
 function powerLog(dev) {
   const d = new Date();
-  const logLine = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), time: d.getTime(), Watt: dev.Watt, status: dev.status};
+  const logLine = {year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(), time: d.getTime(), Watt: dev.Watt, name: dev.name, status: dev.status};
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
