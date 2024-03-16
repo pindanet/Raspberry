@@ -5,32 +5,46 @@
   <title>PindaDomo Power log</title>
 </head>
 <body style="font-family: monospace;">
+<div id="errors"  style="font-weight: bold; color: red"></div>
 <div id="log"></div>
-<div id="errors"></div>
 <script>
-  const xhttp = new XMLHttpRequest();
-  xhttp.onload = function(e) {
-    if (this.status == 200) {
-      const lines = this.responseText.split('\n');
-      for (let index = lines.length - 2; index >= 0; index--) {
-        try {
-          const powerLine = JSON.parse(lines[index]);
-console.log(powerLine);
-          const event = new Date(powerLine.time);
-          var HTMLline = event.toLocaleString();
-          HTMLline += powerLine.name.padStart(12, '\u00A0');
-          HTMLline += powerLine.Watt.padStart(5, '\u00A0');
-
-          HTMLline += "</br>";
-          document.getElementById("log").innerHTML += HTMLline;
-        } catch {
-          document.getElementById("errors").innerHTML += 'Invalid logLine ' + index + "</br>"
-        }
-      }
-    }
+var price = 30 // per kWh in centimen
+var dev = {};
+var time = {};
+function processLine(line, index) {
+  var powerLine;
+  try {
+    powerLine = JSON.parse(line);
+  } catch {
+    document.getElementById("errors").innerHTML += 'Invalid logLine ' + index + "</br>"
+    return;
   }
-  xhttp.open("POST", "data/power.log");
-  xhttp.send();
+console.log(powerLine);
+  const event = new Date(powerLine.time);
+  var HTMLline = event.toLocaleString();
+  HTMLline += powerLine.name.padStart(12, '\u00A0');
+  HTMLline += powerLine.Watt.padStart(5, '\u00A0');
+  HTMLline += powerLine.status.padStart(5, '\u00A0');
+  if (powerLine.status == "on" && dev[powerLine.name] == "off") {
+console.log(time[powerLine.name] - powerLine.time);
+  }
+  dev[powerLine.name] = powerLine.status;
+  time[powerLine.name] = powerLine.time;
+  HTMLline += "</br>";
+  document.getElementById("log").innerHTML += HTMLline;
+}
+const xhttp = new XMLHttpRequest();
+xhttp.onload = function(e) {
+  if (this.status == 200) {
+    const lines = this.responseText.split('\n');
+    for (let index = lines.length - 2; index >= 0; index--) {
+      processLine(lines[index], index);
+    }
+console.log(dev);
+  }
+}
+xhttp.open("POST", "data/power.log");
+xhttp.send();
 </script>
 </body>
 </html>
