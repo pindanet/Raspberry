@@ -22,7 +22,7 @@ function processLine(line, index) {
 console.log(powerLine);
   const event = new Date(powerLine.time);
   var HTMLline = event.toLocaleString();
-  HTMLline += powerLine.name.padStart(12, '\u00A0');
+  HTMLline += powerLine.name.padStart(15, '\u00A0');
   HTMLline += powerLine.Watt.padStart(5, '\u00A0');
   HTMLline += powerLine.status.padStart(5, '\u00A0');
   if (powerLine.status == "on" && dev[powerLine.name] == "off") {
