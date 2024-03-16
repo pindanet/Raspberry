@@ -22,9 +22,11 @@ function tasmotaHeater (dev, cmd, room, heater) {
       if (output[0] == '{"POWER":"OFF"}') {
         room.heater[heater].status = "off";
         activeHeaters(room);
+        powerLog(room.heater[heater]);
       } else if (output[0] == '{"POWER":"ON"}') {
         room.heater[heater].status = "on";
         activeHeaters(room);
+        powerLog(room.heater[heater]);
       }
     }
   };
