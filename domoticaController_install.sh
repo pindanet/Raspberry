@@ -166,8 +166,12 @@ EOF
   echo "# Start fullscreen browser" >> $HOME/.config/openbox/autostart
   echo "chromium-browser --incognito --kiosk --check-for-update-interval=31536000 http://localhost/staand.html &" >> $HOME/.config/openbox/autostart
 
-  sudo wget -O /var/www/html/index.html https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.html
-  sudo wget -O /var/www/html/index.css https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/index.css
+  sudo wget -O /var/www/html/staand.html https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/staand.html
+  sudo wget -O /var/www/html/staand.css https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/staand.css
+  sudo wget -O /var/www/html/staand.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/staand.js
+  sudo wget -O /var/www/html/suncalc.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/suncalc.js
+  sudo wget -O /var/www/html/lights.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/lights.js
+  sudo wget -O /var/www/html/thermostat.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/thermostat.js
   sudo mkdir /var/www/html/emoji/
   sudo wget -O /var/www/html/emoji/medicinecabinet.png https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/medicinecabinet.png
   sudo wget -O /var/www/html/emoji/christmassspheres.svg https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/christmassspheres.svg
