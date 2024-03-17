@@ -631,8 +631,8 @@ console.log("ThermostatUI / min");
   }
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
-function startOnload () {
-  startTime();
-  thermostat();
-}
+//function startOnload () {
+//  startTime();
+//  thermostat();
+//}
 window.onload = startTime;
