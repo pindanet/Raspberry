@@ -123,11 +123,11 @@ function tempAdjustment(room) {
       beginDate.setHours(beginTime[0]);
       beginDate.setMinutes(beginTime[1]);
       begin = beginDate.getTime();
-console.log("Event on " + beginDate.toString());
-console.log("Until " + endDate.toString());
+//console.log("Event on " + beginDate.toString());
+//console.log("Until " + endDate.toString());
       if (begin <= now && end > now) {
         tempWanted = conf[conf.event[i].temp[room.id]];
-console.log("Event Temp wanted: " + tempWanted);
+//console.log("Event Temp wanted: " + tempWanted);
         break;
       }
     }
