@@ -74,8 +74,14 @@ function nextalarm() {
     nextDate.setHours(0,0,0,0);
     setAlarmTime(getEventAlarm(nextDate, today), nextDate); // Get tomorrow's alarmtime
   }
-console.log(today.toString());
+
+console.log(conf.lights.lightsOut);
+
+  lightsOut = new Date(nextAlarm.getTime() + (conf.lightsOutAfter * 60000)); // 1 hour 19 min after wakeup
+
+
 console.log(nextAlarm.toString());
+console.log(lightsOut.toString());
 
   lights();
 }
