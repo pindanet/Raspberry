@@ -15,7 +15,14 @@
   "tempNightTime": "06:30",
   "bedTime": "22:50",
   "hysteresis": 0.1,
+  "lights": {
+    "lightsOut": {
+      "at": "nextAlarm",
+      "Offset": "79"
+    }
+  },
   "eveningShutterDown": "22:20",
+  "lightsOutAfter": 79,
   "alarmtime":  "07:30",
   "switch": [
     {
