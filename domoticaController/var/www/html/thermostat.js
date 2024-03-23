@@ -58,6 +58,13 @@ function getDiningTemp() {
 function getKitchenTemp() {
   getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
 }
+function timeDate (time, dateObject) {
+  var hourMin = splitTime (time);
+  dateObject.setHours(hourMin[0]);
+  dateObject.setMinutes(hourMin[1]);
+  dateObject.setSeconds(0);
+  return dateObject;
+}
 function splitTime (time) { // convert time variable to time and split hours and minutes
   if (time.indexOf(":") > -1) {
     return time.split(':');
