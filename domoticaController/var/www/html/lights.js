@@ -75,13 +75,13 @@ function nextalarm() {
     setAlarmTime(getEventAlarm(nextDate, today), nextDate); // Get tomorrow's alarmtime
   }
 
-console.log(conf.lights.lightsOut);
+  lightsOut = new Date(nextAlarm.getTime() + (conf.lights.lightsOut.Offset * 60000)); // 79 min (1 hour 19 min) after wakeup
+  var eveningShutterDownTime = timeDate(conf.lights.eveningShutterDown, eveningShutterDown = new Date());
 
-  lightsOut = new Date(nextAlarm.getTime() + (conf.lightsOutAfter * 60000)); // 1 hour 19 min after wakeup
-
+//console.log(conf.lights.eveningShutterDown);
 
 console.log(nextAlarm.toString());
-console.log(lightsOut.toString());
+console.log(eveningShutterDown.toString());
 
   lights();
 }
