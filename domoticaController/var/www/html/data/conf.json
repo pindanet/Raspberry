@@ -19,10 +19,9 @@
     "lightsOut": {
       "at": "nextAlarm",
       "Offset": "79"
-    }
+    },
+    "eveningShutterDown": "22:20"
   },
-  "eveningShutterDown": "22:20",
-  "lightsOutAfter": 79,
   "alarmtime":  "07:30",
   "switch": [
     {
