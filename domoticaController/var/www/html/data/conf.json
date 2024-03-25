@@ -20,9 +20,37 @@
       "at": "nextAlarm",
       "Offset": "79"
     },
-    "eveningShutterDown": "22:20"
+    "eveningShutterDown": "22:20",
+    "timer": [
+       {
+         "dev": "Haardlamp",
+         "begin": "breakfast",
+         "end": "morningLightsOut"
+       },
+       {
+         "dev": "Apotheek",
+         "begin": "breakfast",
+         "end": "morningLightsOut"
+       },
+       {
+         "dev": "Apotheek",
+         "begin": "breakfast",
+         "end": "morningLightsOut"
+       },
+       {
+         "dev": "Tandenborstel",
+         "begin": "16:00",
+         "end": "22:15"
+       },
+       {
+         "dev": "Apotheek",
+         "begin": "22:24",
+         "end": "bedtime"
+       }
+    ]
   },
-  "alarmtime":  "07:30",
+  "alarmtime": "07:30",
+  "breakfastOffset": "11",
   "switch": [
     {
       "name": "Haardlamp",
@@ -239,10 +267,10 @@
   "event": [
     {
       "repeat": 0,
-      "begindate": "2024-03-20",
-      "begin": "07:30",
+      "begindate": "2023-03-24",
+      "begin": "08:30",
       "alarm": "07:29",
-      "enddate": "2024-03-20",
+      "enddate": "2023-03-24",
       "end": "11:50",
       "temp": {
         "living": "tempComfort",
