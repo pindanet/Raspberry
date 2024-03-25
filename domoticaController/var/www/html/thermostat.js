@@ -59,19 +59,25 @@ function getKitchenTemp() {
   getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
 }
 function timeDate (time, dateObject) {
-  var hourMin = splitTime (time);
-  dateObject.setHours(hourMin[0]);
-  dateObject.setMinutes(hourMin[1]);
-  dateObject.setSeconds(0);
+  var hourMin;
+  if (time.indexOf(":") > -1) {
+    hourMin = time.split(':');
+  } else {
+    hourMin = conf[time].split(':');
+  }
+//  var hourMin = splitTime (time);
+  dateObject.setHours(hourMin[0], hourMin[1], 0, 0);
+//  dateObject.setMinutes(hourMin[1]);
+//  dateObject.setSeconds(0);
   return dateObject;
 }
-function splitTime (time) { // convert time variable to time and split hours and minutes
-  if (time.indexOf(":") > -1) {
-    return time.split(':');
-  } else {
-    return conf[time].split(':');
-  }
-}
+//function splitTime (time) { // convert time variable to time and split hours and minutes
+//  if (time.indexOf(":") > -1) {
+//    return time.split(':');
+//  } else {
+//    return conf[time].split(':');
+//  }
+//}
 function tempAdjustment(room) {
   if (isNaN(room.temp)) {
     return;
@@ -80,19 +86,20 @@ function tempAdjustment(room) {
   var now = today.getTime();
   var tempWanted = conf.tempOff;
   for (let i = 0; i < room.thermostat.length; i++) {
-//    var beginTime = room.thermostat[i].begin.split(':');
-    var beginTime = splitTime(room.thermostat[i].begin);
-    var beginDate = new Date();
-    beginDate.setHours(beginTime[0]);
-    beginDate.setMinutes(beginTime[1]);
-    beginDate.setSeconds(0);
+    var beginDate = timeDate(room.thermostat[i].begin, new Date());
+//    var beginTime = splitTime(room.thermostat[i].begin);
+//    var beginDate = new Date();
+//    beginDate.setHours(beginTime[0]);
+//    beginDate.setMinutes(beginTime[1]);
+//    beginDate.setSeconds(0);
     var begin = beginDate.getTime();
 //    var endTime = room.thermostat[i].end.split(':');
-    var endTime = splitTime(room.thermostat[i].end);
-    var endDate = new Date();
-    endDate.setHours(endTime[0]);
-    endDate.setMinutes(endTime[1]);
-    endDate.setSeconds(0);
+    var endDate = timeDate(room.thermostat[i].end, new Date());
+//    var endTime = splitTime(room.thermostat[i].end);
+//    var endDate = new Date();
+//    endDate.setHours(endTime[0]);
+//    endDate.setMinutes(endTime[1]);
+//    endDate.setSeconds(0);
     var end = endDate.getTime();
     if (begin <= now && end > now) {
       tempWanted = conf[room.thermostat[i].temp];
@@ -119,16 +126,20 @@ function tempAdjustment(room) {
       var endDate = new Date(conf.event[i].enddate);
       var end = endDate.getTime();
       endDate.setTime(end + expired);
-      var endTime = splitTime(conf.event[i].end);
-      endDate.setHours(endTime[0]);
-      endDate.setMinutes(endTime[1]);
-      endDate.setSeconds(0);
+      endDate = timeDate(conf.event[i].end, endDate);
+//      var endTime = splitTime(conf.event[i].end);
+//      endDate.setHours(endTime[0]);
+//      endDate.setMinutes(endTime[1]);
+//      endDate.setSeconds(0);
+//console.log(endDate.toString());
       end = endDate.getTime();
 
       beginDate.setTime(begin);
-      var beginTime = splitTime(conf.event[i].begin);
-      beginDate.setHours(beginTime[0]);
-      beginDate.setMinutes(beginTime[1]);
+      beginDate = timeDate(conf.event[i].begin, beginDate);
+//      var beginTime = splitTime(conf.event[i].begin);
+//      beginDate.setHours(beginTime[0]);
+//      beginDate.setMinutes(beginTime[1]);
+//console.log(beginDate.toString());
       begin = beginDate.getTime();
 //console.log("Event on " + beginDate.toString());
 //console.log("Until " + endDate.toString());
