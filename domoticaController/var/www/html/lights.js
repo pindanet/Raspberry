@@ -1,8 +1,10 @@
-var times = SunCalc.getTimes(new Date(), 51.2, 5);
-var sunrise = times.sunrise.getHours().toString().padStart(2, '0') + ':' + times.sunrise.getMinutes().toString().padStart(2, '0');
-var sunset = times.sunset.getHours().toString().padStart(2, '0') + ':' + times.sunset.getMinutes().toString().padStart(2, '0');
+var sunTimes;
+//console.log(times.sunrise.toString());
+//var sunrise = times.sunrise.getHours().toString().padStart(2, '0') + ':' + times.sunrise.getMinutes().toString().padStart(2, '0');
+//var sunset = times.sunset.getHours().toString().padStart(2, '0') + ':' + times.sunset.getMinutes().toString().padStart(2, '0');
 var nextAlarm;
 var lightsOut;
+var eveningShutterDownTime;
 function getEventAlarm(nowDate, ref) {
   var nowDateOnly = new Date(nowDate.getTime());
   var refDate = new Date(ref.getTime());
@@ -26,24 +28,30 @@ function getEventAlarm(nowDate, ref) {
         var endDate = new Date(conf.event[i].enddate);
         var end = endDate.getTime();
         endDate.setTime(end + expired);
-        var endTime = splitTime(conf.event[i].end);
-        endDate.setHours(endTime[0]);
-        endDate.setMinutes(endTime[1]);
-        endDate.setSeconds(0);
+        endDate = timeDate(conf.event[i].end, endDate);
+//        var endTime = splitTime(conf.event[i].end);
+//        endDate.setHours(endTime[0]);
+//        endDate.setMinutes(endTime[1]);
+//        endDate.setSeconds(0);
+console.log(endDate.toString());
         end = endDate.getTime();
 
         beginDate.setTime(begin);
-        var beginTime = splitTime(conf.event[i].begin);
-        beginDate.setHours(beginTime[0]);
-        beginDate.setMinutes(beginTime[1]);
+        beginDate = timeDate(conf.event[i].begin, beginDate);
+//        var beginTime = splitTime(conf.event[i].begin);
+//        beginDate.setHours(beginTime[0]);
+//        beginDate.setMinutes(beginTime[1]);
+console.log(beginDate.toString());
         begin = beginDate.getTime();
 
         var alarmDate = new Date();
         alarmDate.setTime(begin);
-        var alarmTime = splitTime(conf.event[i].alarm);
-        alarmDate.setHours(alarmTime[0]);
-        alarmDate.setMinutes(alarmTime[1]);
-        alarmDate.setSeconds(0);
+        alarmDate = timeDate(conf.event[i].alarm, alarmDate);
+//        var alarmTime = splitTime(conf.event[i].alarm);
+//        alarmDate.setHours(alarmTime[0]);
+//        alarmDate.setMinutes(alarmTime[1]);
+//        alarmDate.setSeconds(0);
+console.log(alarmDate.toString());
         alarm = alarmDate.getTime();
         if (alarm >= refDate.getTime() && alarm <= end) {
           return alarmDate.getTime();
@@ -55,11 +63,12 @@ function getEventAlarm(nowDate, ref) {
 }
 function setAlarmTime(nextAlarmSec, defaultDate) {
   if (nextAlarmSec == 0) { // No alarmtime found, use default alarmtime
-    nextAlarm = new Date(defaultDate.getTime());
-    var nextAlarmTime = splitTime(conf.alarmtime);
-    nextAlarm.setHours(nextAlarmTime[0]);
-    nextAlarm.setMinutes(nextAlarmTime[1]);
-    nextAlarm.setSeconds(0);
+    nextAlarm = timeDate (conf.alarmtime, new Date(defaultDate.getTime()));
+//    nextAlarm = new Date(defaultDate.getTime());
+//    var nextAlarmTime = splitTime(conf.alarmtime);
+//    nextAlarm.setHours(nextAlarmTime[0]);
+//    nextAlarm.setMinutes(nextAlarmTime[1]);
+//    nextAlarm.setSeconds(0);
   } else { // Set found alarmtime
     nextAlarm = new Date(nextAlarmSec);
   }
@@ -75,18 +84,29 @@ function nextalarm() {
     setAlarmTime(getEventAlarm(nextDate, today), nextDate); // Get tomorrow's alarmtime
   }
 
-  lightsOut = new Date(nextAlarm.getTime() + (conf.lights.lightsOut.Offset * 60000)); // 79 min (1 hour 19 min) after wakeup
-  var eveningShutterDownTime = timeDate(conf.lights.eveningShutterDown, eveningShutterDown = new Date());
+  sunTimes = SunCalc.getTimes(nextAlarm, 51.2, 5);
 
-//console.log(conf.lights.eveningShutterDown);
+  morningTimerLightsOut = new Date(nextAlarm.getTime() + (conf.lights.lightsOut.Offset * 60000)); // 79 min (1 hour 19 min) after wakeup
+  eveningShutterDownTime = timeDate(conf.lights.eveningShutterDown, eveningShutterDown = new Date());
+  breakfast = new Date(nextAlarm.getTime() + (conf.breakfastOffset * 60000)); // 11 min after nextAlarm
+  if (morningTimerLightsOut.getTime() > sunTimes.sunrise.getTime()) { // Sun shines
+    morningLightsOut = new Date(morningTimerLightsOut.getTime());
+  } else { // Still dark
+    morningLightsOut = new Date(sunTimes.sunrise.getTime());
+  }
 
-console.log(nextAlarm.toString());
-console.log(eveningShutterDown.toString());
+//console.log(conf.breakfastOffset);
+
+console.log(morningTimerLightsOut.toString());
+console.log(sunTimes.sunrise.toString());
+console.log(morningLightsOut.toString());
+
+
 
   lights();
 }
 function lights() {
-//  console.log(sunrise, sunset);
+//  console.log(times.sunrise.toString(), times.sunset.sunrise.toString());
 //  console.log(conf.alarmtime);
   setTimeout(lights, 60000);
 }
