@@ -3,8 +3,9 @@ var sunTimes;
 //var sunrise = times.sunrise.getHours().toString().padStart(2, '0') + ':' + times.sunrise.getMinutes().toString().padStart(2, '0');
 //var sunset = times.sunset.getHours().toString().padStart(2, '0') + ':' + times.sunset.getMinutes().toString().padStart(2, '0');
 var nextAlarm;
-var lightsOut;
-var eveningShutterDownTime;
+var breakfast;
+var morningLightsOut;
+var eveningLightsOn;
 function getEventAlarm(nowDate, ref) {
   var nowDateOnly = new Date(nowDate.getTime());
   var refDate = new Date(ref.getTime());
@@ -84,10 +85,8 @@ function nextalarm() {
     setAlarmTime(getEventAlarm(nextDate, today), nextDate); // Get tomorrow's alarmtime
   }
 
-  sunTimes = SunCalc.getTimes(nextAlarm, 51.2, 5);
-
+  var sunTimes = SunCalc.getTimes(nextAlarm, 51.2, 5);
   morningTimerLightsOut = new Date(nextAlarm.getTime() + (conf.lights.lightsOut.Offset * 60000)); // 79 min (1 hour 19 min) after wakeup
-  eveningShutterDownTime = timeDate(conf.lights.eveningShutterDown, eveningShutterDown = new Date());
   breakfast = new Date(nextAlarm.getTime() + (conf.breakfastOffset * 60000)); // 11 min after nextAlarm
   if (morningTimerLightsOut.getTime() > sunTimes.sunrise.getTime()) { // Sun shines
     morningLightsOut = new Date(morningTimerLightsOut.getTime());
@@ -95,19 +94,29 @@ function nextalarm() {
     morningLightsOut = new Date(sunTimes.sunrise.getTime());
   }
 
-//console.log(conf.breakfastOffset);
-
-console.log(morningTimerLightsOut.toString());
-console.log(sunTimes.sunrise.toString());
-console.log(morningLightsOut.toString());
-
-
+  sunTimes = SunCalc.getTimes(new Date(), 51.2, 5);
+  var eveningShutterDown = timeDate(conf.lights.eveningShutterDown, eveningShutterDown = new Date());
+  if (eveningShutterDown.getTime() > sunTimes.sunset.getTime()) { // Already dark
+    eveningLightsOn = new Date(sunTimes.sunset.getTime());
+  } else { // Still daylight
+    eveningLightsOn = new Date(eveningShutterDown.getTime());
+  }
 
   lights();
 }
 function lights() {
-//  console.log(times.sunrise.toString(), times.sunset.sunrise.toString());
-//  console.log(conf.alarmtime);
+  var now = new Date().getTime();
+  for (let i = 0; i < conf.lights.timer.length; i++) {
+    var beginDate = timeDate(conf.lights.timer[i].begin, new Date());
+    var begin = beginDate.getTime();
+    var endDate = timeDate(conf.lights.timer[i].end, new Date());
+    var end = endDate.getTime();
+    if (begin <= now && end > now) {
+console.log(conf.lights.timer[i]);
+console.log(beginDate, endDate);
+console.log(conf.switch[conf.lights.timer[i].dev]);
+    }
+  }
   setTimeout(lights, 60000);
 }
 setTimeout(nextalarm, 6000);
