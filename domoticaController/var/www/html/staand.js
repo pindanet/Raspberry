@@ -294,11 +294,11 @@ function thermostatIfFileExist(url, id) {
   xhr.send("id=" + id);
 }
 */
-function powerLog(dev) {
+function powerLog(dev, name) {
   const d = new Date();
-  const logLine = {time: d.getTime(), 
-    Watt: dev.Watt, 
-    name: dev.name, 
+  const logLine = {time: d.getTime(),
+    Watt: dev.Watt,
+    name: name,
     status: dev.status};
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -312,9 +312,7 @@ function powerLog(dev) {
 }
 
 function lightSwitch(name, cmd) {
-  var tasmotaSwitch = conf.switch.filter(obj => {
-    return obj.name === name
-  })
+  var tasmotaSwitch = conf.switch[name];
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -322,17 +320,17 @@ function lightSwitch(name, cmd) {
     if (this.status == 200) {
       const output = JSON.parse(this.responseText);
       if (output[0].includes(':"OFF"}')) {
-        tasmotaSwitch[0].status = "off";
+        tasmotaSwitch.status = "off";
       } else if (output[0].includes(':"ON"}')) {
-        tasmotaSwitch[0].status = "on";
+        tasmotaSwitch.status = "on";
       }
-      powerLog(tasmotaSwitch[0]);
+      powerLog(tasmotaSwitch, name);
     }
   };
-  if (typeof tasmotaSwitch[0].Channel !== 'undefined') {
-    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch[0].IP + "/cm?cmnd=Power"+ tasmotaSwitch[0].Channel + "%20" + cmd));
+  if (typeof tasmotaSwitch.Channel !== 'undefined') {
+    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch.IP + "/cm?cmnd=Power"+ tasmotaSwitch.Channel + "%20" + cmd));
   } else {
-    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch[0].IP + "/cm?cmnd=Power%20" + cmd));
+    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch.IP + "/cm?cmnd=Power%20" + cmd));
   }
 }
 
