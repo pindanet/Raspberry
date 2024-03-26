@@ -22,11 +22,11 @@ function tasmotaHeater (dev, cmd, room, heater) {
       if (output[0] == '{"POWER":"OFF"}') {
         room.heater[heater].status = "off";
         activeHeaters(room);
-        powerLog(room.heater[heater]);
+        powerLog(room.heater[heater], room.heater[heater].name);
       } else if (output[0] == '{"POWER":"ON"}') {
         room.heater[heater].status = "on";
         activeHeaters(room);
-        powerLog(room.heater[heater]);
+        powerLog(room.heater[heater], room.heater[heater].name);
       }
     }
   };
@@ -63,7 +63,12 @@ function timeDate (time, dateObject) {
   if (time.indexOf(":") > -1) {
     hourMin = time.split(':');
   } else {
-    hourMin = conf[time].split(':');
+    if (conf.hasOwnProperty(time)) {
+      hourMin = conf[time].split(':');
+    } else {
+      dateObject.setTime(window[time].getTime());
+      return dateObject;
+    }
   }
 //  var hourMin = splitTime (time);
   dateObject.setHours(hourMin[0], hourMin[1], 0, 0);
