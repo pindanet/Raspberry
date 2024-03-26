@@ -45,55 +45,57 @@
        {
          "dev": "Apotheek",
          "begin": "22:24",
-         "end": "bedtime"
+         "end": "bedTime"
+       },
+       {
+         "dev": "HaardLamp",
+         "begin": "eveningLightsOn",
+         "end": "bedTime"
+       },
+       {
+         "dev": "TVlamp",
+         "begin": "eveningLightsOn",
+         "end": "bedTime"
        }
     ]
   },
   "alarmtime": "07:30",
   "breakfastOffset": "11",
-  "switch": [
-    {
-      "name": "Haardlamp",
+  "switch": {
+    "Haardlamp": {
       "IP": "192.168.129.18",
       "Watt": "20"
     },
-    {
-      "name": "Tandenborstel",
+    "Tandenborstel": {
       "IP": "192.168.129.7",
       "Watt": "10"
     },
-    {
-      "name": "Apotheek",
+    "Apotheek": {
       "IP": "192.168.129.19",
       "Watt": "20"
     },
-    {
-      "name": "TVlamp",
+    "TVlamp": {
       "IP": "192.168.129.11",
       "Watt": "20"
     },
-    {
-      "name": "Keukenlamp",
+    "Keukenlamp": {
       "IP": "192.168.129.14",
       "Watt": "8"
     },
-    {
-      "name": "Kerst",
+    "Kerst": {
       "IP": "192.168.129.44",
       "Watt": "15"
     },
-    {
-      "name": "LivingZij",
+    "LivingZij": {
       "IP": "192.168.129.41",
       "Watt": "8"
     },
-    {
-      "name": "LivingVoor",
+    "LivingVoor": {
       "IP": "192.168.129.41",
       "Channel": "2",
       "Watt": "16"
     }
-  ],
+  },
   "Living": {
     "id": "living",
     "htmlElementId": "clockmonthday",
