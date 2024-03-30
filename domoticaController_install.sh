@@ -41,6 +41,9 @@ FULLCALENDAR="4.4.0"
 if [ $USER == "pi" ]; then
   # rotate Touchscreen
   #echo 'lcd_rotate=2' | sudo tee -a /boot/config.txt
+
+  # Enable Touchscreen brightness control for user
+  echo 'SUBSYSTEM=="backlight",RUN+="/bin/chmod 666 /sys/class/backlight/%k/brightness /sys/class/backlight/%k/bl_power"' | sudo tee -a /etc/udev/rules.d/backlight-permissions.rules
   
   # disable ethernet LED's (Raspberry Pi 3B+)
 #  echo 'dtparam=eth_led0=14' | sudo tee -a /boot/config.txt
