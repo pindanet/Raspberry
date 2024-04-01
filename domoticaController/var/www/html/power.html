@@ -26,7 +26,13 @@ console.log(powerLine);
   HTMLline += powerLine.Watt.padStart(5, '\u00A0');
   HTMLline += powerLine.status.padStart(5, '\u00A0');
   if (powerLine.status == "on" && dev[powerLine.name] == "off") {
-console.log(time[powerLine.name] - powerLine.time);
+    var onTime = time[powerLine.name] - powerLine.time;
+    var onPower = powerLine.Watt * onTime / 3600000;
+    var onPrice = onPower * price / 100000;
+console.log(onPrice);
+    HTMLline += new Date(onTime).toISOString().slice(11, 19).padStart(10, '\u00A0');
+    HTMLline += parseInt(onPower).toString().padStart(5, '\u00A0');
+    HTMLline += onPrice.toFixed(2).toString().padStart(6, '\u00A0');
   }
   dev[powerLine.name] = powerLine.status;
   time[powerLine.name] = powerLine.time;
