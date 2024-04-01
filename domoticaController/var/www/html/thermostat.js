@@ -11,7 +11,6 @@ function activeHeaters(room) {
     document.getElementById(room.htmlElementId).style.color = "";
   }
 }
-
 function tasmotaHeater (dev, cmd, room, heater) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -43,7 +42,6 @@ function getTemp(host, cmd, room) {
       if (room.id == "living") {
         roomTemp = room.temp.toFixed(1) + " °C";
       }
-//console.log(room.id, room.temp, roomTemp, room.tempCorrection, parseFloat(this.responseText) / 1000 + room.tempCorrection);
     }
   };
   xhr.send('host=' + host + '&command=' + cmd);
@@ -51,7 +49,6 @@ function getTemp(host, cmd, room) {
 function getLivingTemp() {
   getTemp("pindadomo", "cat /sys/bus/iio/devices/iio\:device0/in_temp_input", conf.Living);
 }
-//var testTemp = 17.81;
 function getDiningTemp() {
   getTemp("pindadining", "cat /sys/bus/w1/devices/28-*/temperature", conf.Dining);
 }
@@ -70,19 +67,9 @@ function timeDate (time, dateObject) {
       return dateObject;
     }
   }
-//  var hourMin = splitTime (time);
   dateObject.setHours(hourMin[0], hourMin[1], 0, 0);
-//  dateObject.setMinutes(hourMin[1]);
-//  dateObject.setSeconds(0);
   return dateObject;
 }
-//function splitTime (time) { // convert time variable to time and split hours and minutes
-//  if (time.indexOf(":") > -1) {
-//    return time.split(':');
-//  } else {
-//    return conf[time].split(':');
-//  }
-//}
 function tempAdjustment(room) {
   if (isNaN(room.temp)) {
     return;
@@ -92,19 +79,8 @@ function tempAdjustment(room) {
   var tempWanted = conf.tempOff;
   for (let i = 0; i < room.thermostat.length; i++) {
     var beginDate = timeDate(room.thermostat[i].begin, new Date());
-//    var beginTime = splitTime(room.thermostat[i].begin);
-//    var beginDate = new Date();
-//    beginDate.setHours(beginTime[0]);
-//    beginDate.setMinutes(beginTime[1]);
-//    beginDate.setSeconds(0);
     var begin = beginDate.getTime();
-//    var endTime = room.thermostat[i].end.split(':');
     var endDate = timeDate(room.thermostat[i].end, new Date());
-//    var endTime = splitTime(room.thermostat[i].end);
-//    var endDate = new Date();
-//    endDate.setHours(endTime[0]);
-//    endDate.setMinutes(endTime[1]);
-//    endDate.setSeconds(0);
     var end = endDate.getTime();
     if (begin <= now && end > now) {
       tempWanted = conf[room.thermostat[i].temp];
@@ -132,25 +108,13 @@ function tempAdjustment(room) {
       var end = endDate.getTime();
       endDate.setTime(end + expired);
       endDate = timeDate(conf.event[i].end, endDate);
-//      var endTime = splitTime(conf.event[i].end);
-//      endDate.setHours(endTime[0]);
-//      endDate.setMinutes(endTime[1]);
-//      endDate.setSeconds(0);
-//console.log(endDate.toString());
       end = endDate.getTime();
 
       beginDate.setTime(begin);
       beginDate = timeDate(conf.event[i].begin, beginDate);
-//      var beginTime = splitTime(conf.event[i].begin);
-//      beginDate.setHours(beginTime[0]);
-//      beginDate.setMinutes(beginTime[1]);
-//console.log(beginDate.toString());
       begin = beginDate.getTime();
-//console.log("Event on " + beginDate.toString());
-//console.log("Until " + endDate.toString());
       if (begin <= now && end > now) {
         tempWanted = conf[conf.event[i].temp[room.id]];
-//console.log("Event Temp wanted: " + tempWanted);
         break;
       }
     }
@@ -186,7 +150,6 @@ function tempAdjustment(room) {
         }
       }
     }
-//console.log("On: " + tempOn, "Off: " + tempOff, "Room.temp: " + room.temp, room.heater[i].name + ": " + room.heater[i].status);
   }
 }
 function sendConf(obj) {
@@ -207,25 +170,4 @@ function thermostat() {
   getDiningTemp();
   tempAdjustment(conf.Kitchen);
   getKitchenTemp();
-  setTimeout(getConf, 60000); // Every minute
 }
-function getConf() { // Get configuration
-  const xhttp = new XMLHttpRequest();
-  xhttp.onload = function(e) {
-    if (this.status == 200) {
-      if (typeof conf === 'undefined') {
-        conf = JSON.parse(this.responseText);
-        conf.lastModified = this.getResponseHeader('Last-Modified');
-console.log("Init " + conf.lastModified);
-      } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
-        conf = JSON.parse(this.responseText);
-        conf.lastModified = this.getResponseHeader('Last-Modified');
-console.log("Modified " + conf.lastModified);
-      }
-      thermostat();
-    }
-  }
-  xhttp.open("POST", "data/conf.json");
-  xhttp.send();
-}
-getConf();
