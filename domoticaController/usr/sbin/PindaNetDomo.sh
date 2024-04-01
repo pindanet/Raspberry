@@ -440,32 +440,34 @@ do
 
 #  broadcast "heatingLiving" $heatingLiving
 
-  state="sleep"
-  if [ $heatingRoom == "on" ] || ( [[ $now < $lightevening ]] && [[ $now > $lightmorning ]] ); then
-    state="awake"
-  fi
-
-  echo "$state, $heatingRoom || ($now < $lightevening && $now > $lightmorning)"
-  if [ $state == "awake" ]; then
-    echo 0 > /sys/class/backlight/rpi_backlight/bl_power
-  #  echo 255 > /sys/class/leds/led0/brightness
-  #  echo 255 > /sys/class/leds/led1/brightness
-  else
-    # deactivate backlight touchscreen
-    echo 1 > /sys/class/backlight/rpi_backlight/bl_power
-    # disable status led's
-    echo 0 > /sys/class/leds/led0/brightness
-    echo 0 > /sys/class/leds/led1/brightness
+#  state="sleep"
+#  if [ $heatingRoom == "on" ] || ( [[ $now < $lightevening ]] && [[ $now > $lightmorning ]] ); then
+#    state="awake"
+#  fi
+#
+#  echo "$state, $heatingRoom || ($now < $lightevening && $now > $lightmorning)"
+#  if [ $state == "awake" ]; then
+#    echo 0 > /sys/class/backlight/rpi_backlight/bl_power
+#  #  echo 255 > /sys/class/leds/led0/brightness
+#  #  echo 255 > /sys/class/leds/led1/brightness
+#  else
+#    # deactivate backlight touchscreen
+#    echo 1 > /sys/class/backlight/rpi_backlight/bl_power
+#    # disable status led's
+#    echo 0 > /sys/class/leds/led0/brightness
+#    echo 0 > /sys/class/leds/led1/brightness
+#  fi
     # TV Lamp out
 #    dummy=$(wget -qO- http://$TVlamp/cm?cmnd=Power%20Off)
     # Haard Lamp out
 #    dummy=$(wget -qO- http://$Haardlamp/cm?cmnd=Power%20Off)
     # Stop Musisc Player
-    if [ -f /var/www/html/data/radio.log ]; then
-      killall mpg123 curl
+#    if [ -f /var/www/html/data/radio.log ]; then
+#      killall mpg123 curl
 #      mpc volume $TVVolume
-      rm /var/www/html/data/radio.log
-    fi
+#      rm /var/www/html/data/radio.log
+#    fi
+
 #    if [ -f /var/www/html/data/mpc.txt ]; then
 #      mpc stop
 #      mpc volume $TVVolume
@@ -481,7 +483,7 @@ do
 #    fi
 #    thermostatOff
 #    thermostatManualReset
-  fi
+##  fi
 
 # PIR detector for 1 minute
 #  starttime=$(date +"%s") # moved to start while true loop
