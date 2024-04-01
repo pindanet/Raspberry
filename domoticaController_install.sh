@@ -271,6 +271,7 @@ EOF
   echo 'dtoverlay=i2c-sensor,bme280,addr=0x77' | sudo tee -a /boot/config.txt
   
   sudo wget -O /var/www/html/tls2591.py https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/tls2591.py
+  sudo usermod -a -G i2c www-data
   
   wget https://github.com/ssjoholm/rfxcmd_gc/archive/master.zip
   unzip master.zip
