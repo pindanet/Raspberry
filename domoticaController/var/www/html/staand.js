@@ -318,7 +318,6 @@ function gotoSleep() {
           thermostatUI(event, 'Auto', 'livingtemp');
           thermostatUI(event, 'Auto', 'diningtemp');
           thermostatUI(event, 'Auto', 'kitchentemp');
-//          setTimeout(sleepLightsOut, 30000);
           radioCommand(event, 'stop', 1);
           // network leds out
         }
