@@ -10,6 +10,7 @@
   <script src='thermostat.js'></script>
   <script src='suncalc.js'></script>
   <script src='lights.js'></script>
+  <script src='lux.js'></script>
 </head>
 <body>
 <a href="#menu" onclick="wakeup();document.getElementById('miniclock').style.display = '';document.getElementById('minitemp').style.display = '';"><div onclick="radio();" id="content">
@@ -22,6 +23,7 @@
   <a href="#weather"><img class="menubutton" onclick="document.getElementById('weather').contentDocument.location.reload(true);" src="emoji/weather.svg"></a>
   <a href="#thermostatUI"><img class="menubutton" src="emoji/thermostat.svg"></a>
   <a href="#lights"><img class="menubutton" src="emoji/light_bulb.svg"></a>
+  <a><img class="menubutton" onclick="gotoSleep();" src="emoji/sleep.svg"></a>
   <!--a><img class="menubutton" onclick="lights(event);" src="emoji/light_bulb.svg"></a-->
   <!--a href="#PINform" id="pinpadmenubutton"><img class="menubutton" src="emoji/keyring.svg"></a-->
   <!--a href="#photoframe"><img class="menubutton" onclick="photoframe(event);" src="emoji/monitor.svg"></a-->
