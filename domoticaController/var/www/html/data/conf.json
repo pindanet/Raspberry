@@ -1,5 +1,10 @@
 {
   "lastModified": "auto",
+  "location": {
+    "Latitude": 51.1852,
+    "Longitude": 3.24034,
+    "Altitude": 4
+  },
   "available": [
     {
       "absent": "Afwezig",
@@ -16,6 +21,8 @@
   "tempNightTime": "06:30",
   "bedTime": "22:50",
   "hysteresis": 0.1,
+  "minBacklight": 15,
+  "maxBacklight": 110,
   "lights": {
     "lightsOut": {
       "at": "nextAlarm",
