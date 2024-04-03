@@ -117,12 +117,6 @@ function nextalarm() {
     eveningLightsOn = new Date(eveningShutterDown.getTime());
   }
 }
-//function sleepLightsOut() {
-//  for (const [key, value] of Object.entries(conf.switch)) {
-//    lightSwitch(key, "Off");
-//  }
-//  radioCommand(event, 'stop', 1);
-//}
 function lights() {
   var now = new Date().getTime();
   for (const [key, value] of Object.entries(conf.switch)) { // reset switch commands
@@ -148,5 +142,4 @@ function lights() {
       }
     }
   }
-   setTimeout(lights, 60000);
 }
