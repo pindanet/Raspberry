@@ -100,7 +100,7 @@ function nextalarm() {
   }
   setTimeout(wakeup, nextAlarm.getTime() - today.getTime()); // activate backlight Touchscreen at nextAlarm
 
-  var sunTimes = SunCalc.getTimes(nextAlarm, 51.2, 3.3, 5);
+  var sunTimes = SunCalc.getTimes(nextAlarm, conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
   morningTimerLightsOut = new Date(nextAlarm.getTime() + (conf.lights.lightsOut.Offset * 60000)); // 79 min (1 hour 19 min) after wakeup
   breakfast = new Date(nextAlarm.getTime() + (conf.breakfastOffset * 60000)); // 11 min after nextAlarm
   if (morningTimerLightsOut.getTime() > sunTimes.sunrise.getTime()) { // Sun shines
@@ -109,7 +109,7 @@ function nextalarm() {
     morningLightsOut = new Date(sunTimes.sunrise.getTime());
   }
 
-  sunTimes = SunCalc.getTimes(new Date(), 51.2, 3.3, 5);
+  sunTimes = SunCalc.getTimes(new Date(), conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
   var eveningShutterDown = timeDate(conf.lights.eveningShutterDown, eveningShutterDown = new Date());
   if (eveningShutterDown.getTime() > sunTimes.sunset.getTime()) { // Already dark
     eveningLightsOn = new Date(sunTimes.sunset.getTime());
