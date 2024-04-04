@@ -100,6 +100,7 @@ function tempAdjustment(room) {
     if (conf.event[i].repeat > 0) { // repeating event
       while (begin < dateOnly) {
         begin += 86400000 * conf.event[i].repeat;
+        begin = new Date(begin).setHours(0); // Compensate Daylight Saving
       }
     }
     if (begin == dateOnly) {
@@ -115,6 +116,7 @@ function tempAdjustment(room) {
       begin = beginDate.getTime();
       if (begin <= now && end > now) {
         tempWanted = conf[conf.event[i].temp[room.id]];
+//console.log(conf.event[i].temp[room.id]);
         break;
       }
     }
