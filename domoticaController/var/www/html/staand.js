@@ -23,7 +23,8 @@ var LivingZijDev = "192.168.129.41"
 function calcConf() {// Calculated Configuration
   var now = new Date();
   var hourMin = conf.available[0].sleeptime.split(":");
-  conf.available[0].sleepdate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourMin[0], hourMin[1], 0, 0);
+  // one minute later before temporary freezing the light control
+  conf.available[0].sleepdate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourMin[0], hourMin[1] + 1, 0, 0);
   if (conf.available[0].sleepdate - now < 0) {
     conf.available[0].sleepdate.setDate(conf.available[0].sleepdate.getDate()+1);
   }
