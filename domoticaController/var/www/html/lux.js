@@ -9,6 +9,12 @@ function brightness() {
     const output = JSON.parse(this.responseText);
     lux = parseFloat(output[0]);
 console.log("Omgevingslicht: " + lux);
+    setTimeout(() => {
+      var xhr = new XMLHttpRequest(); // write lux
+      xhr.open('POST', "cli.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.send("cmd=echo&params="+stringToHex(lux + " > /var/www/html/data/luxtls"));
+    }, "1000");
     var xhr = new XMLHttpRequest();
     xhr.open('POST', "cli.php", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -21,7 +27,7 @@ console.log("Omgevingslicht: " + lux);
           var xhr = new XMLHttpRequest(); // write luxmax
           xhr.open('POST', "cli.php", true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          xhr.send("cmd=echo&params="+stringToHex(luxmax + " > /var/www/html/data/luxmax"));
+          xhr.send("cmd=echo&params="+stringToHex(luxmax + " > /var/www/html/data/luxmaxtls"));
         }
         luxmin = 0;
 console.log("Maximaal gemeten omgevingslicht: " + luxmax);
@@ -73,6 +79,10 @@ console.log("CorrectionTable Relatief omgevingslicht: " + correctionTableBrightn
             const output = JSON.parse(this.responseText);
             current = output[0];
 console.log("Brightness from " + current + " to " + backlight);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', "cli.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("cmd=echo&params="+stringToHex(backlight + " > /sys/class/backlight/rpi_backlight/brightness"));
           }
         };
         xhr.send("cmd=cat&params="+stringToHex("/sys/class/backlight/rpi_backlight/brightness"));
