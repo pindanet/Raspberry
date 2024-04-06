@@ -287,41 +287,41 @@ EOF
   # enable picamera
   
   sudo wget -O /var/www/html/data/thermostat https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/data/thermostat
-  sudo wget -O /usr/sbin/PindaNetDomo.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetDomo.sh
-  sudo chmod +x /usr/sbin/PindaNetDomo.sh
-  cat > PindaNetDomo.service <<EOF
-[Unit]
-Description=PindaNetDomotica
-Wants=network-online.target
-After=network.target network-online.target
-[Service]
-ExecStart=/usr/sbin/PindaNetDomo.sh
-Restart=always
-RestartSec=60
-[Install]
-WantedBy=multi-user.target
-EOF
-  sudo mv PindaNetDomo.service /etc/systemd/system/
-  sudo systemctl daemon-reload
-  sudo systemctl enable PindaNetDomo.service
+#  sudo wget -O /usr/sbin/PindaNetDomo.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetDomo.sh
+#  sudo chmod +x /usr/sbin/PindaNetDomo.sh
+#  cat > PindaNetDomo.service <<EOF
+#[Unit]
+#Description=PindaNetDomotica
+#Wants=network-online.target
+#After=network.target network-online.target
+#[Service]
+#ExecStart=/usr/sbin/PindaNetDomo.sh
+#Restart=always
+#RestartSec=60
+#[Install]
+#WantedBy=multi-user.target
+#EOF
+#  sudo mv PindaNetDomo.service /etc/systemd/system/
+#  sudo systemctl daemon-reload
+#  sudo systemctl enable PindaNetDomo.service
 
-  sudo wget -O /usr/sbin/PindaNetLights.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetLights.sh
-  sudo chmod +x /usr/sbin/PindaNetLights.sh
-  cat > PindaNetLights.service <<EOF
-[Unit]
-Description=PindaNetDomotica Lights
-Wants=network-online.target
-After=network.target network-online.target
-[Service]
-ExecStart=/usr/sbin/PindaNetLights.sh
-Restart=always
-RestartSec=60
-[Install]
-WantedBy=multi-user.target
-EOF
-  sudo mv PindaNetLights.service /etc/systemd/system/
-  sudo systemctl daemon-reload
-  sudo systemctl enable PindaNetLights.service
+#  sudo wget -O /usr/sbin/PindaNetLights.sh https://github.com/pindanet/Raspberry/raw/master/domoticaController/usr/sbin/PindaNetLights.sh
+#  sudo chmod +x /usr/sbin/PindaNetLights.sh
+#  cat > PindaNetLights.service <<EOF
+#[Unit]
+#Description=PindaNetDomotica Lights
+#Wants=network-online.target
+#After=network.target network-online.target
+#[Service]
+#ExecStart=/usr/sbin/PindaNetLights.sh
+#Restart=always
+#RestartSec=60
+#[Install]
+#WantedBy=multi-user.target
+#EOF
+#  sudo mv PindaNetLights.service /etc/systemd/system/
+#  sudo systemctl daemon-reload
+#  sudo systemctl enable PindaNetLights.service
 
   sudo wget -O /var/www/html/sun.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/sun.sh
   sudo wget -O /var/www/html/nextalarm.sh https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/nextalarm.sh
