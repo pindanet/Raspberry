@@ -174,6 +174,7 @@ EOF
   sudo wget -O /var/www/html/staand.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/staand.js
   sudo wget -O /var/www/html/suncalc.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/suncalc.js
   sudo wget -O /var/www/html/lights.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/lights.js
+  sudo wget -O /var/www/html/lux.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/lux.js
   sudo wget -O /var/www/html/thermostat.js https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/thermostat.js
   sudo mkdir /var/www/html/emoji/
   sudo wget -O /var/www/html/emoji/medicinecabinet.png https://raw.githubusercontent.com/pindanet/Raspberry/master/domoticaController/var/www/html/emoji/medicinecabinet.png
