@@ -1,3 +1,10 @@
+// Todo
+// Radio interval
+// cli.php
+// Clean Up
+// power.html
+// config.html
+
 // define a function that converts a string to hex
 const stringToHex = (str) => {
   let hex = '';
