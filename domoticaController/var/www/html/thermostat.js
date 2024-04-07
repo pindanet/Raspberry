@@ -88,6 +88,7 @@ function tempAdjustment(room) {
     }
   }
   for (let i = 0; i < conf.event.length; i++) {
+    delete conf.eventDots;
     var nowDateOnly = new Date(now);
     nowDateOnly.setHours(0);
     nowDateOnly.setMinutes(0);
@@ -116,6 +117,7 @@ function tempAdjustment(room) {
       begin = beginDate.getTime();
       if (begin <= now && end > now) {
         tempWanted = conf[conf.event[i].temp[room.id]];
+        conf.eventDots = true;
 //console.log(conf.event[i].temp[room.id]);
         break;
       }
