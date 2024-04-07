@@ -380,7 +380,13 @@ function startTime() {
     }
   }
   document.getElementById('clockday').innerHTML = dayNames[today.getDay()] + ' ' + conf.Living.temp.toFixed(1) + " °C";;
-  document.getElementById('clock').innerHTML = h + ":" + m;
+  var eventDots = ":" ;
+  if (Object.keys(conf).includes("eventDots")) {
+    if (today.getSeconds() % 2 == 0) {
+      eventDots = '<span style="visibility:hidden">:</span>';
+    }
+  }
+  document.getElementById('clock').innerHTML = h + eventDots + m;
   document.getElementById('miniclock').innerHTML = h + ":" + m;
   document.getElementById('minitemp').innerHTML = conf.Living.temp.toFixed(1) + " °C";;
   var radioApp = getApp("radio");
