@@ -273,11 +273,11 @@
   "event": [
     {
       "repeat": 0,
-      "begindate": "2023-03-24",
-      "begin": "08:30",
+      "begindate": "2024-04-07",
+      "begin": "17:30",
       "alarm": "07:29",
-      "enddate": "2023-03-24",
-      "end": "11:50",
+      "enddate": "2024-04-07",
+      "end": "18:20",
       "temp": {
         "living": "tempComfort",
         "dining": "tempAux",
@@ -363,5 +363,42 @@
       },
       "comment": "ACCB"
     }
-  ]
+  ],
+  "radio": {
+    "volume": 70,
+    "channel": {
+       "radio1": {
+          "URL": "http://icecast.vrtcdn.be/radio1-high.mp3",
+          "interval": 8192
+       },
+       "radio2": {
+          "URL": "http://icecast.vrtcdn.be/ra2wvl-high.mp3",
+          "interval": 8192
+       },
+       "klara": {
+          "URL": "http://icecast.vrtcdn.be/klara-high.mp3",
+          "interval": 8192
+       },
+       "klaracontinuo": {
+          "URL": "http://icecast.vrtcdn.be/klaracontinuo-high.mp3",
+          "interval": 8192
+       },
+       "stubru": {
+          "URL": "http://icecast.vrtcdn.be/stubru-high.mp3",
+          "interval": 8192
+       },
+       "mnm": {
+          "URL": "http://icecast.vrtcdn.be/mnm-high.mp3",
+          "interval": 8192
+       },
+       "mnmhits": {
+          "URL": "http://icecast.vrtcdn.be/mnm_hits-high.mp3",
+          "interval": 8192
+       },
+       "vrtnws": {
+          "URL": "http://progressive-audio.vrtcdn.be/content/fixed/11_11niws-snip_hi.mp3",
+          "interval": 16000
+       }
+    }
+  }
 }
