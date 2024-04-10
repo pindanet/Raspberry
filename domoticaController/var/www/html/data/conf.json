@@ -398,6 +398,30 @@
        "vrtnws": {
           "URL": "http://progressive-audio.vrtcdn.be/content/fixed/11_11niws-snip_hi.mp3",
           "interval": 16000
+       },
+       "ketnet": {
+          "URL": "http://icecast.vrtcdn.be/ketnetradio-high.mp3",
+          "interval": 8192
+       },
+       "crooze": {
+          "URL": "http://streams.crooze.fm:8000",
+          "interval": 8192
+       },
+       "vbro": {
+          "URL": "http://stream.vbro.be:9100/vbro",
+          "interval": 16384
+       },
+       "joe": {
+          "URL": "https://streams.radio.dpgmedia.cloud/redirect/joe_fm/mp3",
+          "interval": 1024
+       },
+       "qmusic": {
+          "URL": "https://streams.radio.dpgmedia.cloud/redirect/qmusic_be/mp3",
+          "interval": 1024
+       },
+       "willy": {
+          "URL": "https://streams.radio.dpgmedia.cloud/redirect/willy_be/mp3",
+          "interval": 1024
        }
     }
   }
