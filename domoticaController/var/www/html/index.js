@@ -32,43 +32,45 @@ function calcConf() {// Calculated Configuration
   var hourMin = conf.available[0].sleeptime.split(":");
   // one minute later before temporary freezing the light control
   conf.available[0].sleepdate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourMin[0], parseInt(hourMin[1]) + 1, 0, 0);
-  hourMin = conf.available[0].absenttime.split(":");
-  conf.available[0].absentdate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourMin[0], hourMin[1], 0, 0);
-  if (conf.available[0].absentdate - now < 0) {
-    conf.available[0].absentdate.setDate(conf.available[0].absentdate.getDate()+1);
+  if (typeof conf.available[0].absenttime !== 'undefined') {
+    hourMin = conf.available[0].absenttime.split(":");
+    conf.available[0].absentdate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourMin[0], hourMin[1], 0, 0);
+    if (conf.available[0].absentdate - now < 0) {
+      conf.available[0].absentdate.setDate(conf.available[0].absentdate.getDate()+1);
+    }
   }
 }
-function getThermostatVar(varname) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "data/thermostat", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function () {
-    var position = this.responseText.search(varname + "=");
-    if (position > -1) {
-      var thermostatVar = parseFloat(this.responseText.substring(position + varname.length + 1));
-      if (varname == "TVVolume") {
-        radioCommand(event, 'setvol', thermostatVar);
-      } else if (varname == "RadioVolume") {
-        radioCommand(event, 'setvol', thermostatVar);
-      }
-    }
-  };
-  xhr.send();
-}
-function photoframe(event) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "system.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function() {
-    if (this.readyState === 4) {
-      var img = new Image();
-      img.src = this.responseText;
-      document.getElementById("photoframe").src = this.responseText;
-    }
-  };
-  xhr.send("command=photoframe");
-  event.stopPropagation();
-}
+//function getThermostatVar(varname) {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "data/thermostat", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function () {
+//    var position = this.responseText.search(varname + "=");
+//    if (position > -1) {
+//      var thermostatVar = parseFloat(this.responseText.substring(position + varname.length + 1));
+//      if (varname == "TVVolume") {
+//        radioVolume(event, thermostatVar);
+//      } else if (varname == "RadioVolume") {
+//        radioVolume(event, thermostatVar);
+//      }
+//    }
+//  };
+//  xhr.send();
+//}
+//function photoframe(event) {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "system.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function() {
+//    if (this.readyState === 4) {
+//      var img = new Image();
+//      img.src = this.responseText;
+//      document.getElementById("photoframe").src = this.responseText;
+//    }
+//  };
+//  xhr.send("command=photoframe");
+//  event.stopPropagation();
+//}
 function os(event, command) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "system.php", true);
@@ -77,41 +79,41 @@ function os(event, command) {
   event.stopPropagation();
 }
 // PinPad
-function addNumber(event, element){
-  document.getElementById('PINbox').value = document.getElementById('PINbox').value+element.value;
-  event.stopPropagation();
-}
-function clearForm(event){
-  document.getElementById('PINbox').value = "";
-  event.stopPropagation();
-}
-function submitForm(event) {
-  if (document.getElementById('PINbox').value != "") {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', "openssl.php", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onload = function(e) {
-      if (this.status == 200) {
-        if (! this.responseText.includes("Password hash:")) {
-          document.getElementById("hiddenmenu").style.display = "";
-          document.getElementById("pinpadmenubutton").style.display = "none";
-          location.href = "#menu";
-        } else {
-          document.getElementById("hiddenmenu").style.display = "none";
-          document.getElementById("pinpadmenubutton").style.display = "";
-          location.href = "#menu";
-        }
-        event.stopPropagation();
-      }
-    };
-    xhr.send("IGTzbhSjRf=" + btoa(document.getElementById('PINbox').value));
-  } else {
-    document.getElementById("hiddenmenu").style.display = "none";
-    document.getElementById("pinpadmenubutton").style.display = "";
-    location.href = "#menu";
-  }
-  event.stopPropagation();
-}
+//function addNumber(event, element){
+//  document.getElementById('PINbox').value = document.getElementById('PINbox').value+element.value;
+//  event.stopPropagation();
+//}
+//function clearForm(event){
+//  document.getElementById('PINbox').value = "";
+//  event.stopPropagation();
+//}
+//function submitForm(event) {
+//  if (document.getElementById('PINbox').value != "") {
+//    var xhr = new XMLHttpRequest();
+//    xhr.open('POST', "openssl.php", true);
+//    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//    xhr.onload = function(e) {
+//      if (this.status == 200) {
+//        if (! this.responseText.includes("Password hash:")) {
+//          document.getElementById("hiddenmenu").style.display = "";
+//          document.getElementById("pinpadmenubutton").style.display = "none";
+//          location.href = "#menu";
+//        } else {
+//          document.getElementById("hiddenmenu").style.display = "none";
+//          document.getElementById("pinpadmenubutton").style.display = "";
+//          location.href = "#menu";
+//        }
+//        event.stopPropagation();
+//      }
+//    };
+//    xhr.send("IGTzbhSjRf=" + btoa(document.getElementById('PINbox').value));
+//  } else {
+//    document.getElementById("hiddenmenu").style.display = "none";
+//    document.getElementById("pinpadmenubutton").style.display = "";
+//    location.href = "#menu";
+//  }
+//  event.stopPropagation();
+//}
 // End PinPad
 
 function thermostatUI (event, command, id) {
@@ -233,54 +235,149 @@ function weather(event) {
   event.stopPropagation();
 }
 
-var radioStatusInterval;
+//var radioStatusInterval;
 function radio(event) {
-  radioCommand(event, 'getvol', 1);
-  radioCommand(event, 'status', 1);
-  radioStatusInterval = setInterval(function () { radioCommand(event, 'status', 1); }, 60000); // Elke minuut
+  radioVolume(event, 'getvol');
+  radioStatus();
+//  radioStatusInterval = setInterval(function () { radioStatus(); }, 60000); // Elke minuut
 }
-function radioCommand(event, command, options) {
-  if ( command == "volup" ) {
-    if ( parseInt(document.getElementById("volumeinfo").innerHTML) == 100 ) { // Maximun Volume
-      if (typeof event !== 'undefined') {
-        event.stopPropagation();
-      }
-      return;
-    }
-  }
+function radioStop(event) {
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', "mpc.php", true);
+  xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200) {
-      if (command == "getvol") {
-        document.getElementById("volumeinfo").innerHTML = this.responseText;
-      } else {
-        var element = document.getElementById("radioinfo")
-        if (element == null || typeof(element) == 'undefinedd') {
-          clearInterval(radioStatusInterval);
-        } else {
-          document.getElementById("radioinfo").innerHTML = this.responseText;
-          if (command == "volup" || command == "voldown") {
-            radioCommand(event, 'getvol', 1);
-          }
-        }
-      }
-    }
-  };
-  xhr.send("command=" + command + "&options=" + options);
-  if (command == "play") {
-    document.getElementById("radioinfo").innerHTML = "Even geduld, de zender wordt opgehaald...";
-  } else if (command == "stop") {
-    window.scrollTo(0, 0);
-    document.getElementById('miniclock').style.display = 'none';
-    document.getElementById('minitemp').style.display = 'none';
-    getThermostatVar("TVVolume");
-  }
+  xhr.send("cmd=rm&params="+stringToHex("/var/www/html/data/radio.log; killall mpg123 curl"));
+  window.scrollTo(0, 0);
+  document.getElementById('miniclock').style.display = 'none';
+  document.getElementById('minitemp').style.display = 'none';
+  radioVolume(event, conf.tvvolume);
   if (typeof event !== 'undefined') {
     event.stopPropagation();
   }
 }
+function radioVolume(event, command) {
+  if (typeof event !== 'undefined') {
+    event.stopPropagation();
+  }
+  switch(command) {
+    case "getvol":
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "cli.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function(e) {
+        if (this.status == 200) {
+          const output = JSON.parse(this.responseText);
+          document.getElementById("volumeinfo").innerHTML = parseInt(output[0]);
+        }
+      };
+      xhr.send("cmd=amixer&params="+stringToHex("get 'Digital' | awk -F'[][]' '/Left:/ { print $2 }'"));
+      break;
+    case "volup":
+      if ( parseInt(document.getElementById("volumeinfo").innerHTML) == 100 ) { // Maximun Volume
+        return;
+      }
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "cli.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function(e) {
+        if (this.status == 200) {
+          const output = JSON.parse(this.responseText);
+          document.getElementById("volumeinfo").innerHTML = parseInt(output[0]);
+        }
+      };
+      xhr.send("cmd=amixer&params="+stringToHex("set 'Digital' 5%+ | awk -F'[][]' '/Left:/ { print $2 }'"));
+      break;
+    case "voldown":
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "cli.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function(e) { 
+        if (this.status == 200) {
+          const output = JSON.parse(this.responseText);
+          document.getElementById("volumeinfo").innerHTML = parseInt(output[0]);
+        }
+      };
+      xhr.send("cmd=amixer&params="+stringToHex("set 'Digital' 5%- | awk -F'[][]' '/Left:/ { print $2 }'"));
+      break;
+    default:
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "cli.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function(e) { 
+        if (this.status == 200) {
+          const output = JSON.parse(this.responseText);
+          document.getElementById("volumeinfo").innerHTML = parseInt(output[0]);
+        }
+      };
+      xhr.send("cmd=amixer&params="+stringToHex("set 'Digital' " + command + "% | awk -F'[][]' '/Left:/ { print $2 }'"));
+  }
+}
+function radioStatus() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+      const output = JSON.parse(this.responseText);
+      if (output.length > 0) {
+        document.getElementById("radioinfo").innerHTML = output[0];
+      }
+    }
+  };
+  xhr.send("cmd=cat&params="+stringToHex("/var/www/html/data/radio.log | tail -1 | cut -d \"'\" -f 2"));
+}
+function radioPlay(event, channel) {
+  if (typeof event !== 'undefined') {
+    event.stopPropagation();
+  }
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("cmd=killall&params="+stringToHex("mpg123 curl; sudo killall roc-recv;curl -H 'Icy-MetaData:1' --silent -L " + conf.radio.channel[channel].URL + " 2>&1 | mpg123 --icy-interval " + conf.radio.channel[channel].interval + " -f -12000 - 2> /var/www/html/data/radio.log"));
+  document.getElementById("radioinfo").innerHTML = "Even geduld, de zenderinformatie wordt opgehaald...";
+  setTimeout(function () { radioStatus(); }, 10000);
+}
+//function radioCommand(event, command, options) {
+//  if ( command == "volup" ) {
+//    if ( parseInt(document.getElementById("volumeinfo").innerHTML) == 100 ) { // Maximun Volume
+//      if (typeof event !== 'undefined') {
+//        event.stopPropagation();
+//      }
+//      return;
+//    }
+//  }
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "mpc.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function(e) {
+//    if (this.status == 200) {
+//      if (command == "getvol") {
+//        document.getElementById("volumeinfo").innerHTML = this.responseText;
+//      } else {
+//        var element = document.getElementById("radioinfo")
+//        if (element == null || typeof(element) == 'undefinedd') {
+//          clearInterval(radioStatusInterval);
+//        } else {
+//          document.getElementById("radioinfo").innerHTML = this.responseText;
+//          if (command == "volup" || command == "voldown") {
+//            radioCommand(event, 'getvol', 1);
+//          }
+//        }
+//      }
+//    }
+//  };
+//  xhr.send("command=" + command + "&options=" + options);
+//  if (command == "play") {
+//    document.getElementById("radioinfo").innerHTML = "Even geduld, de zender wordt opgehaald...";
+//  } else if (command == "stop") {
+//    window.scrollTo(0, 0);
+//    document.getElementById('miniclock').style.display = 'none';
+//    document.getElementById('minitemp').style.display = 'none';
+//    getThermostatVar("TVVolume");
+//  }
+//  if (typeof event !== 'undefined') {
+//    event.stopPropagation();
+//  }
+//}
 
 var startTimer;
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
@@ -323,7 +420,7 @@ function gotoSleep() {
           thermostatUI(event, 'Auto', 'livingtemp');
           thermostatUI(event, 'Auto', 'diningtemp');
           thermostatUI(event, 'Auto', 'kitchentemp');
-          radioCommand(event, 'stop', 1);
+          radioStop(event);
           // network leds out
         }
       };
@@ -379,9 +476,11 @@ function startTime() {
         elem.style.fontSize = "70%";
         thermostatUI(event, 'Manual', 'livingtemp');
       }
-    } else if (conf.available[0].absentdate - today < 0) {
-        conf.available[0].absentdate.setDate(conf.available[0].absentdate.getDate()+1);
-        document.getElementById("clockyear").click();
+    } else if (typeof conf.available[0].absentdate !== 'undefined') {
+      if (conf.available[0].absentdate - today < 0) {
+          conf.available[0].absentdate.setDate(conf.available[0].absentdate.getDate()+1);
+          document.getElementById("clockyear").click();
+      }
     } else {
       document.getElementById("clockyear").innerHTML = today.getFullYear();
     }
@@ -564,7 +663,6 @@ function tempAdjustment(room) {
       if (begin <= now && end > now) {
         tempWanted = conf[conf.event[i].temp[room.id]];
         conf.eventDots = true;
-//console.log(conf.event[i].temp[room.id]);
         break;
       }
     }
@@ -778,7 +876,6 @@ function brightness() {
   xhr.onload = function(e) {
     const output = JSON.parse(this.responseText);
     lux = parseFloat(output[0]);
-console.log("Omgevingslicht: " + lux);
     setTimeout(() => {
       var xhr = new XMLHttpRequest(); // write lux
       xhr.open('POST', "cli.php", true);
@@ -800,8 +897,6 @@ console.log("Omgevingslicht: " + lux);
           xhr.send("cmd=echo&params="+stringToHex(luxmax + " > /var/www/html/data/luxmaxtls"));
         }
         luxmin = 0;
-console.log("Maximaal gemeten omgevingslicht: " + luxmax);
-console.log("Minimaal gemeten omgevingslicht: " + luxmin);
         var rangelux = luxmax - luxmin;
         var rellux = (lux - luxmin) / rangelux;
         var correction = [65535, 65508, 65479, 65451, 65422, 65394, 65365, 65337,
@@ -839,7 +934,6 @@ console.log("Minimaal gemeten omgevingslicht: " + luxmin);
         var correctionTableIndex = parseInt(255 - (rellux * 255));
         var correctionTableValue = correction[correctionTableIndex];
         var correctionTableBrightness = correctionTableValue / correction[0];
-console.log("CorrectionTable Relatief omgevingslicht: " + correctionTableBrightness);
         var backlight = parseInt(conf.minBacklight + correctionTableBrightness * conf.maxBacklight); // 15, 110
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "cli.php", true);
@@ -848,7 +942,6 @@ console.log("CorrectionTable Relatief omgevingslicht: " + correctionTableBrightn
           if (this.status == 200) {
             const output = JSON.parse(this.responseText);
             current = output[0];
-console.log("Brightness from " + current + " to " + backlight);
             var xhr = new XMLHttpRequest();
             xhr.open('POST', "cli.php", true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
