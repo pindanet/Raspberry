@@ -10,7 +10,7 @@
       "absent": "Afwezig",
       "sleep": "Slapen",
       "sleeptime": "22:24",
-      "absenttime": "13:30"
+      "disabled_absenttime": "13:30"
     }
   ],
   "tempIncrDecr": 0.5,
@@ -287,6 +287,19 @@
     },
     {
       "repeat": 0,
+      "begindate": "2024-04-17",
+      "begin": "11:25",
+      "enddate": "2024-04-17",
+      "end": "19:45",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
+      },
+      "comment": "Roos"
+    },
+    {
+      "repeat": 0,
       "begindate": "2024-02-20",
       "begin": "11:45",
       "enddate": "2024-02-20",
@@ -364,6 +377,7 @@
       "comment": "ACCB"
     }
   ],
+  "tvvolume": 70,
   "radio": {
     "volume": 70,
     "channel": {
@@ -397,7 +411,7 @@
        },
        "vrtnws": {
           "URL": "http://progressive-audio.vrtcdn.be/content/fixed/11_11niws-snip_hi.mp3",
-          "interval": 16000
+          "interval": 0
        },
        "ketnet": {
           "URL": "http://icecast.vrtcdn.be/ketnetradio-high.mp3",
