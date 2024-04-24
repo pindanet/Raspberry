@@ -106,7 +106,6 @@
     "temp": 20,
     "tempCorrection": -2.5,
     "mode": "Auto",
-    "ManualId": "",
     "heater": [
       {
         "name": "Schilderij",
@@ -160,7 +159,6 @@
     "temp": 20,
     "tempCorrection": 0.5,
     "mode": "Auto",
-    "ManualId": "",
     "tempOffset": "0",
     "subtitleColor": "white",
     "heater": [
@@ -236,7 +234,6 @@
     "temp": 20,
     "tempCorrection": -0.2,
     "mode": "Auto",
-    "ManualId": "",
     "tempOffset": "0",
     "heater": [
       {
@@ -288,12 +285,12 @@
     {
       "repeat": 0,
       "begindate": "2024-04-17",
-      "begin": "11:25",
+      "begin": "11:20",
       "enddate": "2024-04-17",
       "end": "19:45",
       "temp": {
-        "living": "tempAux",
-        "dining": "tempAux",
+        "living": "tempOff",
+        "dining": "tempOff",
         "kitchen": "tempOff"
       },
       "comment": "Roos"
