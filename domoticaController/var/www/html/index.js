@@ -1,5 +1,4 @@
 // Todo
-// Radio interval
 // cli.php
 // Clean Up
 // power.html
@@ -19,15 +18,22 @@ const stringToHex = (str) => {
 };
 
 var tempIncrDecr = 0.5;
-var ChristmasLightDev = "192.168.129.44";
-var TVlampDev = "192.168.129.11";
-var HaardlampDev = "192.168.129.18";
-var KitchenLightDev = "192.168.129.14"
-var PharmacyLightDev = "192.168.129.19"
-var LivingVoorDev = "192.168.129.41:2"
-var LivingZijDev = "192.168.129.41"
+//var ChristmasLightDev = "192.168.129.44";
+//var TVlampDev = "192.168.129.11";
+//var HaardlampDev = "192.168.129.18";
+//var KitchenLightDev = "192.168.129.14"
+//var PharmacyLightDev = "192.168.129.19"
+//var LivingVoorDev = "192.168.129.41:2"
+//var LivingZijDev = "192.168.129.41"
 
-function calcConf() {// Calculated Configuration
+function calcConf() { // Calculated Configuration
+  // Set Thermostat UI
+  document.getElementById("livingaux").innerHTML = conf.tempAux.toFixed(1);
+  document.getElementById("diningaux").innerHTML = conf.tempAux.toFixed(1);
+  document.getElementById("livingtemp").innerHTML = conf.tempComfort.toFixed(1);
+  document.getElementById("livingtemp").innerHTML = conf.tempComfort.toFixed(1);
+  document.getElementById("kitchentemp").innerHTML = conf.tempAux.toFixed(1);
+  // Calculated Configuration
   var now = new Date();
   var hourMin = conf.available[0].sleeptime.split(":");
   // one minute later before temporary freezing the light control
@@ -71,13 +77,13 @@ function calcConf() {// Calculated Configuration
 //  xhr.send("command=photoframe");
 //  event.stopPropagation();
 //}
-function os(event, command) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "system.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("command=" + command);
-  event.stopPropagation();
-}
+//function os(event, command) {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "system.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.send("command=" + command);
+//  event.stopPropagation();
+//}
 // PinPad
 //function addNumber(event, element){
 //  document.getElementById('PINbox').value = document.getElementById('PINbox').value+element.value;
@@ -133,76 +139,122 @@ function thermostatUI (event, command, id) {
     case "Manual":
     case "Auto":
     case "Off":
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', "ssh.php", true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.onload = function() {
-        if (this.readyState === 4) {
-          setThermostatUI(event);
-        }
-      };
-      var temp = document.getElementById(id).innerHTML;
+      var room;
+      if (id.indexOf("temp") > -1) {
+        room = id.charAt(0).toUpperCase() + id.slice(1).substr(0, id.indexOf("temp") - 1);
+      } else {
+        room = id.charAt(0).toUpperCase() + id.slice(1).substr(0, id.indexOf("aux") - 1);
+      }
+      conf[room].mode = command;
+      conf[room].tempManual = parseFloat(document.getElementById(id).innerHTML);
+//      conf[room].ManualId = id;
       if (command == "Off") {
-        temp = "off";
+        conf[room].tempManual = conf.tempOff;
+        conf[room].mode = "Manual";
       }
-      sshcommand = 'echo ' + temp + ' > /tmp/thermostatManual';
-      if (command == "Auto") {
-        sshcommand = 'rm /tmp/thermostatManual';
-      }
-    if (id == "kitchentemp") {
-      xhr.send("command=" + sshcommand + "&host=pindakeuken");
-      conf.Kitchen.mode = command;
-      conf.Kitchen.ManualId = id;
-    } else if (id.substr(0, 6) == "dining") {
-      xhr.send("command=" + sshcommand + "&host=pindadining");
-      conf.Dining.mode = command;
-      conf.Dining.ManualId = id;
-    } else {
-      xhr.send("command=" + sshcommand + "&host=localhost");
-      conf.Living.mode = command;
-      conf.Living.ManualId = id;
-    }
+      setThermostatUI(event);
+//      var xhr = new XMLHttpRequest();
+//      xhr.open('POST', "ssh.php", true);
+//      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//      xhr.onload = function() {
+//        if (this.readyState === 4) {
+//          setThermostatUI(event);
+//        }
+//      };
+//      var temp = document.getElementById(id).innerHTML;
+//      if (command == "Off") {
+//        temp = "off";
+//      }
+//      sshcommand = 'echo ' + temp + ' > /tmp/thermostatManual';
+//      if (command == "Auto") {
+//        sshcommand = 'rm /tmp/thermostatManual';
+//      }
+//    if (id == "kitchentemp") {
+//      xhr.send("command=" + sshcommand + "&host=pindakeuken");
+//      conf.Kitchen.mode = command;
+//      conf.Kitchen.ManualId = id;
+//    } else if (id.substr(0, 6) == "dining") {
+//      xhr.send("command=" + sshcommand + "&host=pindadining");
+//      conf.Dining.mode = command;
+//      conf.Dining.ManualId = id;
+//    } else {
+//      xhr.send("command=" + sshcommand + "&host=localhost");
+//      conf.Living.mode = command;
+//      conf.Living.ManualId = id;
+//    }
     break;
   }
 }
 function getThermostatManual (id, host) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "ssh.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function() {
-    if (this.readyState === 4) {
-      if (this.responseText.length == 0) {
-        document.getElementById(id+"Auto").className = "highlight";
-        document.getElementById(id+"Manual").className = "";
-        if (id != "kitchen") {
-          document.getElementById(id+"ManualAux").className = "";
-        }
-        document.getElementById(id+"Off").className = "";
-      } else if (this.responseText == "off\n") {
-        document.getElementById(id+"Auto").className = "";
-        document.getElementById(id+"Manual").className = "";
-        if (id != "kitchen") {
-          document.getElementById(id+"ManualAux").className = "";
-        }
+  var room = id.charAt(0).toUpperCase() + id.slice(1);
+  switch(conf[room].mode) {
+    case "Auto":
+      document.getElementById(id+"Auto").className = "highlight";
+      document.getElementById(id+"Manual").className = "";
+      if (id != "kitchen") {
+        document.getElementById(id+"ManualAux").className = "";
+      }
+      document.getElementById(id+"Off").className = "";
+      break;
+    default: // Manual
+      document.getElementById(id+"Auto").className = "";
+      var auxElem =  document.getElementById(id+"aux");
+      if (conf[room].tempManual.toFixed(1) == conf.tempOff) { // Off
         document.getElementById(id+"Off").className = "highlight";
-      } else {
-        document.getElementById(id+"Auto").className = "";
+      } else { // Manual
         document.getElementById(id+"Off").className = "";
-        if (parseFloat(this.responseText).toFixed(1) == document.getElementById(id+"temp").innerHTML) {
-          if (id != "kitchen") {
+        if (typeof(auxElem) != 'undefined' && auxElem != null) {  // not the kitchen
+          if (conf.tempAux.toFixed(1) == conf[room].tempManual.toFixed(1)) { // Aux temp
+            document.getElementById(id+"Manual").className = "";
+            document.getElementById(id+"ManualAux").className = "highlight";
+          } else {
+            document.getElementById(id+"Manual").className = "highlight";
             document.getElementById(id+"ManualAux").className = "";
           }
+        } else { // kitchen
           document.getElementById(id+"Manual").className = "highlight";
-          document.getElementById(id+"temp").innerHTML = parseFloat(this.responseText).toFixed(1);
-        } else {
-          document.getElementById(id+"Manual").className = "";
-          document.getElementById(id+"ManualAux").className = "highlight";
-          document.getElementById(id+"aux").innerHTML = parseFloat(this.responseText).toFixed(1);
         }
       }
-    }
-  };
-  xhr.send('host=' + host + '&command=cat /tmp/thermostatManual');
+      break;
+  }
+// Oude code
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "ssh.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function() {
+//    if (this.readyState === 4) {
+//      if (this.responseText.length == 0) {
+//        document.getElementById(id+"Auto").className = "highlight";
+//        document.getElementById(id+"Manual").className = "";
+//        if (id != "kitchen") {
+//          document.getElementById(id+"ManualAux").className = "";
+//        }
+//        document.getElementById(id+"Off").className = "";
+//      } else if (this.responseText == "off\n") {
+//        document.getElementById(id+"Auto").className = "";
+//        document.getElementById(id+"Manual").className = "";
+//        if (id != "kitchen") {
+//          document.getElementById(id+"ManualAux").className = "";
+//        }
+//        document.getElementById(id+"Off").className = "highlight";
+//      } else {
+//        document.getElementById(id+"Auto").className = "";
+//        document.getElementById(id+"Off").className = "";
+//        if (parseFloat(this.responseText).toFixed(1) == document.getElementById(id+"temp").innerHTML) {
+//          if (id != "kitchen") {
+//            document.getElementById(id+"ManualAux").className = "";
+//          }
+//          document.getElementById(id+"Manual").className = "highlight";
+//          document.getElementById(id+"temp").innerHTML = parseFloat(this.responseText).toFixed(1);
+//        } else {
+//          document.getElementById(id+"Manual").className = "";
+//          document.getElementById(id+"ManualAux").className = "highlight";
+//          document.getElementById(id+"aux").innerHTML = parseFloat(this.responseText).toFixed(1);
+//        }
+//      }
+//    }
+//  };
+//  xhr.send('host=' + host + '&command=cat /tmp/thermostatManual');
 }
 
 function setThermostatUI (event) {
@@ -439,7 +491,7 @@ function toggleAvailable(event) {
     case conf.available[0].sleep:
       // Get next Sleepdate
       conf.available[0].sleepdate.setDate(conf.available[0].sleepdate.getDate()+1);
-      var timeoutTime = Math.max(30000, timeDate(conf.bedTime, new Date()).getTime() - new Date().getTime());
+      var timeoutTime = Math.max(30000, timeDate(conf.bedTime, new Date()).getTime() - new Date().getTime() + 30000);
       setTimeout(gotoSleep, timeoutTime);
     case conf.available[0].absent:
       var today = new Date();
@@ -670,7 +722,8 @@ function tempAdjustment(room) {
 
 // Manual temp
   if (room.mode == "Manual") {
-    tempWanted = parseFloat(document.getElementById(room.ManualId).innerHTML);
+    tempWanted = room.tempManual;
+//    tempWanted = parseFloat(document.getElementById(room.ManualId).innerHTML);
   } else if (room.mode == "Off") {
     tempWanted = conf.tempOff;
   }
