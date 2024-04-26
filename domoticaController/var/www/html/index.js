@@ -275,17 +275,17 @@ function powerLog(dev, name) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.send("cmd=echo&params="+stringToHex("'" + JSON.stringify(logLine) + "' >> data/power.log"));
 }
-function weather(event) {
-  var xhrforecast = new XMLHttpRequest();
-  xhrforecast.open('POST', "weather.php", true);
-  xhrforecast.onload = function(e) {
-    if (this.status == 200) {
-      document.getElementById("weather").innerHTML = this.responseText;
-    }
-  };
-  xhrforecast.send();
-  event.stopPropagation();
-}
+//function weather(event) {
+//  var xhrforecast = new XMLHttpRequest();
+//  xhrforecast.open('POST', "weather.php", true);
+//  xhrforecast.onload = function(e) {
+//    if (this.status == 200) {
+//      document.getElementById("weather").innerHTML = this.responseText;
+//    }
+//  };
+//  xhrforecast.send();
+//  event.stopPropagation();
+//}
 
 //var radioStatusInterval;
 function radio(event) {
@@ -630,18 +630,19 @@ function tasmotaHeater (dev, cmd, room, heater) {
 }
 function getTemp(host, cmd, room) {
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', "ssh.php", true);
+  xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
-      room.temp = parseFloat(this.responseText) / 1000 + room.tempCorrection;
+      const output = JSON.parse(this.responseText);
+      room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
       document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
       if (room.id == "living") {
         roomTemp = room.temp.toFixed(1) + " °C";
       }
     }
   };
-  xhr.send('host=' + host + '&command=' + cmd);
+  xhr.send("cmd=ssh&params="+stringToHex("-v -i data/id_rsa -o StrictHostKeyChecking=no -o 'UserKnownHostsFile /dev/null' $(ls /home)@" +  host +" '" + cmd + "'"));
 }
 function getLivingTemp() {
   getTemp("pindadomo", "cat /sys/bus/iio/devices/iio\:device0/in_temp_input", conf.Living);
