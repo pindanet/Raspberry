@@ -21,18 +21,9 @@
   <a href="#thermostatUI"><img class="menubutton" src="emoji/thermostat.svg"></a>
   <a href="#lights"><img class="menubutton" src="emoji/light_bulb.svg"></a>
   <a><img class="menubutton" onclick="gotoSleep();" src="emoji/sleep.svg"></a>
-  <!--a><img class="menubutton" onclick="lights(event);" src="emoji/light_bulb.svg"></a-->
-  <!--a href="#PINform" id="pinpadmenubutton"><img class="menubutton" src="emoji/keyring.svg"></a-->
-  <!--a href="#photoframe"><img class="menubutton" onclick="photoframe(event);" src="emoji/monitor.svg"></a-->
-  <!--a href="index.html"><img class="menubutton" src="emoji/calendar.svg"></a-->
   <a href="javascript:location.reload();scroll(0,0)"><img class="menubutton" src="emoji/refresh.svg"></a>
-  <!--span id="hiddenmenu" style="display: none;"-->
-    <img class="menubutton" onclick="clearTimeout(startTimer);os(event,'reboot');" src="emoji/reboot.svg">
-    <img class="menubutton" onclick="clearTimeout(startTimer);os(event,'halt');" src="emoji/shutdown.svg">
-    <!--a href="index.html"><img class="menubutton" src="emoji/calendar.svg"></a-->
-  <!--/span-->
-  <!--a href="index.html"><object class="menubutton" data="emoji/calendar.svg"></object></a-->
-  <!--a href="#top"><div style="overflow: hidden; display: inline-block; margin-bottom: -2px;"><object style="height: 100px; pointer-events: none;" data="emoji/calendar.svg"></object></div></a-->
+  <img class="menubutton" onclick="clearTimeout(startTimer);os(event,'reboot');" src="emoji/reboot.svg">
+  <img class="menubutton" onclick="clearTimeout(startTimer);os(event,'halt');" src="emoji/shutdown.svg">
 </div>
 <div id="radio">
   <h1><img src="emoji/radio.svg">His Master's Voice</h1>
@@ -74,7 +65,7 @@
     <h1><img src="emoji/thermostat.svg"> Dining <span id="diningRoomTemp">--.- °C</span></h1>
     <button id="diningAuto" onclick="thermostatUI(event, 'Auto', 'diningtemp');">Auto</button>
     <button id="diningOff" onclick="thermostatUI(event, 'Off', 'diningtemp');">Uit</button>
-    <button id="diningManualAux" onclick="thermostatUI(event, 'Manual', 'diningaux');"><span id="diningaux">17.5</span> °C</button>
+    <button id="diningManualAux" onclick="thermostatUI(event, 'Manual', 'diningaux');"><span id="diningaux">17.0</span> °C</button>
     <button id="diningManual" onclick="thermostatUI(event, 'Manual', 'diningtemp');"><span id="diningtemp">20.0</span> °C</button>
     <button onclick="thermostatUI(event, 'Incr', 'diningtemp');">+</button>
     <button onclick="thermostatUI(event, 'Decr', 'diningtemp');">-</button>
@@ -89,21 +80,6 @@
   </div>
 </div>
 <iframe id="weather" src="meteogram/meteogram.html" height="480" width="800" style="border:none; padding: 0; margin: 0;"></iframe>
-<!--form action="" method="" name="PINform" id="PINform" autocomplete="off">
-  <input id="PINbox" value="" name="PINbox" disabled="" type="password"><br>
-  <input class="PINbutton" name="1" value="1" id="1" onclick="addNumber(event, this);" type="button">
-  <input class="PINbutton" name="2" value="2" id="2" onclick="addNumber(event, this);" type="button">
-  <input class="PINbutton" name="3" value="3" id="3" onclick="addNumber(event,this);" type="button">
-  <input class="PINbutton" name="4" value="4" id="4" onclick="addNumber(event,this);" type="button">
-  <input class="PINbutton" name="5" value="5" id="5" onclick="addNumber(event,this);" type="button"><br>
-  <input class="PINbutton" name="6" value="6" id="6" onclick="addNumber(event,this);" type="button">
-  <input class="PINbutton" name="7" value="7" id="7" onclick="addNumber(event,this);" type="button">
-  <input class="PINbutton" name="8" value="8" id="8" onclick="addNumber(event,this);" type="button">
-  <input class="PINbutton" name="9" value="9" id="9" onclick="addNumber(event,this);" type="button">
-  <input class="PINbutton" name="0" value="0" id="0" onclick="addNumber(event,this);" type="button"><br>
-  <input class="button clear" name="-" value="Clear" id="-" onclick="clearForm(event);" type="button">&nbsp;&nbsp;&nbsp;
-  <input class="button enter" name="+" value="Enter" id="+" onclick="submitForm(event);" type="button">
-</form-->
 <div id="lights">
   <h1><img src="emoji/light_bulb.svg">Verlichting</h1>
   <figure>
@@ -135,29 +111,7 @@
     <img onclick="lightSwitch('LivingZij','Toggle');" src="emoji/ledlampzij.svg">
      <figcaption>Living Zij</figcaption>
   </figure>
-  <!--img onclick="radioCommand(event, 'play', 2);" src="radiologos/radio2.svg">
-  <img onclick="radioCommand(event, 'play', 3);" src="radiologos/klara.svg">
-  <img onclick="radioCommand(event, 'play', 4);" src="radiologos/klaracontinuo.png">
-  <img onclick="radioCommand(event, 'play', 5);" src="radiologos/stubru.svg">
-  <img onclick="radioCommand(event, 'play', 6);" src="radiologos/mnm.svg">
-  <img onclick="radioCommand(event, 'play', 7);" src="radiologos/mnmhits.svg">
-  <img onclick="radioCommand(event, 'play', 8);" src="radiologos/vrtnws.svg">
-  <img onclick="radioCommand(event, 'play', 9);" src="radiologos/ketnet.svg">
-  <img onclick="radioCommand(event, 'play', 10);" src="radiologos/crooze.png">
-  <img onclick="radioCommand(event, 'play', 11);" src="radiologos/vbro.png">
-  <img onclick="radioCommand(event, 'play', 12);" src="radiologos/joe.svg">
-  <img onclick="radioCommand(event, 'play', 13);" src="radiologos/qmusic.svg">
-  <img onclick="radioCommand(event, 'play', 14);" src="radiologos/willy.svg">
-  <br>
-  <button onclick="clearInterval(radioStatusInterval); radioCommand(event, 'stop', 1);">Stop</button>
-  <button onclick="radioCommand(event, 'voldown', 1);">V-</button>
-  <span class="terminalbox" style="text-align: center; font-size: 30px; padding: 15px; font-weight: bold; margin-right: 5px;" id="volu$
-  <button onclick="radioCommand(event, 'volup', 1);">V+</button>
-  <br>
-  <p class="terminalbox" style="text-align: center; display: inline-block; max-width: 736px;" id="radioinfo"></p-->
 </div>
-
-<img id="photoframe" onload="location.href = "#photoframe";">
 <div id="miniclock" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('minitemp').style.display = 'none';" style="display:none">20:00</div>
 <div id="minitemp" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('miniclock').style.display = 'none';" style="display:none">20.0</div>
 </body>
