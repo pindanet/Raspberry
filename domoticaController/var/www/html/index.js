@@ -1,9 +1,9 @@
 // Todo
-// cli.php
 // Clean Up
 // power.html
 // config.html
 
+var tempIncrDecr = 0.5;
 // define a function that converts a string to hex
 const stringToHex = (str) => {
   let hex = '';
@@ -16,16 +16,6 @@ const stringToHex = (str) => {
   }
   return hex;
 };
-
-var tempIncrDecr = 0.5;
-//var ChristmasLightDev = "192.168.129.44";
-//var TVlampDev = "192.168.129.11";
-//var HaardlampDev = "192.168.129.18";
-//var KitchenLightDev = "192.168.129.14"
-//var PharmacyLightDev = "192.168.129.19"
-//var LivingVoorDev = "192.168.129.41:2"
-//var LivingZijDev = "192.168.129.41"
-
 function calcConf() { // Calculated Configuration
   // Set Thermostat UI
   document.getElementById("livingaux").innerHTML = conf.tempAux.toFixed(1);
@@ -46,82 +36,6 @@ function calcConf() { // Calculated Configuration
     }
   }
 }
-//function getThermostatVar(varname) {
-//  var xhr = new XMLHttpRequest();
-//  xhr.open('POST', "data/thermostat", true);
-//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//  xhr.onload = function () {
-//    var position = this.responseText.search(varname + "=");
-//    if (position > -1) {
-//      var thermostatVar = parseFloat(this.responseText.substring(position + varname.length + 1));
-//      if (varname == "TVVolume") {
-//        radioVolume(event, thermostatVar);
-//      } else if (varname == "RadioVolume") {
-//        radioVolume(event, thermostatVar);
-//      }
-//    }
-//  };
-//  xhr.send();
-//}
-//function photoframe(event) {
-//  var xhr = new XMLHttpRequest();
-//  xhr.open('POST', "system.php", true);
-//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//  xhr.onload = function() {
-//    if (this.readyState === 4) {
-//      var img = new Image();
-//      img.src = this.responseText;
-//      document.getElementById("photoframe").src = this.responseText;
-//    }
-//  };
-//  xhr.send("command=photoframe");
-//  event.stopPropagation();
-//}
-//function os(event, command) {
-//  var xhr = new XMLHttpRequest();
-//  xhr.open('POST', "system.php", true);
-//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//  xhr.send("command=" + command);
-//  event.stopPropagation();
-//}
-// PinPad
-//function addNumber(event, element){
-//  document.getElementById('PINbox').value = document.getElementById('PINbox').value+element.value;
-//  event.stopPropagation();
-//}
-//function clearForm(event){
-//  document.getElementById('PINbox').value = "";
-//  event.stopPropagation();
-//}
-//function submitForm(event) {
-//  if (document.getElementById('PINbox').value != "") {
-//    var xhr = new XMLHttpRequest();
-//    xhr.open('POST', "openssl.php", true);
-//    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//    xhr.onload = function(e) {
-//      if (this.status == 200) {
-//        if (! this.responseText.includes("Password hash:")) {
-//          document.getElementById("hiddenmenu").style.display = "";
-//          document.getElementById("pinpadmenubutton").style.display = "none";
-//          location.href = "#menu";
-//        } else {
-//          document.getElementById("hiddenmenu").style.display = "none";
-//          document.getElementById("pinpadmenubutton").style.display = "";
-//          location.href = "#menu";
-//        }
-//        event.stopPropagation();
-//      }
-//    };
-//    xhr.send("IGTzbhSjRf=" + btoa(document.getElementById('PINbox').value));
-//  } else {
-//    document.getElementById("hiddenmenu").style.display = "none";
-//    document.getElementById("pinpadmenubutton").style.display = "";
-//    location.href = "#menu";
-//  }
-//  event.stopPropagation();
-//}
-// End PinPad
-
 function thermostatUI (event, command, id) {
   switch (command) {
     case "Incr":
@@ -147,41 +61,11 @@ function thermostatUI (event, command, id) {
       }
       conf[room].mode = command;
       conf[room].tempManual = parseFloat(document.getElementById(id).innerHTML);
-//      conf[room].ManualId = id;
       if (command == "Off") {
         conf[room].tempManual = conf.tempOff;
         conf[room].mode = "Manual";
       }
       setThermostatUI(event);
-//      var xhr = new XMLHttpRequest();
-//      xhr.open('POST', "ssh.php", true);
-//      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//      xhr.onload = function() {
-//        if (this.readyState === 4) {
-//          setThermostatUI(event);
-//        }
-//      };
-//      var temp = document.getElementById(id).innerHTML;
-//      if (command == "Off") {
-//        temp = "off";
-//      }
-//      sshcommand = 'echo ' + temp + ' > /tmp/thermostatManual';
-//      if (command == "Auto") {
-//        sshcommand = 'rm /tmp/thermostatManual';
-//      }
-//    if (id == "kitchentemp") {
-//      xhr.send("command=" + sshcommand + "&host=pindakeuken");
-//      conf.Kitchen.mode = command;
-//      conf.Kitchen.ManualId = id;
-//    } else if (id.substr(0, 6) == "dining") {
-//      xhr.send("command=" + sshcommand + "&host=pindadining");
-//      conf.Dining.mode = command;
-//      conf.Dining.ManualId = id;
-//    } else {
-//      xhr.send("command=" + sshcommand + "&host=localhost");
-//      conf.Living.mode = command;
-//      conf.Living.ManualId = id;
-//    }
     break;
   }
 }
@@ -217,46 +101,7 @@ function getThermostatManual (id, host) {
       }
       break;
   }
-// Oude code
-//  var xhr = new XMLHttpRequest();
-//  xhr.open('POST', "ssh.php", true);
-//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//  xhr.onload = function() {
-//    if (this.readyState === 4) {
-//      if (this.responseText.length == 0) {
-//        document.getElementById(id+"Auto").className = "highlight";
-//        document.getElementById(id+"Manual").className = "";
-//        if (id != "kitchen") {
-//          document.getElementById(id+"ManualAux").className = "";
-//        }
-//        document.getElementById(id+"Off").className = "";
-//      } else if (this.responseText == "off\n") {
-//        document.getElementById(id+"Auto").className = "";
-//        document.getElementById(id+"Manual").className = "";
-//        if (id != "kitchen") {
-//          document.getElementById(id+"ManualAux").className = "";
-//        }
-//        document.getElementById(id+"Off").className = "highlight";
-//      } else {
-//        document.getElementById(id+"Auto").className = "";
-//        document.getElementById(id+"Off").className = "";
-//        if (parseFloat(this.responseText).toFixed(1) == document.getElementById(id+"temp").innerHTML) {
-//          if (id != "kitchen") {
-//            document.getElementById(id+"ManualAux").className = "";
-//          }
-//          document.getElementById(id+"Manual").className = "highlight";
-//          document.getElementById(id+"temp").innerHTML = parseFloat(this.responseText).toFixed(1);
-//        } else {
-//          document.getElementById(id+"Manual").className = "";
-//          document.getElementById(id+"ManualAux").className = "highlight";
-//          document.getElementById(id+"aux").innerHTML = parseFloat(this.responseText).toFixed(1);
-//        }
-//      }
-//    }
-//  };
-//  xhr.send('host=' + host + '&command=cat /tmp/thermostatManual');
 }
-
 function setThermostatUI (event) {
   getThermostatManual("living", "localhost");
   getThermostatManual("dining", "pindadining");
@@ -275,23 +120,9 @@ function powerLog(dev, name) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.send("cmd=echo&params="+stringToHex("'" + JSON.stringify(logLine) + "' >> data/power.log"));
 }
-//function weather(event) {
-//  var xhrforecast = new XMLHttpRequest();
-//  xhrforecast.open('POST', "weather.php", true);
-//  xhrforecast.onload = function(e) {
-//    if (this.status == 200) {
-//      document.getElementById("weather").innerHTML = this.responseText;
-//    }
-//  };
-//  xhrforecast.send();
-//  event.stopPropagation();
-//}
-
-//var radioStatusInterval;
 function radio(event) {
   radioVolume(event, 'getvol');
   radioStatus();
-//  radioStatusInterval = setInterval(function () { radioStatus(); }, 60000); // Elke minuut
 }
 function radioStop(event) {
   var xhr = new XMLHttpRequest();
@@ -388,49 +219,6 @@ function radioPlay(event, channel) {
   document.getElementById("radioinfo").innerHTML = "Even geduld, de zenderinformatie wordt opgehaald...";
   setTimeout(function () { radioStatus(); }, 10000);
 }
-//function radioCommand(event, command, options) {
-//  if ( command == "volup" ) {
-//    if ( parseInt(document.getElementById("volumeinfo").innerHTML) == 100 ) { // Maximun Volume
-//      if (typeof event !== 'undefined') {
-//        event.stopPropagation();
-//      }
-//      return;
-//    }
-//  }
-//  var xhr = new XMLHttpRequest();
-//  xhr.open('POST', "mpc.php", true);
-//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//  xhr.onload = function(e) {
-//    if (this.status == 200) {
-//      if (command == "getvol") {
-//        document.getElementById("volumeinfo").innerHTML = this.responseText;
-//      } else {
-//        var element = document.getElementById("radioinfo")
-//        if (element == null || typeof(element) == 'undefinedd') {
-//          clearInterval(radioStatusInterval);
-//        } else {
-//          document.getElementById("radioinfo").innerHTML = this.responseText;
-//          if (command == "volup" || command == "voldown") {
-//            radioCommand(event, 'getvol', 1);
-//          }
-//        }
-//      }
-//    }
-//  };
-//  xhr.send("command=" + command + "&options=" + options);
-//  if (command == "play") {
-//    document.getElementById("radioinfo").innerHTML = "Even geduld, de zender wordt opgehaald...";
-//  } else if (command == "stop") {
-//    window.scrollTo(0, 0);
-//    document.getElementById('miniclock').style.display = 'none';
-//    document.getElementById('minitemp').style.display = 'none';
-//    getThermostatVar("TVVolume");
-//  }
-//  if (typeof event !== 'undefined') {
-//    event.stopPropagation();
-//  }
-//}
-
 var startTimer;
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
@@ -439,7 +227,6 @@ function checkTime(i) {
   return i;
 }
 var app = {radio:false, thermostatUI:false};
-
 function getApp(id) {
   var el = document.getElementById(id);
   var top = el.offsetTop;
@@ -644,15 +431,6 @@ function getTemp(host, cmd, room) {
   };
   xhr.send("cmd=ssh&params="+stringToHex("-v -i data/id_rsa -o StrictHostKeyChecking=no -o 'UserKnownHostsFile /dev/null' $(ls /home)@" +  host +" '" + cmd + "'"));
 }
-function getLivingTemp() {
-  getTemp("pindadomo", "cat /sys/bus/iio/devices/iio\:device0/in_temp_input", conf.Living);
-}
-function getDiningTemp() {
-  getTemp("pindadining", "cat /sys/bus/w1/devices/28-*/temperature", conf.Dining);
-}
-function getKitchenTemp() {
-  getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
-}
 function timeDate (time, dateObject) {
   var hourMin;
   if (time.indexOf(":") > -1) {
@@ -724,7 +502,6 @@ function tempAdjustment(room) {
 // Manual temp
   if (room.mode == "Manual") {
     tempWanted = room.tempManual;
-//    tempWanted = parseFloat(document.getElementById(room.ManualId).innerHTML);
   } else if (room.mode == "Off") {
     tempWanted = conf.tempOff;
   }
@@ -754,24 +531,27 @@ function tempAdjustment(room) {
     }
   }
 }
-function sendConf(obj) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', "sendConf.php", true);
-    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    xhr.onload = function(e) {
-      if (this.status == 200) {
-        conf = JSON.parse(this.responseText);
-      }
-    };
-    xhr.send(JSON.stringify(obj, null, 2));
-}
+//function sendConf(obj) {
+//    var xhr = new XMLHttpRequest();
+//    xhr.open('POST', "sendConf.php", true);
+//    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+//    xhr.onload = function(e) {
+//      if (this.status == 200) {
+//        conf = JSON.parse(this.responseText);
+//      }
+//    };
+//    xhr.send(JSON.stringify(obj, null, 2));
+//}
 function thermostat() {
   tempAdjustment(conf.Living);
-  getLivingTemp();
+// getLivingTemp
+  getTemp("pindadomo", "cat /sys/bus/iio/devices/iio\:device0/in_temp_input", conf.Living);
   tempAdjustment(conf.Dining);
-  getDiningTemp();
+// getDiningTemp
+  getTemp("pindadining", "cat /sys/bus/w1/devices/28-*/temperature", conf.Dining);
   tempAdjustment(conf.Kitchen);
-  getKitchenTemp();
+// getKitchenTemp
+  getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
 }
 // Lights
 var sunTimes;
@@ -1009,4 +789,3 @@ function brightness() {
   };
   xhr.send("cmd=python3&params="+stringToHex("/var/www/html/tls2591.py"));
 }
-
