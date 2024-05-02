@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PindaDomo Power log</title>
+</head>
+<body style="font-family: monospace;">
+<div id="errors"  style="font-weight: bold; color: red"></div>
+<div id="log">Bezig met het inlezen van het logboek...</div>
+<script>
+var price = 30 // per kWh in centimen
+var dev = {};
+var time = {};
+function processLine(line, index) {
+  var powerLine;
+  try {
+    powerLine = JSON.parse(line);
+  } catch {
+    document.getElementById("errors").innerHTML += 'Invalid logLine ' + index + "</br>"
+    return;
+  }
+console.log(powerLine);
+  const event = new Date(powerLine.time);
+  var HTMLline = event.toLocaleString();
+  HTMLline += powerLine.name.padStart(15, '\u00A0');
+  HTMLline += powerLine.Watt.padStart(5, '\u00A0');
+  HTMLline += powerLine.status.padStart(5, '\u00A0');
+  if (powerLine.status == "on" && dev[powerLine.name] == "off") {
+    var onTime = time[powerLine.name] - powerLine.time;
+    var onPower = powerLine.Watt * onTime / 3600000;
+    var onPrice = onPower * price / 100000;
+console.log(onPrice);
+    HTMLline += new Date(onTime).toISOString().slice(11, 19).padStart(10, '\u00A0');
+    HTMLline += parseInt(onPower).toString().padStart(5, '\u00A0');
+    HTMLline += onPrice.toFixed(2).toString().padStart(6, '\u00A0');
+  }
+  dev[powerLine.name] = powerLine.status;
+  time[powerLine.name] = powerLine.time;
+  HTMLline += "</br>";
+  document.getElementById("log").innerHTML += HTMLline;
+}
+// https://stackoverflow.com/questions/71983227/how-to-read-a-text-file-line-by-line-in-javascript
+async function* makeTextFileLineIterator(fileURL) {
+  const utf8Decoder = new TextDecoder("utf-8");
+  let response = await fetch(fileURL);
+  let reader = response.body.getReader();
+  let { value: chunk, done: readerDone } = await reader.read();
+  chunk = chunk ? utf8Decoder.decode(chunk, { stream: true }) : "";
+
+  const re = /\r\n|\n|\r/gm;
+  let startIndex = 0;
+
+  for (;;) {
+    const result = re.exec(chunk);
+    if (!result) {
+      if (readerDone) {
+        break;
+      }
+      const remainder = chunk.substr(startIndex);
+      ({ value: chunk, done: readerDone } = await reader.read());
+      chunk =
+        remainder + (chunk ? utf8Decoder.decode(chunk, { stream: true }) : "");
+      startIndex = re.lastIndex = 0;
+      continue;
+    }
+    yield chunk.substring(startIndex, result.index);
+    startIndex = re.lastIndex;
+  }
+  if (startIndex < chunk.length) {
+    // last line didn't end in a newline char
+    yield chunk.substr(startIndex);
+  }
+}
+
+for await (let line of makeTextFileLineIterator("./data/power.log")) {
+  console.log(line);
+}
+/*
+const xhttp = new XMLHttpRequest();
+xhttp.onload = function(e) {
+  if (this.status == 200) {
+    const lines = this.responseText.split('\n');
+    for (let index = lines.length - 2; index >= 0; index--) {
+      processLine(lines[index], index);
+    }
+console.log(dev);
+  }
+}
+xhttp.open("POST", "data/power.log");
+xhttp.send();
+*/
+</script>
+</body>
+</html>
