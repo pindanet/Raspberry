@@ -22,8 +22,8 @@
   <a href="#lights"><img class="menubutton" src="emoji/light_bulb.svg"></a>
   <a><img class="menubutton" onclick="gotoSleep();" src="emoji/sleep.svg"></a>
   <a href="javascript:location.reload();scroll(0,0)"><img class="menubutton" src="emoji/refresh.svg"></a>
-  <img class="menubutton" onclick="clearTimeout(startTimer);os(event,'reboot');" src="emoji/reboot.svg">
-  <img class="menubutton" onclick="clearTimeout(startTimer);os(event,'halt');" src="emoji/shutdown.svg">
+  <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -r now');" src="emoji/reboot.svg">
+  <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -h now');" src="emoji/shutdown.svg">
 </div>
 <div id="radio">
   <h1><img src="emoji/radio.svg">His Master's Voice</h1>
@@ -36,7 +36,7 @@
   <img onclick="radioPlay(event, 'mnmhits');" src="radiologos/mnmhits.svg">
   <img onclick="radioPlay(event, 'vrtnws');" src="radiologos/vrtnws.svg">
   <img onclick="radioPlay(event, 'ketnet');" src="radiologos/ketnet.svg">
-  <img onclick="radioPlay(event, 'crooze');" src="radiologos/crooze.png">
+  <img onclick="radioPlay(event, 'smoothjazz');" src="radiologos/smoothjazz.png">
   <img onclick="radioPlay(event, 'vbro');" src="radiologos/vbro.png">
   <img onclick="radioPlay(event, 'joe');" src="radiologos/joe.svg">
   <img onclick="radioPlay(event, 'qmusic');" src="radiologos/qmusic.svg">
