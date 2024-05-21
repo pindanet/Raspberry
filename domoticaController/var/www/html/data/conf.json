@@ -414,9 +414,9 @@
           "URL": "http://icecast.vrtcdn.be/ketnetradio-high.mp3",
           "interval": 8192
        },
-       "crooze": {
-          "URL": "http://streams.crooze.fm:8000",
-          "interval": 8192
+       "swissjazz": {
+          "URL": "http://stream.srg-ssr.ch/m/rsj/mp3_128",
+          "interval": 16000
        },
        "vbro": {
           "URL": "http://stream.vbro.be:9100/vbro",
