@@ -9,15 +9,14 @@
 <div id="log">Bezig met het inlezen van het logboek...</div>
 <?php
 // ToDo
-// reverse power.log > power.rev
+// 
 
 $price = 32; // per kWh in centimen
 $processDay = 0;
 $processToday = 0;
 
 function processLine($powerline) {
-  $datetime = explode(" ", date("d m Y H m s", $powerline["time"] / 1000));
-//  echo $GLOBALS['processDay'] . " " . $datetime[0] . "<br>";
+  $datetime = explode(" ", date("d m Y H i s", $powerline["time"] / 1000));
   if($GLOBALS['processDay'] <> $datetime[0]) {
     if($GLOBALS['processDay'] <> 0) {
       $GLOBALS['processToday'] = 1;
@@ -25,15 +24,25 @@ function processLine($powerline) {
     $GLOBALS['processDay'] = $datetime[0];
     echo "New day: " . $GLOBALS['processDay'] . "<br>";
   }
+  if($powerline["status"] == "Off") {
+    $GLOBALS[$powerline["name"]] = $powerline["time"];
+  } else if (isset($GLOBALS[$powerline["name"]])) {
+// https://www.tutorialspoint.com/how-to-calculate-the-difference-between-two-dates-in-php
+    $minutes = round(($GLOBALS[$powerline["name"]] - $powerline["time"]) / 60000);
+echo date("d/m/Y H:i:s", $powerline["time"] / 1000) . " to " . date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000) . " " . $minutes . " minutes<br>";
+    unset($GLOBALS[$powerline["name"]]);
+  }
   if($GLOBALS['processToday'] == 0) {
-//  var_dump($powerline);
-    echo date("d/m/Y H:m:s", $powerline["time"] / 1000) . "<br>";
+    echo date("d/m/Y H:i:s", $powerline["time"] / 1000) . " " . $powerline["Watt"] . " " . $powerline["name"] . " " . $powerline["status"] . " " . $GLOBALS[$powerline["name"]] . "<br>";
+// var_dump($powerline);
   }
 }
+// Reverse power.log
+exec("tac data/power.log > data/power.rev ", $output, $return);
 
-$file = fopen("data/power.log", "r");
+$file = fopen("data/power.rev", "r");
 // Iterator Number
-$i = 0; 
+$i = 0;
 if($file){
     // If file is open
     while(($line=fgets($file)) !== false){
