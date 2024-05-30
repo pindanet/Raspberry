@@ -16,6 +16,14 @@ const stringToHex = (str) => {
   }
   return hex;
 };
+function debug(debugText) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("cmd=echo&params="+stringToHex("'" + new Date().toString() + ": " + debugText + "' >> data/debug.log"));
+}
+debug("Debug active");
+
 function calcConf() { // Calculated Configuration
   // Set Thermostat UI
   document.getElementById("livingaux").innerHTML = conf.tempAux.toFixed(1);
@@ -108,6 +116,12 @@ function setThermostatUI (event) {
   getThermostatManual("kitchen", "pindakeuken");
 
   document.getElementById('livingRoomTemp').innerHTML = conf.Living.temp.toFixed(1) + " °C";
+}
+function cli(cmd, params) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("cmd=" + cmd + "&params="+stringToHex(params));
 }
 function powerLog(dev, name) {
   const d = new Date();
@@ -313,7 +327,7 @@ function startTime() {
       if (elem.innerHTML != conf.available[0].sleep) {
         elem.innerHTML = conf.available[0].sleep;
         elem.style.fontSize = "70%";
-        thermostatUI(event, 'Manual', 'livingtemp');
+//        thermostatUI(event, 'Manual', 'livingtemp');
       }
     } else if (typeof conf.available[0].absentdate !== 'undefined') {
       if (conf.available[0].absentdate - today < 0) {
@@ -512,6 +526,15 @@ function tempAdjustment(room) {
       tempWanted = conf.tempNight;
     }
   }
+  if (document.getElementById("clockyear").innerHTML == conf.available[0].sleep) { // Sleeptime: keep temp
+    if (typeof room.sleepTemp !== 'undefined') {
+      tempWanted = room.sleepTemp;
+    } else {
+      room.sleepTemp = tempWanted;
+    }
+  } else { // Store Sleeptime temp
+    room.sleepTemp = tempWanted;
+  }
 // Heaters On/Off
   for (let i = 0; i < room.heater.length; i++) {
     if (room.heater[i].status != "off" && room.heater[i].status != "on") { // Initialise heater status
@@ -552,6 +575,11 @@ function thermostat() {
   tempAdjustment(conf.Kitchen);
 // getKitchenTemp
   getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
+  if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort)) {
+    document.getElementById("clockday").style.color="lime";
+  } else {
+    document.getElementById("clockday").style.color="";
+  }
 }
 // Lights
 var sunTimes;
@@ -693,6 +721,7 @@ function lights() {
     } else {
       if (! Object.keys(conf.switch[key]).includes("manual")) {
         if (conf.switch[key].cmd != conf.switch[key].status) {
+debug(JSON.stringify(conf.switch[key]));
           lightSwitch(key, conf.switch[key].cmd);
         }
       }
