@@ -1,4 +1,5 @@
 // Todo
+// Alarm Temperature
 // Clean Up
 // power.html
 // config.html
@@ -16,13 +17,13 @@ const stringToHex = (str) => {
   }
   return hex;
 };
-function debug(debugText) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("cmd=echo&params="+stringToHex("'" + new Date().toString() + ": " + debugText + "' >> data/debug.log"));
-}
-debug("Debug active");
+//function debug(debugText) {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "cli.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.send("cmd=echo&params="+stringToHex("'" + new Date().toString() + ": " + debugText + "' >> data/debug.log"));
+//}
+//debug("Debug active");
 
 function calcConf() { // Calculated Configuration
   // Set Thermostat UI
@@ -446,15 +447,17 @@ function getTemp(host, cmd, room) {
   xhr.send("cmd=ssh&params="+stringToHex("-v -i data/id_rsa -o StrictHostKeyChecking=no -o 'UserKnownHostsFile /dev/null' $(ls /home)@" +  host +" '" + cmd + "'"));
 }
 function timeDate (time, dateObject) {
-  var hourMin;
+  var hourMin = [];
   if (time.indexOf(":") > -1) {
     hourMin = time.split(':');
   } else {
     if (conf.hasOwnProperty(time)) {
       hourMin = conf[time].split(':');
     } else {
-      dateObject.setTime(window[time].getTime());
-      return dateObject;
+      var varDate = new Date();
+      varDate.setTime(window[time].getTime());
+      hourMin[0] = varDate.getHours();
+      hourMin[1] = varDate.getMinutes();
     }
   }
   dateObject.setHours(hourMin[0], hourMin[1], 0, 0);
@@ -587,7 +590,7 @@ var nextAlarm;
 var breakfast;
 var morningLightsOut;
 var eveningLightsOn;
-var bedTime;
+//var bedTime;
 function lightSwitch(name, cmd) {
   var tasmotaSwitch = conf.switch[name];
   var xhr = new XMLHttpRequest();
@@ -711,6 +714,7 @@ function lights() {
     var begin = beginDate.getTime();
     var endDate = timeDate(conf.lights.timer[i].end, new Date());
     var end = endDate.getTime();
+
     if (begin <= now && end > now) {
       conf.switch[conf.lights.timer[i].dev].cmd = "On";
     }
@@ -721,7 +725,6 @@ function lights() {
     } else {
       if (! Object.keys(conf.switch[key]).includes("manual")) {
         if (conf.switch[key].cmd != conf.switch[key].status) {
-debug(JSON.stringify(conf.switch[key]));
           lightSwitch(key, conf.switch[key].cmd);
         }
       }
