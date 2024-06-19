@@ -1,4 +1,5 @@
 // Todo
+// Sleep Manual temp
 // Alarm Temperature
 // Clean Up
 // power.html
@@ -73,6 +74,9 @@ function thermostatUI (event, command, id) {
       if (command == "Off") {
         conf[room].tempManual = conf.tempOff;
         conf[room].mode = "Manual";
+      }
+      if (document.getElementById("clockyear").innerHTML == conf.available[0].sleep) { //overrule sleep temp
+        conf[room].sleepTemp = conf[room].tempManual;
       }
       setThermostatUI(event);
     break;
