@@ -41,11 +41,6 @@
          "end": "morningLightsOut"
        },
        {
-         "dev": "Apotheek",
-         "begin": "breakfast",
-         "end": "morningLightsOut"
-       },
-       {
          "dev": "Tandenborstel",
          "begin": "16:00",
          "end": "22:15"
@@ -372,6 +367,20 @@
         "kitchen": "tempOff"
       },
       "comment": "ACCB"
+    },
+    {
+      "repeat": 0,
+      "begindate": "2025-05-26",
+      "begin": "08:40",
+      "alarm": "07:00",
+      "enddate": "2025-05-26",
+      "end": "09:40",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
+      },
+      "comment": "Tandarts"
     }
   ],
   "tvvolume": 70,
