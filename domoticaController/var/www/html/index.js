@@ -1,5 +1,4 @@
 // Todo
-// Sleep Manual temp
 // Alarm Temperature
 // Clean Up
 // power.html
@@ -295,9 +294,16 @@ function toggleAvailable(event) {
   var elem = document.getElementById("clockyear");
   switch(elem.innerHTML) {
     case conf.available[0].sleep:
-      // Get next Sleepdate
+      var sleepdate = new Date(conf.available[0].sleepdate);
+//console.log(sleepdate);
+//var testdate = new Date();
+//testdate.setTime(testdate.getTime() + (+1*60*60*1000));
+//console.log(testdate);
+      // Set next Sleepdate
       conf.available[0].sleepdate.setDate(conf.available[0].sleepdate.getDate()+1);
-      var timeoutTime = Math.max(30000, timeDate(conf.bedTime, new Date()).getTime() - new Date().getTime() + 30000);
+//      var timeoutTime = Math.max(30000, timeDate(conf.bedTime, new Date()).getTime() - new Date().getTime() + 30000);
+      var timeoutTime = Math.max(30000, sleepdate.getTime() - new Date().getTime() + 30000);
+//console.log(timeoutTime);
       setTimeout(gotoSleep, timeoutTime);
     case conf.available[0].absent:
       var today = new Date();
