@@ -5,8 +5,6 @@
   <title>PindaDomo Power log</title>
 </head>
 <body style="font-family: monospace;white-space: pre;">
-<div id="errors"  style="font-weight: bold; color: red"></div>
-<div id="log">Bezig met het inlezen van het logboek...</div>
 <?php
 // ToDo
 // 
@@ -20,7 +18,7 @@ function processLine($powerline) {
   $datetime = explode(" ", date("d m Y G i s l", $powerline["time"] / 1000));
   if($GLOBALS['processDay'] <> $datetime[0]) {
     if($GLOBALS['processDay'] <> 0) {
-      echo "Dagtotaal: " . $GLOBALS['processDaykWh'] . "<br>";
+      echo "Dagtotaal: " . round($GLOBALS['processDaykWh'], 3) . " kWh, " . round($GLOBALS['processDaykWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
       $GLOBALS['processDaykWh'] = 0;
       $GLOBALS['processToday'] = 1;
       echo "Dag: " . $datetime[6] . " " . $datetime[0] . "<br>";
@@ -35,6 +33,7 @@ function processLine($powerline) {
 // https://www.tutorialspoint.com/how-to-calculate-the-difference-between-two-dates-in-php
     $minutes = round(($GLOBALS[$powerline["name"]] - $powerline["time"]) / 60000);
     $kWh = ($powerline["Watt"] / 1000) * ($minutes / 60);
+    $GLOBALS['processDaykWh'] += $kWh;
     if($datetime[3] < "7") {  // Highlight night time: 00h00 - 06h59
       echo "<b style='color: red;'>";
     }
