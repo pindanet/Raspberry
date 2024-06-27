@@ -14,16 +14,20 @@ $processDay = 0;
 $processToday = 0;
 $processDaykWh = 0;
 
+$processWeek = 0;
+$processThisWeek = 0;
+$processWeekkWh = 0;
+
 function processLine($powerline) {
-  $datetime = explode(" ", date("d m Y G i s l", $powerline["time"] / 1000));
+  $datetime = explode(" ", date("d W m Y G i s l", $powerline["time"] / 1000));
   if($GLOBALS['processDay'] <> $datetime[0]) {
     if($GLOBALS['processDay'] <> 0) {
       echo "Dagtotaal: " . round($GLOBALS['processDaykWh'], 3) . " kWh, " . round($GLOBALS['processDaykWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
       $GLOBALS['processDaykWh'] = 0;
       $GLOBALS['processToday'] = 1;
-      echo "Dag: " . $datetime[6] . " " . $datetime[0] . "<br>";
+      echo "Dag: " . $datetime[7] . " " . $datetime[0] . "<br>";
     } else {
-      echo "Vandaag: " . $datetime[0] . "<br>";
+      echo "Vandaag: " . $datetime[0] . ", Week: " . $datetime[1]  .  "<br>";
     }
     $GLOBALS['processDay'] = $datetime[0];
   }
