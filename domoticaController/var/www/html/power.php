@@ -15,7 +15,7 @@ $processToday = 0;
 $processDaykWh = 0;
 
 $processWeek = 0;
-$processThisWeek = 0;
+//$processThisWeek = 0;
 $processWeekkWh = 0;
 
 function processLine($powerline) {
@@ -27,9 +27,14 @@ function processLine($powerline) {
       $GLOBALS['processToday'] = 1;
       echo $datetime[7] . " " . $datetime[0] . " " . $datetime[8] . "<br>";
     } else {
-      echo $datetime[7] . " " . $datetime[0] . " " . $datetime[8] . ", Week: " . $datetime[1]  .  "<br>";
+      echo $datetime[7] . " " . $datetime[0] . " " . $datetime[8] . ", Week: " . $datetime[1] . "<br>";
     }
     $GLOBALS['processDay'] = $datetime[0];
+  if($GLOBALS['processWeek'] <> $datetime[1]) {
+//    if($GLOBALS['processWeek'] <> 0) {
+      echo "Week: " . $processWeekkWh . " kWh" . "<br>";
+//    }
+  }
   }
   if(strtolower($powerline["status"]) == "off") {
     $GLOBALS[$powerline["name"]] = $powerline["time"];
@@ -38,6 +43,7 @@ function processLine($powerline) {
     $minutes = round(($GLOBALS[$powerline["name"]] - $powerline["time"]) / 60000);
     $kWh = ($powerline["Watt"] / 1000) * ($minutes / 60);
     $GLOBALS['processDaykWh'] += $kWh;
+    $GLOBALS['processWeekkWh'] += $kWh;
     if($datetime[3] < "7") {  // Highlight night time: 00h00 - 06h59
       echo "<b style='color: red;'>";
     }
