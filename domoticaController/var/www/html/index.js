@@ -301,9 +301,9 @@ function toggleAvailable(event) {
 //console.log(testdate);
       // Set next Sleepdate
       conf.available[0].sleepdate.setDate(conf.available[0].sleepdate.getDate()+1);
-//      var timeoutTime = Math.max(30000, timeDate(conf.bedTime, new Date()).getTime() - new Date().getTime() + 30000);
-      var timeoutTime = Math.max(30000, sleepdate.getTime() - new Date().getTime() + 30000);
-//console.log(timeoutTime);
+      var timeoutTime = Math.max(30000, timeDate(conf.bedTime, new Date(sleepdate)).getTime() - new Date().getTime() + 30000);
+//      var timeoutTime = Math.max(30000, sleepdate.getTime() - new Date().getTime() + 30000);
+//console.log(new Date(new Date().getTime() + timeoutTime));
       setTimeout(gotoSleep, timeoutTime);
     case conf.available[0].absent:
       var today = new Date();
