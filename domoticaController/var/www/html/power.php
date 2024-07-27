@@ -7,7 +7,6 @@
 <body style="font-family: monospace;white-space: pre;">
 <?php
 // ToDo
-// 
 
 $price = 32; // per kWh in centimen
 $processDay = 0;
@@ -17,27 +16,63 @@ $firstWeek = 0;
 
 $processWeek = 0;
 $processWeekkWh = 0;
+$firstMonth = 0;
+
+$processMonth = 0;
+$processMonthkWh = 0;
+$months = array(
+    'Januari',
+    'Februari',
+    'Maart',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli ',
+    'Augustus',
+    'September',
+    'October',
+    'November',
+    'December'
+);
 
 function processLine($powerline) {
-  $datetime = explode(" ", date("j W m Y G i s l F", $powerline["time"] / 1000));
-  if($GLOBALS['processWeek'] <> $datetime[1]) {
-    if($GLOBALS['processWeek'] <> 0) {
-      echo "Weektotaal : " . round($GLOBALS['processWeekkWh'], 3) . " kWh, " . round($GLOBALS['processWeekkWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
+  $datetime = explode(" ", date("j W n Y G i s l F", $powerline["time"] / 1000));
+  if($GLOBALS['processMonth'] <> $datetime[2]) {
+    if($GLOBALS['processMonth'] <> 0) {
+      echo "Totaal " . $GLOBALS['months'][$datetime[2]] . " : " . round($GLOBALS['processMonthkWh'], 3) . " kWh, " . round($GLOBALS['processMonthkWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
+      $GLOBALS['firstMonth'] += 1;
     }
-    $GLOBALS['processWeekkWh'] = 0;
-    $GLOBALS['processWeek'] = $datetime[1];
+    $GLOBALS['processMonthkWh'] = 0;
+    $GLOBALS['processMonth'] = $datetime[2];
   }
-  if($GLOBALS['processDay'] <> $datetime[0]) {
-    if($GLOBALS['processDay'] <> 0) {
-      echo "Dagtotaal: " . round($GLOBALS['processDaykWh'], 3) . " kWh, " . round($GLOBALS['processDaykWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
-      $GLOBALS['processDaykWh'] = 0;
-      $GLOBALS['processToday'] = 1;
-      $GLOBALS['firstWeek'] += 1;
-      echo $datetime[7] . " " . $datetime[0] . " " . $datetime[8] . "<br>";
-    } else {
-      echo $datetime[7] . " " . $datetime[0] . " " . $datetime[8] . ", Week: " . $datetime[1] . "<br>";
+  if($GLOBALS['firstMonth'] == 0) { // first month
+    if($GLOBALS['processWeek'] <> $datetime[1]) {
+      if($GLOBALS['processWeek'] <> 0) {
+        $weekTotal = "Weektotaal : " . round($GLOBALS['processWeekkWh'], 3) . " kWh, " . round($GLOBALS['processWeekkWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
+//        echo "Weektotaal : " . round($GLOBALS['processWeekkWh'], 3) . " kWh, " . round($GLOBALS['processWeekkWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
+      }
+      $GLOBALS['processWeekkWh'] = 0;
+      $GLOBALS['processWeek'] = $datetime[1];
     }
-    $GLOBALS['processDay'] = $datetime[0];
+  }
+  if($GLOBALS['firstWeek'] < 8) { // first week
+    if($GLOBALS['processDay'] <> $datetime[0]) {
+      if($GLOBALS['processDay'] <> 0) {
+        echo "Dagtotaal: " . round($GLOBALS['processDaykWh'], 3) . " kWh, " . round($GLOBALS['processDaykWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
+        if (isset($weekTotal)) {
+          echo $weekTotal;
+        }
+        $GLOBALS['processDaykWh'] = 0;
+        $GLOBALS['processToday'] = 1;
+        $GLOBALS['firstWeek'] += 1;
+        echo $datetime[7] . " " . $datetime[0] . " " . $datetime[8] . "<br>";
+      } else {
+        echo $datetime[7] . " " . $datetime[0] . " " . $datetime[8] . ", Week: " . $datetime[1] . "<br>";
+      }
+      $GLOBALS['processDay'] = $datetime[0];
+    }
+  } elseif (isset($weekTotal)) {
+    echo $weekTotal;
   }
   if(strtolower($powerline["status"]) == "off") {
     $GLOBALS[$powerline["name"]] = $powerline["time"];
@@ -47,6 +82,7 @@ function processLine($powerline) {
     $kWh = ($powerline["Watt"] / 1000) * ($minutes / 60);
     $GLOBALS['processDaykWh'] += $kWh;
     $GLOBALS['processWeekkWh'] += $kWh;
+    $GLOBALS['processMonthkWh'] += $kWh;
 
     if($GLOBALS['firstWeek'] < 8) { // next 7 days details
       if($datetime[3] < "7") {  // Highlight night time: 00h00 - 06h59
@@ -57,7 +93,6 @@ function processLine($powerline) {
         echo "</b>";
       }
     }
-
     unset($GLOBALS[$powerline["name"]]);
   }
   if($GLOBALS['processToday'] == 0) {
