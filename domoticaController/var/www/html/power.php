@@ -27,7 +27,7 @@ $months = array(
     'April',
     'Mei',
     'Juni',
-    'Juli ',
+    'Juli',
     'Augustus',
     'September',
     'October',
@@ -37,9 +37,9 @@ $months = array(
 
 function processLine($powerline) {
   $datetime = explode(" ", date("j W n Y G i s l F", $powerline["time"] / 1000));
-  if($GLOBALS['processMonth'] <> $datetime[2]) {
+  if($GLOBALS['processMonth'] <> $datetime[2]) { // New month
     if($GLOBALS['processMonth'] <> 0) {
-      echo "Totaal " . $GLOBALS['months'][$datetime[2]] . " : " . round($GLOBALS['processMonthkWh'], 3) . " kWh, " . round($GLOBALS['processMonthkWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
+      echo str_pad($GLOBALS['months'][$datetime[2]], 10, " ", STR_PAD_RIGHT) . str_pad(round($GLOBALS['processMonthkWh'], 0),3," ", STR_PAD_LEFT) . " kWh " . str_pad(round($GLOBALS['processMonthkWh'] * $GLOBALS['price'] / 100 , 0),3," ", STR_PAD_LEFT) . " €<br>";
       $GLOBALS['firstMonth'] += 1;
     }
     $GLOBALS['processMonthkWh'] = 0;
@@ -48,8 +48,7 @@ function processLine($powerline) {
   if($GLOBALS['firstMonth'] == 0) { // first month
     if($GLOBALS['processWeek'] <> $datetime[1]) {
       if($GLOBALS['processWeek'] <> 0) {
-        $weekTotal = "Weektotaal : " . round($GLOBALS['processWeekkWh'], 3) . " kWh, " . round($GLOBALS['processWeekkWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
-//        echo "Weektotaal : " . round($GLOBALS['processWeekkWh'], 3) . " kWh, " . round($GLOBALS['processWeekkWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
+        $weekTotal = "Week " . str_pad($GLOBALS['processWeek'],3," ",STR_PAD_RIGHT) . number_format(round($GLOBALS['processWeekkWh'], 1),1,","," ") . " kWh, " . number_format(round($GLOBALS['processWeekkWh'] * $GLOBALS['price'] / 100 , 2),2,',',' ') . " €<br>";
       }
       $GLOBALS['processWeekkWh'] = 0;
       $GLOBALS['processWeek'] = $datetime[1];
@@ -58,14 +57,16 @@ function processLine($powerline) {
   if($GLOBALS['firstWeek'] < 8) { // first week
     if($GLOBALS['processDay'] <> $datetime[0]) {
       if($GLOBALS['processDay'] <> 0) {
-        echo "Dagtotaal: " . round($GLOBALS['processDaykWh'], 3) . " kWh, " . round($GLOBALS['processDaykWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
+        echo "Dagtotaal: " . round($GLOBALS['processDaykWh'], 2) . " kWh, " . round($GLOBALS['processDaykWh'] * $GLOBALS['price'] / 100 , 2) . " €<br>";
         if (isset($weekTotal)) {
           echo $weekTotal;
         }
         $GLOBALS['processDaykWh'] = 0;
         $GLOBALS['processToday'] = 1;
         $GLOBALS['firstWeek'] += 1;
-        echo $datetime[7] . " " . $datetime[0] . " " . $datetime[8] . "<br>";
+        if($GLOBALS['firstWeek'] < 8) {
+          echo $datetime[7] . " " . $datetime[0] . " " . $datetime[8] . "<br>";
+        }
       } else {
         echo $datetime[7] . " " . $datetime[0] . " " . $datetime[8] . ", Week: " . $datetime[1] . "<br>";
       }
@@ -88,7 +89,7 @@ function processLine($powerline) {
       if($datetime[3] < "7") {  // Highlight night time: 00h00 - 06h59
         echo "<b style='color: red;'>";
       }
-      echo date("d/m/Y H:i:s", $powerline["time"] / 1000) . " to " . date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000) . " " . str_pad($powerline["name"], 15, " ", STR_PAD_LEFT) . " " . str_pad($minutes, 4, " ", STR_PAD_LEFT) . " min. " . str_pad(round($kWh, 3), 4, " ", STR_PAD_LEFT) . " kWh<br>";
+      echo date("d/m/Y H:i:s", $powerline["time"] / 1000) . " to " . date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000) . " " . str_pad($powerline["name"], 15, " ", STR_PAD_LEFT) . " " . str_pad($minutes, 4, " ", STR_PAD_LEFT) . " min. " . number_format(round($kWh, 3), 3,',', " ") . " kWh<br>";
       if($datetime[3] < "7") {  // Highlight night time: 00h00 - 06h59
         echo "</b>";
       }
