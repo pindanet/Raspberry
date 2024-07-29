@@ -831,3 +831,23 @@ function brightness() {
   };
   xhr.send("cmd=python3&params="+stringToHex("/var/www/html/tls2591.py"));
 }
+const keyValuePairFuncs = (obj) => {
+  if(!obj) return;  // Added a null check for  Uncaught TypeError: Cannot convert undefined or null to object
+    for (const [key, val] of Object.entries(obj)) {
+      console.log(`${key}: ${JSON.stringify(val)}`)
+      if (typeof val === "object") {
+        keyValuePairFuncs(val);   // recursively call the function
+      }
+    }
+  }
+function getConfig() { // Get configuration
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function(e) {
+    if (this.status == 200) {
+      config = JSON.parse(this.responseText);
+      keyValuePairFuncs(config);
+    }
+  }
+  xhttp.open("POST", "data/conf.json");
+  xhttp.send();
+}
