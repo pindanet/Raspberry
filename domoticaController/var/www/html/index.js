@@ -838,7 +838,6 @@ const keyValuePairFuncs = (obj) => {
       elem = configElem.querySelector('*[id="'+key+'"]');
       if (elem) {
         elem.value = val;
-//console.log(`${key}: ${JSON.stringify(val)}`)
       }
       if (typeof val === "object") {
         keyValuePairFuncs(val);   // recursively call the function
