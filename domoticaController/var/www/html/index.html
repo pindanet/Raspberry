@@ -21,9 +21,7 @@
   <a href="#thermostatUI"><img class="menubutton" src="emoji/thermostat.svg"></a>
   <a href="#lights"><img class="menubutton" src="emoji/light_bulb.svg"></a>
   <a><img class="menubutton" onclick="gotoSleep();" src="emoji/sleep.svg"></a>
-  <a href="javascript:location.reload();scroll(0,0)"><img class="menubutton" src="emoji/refresh.svg"></a>
-  <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -r now');" src="emoji/reboot.svg">
-  <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -h now');" src="emoji/shutdown.svg">
+  <a href="#config"><img class="menubutton" onclick="getConfig();" src="emoji/config.svg"></a>
 </div>
 <div id="radio">
   <h1><img src="emoji/radio.svg">His Master's Voice</h1>
@@ -111,6 +109,14 @@
     <img onclick="lightSwitch('LivingZij','Toggle');" src="emoji/ledlampzij.svg">
      <figcaption>Living Zij</figcaption>
   </figure>
+</div>
+<div id="config">
+  <label for="tempComfort">Comfort temperatuur:</label>
+  <input type="number" id="tempComfort" min="10.0" max="25.0">
+  <br>
+  <a href="javascript:location.reload();scroll(0,0)"><img class="menubutton" src="emoji/refresh.svg"></a>
+  <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -r now');" src="emoji/reboot.svg">
+  <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -h now');" src="emoji/shutdown.svg">
 </div>
 <div id="miniclock" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('minitemp').style.display = 'none';" style="display:none">20:00</div>
 <div id="minitemp" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('miniclock').style.display = 'none';" style="display:none">20.0</div>
