@@ -833,8 +833,13 @@ function brightness() {
 }
 const keyValuePairFuncs = (obj) => {
   if(!obj) return;  // Added a null check for  Uncaught TypeError: Cannot convert undefined or null to object
+    configElem = document.getElementById("config");
     for (const [key, val] of Object.entries(obj)) {
-      console.log(`${key}: ${JSON.stringify(val)}`)
+      elem = configElem.querySelector('*[id="'+key+'"]');
+      if (elem) {
+        elem.value = val;
+//console.log(`${key}: ${JSON.stringify(val)}`)
+      }
       if (typeof val === "object") {
         keyValuePairFuncs(val);   // recursively call the function
       }
