@@ -114,6 +114,15 @@
   <label for="tempComfort">Comfort temperatuur:</label>
   <input type="number" id="tempComfort" min="10.0" max="25.0">
   <br>
+  <label for="tempAux">Werk temperatuur:</label>
+  <input type="number" id="tempAux" min="10.0" max="25.0">
+  <br>
+  <label for="tempOff">Minimum temperatuur:</label>
+  <input type="number" id="tempOff" min="10.0" max="25.0">
+  <br>
+  <label for="tempNight">Nacht temperatuur:</label>
+  <input type="number" id="tempNight" min="10.0" max="25.0">
+  <br>
   <a href="javascript:location.reload();scroll(0,0)"><img class="menubutton" src="emoji/refresh.svg"></a>
   <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -r now');" src="emoji/reboot.svg">
   <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -h now');" src="emoji/shutdown.svg">
