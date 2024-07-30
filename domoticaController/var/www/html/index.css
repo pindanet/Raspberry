@@ -53,7 +53,7 @@ button {
   height: 60vw;
   margin: 0;
 }
-#photoframe, #config {
+#photoframe, #configUI {
   height: 60vw;
 }
 #thermostatUI h1 {
