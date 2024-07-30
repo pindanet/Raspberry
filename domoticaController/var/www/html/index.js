@@ -567,17 +567,6 @@ function tempAdjustment(room) {
     }
   }
 }
-//function sendConf(obj) {
-//    var xhr = new XMLHttpRequest();
-//    xhr.open('POST', "sendConf.php", true);
-//    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
-//    xhr.onload = function(e) {
-//      if (this.status == 200) {
-//        conf = JSON.parse(this.responseText);
-//      }
-//    };
-//    xhr.send(JSON.stringify(obj, null, 2));
-//}
 function thermostat() {
   tempAdjustment(conf.Living);
 // getLivingTemp
@@ -833,7 +822,7 @@ function brightness() {
 }
 const keyValuePairFuncs = (obj) => {
   if(!obj) return;  // Added a null check for  Uncaught TypeError: Cannot convert undefined or null to object
-    configElem = document.getElementById("config");
+    configElem = document.getElementById("configUI");
     for (const [key, val] of Object.entries(obj)) {
       elem = configElem.querySelector('*[id="'+key+'"]');
       if (elem) {
@@ -854,4 +843,20 @@ function getConfig() { // Get configuration
   }
   xhttp.open("POST", "data/conf.json");
   xhttp.send();
+}
+function saveConfig() {
+  if (typeof config === 'object') {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "sendConf.php", true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        console.log(this.responseText);
+      }
+    };
+//    xhr.send(JSON.stringify(config, null, 2));
+console.log("Saved");
+  } else {
+console.log("Not saved");
+  }
 }
