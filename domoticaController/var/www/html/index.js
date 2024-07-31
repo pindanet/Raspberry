@@ -147,9 +147,10 @@ function radioStop(event) {
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.send("cmd=rm&params="+stringToHex("/var/www/html/data/radio.log; killall mpg123 curl"));
-  window.scrollTo(0, 0);
-  document.getElementById('miniclock').style.display = 'none';
-  document.getElementById('minitemp').style.display = 'none';
+  toTop();
+//  window.scrollTo(0, 0);
+//  document.getElementById('miniclock').style.display = 'none';
+//  document.getElementById('minitemp').style.display = 'none';
   radioVolume(event, conf.tvvolume);
   if (typeof event !== 'undefined') {
     event.stopPropagation();
@@ -844,8 +845,25 @@ function getConfig() { // Get configuration
   xhttp.open("POST", "data/conf.json");
   xhttp.send();
 }
+const keyValuePairFuncsSet = (obj) => {
+  if(!obj) return;  // Added a null check for  Uncaught TypeError: Cannot convert undefined or null to object
+    configElem = document.getElementById("configUI");
+    for (const [key, val] of Object.entries(obj)) {
+      elem = configElem.querySelector('*[id="'+key+'"]');
+      if (elem) {
+// switch typeof config[key] + elem.type == numbernumber
+console.log(typeof config[key], elem.type);
+        config[key] = parseFloat(elem.value);
+//console.log(parseFloat(elem.value), config[key]);
+      }
+      if (typeof val === "object") {
+        keyValuePairFuncs(val);   // recursively call the function
+      }
+    }
+  }
 function saveConfig() {
   if (typeof config === 'object') {
+    keyValuePairFuncsSet(config);
     var xhr = new XMLHttpRequest();
     xhr.open('POST', "sendConf.php", true);
     xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -854,9 +872,12 @@ function saveConfig() {
         console.log(this.responseText);
       }
     };
-//    xhr.send(JSON.stringify(config, null, 2));
-console.log("Saved");
-  } else {
-console.log("Not saved");
+    xhr.send(JSON.stringify(config, null, 2));
+    toTop();
   }
+}
+function toTop() {
+  window.scrollTo(0, 0);
+  document.getElementById('miniclock').style.display = 'none';
+  document.getElementById('minitemp').style.display = 'none';
 }
