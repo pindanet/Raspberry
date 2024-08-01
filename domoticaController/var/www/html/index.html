@@ -111,17 +111,20 @@
   </figure>
 </div>
 <div id="configUI">
-  <label for="tempComfort">Comfort temperatuur:</label>
-  <input type="number" step="0.5" id="tempComfort" min="10.0" max="25.0">
-  <br>
-  <label for="tempAux">Werk temperatuur:</label>
-  <input type="number" step="0.5" id="tempAux" min="10.0" max="25.0">
-  <br>
-  <label for="tempOff">Minimum temperatuur:</label>
-  <input type="number" step="0.5" id="tempOff" min="10.0" max="25.0">
-  <br>
-  <label for="tempNight">Nacht temperatuur:</label>
-  <input type="number" step="0.5" id="tempNight" min="10.0" max="25.0">
+  <h1><img src="emoji/config.svg">Instellingen</h1>
+  <h1><img src="emoji/thermostat.svg">Temperatuur</h1>
+  <label for="tempComfort">Comfort temperatuur:
+     <input type="number" step="0.5" id="tempComfort" min="10.0" max="25.0">
+  </label>
+  <label for="tempAux">Werk temperatuur:
+    <input type="number" step="0.5" id="tempAux" min="10.0" max="25.0">
+  </label>
+  <label for="tempOff">Minimum temperatuur:
+    <input type="number" step="0.5" id="tempOff" min="10.0" max="25.0">
+  </label>
+  <label for="tempNight">Nacht temperatuur:
+    <input type="number" step="0.5" id="tempNight" min="10.0" max="25.0">
+  </label>
   <br>
   <a href="javascript:location.reload();scroll(0,0)"><img class="menubutton" src="emoji/refresh.svg"></a>
   <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -r now');" src="emoji/reboot.svg">
