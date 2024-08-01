@@ -47,13 +47,16 @@ button {
   text-align: center;
   padding-bottom: 1vw;
 }
-#lights, #radio, #menu, #thermostatUI, #weather, PINform {
+#lights, #radio, #menu, #thermostatUI, #weather, PINform, #configUI {
   text-align: center;
   vertical-align: middle;
   height: 60vw;
   margin: 0;
 }
-#photoframe, #configUI {
+label {
+  white-space: nowrap;
+}
+#photoframe {
   height: 60vw;
 }
 #thermostatUI h1 {
@@ -61,7 +64,7 @@ button {
   margin-bottom: 0;
   margin-top: 0;
 }
-#lights h1, #radio h1 {
+#lights h1, #radio h1, #configUI h1 {
   font-size: 8vw;
   margin-bottom: 0;
   margin-top: 0;
