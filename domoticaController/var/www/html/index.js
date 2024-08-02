@@ -851,10 +851,14 @@ const keyValuePairFuncsSet = (obj) => {
     for (const [key, val] of Object.entries(obj)) {
       elem = configElem.querySelector('*[id="'+key+'"]');
       if (elem) {
-// switch typeof config[key] + elem.type == numbernumber
+        switch(typeof config[key] + elem.type) {
+          case "numbernumber":
+            config[key] = parseFloat(elem.value);
+            break;
+          default:
 console.log(typeof config[key], elem.type);
-        config[key] = parseFloat(elem.value);
-//console.log(parseFloat(elem.value), config[key]);
+console.log(typeof config[key] + elem.type);
+        }
       }
       if (typeof val === "object") {
         keyValuePairFuncs(val);   // recursively call the function
