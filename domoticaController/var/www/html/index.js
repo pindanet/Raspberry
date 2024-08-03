@@ -1,7 +1,6 @@
 // Todo
 // Alarm Temperature
 // Clean Up
-// power.html
 // config.html
 
 var tempIncrDecr = 0.5;
@@ -821,16 +820,29 @@ function brightness() {
   };
   xhr.send("cmd=python3&params="+stringToHex("/var/www/html/tls2591.py"));
 }
+var preKey = "";
 const keyValuePairFuncs = (obj) => {
   if(!obj) return;  // Added a null check for  Uncaught TypeError: Cannot convert undefined or null to object
     configElem = document.getElementById("configUI");
     for (const [key, val] of Object.entries(obj)) {
-      elem = configElem.querySelector('*[id="'+key+'"]');
+      elem = configElem.querySelector('*[id="'+preKey+key+'"]');
       if (elem) {
         elem.value = val;
       }
       if (typeof val === "object") {
+        preKey += key + "_";
+console.log(preKey);
         keyValuePairFuncs(val);   // recursively call the function
+      }
+    }
+    if (preKey.indexOf('_')) {
+      if (preKey.indexOf('_') == preKey.lastIndexOf('_')) {
+        preKey = "";
+      } else {
+//console.log(preKey, preKey.substring(0, preKey.length - 1));
+        preKey = preKey.substring(0, preKey.length - 1);
+//console.log(preKey, preKey.substring(0, preKey.lastIndexOf('_') + 1));
+        preKey = preKey.substring(0, preKey.lastIndexOf('_') + 1);
       }
     }
   }
@@ -876,7 +888,7 @@ function saveConfig() {
         console.log(this.responseText);
       }
     };
-    xhr.send(JSON.stringify(config, null, 2));
+//    xhr.send(JSON.stringify(config, null, 2));
     toTop();
   }
 }
