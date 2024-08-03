@@ -116,6 +116,11 @@
   <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -r now');" src="emoji/reboot.svg">
   <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -h now');" src="emoji/shutdown.svg">
   <img class="menubutton" onclick="saveConfig();" src="emoji/save.svg">
+  <h1><img src="emoji/location.svg"> Locatie</h1>
+  <label for="location_Latitude">Latitude:
+     <input type="number" id="location_Latitude">
+  </label>
+ 
   <h1><img src="emoji/thermostat.svg"> Temperatuur</h1>
   <label for="tempComfort">Comfort temperatuur:
      <input type="number" step="0.5" id="tempComfort" min="10.0" max="25.0">
