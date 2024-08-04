@@ -831,7 +831,7 @@ const keyValuePairFuncs = (obj) => {
       }
       if (typeof val === "object") {
         preKey += key + "_";
-console.log(preKey);
+//console.log(preKey);
         keyValuePairFuncs(val);   // recursively call the function
       }
     }
@@ -861,19 +861,41 @@ const keyValuePairFuncsSet = (obj) => {
   if(!obj) return;  // Added a null check for  Uncaught TypeError: Cannot convert undefined or null to object
     configElem = document.getElementById("configUI");
     for (const [key, val] of Object.entries(obj)) {
-      elem = configElem.querySelector('*[id="'+key+'"]');
+      elem = configElem.querySelector('*[id="' + preKey + key+'"]');
       if (elem) {
-        switch(typeof config[key] + elem.type) {
+        var configTreeObj = config;
+        if (preKey.indexOf('_')) {
+          const configTree = preKey.split("_");
+          for (let i = 0; i < configTree.length - 1; i++) {
+            configTreeObj = configTreeObj[configTree[i]];
+console.log(configTreeObj);
+          }
+
+        }
+        switch(typeof configTreeObj[key] + elem.type) {
           case "numbernumber":
-            config[key] = parseFloat(elem.value);
+console.log(key, configTreeObj[key], parseFloat(elem.value));
+            configTreeObj[key] = parseFloat(elem.value);
             break;
           default:
-console.log(typeof config[key], elem.type);
-console.log(typeof config[key] + elem.type);
+//console.log(preKey,configTree);
+console.log(preKey,typeof configTreeObj[key], elem.type);
+//console.log(typeof config[key] + elem.type);
         }
       }
       if (typeof val === "object") {
-        keyValuePairFuncs(val);   // recursively call the function
+        preKey += key + "_";
+        keyValuePairFuncsSet(val);   // recursively call the function
+      }
+    }
+    if (preKey.indexOf('_')) {
+      if (preKey.indexOf('_') == preKey.lastIndexOf('_')) {
+        preKey = "";
+      } else {
+//console.log(preKey, preKey.substring(0, preKey.length - 1));
+        preKey = preKey.substring(0, preKey.length - 1);
+//console.log(preKey, preKey.substring(0, preKey.lastIndexOf('_') + 1));
+        preKey = preKey.substring(0, preKey.lastIndexOf('_') + 1);
       }
     }
   }
