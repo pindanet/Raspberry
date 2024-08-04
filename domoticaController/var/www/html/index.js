@@ -828,21 +828,22 @@ const keyValuePairFuncs = (obj) => {
       elem = configElem.querySelector('*[id="'+preKey+key+'"]');
       if (elem) {
         elem.value = val;
+console.log(key, val);
+//      } else {
+//console.log(preKey+key);
       }
       if (typeof val === "object") {
-        preKey += key + "_";
+        preKey += key + ">";
 //console.log(preKey);
         keyValuePairFuncs(val);   // recursively call the function
       }
     }
-    if (preKey.indexOf('_')) {
-      if (preKey.indexOf('_') == preKey.lastIndexOf('_')) {
+    if (preKey.indexOf('>')) {
+      if (preKey.indexOf('>') == preKey.lastIndexOf('>')) {
         preKey = "";
       } else {
-//console.log(preKey, preKey.substring(0, preKey.length - 1));
         preKey = preKey.substring(0, preKey.length - 1);
-//console.log(preKey, preKey.substring(0, preKey.lastIndexOf('_') + 1));
-        preKey = preKey.substring(0, preKey.lastIndexOf('_') + 1);
+        preKey = preKey.substring(0, preKey.lastIndexOf('>') + 1);
       }
     }
   }
@@ -864,11 +865,11 @@ const keyValuePairFuncsSet = (obj) => {
       elem = configElem.querySelector('*[id="' + preKey + key+'"]');
       if (elem) {
         var configTreeObj = config;
-        if (preKey.indexOf('_')) {
-          const configTree = preKey.split("_");
+        if (preKey.indexOf('>')) {
+          const configTree = preKey.split(">");
           for (let i = 0; i < configTree.length - 1; i++) {
             configTreeObj = configTreeObj[configTree[i]];
-console.log(configTreeObj);
+//console.log(configTreeObj);
           }
 
         }
@@ -879,23 +880,21 @@ console.log(key, configTreeObj[key], parseFloat(elem.value));
             break;
           default:
 //console.log(preKey,configTree);
-console.log(preKey,typeof configTreeObj[key], elem.type);
+console.log(preKey, key, typeof configTreeObj[key], elem.type);
 //console.log(typeof config[key] + elem.type);
         }
       }
       if (typeof val === "object") {
-        preKey += key + "_";
+        preKey += key + ">";
         keyValuePairFuncsSet(val);   // recursively call the function
       }
     }
-    if (preKey.indexOf('_')) {
-      if (preKey.indexOf('_') == preKey.lastIndexOf('_')) {
+    if (preKey.indexOf('>')) {
+      if (preKey.indexOf('>') == preKey.lastIndexOf('>')) {
         preKey = "";
       } else {
-//console.log(preKey, preKey.substring(0, preKey.length - 1));
         preKey = preKey.substring(0, preKey.length - 1);
-//console.log(preKey, preKey.substring(0, preKey.lastIndexOf('_') + 1));
-        preKey = preKey.substring(0, preKey.lastIndexOf('_') + 1);
+        preKey = preKey.substring(0, preKey.lastIndexOf('>') + 1);
       }
     }
   }
