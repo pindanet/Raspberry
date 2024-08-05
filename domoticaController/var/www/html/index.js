@@ -834,7 +834,6 @@ console.log(key, val);
       }
       if (typeof val === "object") {
         preKey += key + ">";
-//console.log(preKey);
         keyValuePairFuncs(val);   // recursively call the function
       }
     }
@@ -869,19 +868,19 @@ const keyValuePairFuncsSet = (obj) => {
           const configTree = preKey.split(">");
           for (let i = 0; i < configTree.length - 1; i++) {
             configTreeObj = configTreeObj[configTree[i]];
-//console.log(configTreeObj);
           }
-
         }
         switch(typeof configTreeObj[key] + elem.type) {
           case "numbernumber":
 console.log(key, configTreeObj[key], parseFloat(elem.value));
             configTreeObj[key] = parseFloat(elem.value);
             break;
+          case "stringtime":
+console.log(key, configTreeObj[key], elem.value);
+            configTreeObj[key] = elem.value;
+            break;
           default:
-//console.log(preKey,configTree);
 console.log(preKey, key, typeof configTreeObj[key], elem.type);
-//console.log(typeof config[key] + elem.type);
         }
       }
       if (typeof val === "object") {
@@ -909,7 +908,7 @@ function saveConfig() {
         console.log(this.responseText);
       }
     };
-//    xhr.send(JSON.stringify(config, null, 2));
+    xhr.send(JSON.stringify(config, null, 2));
     toTop();
   }
 }
