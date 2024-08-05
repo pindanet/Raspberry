@@ -136,17 +136,21 @@
 
   <h1><img src="emoji/thermostat.svg"> Temperatuur</h1>
   <label for="tempComfort">Comfort temperatuur:
-     <input type="number" step="0.5" id="tempComfort" min="10.0" max="25.0">
+     <input type="number" step="0.5" id="tempComfort" min="10.0" max="25.0"> °C,
   </label>
   <label for="tempAux">Werk temperatuur:
-    <input type="number" step="0.5" id="tempAux" min="10.0" max="25.0">
+    <input type="number" step="0.5" id="tempAux" min="10.0" max="25.0"> *C,
   </label>
   <label for="tempOff">Minimum temperatuur:
-    <input type="number" step="0.5" id="tempOff" min="10.0" max="25.0">
-  </label>
+    <input type="number" step="0.5" id="tempOff" min="10.0" max="25.0"> °C
+  </label><br>
   <label for="tempNight">Nacht temperatuur:
-    <input type="number" step="0.5" id="tempNight" min="10.0" max="25.0">
+    <input type="number" step="0.5" id="tempNight" min="10.0" max="25.0"> °C
   </label>
+  <label for="tempNightTime">tot:
+     <input type="time" id="tempNightTime">
+  </label>
+
 </div>
 <div id="miniclock" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('minitemp').style.display = 'none';" style="display:none">20:00</div>
 <div id="minitemp" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('miniclock').style.display = 'none';" style="display:none">20.0</div>
