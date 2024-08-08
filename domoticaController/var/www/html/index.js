@@ -875,11 +875,15 @@ const keyValuePairFuncsSet = (obj) => {
 console.log(key, configTreeObj[key], parseFloat(elem.value));
             configTreeObj[key] = parseFloat(elem.value);
             break;
+          case "stringtext":
           case "stringtime":
 console.log(key, configTreeObj[key], elem.value);
             configTreeObj[key] = elem.value;
             break;
-          default:
+          case "stringtime":
+console.log(key, configTreeObj[key], elem.value);
+            configTreeObj[key] = elem.value;
+            break;          default:
 console.log(preKey, key, typeof configTreeObj[key], elem.type);
         }
       }
