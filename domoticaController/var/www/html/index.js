@@ -821,6 +821,22 @@ function brightness() {
   xhr.send("cmd=python3&params="+stringToHex("/var/www/html/tls2591.py"));
 }
 var preKey = "";
+var devOptionsHTML = "";
+function devOptions() {
+  for (const [key, value] of Object.entries(config.switch)) {
+console.log(`${key}: ${value}`);
+    devOptionsHTML += '\n       <option value="' + key + '">' + key + '</option>';
+  }
+  console.log(devOptionsHTML);
+}
+function selectBegin(id) {
+  var elem = document.getElementById("lights>timer>" + id + ">begin");
+  if (elem.value == "time") {
+    document.getElementById("lights>timer>" + id + ">begintime").style.display = "";
+  } else {
+    document.getElementById("lights>timer>" + id + ">begintime").style.display = "none";
+  }
+}
 const keyValuePairFuncs = (obj) => {
   if(!obj) return;  // Added a null check for  Uncaught TypeError: Cannot convert undefined or null to object
     configElem = document.getElementById("configUI");
@@ -833,8 +849,39 @@ console.log(key, val);
 //console.log(preKey+key);
       }
       if (typeof val === "object") {
-        preKey += key + ">";
-        keyValuePairFuncs(val);   // recursively call the function
+        if (key == "timer") { // timers
+          document.getElementById("timers").innerHTML = "";
+          for (let i = 0; i < val.length; i++) {
+console.log(val[i]);
+            var HTML = `
+0: 
+  <label for="lights>timer>0>dev">Apparaat
+     <select id="lights>timer>0>dev">
+`.trim();
+            HTML += devOptionsHTML;
+            HTML += `
+     </select>
+  </label>
+`.trim();
+            HTML += `
+  <label for="lights>timer>0>begin">Begin
+     <select id="lights>timer>0>begin" onchange="selectBegin(0)">
+       <option value="breakfast">Ontbijt</option>
+       <option value="eveningLightsOn">Valavond</option>
+       <option value="time">Tijdstip</option>
+     </select>
+  </label><input type="time" id="lights>timer>0>begintime" style="display: none">
+`.trim();
+
+// display: none zetten
+
+            HTML = HTML.replace(' value="' + config.lights.timer[i].dev + '"', ' selected value="' + config.lights.timer[i].dev + '"');
+            document.getElementById("timers").innerHTML += HTML.replace(/0/g, i) + "<br>";
+          }
+        } else {
+          preKey += key + ">";
+          keyValuePairFuncs(val);   // recursively call the function
+        }
       }
     }
     if (preKey.indexOf('>')) {
@@ -851,6 +898,7 @@ function getConfig() { // Get configuration
   xhttp.onload = function(e) {
     if (this.status == 200) {
       config = JSON.parse(this.responseText);
+      devOptions();
       keyValuePairFuncs(config);
     }
   }
