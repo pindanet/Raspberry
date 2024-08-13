@@ -830,11 +830,12 @@ console.log(`${key}: ${value}`);
   console.log(devOptionsHTML);
 }
 function selectBegin(id) {
+//console.log("lights>timer>" + id + ">begin");
   var elem = document.getElementById("lights>timer>" + id + ">begin");
   if (elem.value == "time") {
-    document.getElementById("lights>timer>" + id + ">begintime").style.display = "";
+    document.getElementById("lights>timer>" + id + ">begintime").style.visibility = "";
   } else {
-    document.getElementById("lights>timer>" + id + ">begintime").style.display = "none";
+    document.getElementById("lights>timer>" + id + ">begintime").style.visibility = "hidden";
   }
 }
 const keyValuePairFuncs = (obj) => {
@@ -853,30 +854,44 @@ console.log(key, val);
           document.getElementById("timers").innerHTML = "";
           for (let i = 0; i < val.length; i++) {
 console.log(val[i]);
-            var HTML = `
-0: 
-  <label for="lights>timer>0>dev">Apparaat
-     <select id="lights>timer>0>dev">
-`.trim();
+            var HTML = i + ': ';
+            HTML += '  <label for="lights>timer>' + i + '>dev">Apparaat';
+            HTML += '     <select id="lights>timer>' + i + '>dev">';
             HTML += devOptionsHTML;
-            HTML += `
-     </select>
-  </label>
-`.trim();
-            HTML += `
-  <label for="lights>timer>0>begin">Begin
-     <select id="lights>timer>0>begin" onchange="selectBegin(0)">
-       <option value="breakfast">Ontbijt</option>
-       <option value="eveningLightsOn">Valavond</option>
-       <option value="time">Tijdstip</option>
-     </select>
-  </label><input type="time" id="lights>timer>0>begintime" style="display: none">
-`.trim();
-
-// display: none zetten
-
+            HTML += '     </select>';
+            HTML += '  </label>';
             HTML = HTML.replace(' value="' + config.lights.timer[i].dev + '"', ' selected value="' + config.lights.timer[i].dev + '"');
-            document.getElementById("timers").innerHTML += HTML.replace(/0/g, i) + "<br>";
+
+            var HTMLBegin = '  <label for="lights>timer>' + i + '>begin">Begin';
+            HTMLBegin += '     <select id="lights>timer>' + i + '>begin" onchange="selectBegin(' + i + ')">';
+            HTMLBegin += '       <option value="breakfast">Ontbijt</option>';
+            HTMLBegin += '       <option value="eveningLightsOn">Valavond</option>';
+            HTMLBegin += '       <option value="time">Tijdstip</option>';
+            HTMLBegin += '     </select>';
+            if (config.lights.timer[i].begin.indexOf(':') > -1) { // time
+              HTMLBegin += '</label><input type="time" id="lights>timer>' + i + '>begintime" value="' + config.lights.timer[i].begin + '">';
+              HTMLBegin = HTMLBegin.replace(' value="time"', ' selected value="time"');
+            } else { // placeholder
+              HTMLBegin += '</label><input type="time" id="lights>timer>' + i + '>begintime" style="visibility: hidden">';
+              HTMLBegin = HTMLBegin.replace(' value="' + config.lights.timer[i].begin + '"', ' selected value="' + config.lights.timer[i].begin + '"');
+            }
+            HTML += HTMLBegin;
+
+            var HTMLEnd = '  <label for="lights>timer>' + i + '>end">Einde';
+            HTMLEnd += '     <select id="lights>timer>' + i + '>end" onchange="selectEnd(' + i + ')">';
+            HTMLEnd += '       <option value="morningLightsOut">Na ontbijt</option>';
+            HTMLEnd += '       <option value="bedTime">Bedtijd</option>';
+            HTMLEnd += '       <option value="time">Tijdstip</option>';
+            HTMLEnd += '     </select>';
+            if (config.lights.timer[i].end.indexOf(':') > -1) { // time
+              HTMLEnd += '</label><input type="time" id="lights>timer>' + i + '>endtime" value="' + config.lights.timer[i].end + '">';
+              HTMLEnd = HTMLEnd.replace(' value="time"', ' selected value="time"');
+            } else { // placeholder
+              HTMLEnd += '</label><input type="time" id="lights>timer>' + i + '>endtime" style="visibility: hidden">';
+              HTMLEnd = HTMLEnd.replace(' value="' + config.lights.timer[i].end + '"', ' selected value="' + config.lights.timer[i].end + '"');
+            }
+            HTML += HTMLEnd;
+            document.getElementById("timers").innerHTML += HTML + "<br>"; //.replace(/>0>/g, i) + "<br>";
           }
         } else {
           preKey += key + ">";
