@@ -860,7 +860,6 @@ console.log(key, val);
         if (key == "timer") { // timers
           document.getElementById("timers").innerHTML = "";
           for (let i = 0; i < val.length; i++) {
-console.log(val[i]);
             var HTML = i + ': ';
             HTML += '  <label for="lights>timer>' + i + '>dev">Apparaat';
             HTML += '     <select id="lights>timer>' + i + '>dev">';
@@ -898,7 +897,7 @@ console.log(val[i]);
               HTMLEnd = HTMLEnd.replace(' value="' + config.lights.timer[i].end + '"', ' selected value="' + config.lights.timer[i].end + '"');
             }
             HTML += HTMLEnd;
-            document.getElementById("timers").innerHTML += HTML + "<br>"; //.replace(/>0>/g, i) + "<br>";
+            document.getElementById("timers").innerHTML += HTML + "<button>-</button><br>";
           }
         } else {
           preKey += key + ">";
