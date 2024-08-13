@@ -32,6 +32,9 @@ button {
   font-weight: bold;
   border-radius: 12px;
 }
+#configUI button {
+  font-size: inherit;
+}
 #clockday {
   padding-top: 1vw;
   font-size: 10vw;
