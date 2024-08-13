@@ -830,12 +830,19 @@ console.log(`${key}: ${value}`);
   console.log(devOptionsHTML);
 }
 function selectBegin(id) {
-//console.log("lights>timer>" + id + ">begin");
   var elem = document.getElementById("lights>timer>" + id + ">begin");
   if (elem.value == "time") {
     document.getElementById("lights>timer>" + id + ">begintime").style.visibility = "";
   } else {
     document.getElementById("lights>timer>" + id + ">begintime").style.visibility = "hidden";
+  }
+}
+function selectEnd(id) {
+  var elem = document.getElementById("lights>timer>" + id + ">end");
+  if (elem.value == "time") {
+    document.getElementById("lights>timer>" + id + ">endtime").style.visibility = "";
+  } else {
+    document.getElementById("lights>timer>" + id + ">endtime").style.visibility = "hidden";
   }
 }
 const keyValuePairFuncs = (obj) => {
