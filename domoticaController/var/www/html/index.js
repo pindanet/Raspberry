@@ -845,6 +845,20 @@ function selectEnd(id) {
     document.getElementById("lights>timer>" + id + ">endtime").style.visibility = "hidden";
   }
 }
+function removeTimer(id) {
+//  delete config.lights.timer[id];
+  var tmpArray = [];
+  for (let i = 0; i < config.lights.timer.length; i++) {
+    if (i != id) {
+      tmpArray.push(config.lights.timer[i]);
+    }
+  }
+  config.lights.timer.pop();
+  for (let i = 0; i < tmpArray.length; i++) {
+    config.lights.timer[i] = tmpArray[i];
+  }
+  keyValuePairFuncs(config);
+}
 const keyValuePairFuncs = (obj) => {
   if(!obj) return;  // Added a null check for  Uncaught TypeError: Cannot convert undefined or null to object
     configElem = document.getElementById("configUI");
@@ -897,7 +911,7 @@ console.log(key, val);
               HTMLEnd = HTMLEnd.replace(' value="' + config.lights.timer[i].end + '"', ' selected value="' + config.lights.timer[i].end + '"');
             }
             HTML += HTMLEnd;
-            document.getElementById("timers").innerHTML += HTML + "<button>-</button><br>";
+            document.getElementById("timers").innerHTML += HTML + '<button onclick="removeTimer('+ i + ');">-</button><br>';
           }
         } else {
           preKey += key + ">";
