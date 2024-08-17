@@ -824,10 +824,8 @@ var preKey = "";
 var devOptionsHTML = "";
 function devOptions() {
   for (const [key, value] of Object.entries(config.switch)) {
-console.log(`${key}: ${value}`);
     devOptionsHTML += '\n       <option value="' + key + '">' + key + '</option>';
   }
-  console.log(devOptionsHTML);
 }
 function selectBegin(id) {
   var elem = document.getElementById("lights>timer>" + id + ">begin");
@@ -846,7 +844,6 @@ function selectEnd(id) {
   }
 }
 function removeTimer(id) {
-//  delete config.lights.timer[id];
   var tmpArray = [];
   for (let i = 0; i < config.lights.timer.length; i++) {
     if (i != id) {
@@ -857,6 +854,10 @@ function removeTimer(id) {
   for (let i = 0; i < tmpArray.length; i++) {
     config.lights.timer[i] = tmpArray[i];
   }
+  keyValuePairFuncs(config);
+}
+function addTimer() {
+  config.lights.timer.push({dev:"Haardlamp", begin:"breakfast", end:"morningLightsOut"});
   keyValuePairFuncs(config);
 }
 const keyValuePairFuncs = (obj) => {
@@ -913,6 +914,7 @@ console.log(key, val);
             HTML += HTMLEnd;
             document.getElementById("timers").innerHTML += HTML + '<button onclick="removeTimer('+ i + ');">-</button><br>';
           }
+          document.getElementById("timers").innerHTML += '<br><button onclick="addTimer();">+</button><br>';
         } else {
           preKey += key + ">";
           keyValuePairFuncs(val);   // recursively call the function
