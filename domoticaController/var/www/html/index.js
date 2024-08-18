@@ -946,6 +946,17 @@ const keyValuePairFuncsSet = (obj) => {
   if(!obj) return;  // Added a null check for  Uncaught TypeError: Cannot convert undefined or null to object
     configElem = document.getElementById("configUI");
     for (const [key, val] of Object.entries(obj)) {
+      if (typeof val === "object" && key == "timer") {
+        var selectNodeList = configElem.querySelectorAll('*[id=timers] select');
+        for (let i = 0; i < selectNodeList.length; i++) {
+          var configTree = selectNodeList[i].id.split(">");
+          elem = selectNodeList[i];
+          if (selectNodeList[i].value == "time") {
+            elem = document.getElementById(selectNodeList[i].id + "time");
+          }
+console.log(config[configTree[0]][configTree[1]][configTree[2]][configTree[3]], elem.value);
+        }
+      } else {
       elem = configElem.querySelector('*[id="' + preKey + key+'"]');
       if (elem) {
         var configTreeObj = config;
@@ -976,6 +987,7 @@ console.log(preKey, key, typeof configTreeObj[key], elem.type);
         preKey += key + ">";
         keyValuePairFuncsSet(val);   // recursively call the function
       }
+    }
     }
     if (preKey.indexOf('>')) {
       if (preKey.indexOf('>') == preKey.lastIndexOf('>')) {
