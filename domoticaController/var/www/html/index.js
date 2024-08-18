@@ -957,36 +957,36 @@ const keyValuePairFuncsSet = (obj) => {
 console.log(config[configTree[0]][configTree[1]][configTree[2]][configTree[3]], elem.value);
         }
       } else {
-      elem = configElem.querySelector('*[id="' + preKey + key+'"]');
-      if (elem) {
-        var configTreeObj = config;
-        if (preKey.indexOf('>')) {
-          const configTree = preKey.split(">");
-          for (let i = 0; i < configTree.length - 1; i++) {
-            configTreeObj = configTreeObj[configTree[i]];
+        elem = configElem.querySelector('*[id="' + preKey + key+'"]');
+        if (elem) {
+          var configTreeObj = config;
+          if (preKey.indexOf('>')) {
+            const configTree = preKey.split(">");
+            for (let i = 0; i < configTree.length - 1; i++) {
+              configTreeObj = configTreeObj[configTree[i]];
+            }
+          }
+          switch(typeof configTreeObj[key] + elem.type) {
+            case "numbernumber":
+console.log(key, configTreeObj[key], parseFloat(elem.value));
+              configTreeObj[key] = parseFloat(elem.value);
+              break;
+            case "stringtext":
+            case "stringtime":
+console.log(key, configTreeObj[key], elem.value);
+              configTreeObj[key] = elem.value;
+              break;
+            case "stringtime":
+console.log(key, configTreeObj[key], elem.value);
+              configTreeObj[key] = elem.value;
+              break;          default:
+console.log(preKey, key, typeof configTreeObj[key], elem.type);
           }
         }
-        switch(typeof configTreeObj[key] + elem.type) {
-          case "numbernumber":
-console.log(key, configTreeObj[key], parseFloat(elem.value));
-            configTreeObj[key] = parseFloat(elem.value);
-            break;
-          case "stringtext":
-          case "stringtime":
-console.log(key, configTreeObj[key], elem.value);
-            configTreeObj[key] = elem.value;
-            break;
-          case "stringtime":
-console.log(key, configTreeObj[key], elem.value);
-            configTreeObj[key] = elem.value;
-            break;          default:
-console.log(preKey, key, typeof configTreeObj[key], elem.type);
+        if (typeof val === "object") {
+          preKey += key + ">";
+          keyValuePairFuncsSet(val);   // recursively call the function
         }
-      }
-      if (typeof val === "object") {
-        preKey += key + ">";
-        keyValuePairFuncsSet(val);   // recursively call the function
-      }
     }
     }
     if (preKey.indexOf('>')) {
