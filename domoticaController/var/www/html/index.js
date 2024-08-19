@@ -915,6 +915,23 @@ console.log(key, val);
             document.getElementById("timers").innerHTML += HTML + '<button onclick="removeTimer('+ i + ');">-</button><br>';
           }
           document.getElementById("timers").innerHTML += '<br><button onclick="addTimer();">+</button><br>';
+        } else if (key == "heater") {
+          document.getElementById(preKey + key + "id").innerHTML = "";
+          for (let i = 0; i < val.length; i++) {
+            var configId = preKey + key;
+            var configTree = configId.split(">");
+            var HTML =  '<label for="' + preKey + key + '<' + i + '>name">Naam:';
+            HTML += '  <input type="text" id="' + preKey + key + '>name" value="' + config[configTree[0]][configTree[1]][i].name + '">';
+            HTML += '</label> ';
+            HTML += '<label for="' + preKey + key + '<' + i + '>IP">IP:';
+            HTML += '  <input type="text" id="' + preKey + key + '>name" value="' + config[configTree[0]][configTree[1]][i].IP + '">';
+            HTML += '</label> ';
+            HTML += '<label for="' + preKey + key + '<' + i + '>Watt">Vermogen:';
+            HTML += '  <input type="text" size="4" id="' + preKey + key + '>Watt" value="' + config[configTree[0]][configTree[1]][i].Watt + '"> Watt';
+            HTML += '</label><br>';
+console.log(key, preKey, val[i].name);
+            document.getElementById(preKey + key + "id").innerHTML += HTML;
+          }
         } else {
           preKey += key + ">";
           keyValuePairFuncs(val);   // recursively call the function
@@ -980,7 +997,8 @@ console.log(key, configTreeObj[key], elem.value);
             case "stringtime":
 console.log(key, configTreeObj[key], elem.value);
               configTreeObj[key] = elem.value;
-              break;          default:
+              break;
+            default:
 console.log(preKey, key, typeof configTreeObj[key], elem.type);
           }
         }
