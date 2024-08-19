@@ -955,6 +955,7 @@ const keyValuePairFuncsSet = (obj) => {
             elem = document.getElementById(selectNodeList[i].id + "time");
           }
 console.log(config[configTree[0]][configTree[1]][configTree[2]][configTree[3]], elem.value);
+          config[configTree[0]][configTree[1]][configTree[2]][configTree[3]] = elem.value;
         }
       } else {
         elem = configElem.querySelector('*[id="' + preKey + key+'"]');
