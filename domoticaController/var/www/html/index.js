@@ -846,7 +846,7 @@ function inputBegin(preKey, key, i, configTree, prop, txt) {
 }
 function inputEnd(preKey, key, i, configTree, prop, txt) {
   var HTMLEnd =  '<label for="' + preKey + key + '>' + i + '>' + prop + '">' + txt;
-  HTMLEnd += '     <select id="' + preKey + key + '>' + i + '>' + prop + '" onchange="selectInputBegin(' + i + ')">';
+  HTMLEnd += '     <select id="' + preKey + key + '>' + i + '>' + prop + '" onchange="selectInputEnd(' + i + ')">';
   HTMLEnd += '       <option value="morningLightsOut">Na ontbijt</option>';
   HTMLEnd += '       <option value="bedTime">Bedtijd</option>';
   HTMLEnd += '       <option value="time">Tijdstip</option>';
@@ -860,6 +860,18 @@ function inputEnd(preKey, key, i, configTree, prop, txt) {
   }
   HTMLEnd += '</label> ';
   return HTMLEnd;
+}
+//ToDo functions selectInputBegin, selectInputEnd, selectInputTemp
+function inputTemp(preKey, key, i, configTree, prop, txt) {
+  var HTMLTemp =  '<label for="' + preKey + key + '>' + i + '>' + prop + '">' + txt;
+  HTMLTemp += '     <select id="' + preKey + key + '>' + i + '>' + prop + '" onchange="selectInputTemp(' + i + ')">';
+  HTMLTemp += '       <option value="tempComfort">Comfort</option>';
+  HTMLTemp += '       <option value="tempAux">Werk</option>';
+  HTMLTemp += '     </select>';
+  HTMLTemp += '</label><input type="time" id="' + preKey + key + '>' + i + '>' + prop + 'time" style="visibility: hidden">';
+  HTMLTemp = HTMLTemp.replace(' value="' + config[configTree[0]][configTree[1]][i][prop] + '"', ' selected value="' + config[configTree[0]][configTree[1]][i][prop] + '"');
+  HTMLTemp += '</label> ';
+  return HTMLTemp;
 }
 
 function selectBegin(id) {
@@ -974,7 +986,7 @@ console.log(key, val);
             var configTree = configId.split(">");
             var HTML = inputBegin(preKey, key, i, configTree, "begin", "Van ");
             HTML += inputEnd(preKey, key, i, configTree, "end", "tot ");
-
+            HTML += inputTemp(preKey, key, i, configTree, "temp", "Temp: ");
             HTML += '<br>';
 
 console.log(key, preKey, val[i].name);
