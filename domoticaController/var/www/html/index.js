@@ -827,6 +827,41 @@ function devOptions() {
     devOptionsHTML += '\n       <option value="' + key + '">' + key + '</option>';
   }
 }
+function inputBegin(preKey, key, i, configTree, prop, txt) {
+  var HTMLBegin =  '<label for="' + preKey + key + '>' + i + '>' + prop + '">' + txt;
+  HTMLBegin += '     <select id="' + preKey + key + '>' + i + '>' + prop + '" onchange="selectInputBegin(' + i + ')">';
+  HTMLBegin += '       <option value="breakfast">Ontbijt</option>';
+  HTMLBegin += '       <option value="eveningLightsOn">Valavond</option>';
+  HTMLBegin += '       <option value="time">Tijdstip</option>';
+  HTMLBegin += '     </select>';
+  if (config[configTree[0]][configTree[1]][i][prop].indexOf(':') > -1) { // time
+    HTMLBegin += '</label><input type="time" id="' + preKey + key + '>' + i + '>' + prop + 'time" value="' + config[configTree[0]][configTree[1]][i][prop] + '">';
+    HTMLBegin = HTMLBegin.replace(' value="time"', ' selected value="time"');
+  } else { // placeholder
+    HTMLBegin += '</label><input type="time" id="' + preKey + key + '>' + i + '>' + prop + 'time" style="visibility: hidden">';
+    HTMLBegin = HTMLBegin.replace(' value="' + config[configTree[0]][configTree[1]][i][prop] + '"', ' selected value="' + config[configTree[0]][configTree[1]][i][prop] + '"');
+  }
+  HTMLBegin += '</label> ';
+  return HTMLBegin;
+}
+function inputEnd(preKey, key, i, configTree, prop, txt) {
+  var HTMLEnd =  '<label for="' + preKey + key + '>' + i + '>' + prop + '">' + txt;
+  HTMLEnd += '     <select id="' + preKey + key + '>' + i + '>' + prop + '" onchange="selectInputBegin(' + i + ')">';
+  HTMLEnd += '       <option value="morningLightsOut">Na ontbijt</option>';
+  HTMLEnd += '       <option value="bedTime">Bedtijd</option>';
+  HTMLEnd += '       <option value="time">Tijdstip</option>';
+  HTMLEnd += '     </select>';
+  if (config[configTree[0]][configTree[1]][i][prop].indexOf(':') > -1) { // time
+    HTMLEnd += '</label><input type="time" id="' + preKey + key + '>' + i + '>' + prop + 'time" value="' + config[configTree[0]][configTree[1]][i][prop] + '">';
+    HTMLEnd = HTMLEnd.replace(' value="time"', ' selected value="time"');
+  } else { // placeholder
+    HTMLEnd += '</label><input type="time" id="' + preKey + key + '>' + i + '>' + prop + 'time" style="visibility: hidden">';
+    HTMLEnd = HTMLEnd.replace(' value="' + config[configTree[0]][configTree[1]][i][prop] + '"', ' selected value="' + config[configTree[0]][configTree[1]][i][prop] + '"');
+  }
+  HTMLEnd += '</label> ';
+  return HTMLEnd;
+}
+
 function selectBegin(id) {
   var elem = document.getElementById("lights>timer>" + id + ">begin");
   if (elem.value == "time") {
@@ -929,6 +964,19 @@ console.log(key, val);
             HTML += '<label for="' + preKey + key + '<' + i + '>Watt">Vermogen:';
             HTML += '  <input type="text" size="4" id="' + preKey + key + '>Watt" value="' + config[configTree[0]][configTree[1]][i].Watt + '"> Watt';
             HTML += '</label><br>';
+//console.log(key, preKey, val[i].name);
+            document.getElementById(preKey + key + "id").innerHTML += HTML;
+          }
+        } else if (key == "thermostat") {
+          document.getElementById(preKey + key + "id").innerHTML = "";
+          for (let i = 0; i < val.length; i++) {
+            var configId = preKey + key;
+            var configTree = configId.split(">");
+            var HTML = inputBegin(preKey, key, i, configTree, "begin", "Van ");
+            HTML += inputEnd(preKey, key, i, configTree, "end", "tot ");
+
+            HTML += '<br>';
+
 console.log(key, preKey, val[i].name);
             document.getElementById(preKey + key + "id").innerHTML += HTML;
           }
