@@ -39,7 +39,7 @@ fi
 
 if test -f master.zip; then rm master.zip; fi
 echo "Download and extract Github Repository
-wget https://github.com/pindanet/Raspberry/archive/refs/heads/master.zip
+wget https://github.com/pindanet/Raspberry/archive/refs/heads/master.zip"
 unzip -q master.zip
 rm master.zip
 
