@@ -23,9 +23,17 @@
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
-  "") echo "usage: bash domoticaController_install.sh"
+  "") echo "usage: bash install.sh"
       exit;;
 esac
+
+# Activate 1-Wire
+echo 'dtoverlay=w1-gpio' | sudo tee -a /boot/firmware/config.txt
+# Activate DS18B20 Temperature Sensor
+echo 'w1-gpio' | sudo tee -a /etc/modules
+echo 'w1-therm' | sudo tee -a /etc/modules
+
+exit
 
 KEYMAP="be"
 LOCALE="nl_BE.UTF-8"
