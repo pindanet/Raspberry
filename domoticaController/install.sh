@@ -33,8 +33,10 @@ echo 'dtoverlay=w1-gpio' | sudo tee -a /boot/firmware/config.txt
 echo 'w1-gpio' | sudo tee -a /etc/modules
 echo 'w1-therm' | sudo tee -a /etc/modules
 
+if test -f master.zip; then rm master.zip; fi
 wget https://github.com/pindanet/Raspberry/archive/refs/heads/master.zip
 unzip -q master.zip
+rm master.zip
 
 exit
 
