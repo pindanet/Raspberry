@@ -34,6 +34,7 @@ echo 'w1-gpio' | sudo tee -a /etc/modules
 echo 'w1-therm' | sudo tee -a /etc/modules
 
 wget https://github.com/pindanet/Raspberry/archive/refs/heads/master.zip
+unzip -q master.zip
 
 exit
 
