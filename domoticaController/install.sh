@@ -27,17 +27,23 @@ case "$BASH_VERSION" in
       exit;;
 esac
 
-# Activate 1-Wire
-echo 'dtoverlay=w1-gpio' | sudo tee -a /boot/firmware/config.txt
-# Activate DS18B20 Temperature Sensor
-echo 'w1-gpio' | sudo tee -a /etc/modules
-echo 'w1-therm' | sudo tee -a /etc/modules
+grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
+if [ $? == 1 ]; then
+  echo "Activate 1-Wire and DS18B20 Temperature Sensor"
+  # Activate 1-Wire
+  echo 'dtoverlay=w1-gpio' | sudo tee -a /boot/firmware/config.txt
+  # Activate DS18B20 Temperature Sensor
+  echo 'w1-gpio' | sudo tee -a /etc/modules
+  echo 'w1-therm' | sudo tee -a /etc/modules
+fi
 
 if test -f master.zip; then rm master.zip; fi
+echo "Download and extract Github Repository
 wget https://github.com/pindanet/Raspberry/archive/refs/heads/master.zip
 unzip -q master.zip
 rm master.zip
 
+rm -r Raspberry-master/
 exit
 
 KEYMAP="be"
