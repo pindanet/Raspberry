@@ -1,7 +1,7 @@
 #!/bin/bash
 # For Raspberry Pi OS Bookworm Lite
 # wget https://github.com/pindanet/Raspberry/raw/master/domoticaController/install.sh
-# bash domoticaController_install.sh
+# bash install.sh
 
 # ToDo
 # SSL communication LMI_261-22 p62
