@@ -9,22 +9,17 @@
 # Activate PiCamera
 
 # Hardware
-# BME280 I2C Temperature and Pressure Sensor
-# 3v3 - Vin (Bordeau)
-# Gnd (6) - Gnd (Gray)
-# BCM 3 (SCL) (5) - SCK (White)
-# BCM 2 (SDA) (3) - SDI (Blue)
+# DS18B20 Temperature Sensor
+# 3,3 V (1) naar Vdd (Rood)
+# GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)
+# GND (9) naar GND (Zwart)
 
-# TLS2591 I2C High Dynamic Range Digital Light Sensor
-# 3v3 (1) () - Vin (Bordeau)
-# Gnd (6) > Gnd (6) (Gray)
-# BCM 3 (SCL) (5) - SCL (White)
-# BCM 2 (SDA) (3) - SDA (Blue)
-
-# PIR
-# BCM 4 (7) - output (Brown)
-# 5V (4) - Vdd (Red)
-# Gnd (9) - Gnd (Black)
+# BH1750 Light Sensor
+# 3.3 V (1) naar VIN (Rood)
+# SDA (3) naar SDA   (Grijs)
+# SCL (5) naar SCL   (Wit)
+# GPIO4 (7)          (Zwart)
+# GND (9) naar GND   (Bruin)
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
