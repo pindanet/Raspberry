@@ -33,7 +33,12 @@ echo "Install Wayland"
 sudo apt install wayfire seatd xdg-user-dirs libgl1-mesa-dri
 mkdir .config
 touch ~/.config/wayfire.init
-sudo raspi-config nonint do_boot_behaviour "B4"
+sudo raspi-config nonint do_boot_behaviour "B2"
+echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
+echo '  echo "SSH"' >> .bashrc
+echo 'else' >> .bashrc
+echo '  wayfire' >> .bashrc
+echo 'fi' >> .bashrc
 
 grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
 if [ $? == 1 ]; then
