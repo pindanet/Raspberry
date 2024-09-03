@@ -29,6 +29,11 @@ esac
 
 sudo apt update && sudo apt -y full-upgrade
 
+echo "Install Wayland"
+sudo apt install wayfire seatd xdg-user-dirs
+touch ~/.config/wayfire.init
+sudo raspi-config nonint do_wayland "W2"
+
 grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
 if [ $? == 1 ]; then
   echo "Activate 1-Wire and DS18B20 Temperature Sensor"
