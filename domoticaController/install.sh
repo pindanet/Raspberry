@@ -30,7 +30,7 @@ esac
 sudo apt update && sudo apt -y full-upgrade
 
 echo "Install Wayland"
-sudo apt install wayfire seatd xdg-user-dirs
+sudo apt install wayfire seatd xdg-user-dirs libgl1-mesa-dri
 mkdir .config
 touch ~/.config/wayfire.init
 sudo raspi-config nonint do_wayland "W2"
