@@ -27,6 +27,8 @@ case "$BASH_VERSION" in
       exit;;
 esac
 
+sudo apt update && sudo apt -y full-upgrade
+
 grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
 if [ $? == 1 ]; then
   echo "Activate 1-Wire and DS18B20 Temperature Sensor"
