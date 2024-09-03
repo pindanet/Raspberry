@@ -30,10 +30,11 @@ esac
 sudo apt update && sudo apt -y full-upgrade
 
 echo "Install Wayland"
-sudo apt install wayfire seatd xdg-user-dirs libgl1-mesa-dri
+sudo apt install wayfire seatd xdg-user-dirs libgl1-mesa-dri lightdm
 mkdir .config
 touch ~/.config/wayfire.init
 sudo raspi-config nonint do_wayland "W2"
+sudo raspi-config nonint do_boot_behaviour "B4"
 
 grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
 if [ $? == 1 ]; then
