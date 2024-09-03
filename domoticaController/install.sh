@@ -29,7 +29,7 @@ esac
 
 sudo apt update && sudo apt -y full-upgrade
 
-echo "Install Wayland"
+echo "Install Wayland" # https://gist.github.com/seffs/2395ca640d6d8d8228a19a9995418211
 sudo apt install wayfire seatd xdg-user-dirs libgl1-mesa-dri
 mkdir .config
 touch ~/.config/wayfire.init
