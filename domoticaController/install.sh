@@ -50,6 +50,9 @@ if [ $? == 1 ]; then
   echo 'w1-therm' | sudo tee -a /etc/modules
 fi
 
+echo "Install webserver"
+sudo apt install apache2 libapache2-mod-fcgid php-bcmath php-bz2 php-common php-curl php-xml php-gd php-php-gettext php-gmp php-ldap php-mbstring php-mysql php-odbc php-pgsql php-snmp php-soap php-sqlite3 php-tokenizer libapache2-mod-php -y
+
 if test -f master.zip; then rm master.zip; fi
 echo "Download and extract Github Repository
 wget https://github.com/pindanet/Raspberry/archive/refs/heads/master.zip"
