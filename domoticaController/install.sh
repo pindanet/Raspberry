@@ -62,7 +62,7 @@ echo "Autostart browser" # https://core-electronics.com.au/guides/raspberry-pi-k
 echo '[autostart]' >> .config/wayfire.ini
 echo 'screensaver = false' >> .config/wayfire.ini
 echo 'dpms = false' >> .config/wayfire.ini
-echo 'kiosk = /bin/chromium-browser  --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  https://localhost/ &' >> .config/wayfire.ini
+echo 'kiosk = /bin/chromium-browser  --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &' >> .config/wayfire.ini
 
 exit
 
