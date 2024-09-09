@@ -40,10 +40,6 @@ echo 'else' >> .bashrc
 echo '  wayfire' >> .bashrc
 echo 'fi' >> .bashrc
 
-echo "Activate VNC"
-sudo apt install wayvnc -y
-sudo raspi-config nonint do_vnc 0
-
 grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
 if [ $? == 1 ]; then
   echo "Activate 1-Wire and DS18B20 Temperature Sensor"
