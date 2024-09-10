@@ -570,7 +570,9 @@ function tempAdjustment(room) {
 function thermostat() {
   tempAdjustment(conf.Living);
 // getLivingTemp
-  getTemp("pindadomo", "cat /sys/bus/iio/devices/iio\:device0/in_temp_input", conf.Living);
+//  getTemp("pindadomo", "cat /sys/bus/iio/devices/iio\:device0/in_temp_input", conf.Living);
+//  getTemp("pindadomo", "cat /sys/bus/w1/devices/28-*/temperature", conf.Living);
+  getTemp("pindadomo", "/var/www/html/ds18b20.sh", conf.Living);
   tempAdjustment(conf.Dining);
 // getDiningTemp
   getTemp("pindadining", "cat /sys/bus/w1/devices/28-*/temperature", conf.Dining);
@@ -818,7 +820,8 @@ function brightness() {
     };
     xhr.send("cmd=cat&params="+stringToHex("data/luxmaxtls"));
   };
-  xhr.send("cmd=python3&params="+stringToHex("/var/www/html/tls2591.py"));
+//  xhr.send("cmd=python3&params="+stringToHex("/var/www/html/tls2591.py"));
+  xhr.send("cmd=cat&params="+stringToHex("/sys/class/i2c-adapter/i2c-1/1-0023/iio:device0/in_illuminance_raw"));
 }
 var preKey = "";
 var devOptionsHTML = "";
