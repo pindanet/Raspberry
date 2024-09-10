@@ -27,6 +27,11 @@ case "$BASH_VERSION" in
       exit;;
 esac
 
+# Debug, Test
+echo "Configure Debug/Test"
+echo '127.0.0.1       pindadomo' | sudo tee -a /etc/hosts
+
+echo "Full Upgrade"
 sudo apt update && sudo apt -y full-upgrade
 
 echo "Install Wayland" # https://gist.github.com/seffs/2395ca640d6d8d8228a19a9995418211
