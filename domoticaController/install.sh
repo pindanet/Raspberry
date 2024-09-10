@@ -58,7 +58,7 @@ echo "Download and extract Github Repository"
 wget https://github.com/pindanet/Raspberry/archive/refs/heads/master.zip
 unzip -q master.zip
 rm master.zip
-
+sudo cp -r Raspberry-master/domoticaController/var/www/html/* /var/www/html/
 rm -r Raspberry-master/
 
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
