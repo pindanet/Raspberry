@@ -72,9 +72,11 @@ echo 'kiosk = /bin/chromium-browser  --kiosk --ozone-platform=wayland --start-ma
 
 # Debug, Test, Demo
 echo "Configure Debug/Test/Demo"
-ssh-keygen
-sudo cp .ssh/id_rsa /var/www/html/data/
 echo '127.0.0.1       pindadomo' | sudo tee -a /etc/hosts
+
+ssh-keygen
+
+sudo cp .ssh/id_rsa /var/www/html/data/
 
 exit
 
