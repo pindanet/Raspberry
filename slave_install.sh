@@ -39,6 +39,11 @@
 # Pi SCL (5) to sensor SCK green
 # Pi SDA (3) to sensor SDA blue
 
+# DS18B20 Temperature Sensor
+# GPIO17 (11) naar Vdd (Rood)
+# GPIO27 (13) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
+# GND (9) naar GND (Zwart)
+
 # Test if executed with Bash
 case "$BASH_VERSION" in
   "") echo "usage: bash slave_install.sh"
