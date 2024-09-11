@@ -27,11 +27,6 @@ case "$BASH_VERSION" in
       exit;;
 esac
 
-# Debug, Test, Demo
-echo "Configure Debug/Test/Demo"
-ssh-keygen
-echo '127.0.0.1       pindadomo' | sudo tee -a /etc/hosts
-
 echo "Full Upgrade"
 sudo apt update && sudo apt -y full-upgrade
 
@@ -74,6 +69,12 @@ echo '[autostart]' >> .config/wayfire.ini
 echo 'screensaver = false' >> .config/wayfire.ini
 echo 'dpms = false' >> .config/wayfire.ini
 echo 'kiosk = /bin/chromium-browser  --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &' >> .config/wayfire.ini
+
+# Debug, Test, Demo
+echo "Configure Debug/Test/Demo"
+ssh-keygen
+sudo cp .ssh/id_rsa /var/www/html/data/
+echo '127.0.0.1       pindadomo' | sudo tee -a /etc/hosts
 
 exit
 
