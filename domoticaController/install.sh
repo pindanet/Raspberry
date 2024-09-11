@@ -27,8 +27,9 @@ case "$BASH_VERSION" in
       exit;;
 esac
 
-# Debug, Test
-echo "Configure Debug/Test"
+# Debug, Test, Demo
+echo "Configure Debug/Test/Demo"
+ssh-keygen
 echo '127.0.0.1       pindadomo' | sudo tee -a /etc/hosts
 
 echo "Full Upgrade"
