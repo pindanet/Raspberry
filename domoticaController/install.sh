@@ -73,6 +73,8 @@ echo 'kiosk = /bin/chromium-browser  --kiosk --ozone-platform=wayland --start-ma
 # Debug, Test, Demo
 echo "Configure Debug/Test/Demo"
 echo '127.0.0.1       pindadomo' | sudo tee -a /etc/hosts
+echo '127.0.0.1       pindadining' | sudo tee -a /etc/hosts
+echo '127.0.0.1       pindakeuken' | sudo tee -a /etc/hosts
 
 echo "Configure SSH remote login"
 ssh-keygen
