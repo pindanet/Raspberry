@@ -10,9 +10,9 @@
 
 # Hardware
 # DS18B20 Temperature Sensor
-# GPIO17 (11) naar Vdd (Rood)
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
 # GND (9) naar GND (Zwart)
+# GPIO17 (11) naar Vdd (Rood)
 
 # BH1750 Light Sensor
 # 3.3 V (1) naar VIN (Rood)
