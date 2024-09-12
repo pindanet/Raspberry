@@ -18,7 +18,6 @@
 # 3.3 V (1) naar VIN (Rood)
 # SDA (3) naar SDA   (Grijs)
 # SCL (5) naar SCL   (Wit)
-# GPIO4 (7)          (Zwart)
 # GND (9) naar GND   (Bruin)
 
 # Test if executed with Bash
