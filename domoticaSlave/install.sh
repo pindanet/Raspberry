@@ -13,7 +13,7 @@
 # GPIO17 (11) naar Vdd (Rood)
 
 # PIR
-# 5v (2) > Vcc (Red)
+# 5v (4) > Vcc (Red)
 # Gnd (6) > Gnd (Brown)
 # GPIO14 (8) > Output (Orange)
 
