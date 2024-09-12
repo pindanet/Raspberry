@@ -1,12 +1,10 @@
 #!/bin/bash
 # For Raspberry Pi OS Bookworm Lite
-# wget https://github.com/pindanet/Raspberry/raw/master/domoticaController/install.sh
+# wget https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/install.sh
 # bash install.sh
 
 # ToDo
 # SSL communication LMI_261-22 p62
-# Activate Serial Hardware
-# Activate PiCamera
 
 # Hardware
 # DS18B20 Temperature Sensor
@@ -14,12 +12,10 @@
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
 # GND (14) naar GND (Zwart)
 
-# BH1750 Light Sensor
-# 3.3 V (1) naar VIN (Rood)
-# SDA (3) naar SDA   (Grijs)
-# SCL (5) naar SCL   (Wit)
-# GPIO4 (7)          (Zwart)
-# GND (9) naar GND   (Bruin)
+# PIR
+# Gnd (14) > Gnd (Brown)
+# GPIO 4 (7) > Output (Orange)
+# 5 V (4) > Vcc (Red)
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
@@ -83,21 +79,6 @@ sudo cp .ssh/id_rsa /var/www/html/data/
 sudo chown www-data:www-data /var/www/html/data/id_rsa
 
 exit
-
-#!/bin/bash
-# For Raspbian Buster Lite
-# wget https://github.com/pindanet/Raspberry/raw/master/slave_install.sh
-# bash slave_install.sh
-
-# ToDo
-# Setup Headless: https://www.raspberrypi.org/documentation/configuration/wireless/headless.md
-# Activate ssh on boot partition
-
-# PIR 1
-# -----
-# Gnd (14) > Gnd (Brown)
-# GPIO 4 (7) > Output (Orange)
-# 5 V (4) > Vcc (Red)
 
 # PIR 2
 # -----
