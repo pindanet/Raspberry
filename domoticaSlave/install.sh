@@ -13,9 +13,9 @@
 # GPIO17 (11) naar Vdd (Rood)
 
 # PIR
-# Gnd (9) > Gnd (Brown)
-# GPIO 4 (7) > Vcc (Red)
-# GPIO 4 (7) > Output (Orange)
+# 5v (2) > Vcc (Red)
+# Gnd (6) > Gnd (Brown)
+# GPIO14 (8) > Output (Orange)
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
