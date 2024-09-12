@@ -1,4 +1,90 @@
 #!/bin/bash
+# For Raspberry Pi OS Bookworm Lite
+# wget https://github.com/pindanet/Raspberry/raw/master/domoticaController/install.sh
+# bash install.sh
+
+# ToDo
+# SSL communication LMI_261-22 p62
+# Activate Serial Hardware
+# Activate PiCamera
+
+# Hardware
+# DS18B20 Temperature Sensor
+# GPIO17 (11) naar Vdd (Rood)
+# GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
+# GND (14) naar GND (Zwart)
+
+# BH1750 Light Sensor
+# 3.3 V (1) naar VIN (Rood)
+# SDA (3) naar SDA   (Grijs)
+# SCL (5) naar SCL   (Wit)
+# GPIO4 (7)          (Zwart)
+# GND (9) naar GND   (Bruin)
+
+# Test if executed with Bash
+case "$BASH_VERSION" in
+  "") echo "usage: bash install.sh"
+      exit;;
+esac
+
+echo "Full Upgrade"
+sudo apt update && sudo apt -y full-upgrade
+
+echo "Install Wayland" # https://gist.github.com/seffs/2395ca640d6d8d8228a19a9995418211
+sudo apt install wayfire seatd xdg-user-dirs libgl1-mesa-dri
+mkdir .config
+touch ~/.config/wayfire.init
+sudo raspi-config nonint do_boot_behaviour "B2"  # https://www.raspberrypi.com/documentation/computers/configuration.html
+echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
+echo '  echo "SSH"' >> .bashrc
+echo 'else' >> .bashrc
+echo '  wayfire' >> .bashrc
+echo 'fi' >> .bashrc
+
+grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
+if [ $? == 1 ]; then
+  echo "Activate 1-Wire and DS18B20 Temperature Sensor"
+  # Activate 1-Wire
+  echo 'dtoverlay=w1-gpio' | sudo tee -a /boot/firmware/config.txt
+  # Activate DS18B20 Temperature Sensor
+  echo 'w1-gpio' | sudo tee -a /etc/modules
+  echo 'w1-therm' | sudo tee -a /etc/modules
+fi
+
+echo "Install webserver"
+sudo apt install apache2 libapache2-mod-fcgid php-bcmath php-bz2 php-common php-curl php-xml php-gd php-php-gettext php-gmp php-ldap php-mbstring php-mysql php-odbc php-pgsql php-snmp php-soap php-sqlite3 php-tokenizer libapache2-mod-php -y
+
+if test -f master.zip; then rm master.zip; fi
+echo "Download and extract Github Repository"
+wget https://github.com/pindanet/Raspberry/archive/refs/heads/master.zip
+unzip -q master.zip
+rm master.zip
+sudo cp -r Raspberry-master/domoticaController/var/www/html/* /var/www/html/
+rm -r Raspberry-master/
+
+sudo chmod +x /var/www/html/ds18b20.sh
+
+echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
+echo '[autostart]' >> .config/wayfire.ini
+echo 'screensaver = false' >> .config/wayfire.ini
+echo 'dpms = false' >> .config/wayfire.ini
+echo 'kiosk = /bin/chromium-browser  --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &' >> .config/wayfire.ini
+
+# Debug, Test, Demo
+echo "Configure Debug/Test/Demo"
+echo '127.0.0.1       pindadomo' | sudo tee -a /etc/hosts
+echo '127.0.0.1       pindadining' | sudo tee -a /etc/hosts
+echo '127.0.0.1       pindakeuken' | sudo tee -a /etc/hosts
+
+echo "Configure SSH remote login"
+ssh-keygen
+ssh-copy-id -i $HOME/.ssh/id_rsa.pub $(ls /home)@pindadomo
+sudo cp .ssh/id_rsa /var/www/html/data/
+sudo chown www-data:www-data /var/www/html/data/id_rsa
+
+exit
+
+#!/bin/bash
 # For Raspbian Buster Lite
 # wget https://github.com/pindanet/Raspberry/raw/master/slave_install.sh
 # bash slave_install.sh
