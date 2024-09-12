@@ -13,8 +13,8 @@
 # GND (14) naar GND (Zwart)
 
 # PIR
-# Gnd (14) > Gnd (Brown)
-# GPIO 4 (7) > Output (Orange)
+# Gnd (30) > Gnd (Brown)
+# GPIO 23 (16) > Output (Orange)
 # 5 V (4) > Vcc (Red)
 
 # Test if executed with Bash
