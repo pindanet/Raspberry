@@ -8,14 +8,14 @@
 
 # Hardware
 # DS18B20 Temperature Sensor
-# GPIO17 (11) naar Vdd (Rood)
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
-# GND (14) naar GND (Zwart)
+# GND (9) naar GND (Zwart)
+# GPIO17 (11) naar Vdd (Rood)
 
 # PIR
 # Gnd (9) > Gnd (Brown)
-# GPIO 17 (11) > Vcc (Red)
-# GPIO 27 (13) > Output (Orange)
+# GPIO 4 (7) > Vcc (Red)
+# GPIO 4 (7) > Output (Orange)
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
