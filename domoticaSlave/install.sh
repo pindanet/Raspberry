@@ -23,6 +23,8 @@ case "$BASH_VERSION" in
       exit;;
 esac
 
+cat /sys/firmware/devicetree/base/model
+
 echo "Full Upgrade"
 sudo apt update && sudo apt -y full-upgrade
 
