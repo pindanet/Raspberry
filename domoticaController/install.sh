@@ -12,13 +12,13 @@
 # DS18B20 Temperature Sensor
 # GPIO17 (11) naar Vdd (Rood)
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
-# GND (14) naar GND (Zwart)
+# GND (9) naar GND (Zwart)
 
 # BH1750 Light Sensor
 # 3.3 V (1) naar VIN (Rood)
 # SDA (3) naar SDA   (Grijs)
 # SCL (5) naar SCL   (Wit)
-# GND (9) naar GND   (Bruin)
+# GND (6) naar GND   (Bruin)
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
