@@ -31,7 +31,7 @@ sudo apt update && sudo apt -y full-upgrade
 
 echo "Install Wayland" # https://gist.github.com/seffs/2395ca640d6d8d8228a19a9995418211
 echo "==============="
-sudo apt install wayfire seatd xdg-user-dirs libgl1-mesa-dri
+sudo apt install wayfire seatd xdg-user-dirs libgl1-mesa-dri -y
 mkdir .config
 touch ~/.config/wayfire.init
 sudo raspi-config nonint do_boot_behaviour "B2"  # https://www.raspberrypi.com/documentation/computers/configuration.html
