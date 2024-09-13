@@ -73,18 +73,6 @@ echo 'screensaver = false' >> .config/wayfire.ini
 echo 'dpms = false' >> .config/wayfire.ini
 echo 'kiosk = /bin/chromium-browser  --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &' >> .config/wayfire.ini
 
-# Debug, Test, Demo
-echo "Configure Debug/Test/Demo"
-echo '127.0.0.1       pindadomo' | sudo tee -a /etc/hosts
-echo '127.0.0.1       pindadining' | sudo tee -a /etc/hosts
-echo '127.0.0.1       pindakeuken' | sudo tee -a /etc/hosts
-
-echo "Configure SSH remote login"
-ssh-keygen
-ssh-copy-id -i $HOME/.ssh/id_rsa.pub $(ls /home)@pindadomo
-sudo cp .ssh/id_rsa /var/www/html/data/
-sudo chown www-data:www-data /var/www/html/data/id_rsa
-
 exit
 
 # PIR 2
