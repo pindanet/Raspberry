@@ -7,6 +7,11 @@
 # SSL communication LMI_261-22 p62
 
 # Hardware
+
+# Touch Display https://www.raspberrypi.com/documentation/accessories/display.html
+# 5v (2) > Vcc
+# GND (14) > Gnd
+
 # DS18B20 Temperature Sensor
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
 # GND (9) naar GND (Zwart)
