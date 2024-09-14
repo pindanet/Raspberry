@@ -45,6 +45,13 @@ echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
 echo '  wayfire' >> .bashrc
 echo 'fi' >> .bashrc
+# Rotate the Touch Display
+echo '[output:DSI-1]' >> .config/wayfire.ini
+echo 'mode = 480x800@60' >> .config/wayfire.ini
+echo 'position = 0,0' >> .config/wayfire.ini
+echo 'transform = 270' >> .config/wayfire.ini
+# Optional: Rotate the console
+sudo cp /boot/firmware/cmdline.txt /boot/firmware/cmdline.txt.ori
 
 grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
 if [ $? == 1 ]; then
