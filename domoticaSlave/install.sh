@@ -52,6 +52,7 @@ echo 'position = 0,0' >> .config/wayfire.ini
 echo 'transform = 270' >> .config/wayfire.ini
 # Optional: Rotate the console
 sudo cp /boot/firmware/cmdline.txt /boot/firmware/cmdline.txt.ori
+sudo sed -i ' 1 s/.*/& video=DSI-1:800x480@60,rotate=270/' /boot/firmware/cmdline.txt
 
 grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
 if [ $? == 1 ]; then
