@@ -81,6 +81,8 @@ sudo chmod +x /var/www/html/ds18b20.sh
 sudo chmod +x /var/www/html/pir.sh
 sudo chown www-data:www-data /var/www/html/data
 
+sudo usermod -a -G gpio www-data
+
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
 sudo apt install chromium-browser -y
