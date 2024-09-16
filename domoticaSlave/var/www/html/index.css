@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  color: white;
+  font-family: sans-serif;
+}
+a {
+  color: white;
+  text-decoration: none;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+
+#content div {
+  vertical-align: middle;
+}
+#day {
+  font-size: 14vw;
+  text-align: center;
+}
+table img {
+  width: 19vw;
+  padding-left: 1vw;
+  padding-right: 1vw;
+  padding-top: 1vw;
+}
+#weather img {
+  padding: 0px;
+}
+#clockdate {
+  font-size: 12vw;
+  text-align: center;
+}
+#clock {
+  font-size: 32vw;   
+  text-align: center;
+  line-height: 97%;
+}
+#diningRoomTemp {
+  font-size: 28vw;
+  text-align: center;
+}
+#weather {
+  font-size: 5vw;
+  vertical-align: bottom;
+}
+#weather td {
+  text-align: right;
+}
