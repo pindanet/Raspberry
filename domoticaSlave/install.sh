@@ -78,6 +78,7 @@ sudo cp -r Raspberry-master/domoticaSlave/var/www/html/* /var/www/html/
 rm -r Raspberry-master/
 
 sudo chmod +x /var/www/html/ds18b20.sh
+sudo chown www-data:www-data /var/www/html/data
 
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
