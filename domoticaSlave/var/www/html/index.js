@@ -1,9 +1,5 @@
-//var lightSwitch="tasmota-15dd89-7561";
-//var irSwitch = [];
-//irSwitch["ir1"] = "tasmota-4fd8ee-6382.log";
-//irSwitch["ir2"] = "tasmota-a943fa-1018.log";
+var room = "Kitchen";
 
-var startTimer;
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
 
@@ -17,6 +13,9 @@ function getConf() { // Get configuration
 //        calcConf();
 //        nextalarm();
         startTime();
+        startMotion();
+        startTemp();
+        weather();
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
         conf = JSON.parse(this.responseText);
         conf.lastModified = this.getResponseHeader('Last-Modified');
@@ -42,9 +41,6 @@ const stringToHex = (str) => {
   }
   return hex;
 };
-
-function getTemp(host, cmd, room) {
-}
 
 var yrCodes = {
 	"s01": "clear sky",
@@ -141,8 +137,44 @@ function checkTime(i) {
   return i;
 }
 
+function startTemp() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      const output = JSON.parse(this.responseText);
+      conf[room].temp = parseFloat(output[0]) / 1000 + conf[room].tempCorrection;
+      if (isNaN(conf[room].temp)) {
+        setTimeout(startTemp, 1000); // try again
+      }
+      document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1) + " °C";
+    }
+  };
+  xhr.send("cmd=/var/www/html/ds18b20.sh&params="+stringToHex(""));
+
+  setTimeout(startTemp, 60000); // elke minuut
+}
+function startMotion() {
+//  lightstatus();
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      const output = JSON.parse(this.responseText);
+console.log(output[0]);
+//      conf[room].temp = parseFloat(output[0]) / 1000 + conf[room].tempCorrection;
+//      document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1) + " °C";
+    }
+  };
+  xhr.send("cmd=pinctrl&params="+stringToHex("get 14"));
+
+  setTimeout(startMotion, 1000); // elke seconde
+}
+
 function startTime() {
-  clearTimeout(startTimer);
+//  clearTimeout(startTimer);
   var today = new Date();
   var h = today.getHours();
   var m = today.getMinutes();
@@ -153,28 +185,6 @@ function startTime() {
   document.getElementById('day').innerHTML = dayNames[today.getDay()];
   document.getElementById('clock').innerHTML = h + ":" + m;
   document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
-//  document.getElementById('temp').innerHTML = roomTemp;
 
-  getTemp("localhost", "/var/www/html/ds18b20.sh", conf.Dining);
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200 && this.readyState === 4) {
-      const output = JSON.parse(this.responseText);
-      conf.Dining.temp = parseFloat(output[0]) / 1000 + conf.Dining.tempCorrection;
-      document.getElementById(conf.Dining.id + "RoomTemp").innerHTML = conf.Dining.temp.toFixed(1) + " °C";
-    }
-  };
-//  xhr.send("cmd=ssh&params="+stringToHex("-v -i data/id_rsa -o StrictHostKeyChecking=no -o 'UserKnownHostsFile /dev/null' $(ls /home)@" +  host +" '" + cmd + "'"));
-  xhr.send("cmd=/var/www/html/ds18b20.sh&params="+stringToHex(""));
-
-//  lightstatus();
-  weather();
-
-//  setTimeout(irstatus, 2500, irSwitch["ir1"], "ir1");
-//  irstatus(irSwitch["ir1"], "ir1");
-//  irstatus(irSwitch["ir2"], "ir2");
-
-  startTimer = setTimeout(startTime, 5000); // elke 5 seconden
+  setTimeout(startTime, 1000); // elke seconde
 }
