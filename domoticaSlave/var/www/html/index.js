@@ -15,7 +15,7 @@ function getConf() { // Get configuration
         startTime();
         startMotion();
         startTemp();
-        weather();
+//        weather();
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
         conf = JSON.parse(this.responseText);
         conf.lastModified = this.getResponseHeader('Last-Modified');
@@ -144,28 +144,37 @@ function startTemp() {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
-      conf[room].temp = parseFloat(output[0]) / 1000 + conf[room].tempCorrection;
-      if (isNaN(conf[room].temp)) {
-        setTimeout(startTemp, 1000); // try again
+      if (output[0] != "") {
+        conf[room].temp = parseFloat(output[0]) / 1000 + conf[room].tempCorrection;
+        document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1);
+      } else {
+        console.log("Try again");
       }
-      document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1) + " °C";
     }
   };
   xhr.send("cmd=/var/www/html/ds18b20.sh&params="+stringToHex(""));
 
   setTimeout(startTemp, 60000); // elke minuut
 }
+var pirStatus;
 function startMotion() {
-//  lightstatus();
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
-console.log(output[0]);
-//      conf[room].temp = parseFloat(output[0]) / 1000 + conf[room].tempCorrection;
-//      document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1) + " °C";
+      if (output[0] != pirStatus) {
+        pirStatus = output[0];
+        if (pirStatus.includes(" hi ")) {
+console.log("lightTimer = 180 seconden");
+          document.getElementById("lightoff").style.display = "none";
+          document.getElementById("lighton").style.display = "";
+        } else {
+          document.getElementById("lighton").style.display = "none";
+          document.getElementById("lightoff").style.display = "";
+        }
+      }
     }
   };
   xhr.send("cmd=pinctrl&params="+stringToHex("get 14"));
