@@ -38,4 +38,5 @@ else
   # Power on
   pinctrl set $powergpio op dh
   sleep 5
+  echo "error"
 fi
