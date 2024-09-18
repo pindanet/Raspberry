@@ -1,8 +1,116 @@
+// ToDo
+// powerLog
+
 var room = "Kitchen";
 
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
 
+function timeDate (time, dateObject) {
+  var hourMin = [];
+  if (time.indexOf(":") > -1) {
+    hourMin = time.split(':');
+  } else {
+    if (conf.hasOwnProperty(time)) {
+      hourMin = conf[time].split(':');
+    } else {
+      var varDate = new Date();
+      varDate.setTime(window[time].getTime());
+      hourMin[0] = varDate.getHours();
+      hourMin[1] = varDate.getMinutes();
+    }
+  }
+  dateObject.setHours(hourMin[0], hourMin[1], 0, 0);
+  return dateObject;
+}
+function getEventAlarm(nowDate, ref) {
+  var nowDateOnly = new Date(nowDate.getTime());
+  var refDate = new Date(ref.getTime());
+  for (let i = 0; i < conf.event.length; i++) {
+    if (conf.event[i].hasOwnProperty('alarm')) {
+      nowDateOnly.setHours(0);
+      nowDateOnly.setMinutes(0);
+      nowDateOnly.setSeconds(0);
+      nowDateOnly.setMilliseconds(0);
+      var dateOnly = nowDateOnly.getTime();
+      var beginDate = new Date(conf.event[i].begindate);
+      beginDate.setHours(0);
+      var begin = beginDate.getTime();
+      if (conf.event[i].repeat > 0) { // repeating event
+        while (begin < dateOnly) {
+          begin += 86400000 * conf.event[i].repeat;
+        }
+      }
+      if (begin == dateOnly) {
+        var expired = begin - beginDate.getTime();
+        var endDate = new Date(conf.event[i].enddate);
+        var end = endDate.getTime();
+        endDate.setTime(end + expired);
+        endDate = timeDate(conf.event[i].end, endDate);
+        end = endDate.getTime();
+
+        beginDate.setTime(begin);
+        beginDate = timeDate(conf.event[i].begin, beginDate);
+        begin = beginDate.getTime();
+
+        var alarmDate = new Date();
+        alarmDate.setTime(begin);
+        alarmDate = timeDate(conf.event[i].alarm, alarmDate);
+        alarm = alarmDate.getTime();
+        if (alarm >= refDate.getTime() && alarm <= end) {
+          return alarmDate.getTime();
+        }
+      }
+    }
+  }
+  return 0;
+}
+function setAlarmTime(nextAlarmSec, defaultDate) {
+  if (nextAlarmSec == 0) { // No alarmtime found, use default alarmtime
+    nextAlarm = timeDate (conf.alarmtime, new Date(defaultDate.getTime()));
+  } else { // Set found alarmtime
+    nextAlarm = new Date(nextAlarmSec);
+  }
+}
+function nextalarm() {
+  var today = new Date();
+  setAlarmTime(getEventAlarm(today, today), today); // Get today's alarmtime
+
+  if (today > nextAlarm) { // Alarmtime has expired
+    var nextDate = new Date();
+    nextDate.setDate(nextAlarm.getDate() + 1);
+    nextDate.setHours(0,0,0,0);
+    setAlarmTime(getEventAlarm(nextDate, today), nextDate); // Get tomorrow's alarmtime
+  }
+  var alarmtime = timeDate (conf.alarmtime, new Date());
+  if (today.getTime() < alarmtime.getTime()) { // still night, disable backlight Touchscreen
+    gotoSleep();
+  }
+//  setTimeout(wakeup, nextAlarm.getTime() - today.getTime()); // activate backlight Touchscreen at nextAlarm
+
+  var sunTimes = SunCalc.getTimes(nextAlarm, conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
+  morningTimerLightsOut = new Date(nextAlarm.getTime() + (conf.lights.lightsOut.Offset * 60000)); // 79 min (1 hour 19 min) after wakeup
+  breakfast = new Date(nextAlarm.getTime() + (conf.breakfastOffset * 60000)); // 11 min after nextAlarm
+  if (morningTimerLightsOut.getTime() > sunTimes.sunrise.getTime()) { // Sun shines
+    morningLightsOut = new Date(morningTimerLightsOut.getTime()).getTime();
+  } else { // Still dark
+    morningLightsOut = new Date(sunTimes.sunrise.getTime()).getTime();
+  }
+
+  sunTimes = SunCalc.getTimes(new Date(), conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
+  var eveningShutterDown = timeDate(conf.lights.eveningShutterDown, eveningShutterDown = new Date());
+  if (eveningShutterDown.getTime() > sunTimes.sunset.getTime()) { // Already dark
+    eveningLightsOn = new Date(sunTimes.sunset.getTime()).getTime();
+  } else { // Still daylight
+    eveningLightsOn = new Date(eveningShutterDown.getTime()).getTime();
+  }
+}
+function calcConf() {
+  lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
+  nextalarm();
+console.log(new Date(eveningLightsOn));
+console.log(new Date(morningLightsOut));
+}
 function getConf() { // Get configuration
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function(e) {
@@ -10,7 +118,7 @@ function getConf() { // Get configuration
       if (typeof conf === 'undefined') {
         conf = JSON.parse(this.responseText);
         conf.lastModified = this.getResponseHeader('Last-Modified');
-//        calcConf();
+        calcConf();
 //        nextalarm();
         startTime();
         startMotion();
@@ -19,7 +127,7 @@ function getConf() { // Get configuration
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
         conf = JSON.parse(this.responseText);
         conf.lastModified = this.getResponseHeader('Last-Modified');
-//        calcConf();
+        calcConf();
       }
 //      brightness();
       setTimeout(getConf, 60000); // Every minute
@@ -144,7 +252,7 @@ function startTemp() {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
-      if (output[0] != "") {
+      if (output[0] != "error") {
         conf[room].temp = parseFloat(output[0]) / 1000 + conf[room].tempCorrection;
         document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1);
       } else {
@@ -156,7 +264,31 @@ function startTemp() {
 
   setTimeout(startTemp, 60000); // elke minuut
 }
+
+function tasmotaSwitch (switchName, cmd) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+      const output = JSON.parse(this.responseText);
+      if (output[0] == '{"POWER":"OFF"}') {
+        conf.switch[switchName].status = "off";
+//        activeHeaters(room);
+//        powerLog(room.heater[heater], room.heater[heater].name);
+      } else if (output[0] == '{"POWER":"ON"}') {
+        conf.switch[switchName].status = "on";
+//        activeHeaters(room);
+//        powerLog(room.heater[heater], room.heater[heater].name);
+      }
+    }
+  };
+console.log("wget -qO- http://" + conf.switch[switchName].IP + "/cm?cmnd=" + cmd);
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.switch[switchName].IP + "/cm?cmnd=" + cmd));
+}
+
 var pirStatus;
+var lightOffTime;
 function startMotion() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -165,14 +297,28 @@ function startMotion() {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
       if (output[0] != pirStatus) {
-        pirStatus = output[0];
-        if (pirStatus.includes(" hi ")) {
-console.log("lightTimer = 180 seconden");
-          document.getElementById("lightoff").style.display = "none";
-          document.getElementById("lighton").style.display = "";
-        } else {
+        if (typeof pirStatus == 'undefined') {
+          pirStatus = output[0];
+        }
+        if (output[0].includes(" hi ")) {
+          pirStatus = output[0];
+//          lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
+          lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
+          var now = new Date().getTime;
+          if (now > eveningLightsOn && now < morningLightsOut) {
+            document.getElementById("lightoff").style.display = "none";
+            document.getElementById("lighton").style.display = "";
+//            tasmotaSwitch ("Keukenlamp", "Power%20On");
+console.log("Nachtscherm activeren", conf.minBacklight);
+          } else {
+console.log("Dagscherm activeren", conf.maxBacklight + conf.minBacklight);
+          }
+        } else if (new Date().getTime() > lightOffTime) {
+console.log("Scherm Uitschakelen");
+          pirStatus = output[0];
           document.getElementById("lighton").style.display = "none";
           document.getElementById("lightoff").style.display = "";
+//          tasmotaSwitch ("Keukenlamp", "Power%20Off");
         }
       }
     }
