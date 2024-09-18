@@ -6,16 +6,6 @@
 
 powergpio=17
 
-#if ! test -d /sys/bus/w1/devices/28-*; then
-#  # Reset DS18B20
-#  # Power off
-#  pinctrl set $powergpio op dl
-#  sleep 3
-#  # Power on
-#  pinctrl set $powergpio op dh
-#  sleep 5
-#fi
-
 # cat /sys/devices/w1_bus_master1/28-*/temperature
 temp=$(cat /sys/bus/w1/devices/28-*/temperature)
 if [[ $temp =~ ^[0-9]+$ ]]; then
@@ -23,7 +13,7 @@ if [[ $temp =~ ^[0-9]+$ ]]; then
   echo $temp > /var/www/html/data/temp
 
   # minimum maximum temp
-  timestamp=$(date +"%Y-%m-%d_")
+  timestamp=$(date +"%m-%d_")
   if [ ! -f /var/www/html/data/${timestamp}tempmax ]; then
     echo 0 > /var/www/html/data/${timestamp}tempmax
   fi
