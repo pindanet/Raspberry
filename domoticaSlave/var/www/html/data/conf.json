@@ -24,6 +24,7 @@
   "minBacklight": 15,
   "maxBacklight": 110,
   "lights": {
+   "lightTimer": 180,
     "lightsOut": {
       "at": "nextAlarm",
       "Offset": "79"
