@@ -43,6 +43,8 @@ function calcConf() { // Calculated Configuration
       conf.available[0].absentdate.setDate(conf.available[0].absentdate.getDate()+1);
     }
   }
+  // Set weather URL
+  document.getElementById('weather').contentDocument.location.href = "meteogram/meteogram.html?lat=" + conf.location.Latitude + "&lon=" + conf.location.Longitude + "&alt=" + conf.location.Altitude;
 }
 function thermostatUI (event, command, id) {
   switch (command) {
@@ -578,7 +580,8 @@ function thermostat() {
   getTemp("pindadining", "cat /sys/bus/w1/devices/28-*/temperature", conf.Dining);
   tempAdjustment(conf.Kitchen);
 // getKitchenTemp
-  getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
+//  getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
+  getTemp("pindakeuken", '/var/www/html/ds18b20.sh', conf.Kitchen);
   if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort)) {
     document.getElementById("clockday").style.color="lime";
   } else {
