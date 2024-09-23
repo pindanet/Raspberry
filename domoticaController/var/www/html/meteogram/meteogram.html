@@ -785,7 +785,12 @@ Meteogram.prototype.parseYrData = function () {
 
 // Set the hash to the yr.no URL we want to parse
 if (!location.hash) {
-    location.hash = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=51.18530&lon=3.24031&altitude=4';
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const lat = urlParams.get('lat');
+    const lon = urlParams.get('lon');
+    const alt = urlParams.get('alt');
+    location.hash = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=' + lat + '&lon=' + lon +'&altitude=' + alt;
 }
 
 const url = location.hash.substr(1);
