@@ -1,8 +1,8 @@
 {
   "lastModified": "auto",
   "location": {
-    "Latitude": 51.1852,
-    "Longitude": 3.24034,
+    "Latitude": 51.1853335,
+    "Longitude": 3.2401705,
     "Altitude": 4
   },
   "available": [
@@ -10,7 +10,7 @@
       "absent": "Afwezig",
       "sleep": "Slapen",
       "sleeptime": "22:24",
-      "disabled_absenttime": "13:30"
+      "disabled_absenttime": "11:00"
     }
   ],
   "tempIncrDecr": 0.5,
@@ -24,6 +24,7 @@
   "minBacklight": 15,
   "maxBacklight": 110,
   "lights": {
+    "lightTimer": 180,
     "lightsOut": {
       "at": "nextAlarm",
       "Offset": "79"
@@ -99,7 +100,7 @@
     "id": "living",
     "htmlElementId": "clockmonthday",
     "temp": 20,
-    "tempCorrection": -2.5,
+    "tempCorrection": 1.6,
     "mode": "Auto",
     "heater": [
       {
@@ -152,7 +153,7 @@
     "htmlElementId": "clockmonth",
     "status": "undefined",
     "temp": 20,
-    "tempCorrection": 0.5,
+    "tempCorrection": 0.7,
     "mode": "Auto",
     "tempOffset": "0",
     "subtitleColor": "white",
@@ -227,7 +228,7 @@
     "htmlElementId": "clockyear",
     "status": "undefined",
     "temp": 20,
-    "tempCorrection": -0.2,
+    "tempCorrection": 0.6,
     "mode": "Auto",
     "tempOffset": "0",
     "heater": [
