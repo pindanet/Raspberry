@@ -234,7 +234,7 @@ function weather(event) {
       }
     }
   };
-  xhr.send();
+  xhr.send("lat=" + conf.location.Latitude + "&lon=" + conf.location.Longitude + "&alt=" + conf.location.Altitude);
   if (typeof event !== 'undefined') {
     event.stopPropagation();
   }
