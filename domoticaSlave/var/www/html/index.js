@@ -265,6 +265,20 @@ function startTemp() {
   setTimeout(startTemp, 60000); // elke minuut
 }
 
+function powerLog(dev, name) {
+  const d = new Date();
+  const logLine = {time: d.getTime(),
+    Watt: dev.Watt,
+    name: name,
+    status: dev.status};
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+console.log("echo '" + JSON.stringify(logLine) + "' >> data/power.log");
+//  xhr.send("cmd=echo&params="+stringToHex("'" + JSON.stringify(logLine) + "' >> data/power.log"));
+}
+
 function tasmotaSwitch (switchName, cmd) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -275,11 +289,11 @@ function tasmotaSwitch (switchName, cmd) {
       if (output[0] == '{"POWER":"OFF"}') {
         conf.switch[switchName].status = "off";
 //        activeHeaters(room);
-//        powerLog(room.heater[heater], room.heater[heater].name);
+        powerLog(conf.switch[switchName], switchName);
       } else if (output[0] == '{"POWER":"ON"}') {
         conf.switch[switchName].status = "on";
 //        activeHeaters(room);
-//        powerLog(room.heater[heater], room.heater[heater].name);
+        powerLog(conf.switch[switchName], switchName);
       }
     }
   };
@@ -287,38 +301,47 @@ console.log("wget -qO- http://" + conf.switch[switchName].IP + "/cm?cmnd=" + cmd
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.switch[switchName].IP + "/cm?cmnd=" + cmd));
 }
 
+function setBrightness(brightness) {
+console.log(brightness);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("cmd=echo&params="+stringToHex(brightness + " > /sys/class/backlight/rpi_backlight/brightness"));
+}
+
 var pirStatus;
 var lightOffTime;
 function startMotion() {
+  var lightswitch = "TVlamp";
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
-      if (output[0] != pirStatus) {
-        if (typeof pirStatus == 'undefined') {
-          pirStatus = output[0];
-        }
+      if (typeof pirStatus == 'undefined') {
         if (output[0].includes(" hi ")) {
-          pirStatus = output[0];
-//          lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
-          lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
-          var now = new Date().getTime;
-          if (now > eveningLightsOn && now < morningLightsOut) {
-            document.getElementById("lightoff").style.display = "none";
-            document.getElementById("lighton").style.display = "";
-//            tasmotaSwitch ("Keukenlamp", "Power%20On");
-console.log("Nachtscherm activeren", conf.minBacklight);
-          } else {
-console.log("Dagscherm activeren", conf.maxBacklight + conf.minBacklight);
+          pirStatus = "lo";
+        } else {
+          pirStatus = "hi";
+        }
+      }
+      if (output[0].includes(" hi ")) {
+//        lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
+        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
+ console.log("hi", pirStatus, new Date(new Date(lightOffTime)));
+        if (pirStatus == "lo") {
+          pirStatus = "hi";
+console.log("lo > hi");
+        }
+      } else if (output[0].includes(" lo ")) {
+// console.log("lo", pirStatus);
+        if (pirStatus == "hi") {
+          if (new Date().getTime() > lightOffTime) {
+console.log("hi > lo, lights/screen out", new Date());
+            pirStatus = "lo";
           }
-        } else if (new Date().getTime() > lightOffTime) {
-console.log("Scherm Uitschakelen");
-          pirStatus = output[0];
-          document.getElementById("lighton").style.display = "none";
-          document.getElementById("lightoff").style.display = "";
-//          tasmotaSwitch ("Keukenlamp", "Power%20Off");
+
         }
       }
     }
@@ -327,6 +350,53 @@ console.log("Scherm Uitschakelen");
 
   setTimeout(startMotion, 1000); // elke seconde
 }
+
+//
+////      if (output[0] != pirStatus) {
+//        if (typeof pirStatus == 'undefined') {
+//          pirStatus = output[0];
+//        }
+//        if (output[0].includes(" hi ")) {
+//          var now = new Date().getTime();
+//eveningLightsOn = now - 3600000;
+//morningLightsOut = now + 3600000;
+////console.log(new Date(eveningLightsOn));
+////console.log(new Date(morningLightsOut));
+//          if (now > eveningLightsOn && now < morningLightsOut) {
+////            lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
+//lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
+//console.log(new Date(lightOffTime));
+//            document.getElementById("lightoff").style.display = "none";
+//            document.getElementById("lighton").style.display = "";
+//            if (conf.switch[lightswitch] != "on") {
+////              tasmotaSwitch (lightswitch, "Power%20On");
+//            }
+//            setBrightness(conf.minBacklight);
+//          } else {
+//            setBrightness(conf.maxBacklight + conf.minBacklight);
+//          }
+//          if (output[0] != pirStatus) {
+//            pirStatus = output[0];
+//            weather();
+//          }
+//        } else {
+//          if (new Date().getTime() > lightOffTime) {
+//            pirStatus = output[0];
+//            document.getElementById("lighton").style.display = "none";
+//            document.getElementById("lightoff").style.display = "";
+//            if (conf.switch[lightswitch] != "off") {
+////              tasmotaSwitch (lightswitch, "Power%20Off");
+//            }
+//          }
+//          setBrightness(0);
+//        }
+////      }
+//    }
+//  };
+//  xhr.send("cmd=pinctrl&params="+stringToHex("get 14"));
+//
+//  setTimeout(startMotion, 1000); // elke seconde
+//}
 
 function startTime() {
 //  clearTimeout(startTimer);
