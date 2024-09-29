@@ -1,8 +1,8 @@
 {
   "lastModified": "auto",
   "location": {
-    "Latitude": 51.1852,
-    "Longitude": 3.24034,
+    "Latitude": 51.1853335,
+    "Longitude": 3.2401705,
     "Altitude": 4
   },
   "available": [
@@ -231,6 +231,7 @@
     "tempCorrection": 0.4,
     "mode": "Auto",
     "tempOffset": "0",
+    "light": "TVlamp",
     "heater": [
       {
         "name": "Tropen",
