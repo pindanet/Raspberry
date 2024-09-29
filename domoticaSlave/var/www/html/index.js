@@ -1,6 +1,9 @@
 // ToDo
 // powerLog
+// Debug variables
+var lightswitch = "TVlamp";
 
+// Variables
 var room = "Kitchen";
 
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
@@ -288,16 +291,13 @@ function tasmotaSwitch (switchName, cmd) {
       const output = JSON.parse(this.responseText);
       if (output[0] == '{"POWER":"OFF"}') {
         conf.switch[switchName].status = "off";
-//        activeHeaters(room);
         powerLog(conf.switch[switchName], switchName);
       } else if (output[0] == '{"POWER":"ON"}') {
         conf.switch[switchName].status = "on";
-//        activeHeaters(room);
         powerLog(conf.switch[switchName], switchName);
       }
     }
   };
-console.log("wget -qO- http://" + conf.switch[switchName].IP + "/cm?cmnd=" + cmd);
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.switch[switchName].IP + "/cm?cmnd=" + cmd));
 }
 
@@ -312,14 +312,13 @@ console.log(brightness);
 var pirStatus;
 var lightOffTime;
 function startMotion() {
-  var lightswitch = "TVlamp";
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
-      if (typeof pirStatus == 'undefined') {
+      if (typeof pirStatus == 'undefined') { // init
         lightOffTime = new Date(new Date().getTime() - 1000).getTime();
         if (output[0].includes(" hi ")) {
           pirStatus = "lo";
@@ -327,30 +326,36 @@ function startMotion() {
           pirStatus = "hi";
         }
       }
-      if (output[0].includes(" hi ")) {
-        lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
-//        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
-        if (pirStatus == "lo") {
+      if (output[0].includes(" hi ")) { // Motion detected
+//        lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime(); // ReSet Timeoff
+        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
+        if (pirStatus == "lo") { // From lo to hi: from idle to active
           pirStatus = "hi";
-          weather();
+          weather();  // refresh weather
           var now = new Date().getTime();
-//eveningLightsOn = now - 3600000;
-//morningLightsOut = now + 3600000;
-          if (now > eveningLightsOn && now < morningLightsOut) {
+// eveningLightsOn = now - 3600000;
+// morningLightsOut = now + 3600000;
+          if (now > eveningLightsOn && now < morningLightsOut) { // at night
             document.getElementById("lightoff").style.display = "none";
             document.getElementById("lighton").style.display = "";
-            setBrightness(conf.minBacklight);
-          } else {
-            setBrightness(conf.maxBacklight + conf.minBacklight);
+            if (conf.switch[lightswitch] != "on") { // if light is out > light on
+              tasmotaSwitch (lightswitch, "Power%20On");
+            }
+            setBrightness(conf.minBacklight); // activate dimmed screen
+          } else { // at daylight
+            setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
           }
         }
-      } else if (output[0].includes(" lo ")) {
-        if (pirStatus == "hi") {
-          if (new Date().getTime() > lightOffTime) {
+      } else if (output[0].includes(" lo ")) { // no motion
+        if (pirStatus == "hi") { // from hi to lo: from active to idle
+          if (new Date().getTime() > lightOffTime) { // stay at least conf.lights.lightTimer active
             pirStatus = "lo";
             document.getElementById("lightoff").style.display = "";
             document.getElementById("lighton").style.display = "none";
-            setBrightness(0);
+            setBrightness(0); // deactivate screen
+            if (conf.switch[lightswitch] != "off") { // if light is on > light off
+              tasmotaSwitch (lightswitch, "Power%20Off");
+            }
           }
         }
       }
@@ -360,53 +365,6 @@ function startMotion() {
 
   setTimeout(startMotion, 1000); // elke seconde
 }
-
-//
-////      if (output[0] != pirStatus) {
-//        if (typeof pirStatus == 'undefined') {
-//          pirStatus = output[0];
-//        }
-//        if (output[0].includes(" hi ")) {
-//          var now = new Date().getTime();
-//eveningLightsOn = now - 3600000;
-//morningLightsOut = now + 3600000;
-////console.log(new Date(eveningLightsOn));
-////console.log(new Date(morningLightsOut));
-//          if (now > eveningLightsOn && now < morningLightsOut) {
-////            lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
-//lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
-//console.log(new Date(lightOffTime));
-//            document.getElementById("lightoff").style.display = "none";
-//            document.getElementById("lighton").style.display = "";
-//            if (conf.switch[lightswitch] != "on") {
-////              tasmotaSwitch (lightswitch, "Power%20On");
-//            }
-//            setBrightness(conf.minBacklight);
-//          } else {
-//            setBrightness(conf.maxBacklight + conf.minBacklight);
-//          }
-//          if (output[0] != pirStatus) {
-//            pirStatus = output[0];
-//            weather();
-//          }
-//        } else {
-//          if (new Date().getTime() > lightOffTime) {
-//            pirStatus = output[0];
-//            document.getElementById("lighton").style.display = "none";
-//            document.getElementById("lightoff").style.display = "";
-//            if (conf.switch[lightswitch] != "off") {
-////              tasmotaSwitch (lightswitch, "Power%20Off");
-//            }
-//          }
-//          setBrightness(0);
-//        }
-////      }
-//    }
-//  };
-//  xhr.send("cmd=pinctrl&params="+stringToHex("get 14"));
-//
-//  setTimeout(startMotion, 1000); // elke seconde
-//}
 
 function startTime() {
 //  clearTimeout(startTimer);
