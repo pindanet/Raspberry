@@ -1,7 +1,5 @@
 // ToDo
 // powerLog
-// Debug variables
-var lightswitch = "TVlamp";
 
 // Variables
 var room = "Kitchen";
@@ -333,13 +331,13 @@ function startMotion() {
           pirStatus = "hi";
           weather();  // refresh weather
           var now = new Date().getTime();
-// eveningLightsOn = now - 3600000;
-// morningLightsOut = now + 3600000;
+//eveningLightsOn = now - 3600000;
+//morningLightsOut = now + 3600000;
           if (now > eveningLightsOn && now < morningLightsOut) { // at night
             document.getElementById("lightoff").style.display = "none";
             document.getElementById("lighton").style.display = "";
-            if (conf.switch[lightswitch] != "on") { // if light is out > light on
-              tasmotaSwitch (lightswitch, "Power%20On");
+            if (conf.switch[conf[room].light] != "on") { // if light is out > light on
+              tasmotaSwitch (conf[room].light, "Power%20On");
             }
             setBrightness(conf.minBacklight); // activate dimmed screen
           } else { // at daylight
@@ -353,8 +351,8 @@ function startMotion() {
             document.getElementById("lightoff").style.display = "";
             document.getElementById("lighton").style.display = "none";
             setBrightness(0); // deactivate screen
-            if (conf.switch[lightswitch] != "off") { // if light is on > light off
-              tasmotaSwitch (lightswitch, "Power%20Off");
+            if (conf.switch[conf[room].light] != "off") { // if light is on > light off
+              tasmotaSwitch (conf[room].light, "Power%20Off");
             }
           }
         }
