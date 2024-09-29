@@ -320,6 +320,7 @@ function startMotion() {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
       if (typeof pirStatus == 'undefined') {
+        lightOffTime = new Date(new Date().getTime() - 1000).getTime();
         if (output[0].includes(" hi ")) {
           pirStatus = "lo";
         } else {
@@ -327,21 +328,30 @@ function startMotion() {
         }
       }
       if (output[0].includes(" hi ")) {
-//        lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
-        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
- console.log("hi", pirStatus, new Date(new Date(lightOffTime)));
+        lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
+//        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
         if (pirStatus == "lo") {
           pirStatus = "hi";
-console.log("lo > hi");
+          weather();
+          var now = new Date().getTime();
+//eveningLightsOn = now - 3600000;
+//morningLightsOut = now + 3600000;
+          if (now > eveningLightsOn && now < morningLightsOut) {
+            document.getElementById("lightoff").style.display = "none";
+            document.getElementById("lighton").style.display = "";
+            setBrightness(conf.minBacklight);
+          } else {
+            setBrightness(conf.maxBacklight + conf.minBacklight);
+          }
         }
       } else if (output[0].includes(" lo ")) {
-// console.log("lo", pirStatus);
         if (pirStatus == "hi") {
           if (new Date().getTime() > lightOffTime) {
-console.log("hi > lo, lights/screen out", new Date());
             pirStatus = "lo";
+            document.getElementById("lightoff").style.display = "";
+            document.getElementById("lighton").style.display = "none";
+            setBrightness(0);
           }
-
         }
       }
     }
