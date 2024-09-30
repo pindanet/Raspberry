@@ -275,9 +275,9 @@ function powerLog(dev, name) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-console.log("echo '" + JSON.stringify(logLine) + "' >> data/power.log");
-//  xhr.send("cmd=echo&params="+stringToHex("'" + JSON.stringify(logLine) + "' >> data/power.log"));
+console.log("ToDo: http://raspberrypi.local");
+  var wgetcmd = "wget -qO- --post-data='" + "cmd=echo&params="+stringToHex("'" + JSON.stringify(logLine) + "' >> data/power.log") + "' http://raspberrypi.local/cli.php";
+  xhr.send("cmd=wget&params="+stringToHex(wgetcmd));
 }
 
 function tasmotaSwitch (switchName, cmd) {
@@ -325,6 +325,7 @@ function startMotion() {
         }
       }
       if (output[0].includes(" hi ")) { // Motion detected
+console.log("ToDo deactivate Debug vars");
 //        lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime(); // ReSet Timeoff
         lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
         if (pirStatus == "lo") { // From lo to hi: from idle to active
@@ -336,7 +337,7 @@ function startMotion() {
           if (now > eveningLightsOn && now < morningLightsOut) { // at night
             document.getElementById("lightoff").style.display = "none";
             document.getElementById("lighton").style.display = "";
-            if (conf.switch[conf[room].light] != "on") { // if light is out > light on
+            if (conf.switch[conf[room].light].status != "on") { // if light is out > light on
               tasmotaSwitch (conf[room].light, "Power%20On");
             }
             setBrightness(conf.minBacklight); // activate dimmed screen
@@ -351,7 +352,7 @@ function startMotion() {
             document.getElementById("lightoff").style.display = "";
             document.getElementById("lighton").style.display = "none";
             setBrightness(0); // deactivate screen
-            if (conf.switch[conf[room].light] != "off") { // if light is on > light off
+            if (conf.switch[conf[room].light].status != "off") { // if light is on > light off
               tasmotaSwitch (conf[room].light, "Power%20Off");
             }
           }
