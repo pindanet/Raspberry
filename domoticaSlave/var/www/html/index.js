@@ -1,6 +1,3 @@
-// ToDo
-// powerLog
-
 // Variables
 var room = "Kitchen";
 
@@ -109,8 +106,6 @@ function nextalarm() {
 function calcConf() {
   lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
   nextalarm();
-console.log(new Date(eveningLightsOn));
-console.log(new Date(morningLightsOut));
 }
 function getConf() { // Get configuration
   const xhttp = new XMLHttpRequest();
@@ -299,7 +294,6 @@ function tasmotaSwitch (switchName, cmd) {
 }
 
 function setBrightness(brightness) {
-console.log(brightness);
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -324,9 +318,9 @@ function startMotion() {
         }
       }
       if (output[0].includes(" hi ")) { // Motion detected
-console.log("ToDo deactivate Debug vars");
-//        lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime(); // ReSet Timeoff
-        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
+//console.log("ToDo deactivate Debug vars");
+        lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime(); // ReSet Timeoff
+//        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
         if (pirStatus == "lo") { // From lo to hi: from idle to active
           pirStatus = "hi";
           weather();  // refresh weather
