@@ -275,8 +275,7 @@ function powerLog(dev, name) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-console.log("ToDo: http://raspberrypi.local");
-  var wgetcmd = "wget -qO- --post-data='" + "cmd=echo&params="+stringToHex("'" + JSON.stringify(logLine) + "' >> data/power.log") + "' http://raspberrypi.local/cli.php";
+  var wgetcmd = "wget -qO- --post-data='" + "cmd=echo&params="+stringToHex("'" + JSON.stringify(logLine) + "' >> data/power.log") + "' http://" + conf.Living.host + "/cli.php";
   xhr.send("cmd=wget&params="+stringToHex(wgetcmd));
 }
 
