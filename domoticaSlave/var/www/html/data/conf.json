@@ -97,6 +97,7 @@
     }
   },
   "Living": {
+    "host": "pindadomo.local",
     "id": "living",
     "htmlElementId": "clockmonthday",
     "temp": 20,
