@@ -24,7 +24,7 @@
 
 # PIR2 AM312
 # 3v3 (17) > Vcc (Blue)
-# Gnd (20) > Gnd (Gris)
+# Gnd (20) > Gnd (Gray)
 # GPIO24 (18) > Output (White)
 
 # Test if executed with Bash
