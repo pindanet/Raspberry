@@ -17,10 +17,15 @@
 # GND (9) naar GND (Zwart)
 # GPIO17 (11) naar Vdd (Rood)
 
-# PIR
-# 5v (4) > Vcc (Red)
+# PIR1 AM312
+# 3v3 (1) > Vcc (Orange)
 # Gnd (6) > Gnd (Brown)
-# GPIO14 (8) > Output (Orange)
+# GPIO14 (8) > Output (Red)
+
+# PIR2 AM312
+# 3v3 (17) > Vcc (Blue)
+# Gnd (20) > Gnd (Gris)
+# GPIO24 (18) > Output (White)
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
