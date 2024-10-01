@@ -340,6 +340,11 @@ console.log("ToDo deactivate Debug vars, PIR GPIO " + pir);
           } else { // at daylight
             setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
           }
+console.log("take picture");
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', "cli.php", true);
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhr.send("cmd=bash&params="+stringToHex("./motion.sh"));
         }
       } else if (output[0].includes(" lo ")) { // no motion
         if (pirStatus == "hi") { // from hi to lo: from active to idle
@@ -355,7 +360,7 @@ console.log("ToDo deactivate Debug vars, PIR GPIO " + pir);
         }
       }
       if (pir == pir1) {
-        pir = pir2;   
+        pir = pir2;
         startMotion();
         return;
       }
