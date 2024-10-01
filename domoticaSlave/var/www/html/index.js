@@ -1,5 +1,7 @@
 // Variables
 var room = "Kitchen";
+var pir1 = 14;
+var pir2 = 24
 
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
@@ -301,6 +303,7 @@ function setBrightness(brightness) {
 }
 
 var pirStatus;
+var pir = pir1;
 var lightOffTime;
 function startMotion() {
   var xhr = new XMLHttpRequest();
@@ -318,7 +321,7 @@ function startMotion() {
         }
       }
       if (output[0].includes(" hi ")) { // Motion detected
-//console.log("ToDo deactivate Debug vars");
+console.log("ToDo deactivate Debug vars, PIR GPIO " + pir);
         lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime(); // ReSet Timeoff
 //        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
         if (pirStatus == "lo") { // From lo to hi: from idle to active
@@ -351,11 +354,16 @@ function startMotion() {
           }
         }
       }
+      if (pir == pir1) {
+        pir = pir2;   
+        startMotion();
+        return;
+      }
+      pir = pir1;
+      setTimeout(startMotion, 1000); // elke seconde
     }
   };
-  xhr.send("cmd=pinctrl&params="+stringToHex("get 14"));
-
-  setTimeout(startMotion, 1000); // elke seconde
+  xhr.send("cmd=pinctrl&params="+stringToHex("get " + pir));
 }
 
 function startTime() {
