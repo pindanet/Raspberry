@@ -82,8 +82,6 @@ rm master.zip
 sudo cp -r Raspberry-master/domoticaSlave/var/www/html/* /var/www/html/
 rm -r Raspberry-master/
 
-sudo chmod +x /var/www/html/ds18b20.sh
-sudo chmod +x /var/www/html/pir.sh
 sudo chown www-data:www-data /var/www/html/data
 
 sudo usermod -a -G gpio www-data
