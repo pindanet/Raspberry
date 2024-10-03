@@ -10,7 +10,7 @@
       "absent": "Afwezig",
       "sleep": "Slapen",
       "sleeptime": "22:24",
-      "disabled_absenttime": "11:00"
+      "absenttime": "13:30"
     }
   ],
   "tempIncrDecr": 0.5,
@@ -97,6 +97,7 @@
     }
   },
   "Living": {
+    "host": "pindadomo.local",
     "id": "living",
     "htmlElementId": "clockmonthday",
     "temp": 20,
@@ -231,6 +232,7 @@
     "tempCorrection": 0.6,
     "mode": "Auto",
     "tempOffset": "0",
+    "light": "TVlamp",
     "heater": [
       {
         "name": "Tropen",
