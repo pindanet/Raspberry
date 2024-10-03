@@ -10,7 +10,7 @@
       "absent": "Afwezig",
       "sleep": "Slapen",
       "sleeptime": "22:24",
-      "disabled_absenttime": "11:00"
+      "absenttime": "13:30"
     }
   ],
   "tempIncrDecr": 0.5,
