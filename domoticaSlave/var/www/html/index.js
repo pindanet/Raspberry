@@ -258,7 +258,7 @@ function startTemp() {
       }
     }
   };
-  xhr.send("cmd=/var/www/html/ds18b20.sh&params="+stringToHex(""));
+  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/ds18b20.sh"));
 
   setTimeout(startTemp, 60000); // elke minuut
 }
@@ -361,8 +361,6 @@ console.log("take picture");
       }
       if (pir == pir1) {
         pir = pir2;
-//        startMotion();
-//        return;
       } else {
         pir = pir1;
       }
