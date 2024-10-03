@@ -361,11 +361,12 @@ console.log("take picture");
       }
       if (pir == pir1) {
         pir = pir2;
-        startMotion();
-        return;
+//        startMotion();
+//        return;
+      } else {
+        pir = pir1;
       }
-      pir = pir1;
-      setTimeout(startMotion, 1000); // elke seconde
+      setTimeout(startMotion, 500); // every 1/2 second
     }
   };
   xhr.send("cmd=pinctrl&params="+stringToHex("get " + pir));
