@@ -106,6 +106,7 @@ echo "Activate daily update"
 echo "====================="
 
 cat > PindaNetUpdate.sh <<EOF
+#!/bin/bash
 sudo dpkg --configure -a
 apt-get clean
 apt-get update
