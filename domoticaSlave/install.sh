@@ -102,6 +102,44 @@ ssh-copy-id -i $HOME/.ssh/id_rsa.pub $(ls /home)@localhost
 sudo cp .ssh/id_rsa /var/www/html/data/
 sudo chown www-data:www-data /var/www/html/data/id_rsa
 
+echo "Activate daily update"
+echo "====================="
+
+cat > PindaNetUpdate.sh <<EOF
+sudo dpkg --configure -a
+apt-get clean
+apt-get update
+apt-get upgrade -y
+shutdown -r now
+EOF
+sudo mv PindaNetUpdate.sh /usr/sbin/
+sudo chmod +x /usr/sbin/PindaNetUpdate.sh
+
+cat > PindaNetUpdate.timer <<EOF
+[Unit]
+Description=Update and Reset
+[Timer]
+OnCalendar=*-*-* 03:30:00
+Unit=PindaNetUpdate.service
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo mv PindaNetUpdate.timer /etc/systemd/system/
+
+cat > PindaNetUpdate.service <<EOF
+[Unit]
+Description=Update and Reset
+[Service]
+Type=simple
+ExecStart=/usr/sbin/PindaNetUpdate.sh
+EOF
+sudo mv PindaNetUpdate.service /etc/systemd/system/
+
+sudo systemctl daemon-reload
+sudo systemctl enable PindaNetUpdate.timer
+sudo systemctl start PindaNetUpdate.timer
+# systemctl list-timers
+
 exit
 
 # PIR 2
