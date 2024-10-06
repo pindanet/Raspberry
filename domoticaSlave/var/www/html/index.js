@@ -297,9 +297,9 @@ function tasmotaSwitch (switchName, cmd) {
 
 function setBrightness(brightness) {
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
+  xhr.open('POST', "brightness.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("cmd=echo&params="+stringToHex(brightness + " > /sys/class/backlight/rpi_backlight/brightness"));
+  xhr.send("brightness=" + brightness);
 }
 
 var pirStatus;
