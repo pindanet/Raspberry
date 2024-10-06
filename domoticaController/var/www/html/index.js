@@ -569,6 +569,23 @@ function tempAdjustment(room) {
     }
   }
 }
+function getKitchenTemp(room) {
+// wget -qO- http://pindakeuken.local/data/temp
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      const output = JSON.parse(this.responseText);
+      room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
+      document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
+      if (room.id == "living") {
+        roomTemp = room.temp.toFixed(1) + " °C";
+      }
+    }
+  };
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://pindakeuken.local/data/temp"));
+}
 function thermostat() {
   tempAdjustment(conf.Living);
 // getLivingTemp
@@ -579,9 +596,9 @@ function thermostat() {
 // getDiningTemp
   getTemp("pindadining", "cat /sys/bus/w1/devices/28-*/temperature", conf.Dining);
   tempAdjustment(conf.Kitchen);
-// getKitchenTemp
+  getKitchenTemp(conf.Kitchen)
 //  getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
-  getTemp("pindakeuken", '/var/www/html/ds18b20.sh', conf.Kitchen);
+//  getTemp("pindakeuken", '/var/www/html/ds18b20.sh', conf.Kitchen);
   if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort)) {
     document.getElementById("clockday").style.color="lime";
   } else {
