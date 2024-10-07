@@ -93,7 +93,7 @@ sudo apt install chromium-browser -y
 echo '[autostart]' >> .config/wayfire.ini
 echo 'screensaver = false' >> .config/wayfire.ini
 echo 'dpms = false' >> .config/wayfire.ini
-echo 'kiosk = /bin/chromium-browser  --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &' >> .config/wayfire.ini
+echo 'kiosk = /bin/chromium-browser --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &' >> .config/wayfire.ini
 
 echo "Configure SSH remote login"
 echo "=========================="
