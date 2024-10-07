@@ -41,6 +41,7 @@ table img {
 #kitchenRoomTemp {
   font-size: 28vw;
   text-align: center;
+  cursor: none;
 }
 #weather {
   font-size: 5vw;
