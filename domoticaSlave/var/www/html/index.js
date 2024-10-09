@@ -320,12 +320,10 @@ function startMotion() {
         }
       }
       if (output[0].includes(" hi ")) { // Motion detected
-console.log("ToDo deactivate Debug vars, PIR GPIO " + pir);
         lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime(); // ReSet Timeoff
 //        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
         if (pirStatus == "lo") { // From lo to hi: from idle to active
           pirStatus = "hi";
-          weather();  // refresh weather
           var now = new Date().getTime();
 //eveningLightsOn = now - 3600000;
 //morningLightsOut = now + 3600000;
@@ -339,7 +337,7 @@ console.log("ToDo deactivate Debug vars, PIR GPIO " + pir);
           } else { // at daylight
             setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
           }
-console.log("take picture");
+          weather();  // refresh weather
           var xhr = new XMLHttpRequest();
           xhr.open('POST', "cli.php", true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
