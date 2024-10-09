@@ -84,9 +84,8 @@ function nextalarm() {
   }
   var alarmtime = timeDate (conf.alarmtime, new Date());
   if (today.getTime() < alarmtime.getTime()) { // still night, disable backlight Touchscreen
-    gotoSleep();
+    setBrightness(0);
   }
-//  setTimeout(wakeup, nextAlarm.getTime() - today.getTime()); // activate backlight Touchscreen at nextAlarm
 
   var sunTimes = SunCalc.getTimes(nextAlarm, conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
   morningTimerLightsOut = new Date(nextAlarm.getTime() + (conf.lights.lightsOut.Offset * 60000)); // 79 min (1 hour 19 min) after wakeup
@@ -336,7 +335,7 @@ console.log("ToDo deactivate Debug vars, PIR GPIO " + pir);
             if (conf.switch[conf[room].light].status != "on") { // if light is out > light on
               tasmotaSwitch (conf[room].light, "Power%20On");
             }
-            setBrightness(conf.minBacklight); // activate dimmed screen
+            setBrightness(conf.minBacklight * 2); // activate dimmed screen
           } else { // at daylight
             setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
           }
