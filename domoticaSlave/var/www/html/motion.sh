@@ -4,4 +4,4 @@ if [ ! -d motion ]; then
 fi
 find ./motion -mtime +1 -type f -delete
 filename=$(date +"%Y-%m-%d_%H.%M.%S.jpg")
-rpicam-still -o motion/$filename --width 480 --height 800 --rotation 180
+rpicam-still -o motion/$filename --rotation 180
