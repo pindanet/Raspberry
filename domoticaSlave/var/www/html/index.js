@@ -74,8 +74,9 @@ function setAlarmTime(nextAlarmSec, defaultDate) {
 }
 function nextalarm() {
   var today = new Date();
+//  today.setHours(3);
+//  today.setMinutes(30);
   setAlarmTime(getEventAlarm(today, today), today); // Get today's alarmtime
-
   if (today > nextAlarm) { // Alarmtime has expired
     var nextDate = new Date();
     nextDate.setDate(nextAlarm.getDate() + 1);
@@ -83,9 +84,6 @@ function nextalarm() {
     setAlarmTime(getEventAlarm(nextDate, today), nextDate); // Get tomorrow's alarmtime
   }
   var alarmtime = timeDate (conf.alarmtime, new Date());
-  if (today.getTime() < alarmtime.getTime()) { // still night, disable backlight Touchscreen
-    setBrightness(0);
-  }
 
   var sunTimes = SunCalc.getTimes(nextAlarm, conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
   morningTimerLightsOut = new Date(nextAlarm.getTime() + (conf.lights.lightsOut.Offset * 60000)); // 79 min (1 hour 19 min) after wakeup
@@ -103,6 +101,11 @@ function nextalarm() {
   } else { // Still daylight
     eveningLightsOn = new Date(eveningShutterDown.getTime()).getTime();
   }
+  if (eveningLightsOn > morningLightsOut) { // next day
+    morningLightsOut += 86400000;
+  }
+console.log(new Date(morningLightsOut));
+console.log(new Date(eveningLightsOn));
 }
 function calcConf() {
   lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
@@ -116,17 +119,15 @@ function getConf() { // Get configuration
         conf = JSON.parse(this.responseText);
         conf.lastModified = this.getResponseHeader('Last-Modified');
         calcConf();
-//        nextalarm();
         startTime();
         startMotion();
         startTemp();
-//        weather();
+        setBrightness(0);
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
         conf = JSON.parse(this.responseText);
         conf.lastModified = this.getResponseHeader('Last-Modified');
         calcConf();
       }
-//      brightness();
       setTimeout(getConf, 60000); // Every minute
     }
   }
@@ -338,7 +339,7 @@ function startMotion() {
             setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
           }
           weather();  // refresh weather
-          var xhr = new XMLHttpRequest();
+          var xhr = new XMLHttpRequest();  // Take picture
           xhr.open('POST', "cli.php", true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
           xhr.send("cmd=bash&params="+stringToHex("./motion.sh"));
