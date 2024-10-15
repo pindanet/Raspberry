@@ -74,8 +74,6 @@ function setAlarmTime(nextAlarmSec, defaultDate) {
 }
 function nextalarm() {
   var today = new Date();
-//  today.setHours(3);
-//  today.setMinutes(30);
   setAlarmTime(getEventAlarm(today, today), today); // Get today's alarmtime
   if (today > nextAlarm) { // Alarmtime has expired
     var nextDate = new Date();
@@ -101,11 +99,9 @@ function nextalarm() {
   } else { // Still daylight
     eveningLightsOn = new Date(eveningShutterDown.getTime()).getTime();
   }
-  if (eveningLightsOn > morningLightsOut) { // next day
-    morningLightsOut += 86400000;
+  if (eveningLightsOn < morningLightsOut) { // next day
+    morningLightsOut -= 86400000;
   }
-console.log(new Date(morningLightsOut));
-console.log(new Date(eveningLightsOn));
 }
 function calcConf() {
   lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
@@ -328,7 +324,7 @@ function startMotion() {
           var now = new Date().getTime();
 //eveningLightsOn = now - 3600000;
 //morningLightsOut = now + 3600000;
-          if (now > eveningLightsOn && now < morningLightsOut) { // at night
+          if (now > eveningLightsOn || now < morningLightsOut) { // at night
             document.getElementById("lightoff").style.display = "none";
             document.getElementById("lighton").style.display = "";
             if (conf.switch[conf[room].light].status != "on") { // if light is out > light on
