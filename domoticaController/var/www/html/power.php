@@ -20,6 +20,7 @@ $firstMonth = 0;
 
 $processMonth = 0;
 $processMonthkWh = 0;
+
 $months = array(
     'Januari',
     'Februari',
@@ -39,7 +40,7 @@ function processLine($powerline) {
   $datetime = explode(" ", date("j W n Y G i s l F", $powerline["time"] / 1000));
   if($GLOBALS['processMonth'] <> $datetime[2]) { // New month
     if($GLOBALS['processMonth'] <> 0) {
-      echo str_pad($GLOBALS['months'][$datetime[2]], 10, " ", STR_PAD_RIGHT) . str_pad(round($GLOBALS['processMonthkWh'], 0),3," ", STR_PAD_LEFT) . " kWh " . str_pad(round($GLOBALS['processMonthkWh'] * $GLOBALS['price'] / 100 , 0),3," ", STR_PAD_LEFT) . " €<br>";
+      echo str_pad($GLOBALS['months'][$datetime[2]] . " " . $datetime[3], 15, " ", STR_PAD_RIGHT) . str_pad(round($GLOBALS['processMonthkWh'], 0),3," ", STR_PAD_LEFT) . " kWh " . str_pad(round($GLOBALS['processMonthkWh'] * $GLOBALS['price'] / 100 , 0),3," ", STR_PAD_LEFT) . " €<br>";
       $GLOBALS['firstMonth'] += 1;
     }
     $GLOBALS['processMonthkWh'] = 0;
@@ -78,31 +79,37 @@ function processLine($powerline) {
   if(strtolower($powerline["status"]) == "off") {
     $GLOBALS[$powerline["name"]] = $powerline["time"];
   } else if (isset($GLOBALS[$powerline["name"]])) {
-// https://www.tutorialspoint.com/how-to-calculate-the-difference-between-two-dates-in-php
     $minutes = round(($GLOBALS[$powerline["name"]] - $powerline["time"]) / 60000);
-    $kWh = ($powerline["Watt"] / 1000) * ($minutes / 60);
-    $GLOBALS['processDaykWh'] += $kWh;
-    $GLOBALS['processWeekkWh'] += $kWh;
-    $GLOBALS['processMonthkWh'] += $kWh;
+    if ($minutes < 60 * 8) { // filter communication errors duration longer than  8 hours
+      $kWh = ($powerline["Watt"] / 1000) * ($minutes / 60);
+      $GLOBALS['processDaykWh'] += $kWh;
+      $GLOBALS['processWeekkWh'] += $kWh;
+      $GLOBALS['processMonthkWh'] += $kWh;
 
-    if($GLOBALS['firstWeek'] < 8) { // next 7 days details
-      if($datetime[3] < "7") {  // Highlight night time: 00h00 - 06h59
-        echo "<b style='color: red;'>";
+      if($GLOBALS['firstWeek'] < 8) { // next 7 days details
+        if($datetime[4] < "7") {  // Highlight night time: 00h00 - 06h59
+          echo "<b style='color: red;'>";
+        }
+        echo date("d/m/Y H:i:s", $powerline["time"] / 1000) . " to " . date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000) . " " . str_pad($powerline["name"], 15, " ", STR_PAD_LEFT) . " " . str_pad($minutes, 4, " ", STR_PAD_LEFT) . " min. " . number_format(round($kWh, 3), 3,',', " ") . " kWh<br>";
+        if($datetime[4] < "7") {  // Highlight night time: 00h00 - 06h59
+          echo "</b>";
+        }
       }
-      echo date("d/m/Y H:i:s", $powerline["time"] / 1000) . " to " . date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000) . " " . str_pad($powerline["name"], 15, " ", STR_PAD_LEFT) . " " . str_pad($minutes, 4, " ", STR_PAD_LEFT) . " min. " . number_format(round($kWh, 3), 3,',', " ") . " kWh<br>";
-      if($datetime[3] < "7") {  // Highlight night time: 00h00 - 06h59
-        echo "</b>";
-      }
+    } else {
+      echo "<b style='color: red;'>";
+      echo date("d/m/Y H:i:s", $powerline["time"] / 1000) . " to " . date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000) . " " . str_pad($powerline["name"], 15, " ", STR_PAD_LEFT) . " " . str_pad($minutes, 4, " ", STR_PAD_LEFT) . " min. " . number_format(round($kWh, 3), 3,',', " ") . " kWh  Genegeerde meting<br>";
+      echo json_encode($powerline) . "<br>";
+      echo "</b>";
     }
     unset($GLOBALS[$powerline["name"]]);
   }
   if($GLOBALS['processToday'] == 0) {
     echo date("d/m/Y H:i:s", $powerline["time"] / 1000) . " " . $powerline["Watt"] . " " . $powerline["name"] . " " . $powerline["status"] . " " . $GLOBALS[$powerline["name"]] . "<br>";
-// var_dump($powerline);
   }
 }
-// Reverse power.log
-exec("tac data/power.log > data/power.rev ", $output, $return);
+
+// Reverse sorted power.log
+exec("sort data/power.log | tac > data/power.rev ", $output, $return);
 
 $file = fopen("data/power.rev", "r");
 // Iterator Number
