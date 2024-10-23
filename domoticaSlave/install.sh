@@ -16,6 +16,7 @@
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
 # GND (9) naar GND (Zwart)
 # GPIO17 (11) naar Vdd (Rood)
+powergpio=17
 
 # PIR1 AM312
 # 3v3 (1) > Vcc (Orange)
@@ -93,7 +94,7 @@ sudo apt install chromium-browser -y
 echo '[autostart]' >> .config/wayfire.ini
 echo 'screensaver = false' >> .config/wayfire.ini
 echo 'dpms = false' >> .config/wayfire.ini
-echo 'kiosk = /bin/chromium-browser --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &' >> .config/wayfire.ini
+echo "kiosk = /usr/bin/pinctrl set $powergpio op dh; /bin/chromium-browser --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" >> .config/wayfire.ini
 
 echo "Configure SSH remote login"
 echo "=========================="
