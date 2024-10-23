@@ -1,3 +1,6 @@
+// ToDo
+// Brandalarm
+
 // Variables
 var room = "Kitchen";
 var pir1 = 14;
@@ -317,6 +320,10 @@ function startMotion() {
         }
       }
       if (output[0].includes(" hi ")) { // Motion detected
+        var xhr = new XMLHttpRequest();  // Take picture
+        xhr.open('POST', "cli.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send("cmd=bash&params="+stringToHex("./motion.sh"));
         lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime(); // ReSet Timeoff
 //        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
         if (pirStatus == "lo") { // From lo to hi: from idle to active
@@ -335,10 +342,6 @@ function startMotion() {
             setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
           }
           weather();  // refresh weather
-          var xhr = new XMLHttpRequest();  // Take picture
-          xhr.open('POST', "cli.php", true);
-          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          xhr.send("cmd=bash&params="+stringToHex("./motion.sh"));
         }
       } else if (output[0].includes(" lo ")) { // no motion
         if (pirStatus == "hi") { // from hi to lo: from active to idle
