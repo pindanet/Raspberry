@@ -95,6 +95,8 @@ echo '[autostart]' >> .config/wayfire.ini
 echo 'screensaver = false' >> .config/wayfire.ini
 echo 'dpms = false' >> .config/wayfire.ini
 echo "kiosk = /usr/bin/pinctrl set $powergpio op dh; /bin/chromium-browser --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" >> .config/wayfire.ini
+# debug mode
+# echo "kiosk = /usr/bin/pinctrl set 17 op dh; /bin/chromium-browser --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" >> .config/wayfire.ini
 
 echo "Configure SSH remote login"
 echo "=========================="
