@@ -301,6 +301,13 @@ function setBrightness(brightness) {
   xhr.send("brightness=" + brightness);
 }
 
+function motionPicture() {
+  var xhr = new XMLHttpRequest();  // Take picture
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("cmd=bash&params="+stringToHex("./motion.sh"));
+}
+
 var pirStatus;
 var pir = pir1;
 var lightOffTime;
@@ -320,10 +327,17 @@ function startMotion() {
         }
       }
       if (output[0].includes(" hi ")) { // Motion detected
-        var xhr = new XMLHttpRequest();  // Take picture
-        xhr.open('POST', "cli.php", true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.send("cmd=bash&params="+stringToHex("./motion.sh"));
+        var motionDate = new Date().getTime();
+        if (typeof motionTimer == 'undefined') { // init
+          motionTimer = motionDate
+          motionPicture();
+        } else if (motionDate - motionTimer > 30000) { // Take picture with 30s interval
+          motionTimer = motionDate;
+          motionPicture();
+        }
+
+        weather();  // refresh weather
+
         lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime(); // ReSet Timeoff
 //        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
         if (pirStatus == "lo") { // From lo to hi: from idle to active
@@ -341,7 +355,6 @@ function startMotion() {
           } else { // at daylight
             setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
           }
-          weather();  // refresh weather
         }
       } else if (output[0].includes(" lo ")) { // no motion
         if (pirStatus == "hi") { // from hi to lo: from active to idle
