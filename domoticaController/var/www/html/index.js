@@ -577,7 +577,34 @@ function getKitchenTemp(room) {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
-      room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
+      if (!isNaN(output[0])) {
+        room.tempPrev = room.temp;
+        room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
+      }
+      if (room.tempPrev != 20 && room.temp != 20 && room.temp > 5) { // Fire alarm
+console.log(room.tempPrev, room.temp);
+        if (room.tempPrev < room.temp) {
+          if (typeof room.tempDiv !== 'undefined') {
+            if (room.temp - room.tempPrev > room.tempDiv * 2) {
+              var xhr = new XMLHttpRequest();
+              xhr.open('POST', "cli.php", true);
+              xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+              var firealarm = "Fire alarm on " + new Date().toString() + "at " + room.temp + " °C and rising with " + (room.temp - room.tempPrev) + " °C (Allowed rising: " + (room.tempDiv * 2) + " °C)";
+console.log(firealarm);
+              xhr.send("cmd=echo&params="+stringToHex("\"" + firealarm + "\" >> data/firealarm.log"));
+            } else {
+              if (room.temp - room.tempPrev > room.tempDiv) {
+                room.tempDiv = room.temp - room.tempPrev;
+              }
+            }
+          } else {
+            room.tempDiv = room.temp - room.tempPrev;
+          }
+console.log(room.temp - room.tempPrev, room.tempDiv);
+        }
+      } else {
+console.log("Initialise Temp");
+      }
       document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
       if (room.id == "living") {
         roomTemp = room.temp.toFixed(1) + " °C";
