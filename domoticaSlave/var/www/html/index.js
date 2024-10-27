@@ -319,7 +319,7 @@ function startMotion() {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
       if (typeof pirStatus == 'undefined') { // init
-        lightOffTime = new Date(new Date().getTime() - 1000).getTime();
+        lightOffTime = new Date(new Date().getTime() - 180000).getTime();
         if (output[0].includes(" hi ")) {
           pirStatus = "lo";
         } else {
@@ -327,21 +327,25 @@ function startMotion() {
         }
       }
       if (output[0].includes(" hi ")) { // Motion detected
-        var motionDate = new Date().getTime();
-        if (typeof motionTimer == 'undefined') { // init
-          motionTimer = motionDate
-          motionPicture();
-        } else if (motionDate - motionTimer > 30000) { // Take picture with 30s interval
-          motionTimer = motionDate;
-          motionPicture();
-        }
+//        var motionDate = new Date().getTime();
+//        if (typeof motionTimer == 'undefined') { // init
+//          motionTimer = motionDate
+//          motionPicture();
+//        } else if (motionDate - motionTimer > 30000) { // Take picture with 30s interval
+//          motionTimer = motionDate;
+//          motionPicture();
+//        }
 
         weather();  // refresh weather
 
+console.log(new Date(lightOffTime));
         lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime(); // ReSet Timeoff
 //        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
         if (pirStatus == "lo") { // From lo to hi: from idle to active
           pirStatus = "hi";
+
+          motionTimer = setInterval(motionPicture, 30000); // take every 30s a photo
+
           var now = new Date().getTime();
 //eveningLightsOn = now - 3600000;
 //morningLightsOut = now + 3600000;
@@ -360,6 +364,9 @@ function startMotion() {
         if (pirStatus == "hi") { // from hi to lo: from active to idle
           if (new Date().getTime() > lightOffTime) { // stay at least conf.lights.lightTimer active
             pirStatus = "lo";
+            if (typeof motionTimer != 'undefined') {
+              clearInterval(motionTimer);
+            }
             document.getElementById("lightoff").style.display = "";
             document.getElementById("lighton").style.display = "none";
             setBrightness(0); // deactivate screen
