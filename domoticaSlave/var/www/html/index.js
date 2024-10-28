@@ -119,7 +119,11 @@ function getConf() { // Get configuration
         conf.lastModified = this.getResponseHeader('Last-Modified');
         calcConf();
         startTime();
-        startMotion();
+        if (typeof motionTimer != 'undefined') {
+          clearInterval(motionTimer);
+        }
+        lightOff();
+        motionTimer = setInterval(startMotion, 500) // check motion sensor every 0.5s
         startTemp();
         setBrightness(0);
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
@@ -308,9 +312,18 @@ function motionPicture() {
   xhr.send("cmd=bash&params="+stringToHex("./motion.sh"));
 }
 
-var pirStatus;
+function lightOff() {
+  document.getElementById("lightoff").style.display = "";
+  document.getElementById("lighton").style.display = "none";
+  if (conf.switch[conf[room].light].status != "off") { // if light is on > light off
+    tasmotaSwitch (conf[room].light, "Power%20Off");
+  }
+}
+
+// var pirStatus;
 var pir = pir1;
-var lightOffTime;
+var pictureTaken = false;
+// var lightOffTime;
 function startMotion() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -318,70 +331,40 @@ function startMotion() {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
-      if (typeof pirStatus == 'undefined') { // init
-        lightOffTime = new Date(new Date().getTime() - 180000).getTime();
-        if (output[0].includes(" hi ")) {
-          pirStatus = "lo";
-        } else {
-          pirStatus = "hi";
-        }
-      }
+//console.log(output[0]);
       if (output[0].includes(" hi ")) { // Motion detected
-//        var motionDate = new Date().getTime();
-//        if (typeof motionTimer == 'undefined') { // init
-//          motionTimer = motionDate
-//          motionPicture();
-//        } else if (motionDate - motionTimer > 30000) { // Take picture with 30s interval
-//          motionTimer = motionDate;
-//          motionPicture();
-//        }
-
+        if (typeof screenTimer != 'undefined') {
+          clearTimeout(screenTimer);
+        }
+        screenTimer = setTimeout(setBrightness, conf.lights.lightTimer*1000, 0); // Reset Timeoff
+        var now = new Date().getTime();
+        if (now > eveningLightsOn || now < morningLightsOut) { // dark
+          setBrightness(conf.minBacklight * 2); // activate dimmed screen
+          if (typeof lightTimer != 'undefined') {
+            clearTimeout(lightTimer);
+          }
+          document.getElementById("lightoff").style.display = "none";
+          document.getElementById("lighton").style.display = "";
+          if (conf.switch[conf[room].light].status != "on") { // if light is out > light on
+            tasmotaSwitch (conf[room].light, "Power%20On");
+          }
+          lightTimer = setTimeout(lightOff, conf.lights.lightTimer*1000); // Reset Timeoff
+        } else {
+          setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
+        }
+        if (pictureTaken == false) {
+          pictureTaken = true;
+          motionPicture(); // take a photo
+        }
         weather();  // refresh weather
-
-console.log(new Date(lightOffTime));
-        lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime(); // ReSet Timeoff
-//        lightOffTime = new Date(new Date().getTime() + 30*1000).getTime();
-        if (pirStatus == "lo") { // From lo to hi: from idle to active
-          pirStatus = "hi";
-
-          motionTimer = setInterval(motionPicture, 30000); // take every 30s a photo
-
-          var now = new Date().getTime();
-//eveningLightsOn = now - 3600000;
-//morningLightsOut = now + 3600000;
-          if (now > eveningLightsOn || now < morningLightsOut) { // at night
-            document.getElementById("lightoff").style.display = "none";
-            document.getElementById("lighton").style.display = "";
-            if (conf.switch[conf[room].light].status != "on") { // if light is out > light on
-              tasmotaSwitch (conf[room].light, "Power%20On");
-            }
-            setBrightness(conf.minBacklight * 2); // activate dimmed screen
-          } else { // at daylight
-            setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
-          }
-        }
-      } else if (output[0].includes(" lo ")) { // no motion
-        if (pirStatus == "hi") { // from hi to lo: from active to idle
-          if (new Date().getTime() > lightOffTime) { // stay at least conf.lights.lightTimer active
-            pirStatus = "lo";
-            if (typeof motionTimer != 'undefined') {
-              clearInterval(motionTimer);
-            }
-            document.getElementById("lightoff").style.display = "";
-            document.getElementById("lighton").style.display = "none";
-            setBrightness(0); // deactivate screen
-            if (conf.switch[conf[room].light].status != "off") { // if light is on > light off
-              tasmotaSwitch (conf[room].light, "Power%20Off");
-            }
-          }
-        }
+      } else { // no motion
+        pictureTaken = false;
       }
       if (pir == pir1) {
         pir = pir2;
       } else {
         pir = pir1;
       }
-      setTimeout(startMotion, 500); // every 1/2 second
     }
   };
   xhr.send("cmd=pinctrl&params="+stringToHex("get " + pir));
