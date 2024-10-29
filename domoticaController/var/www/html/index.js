@@ -691,7 +691,10 @@ function getEventAlarm(nowDate, ref) {
       var begin = beginDate.getTime();
       if (conf.event[i].repeat > 0) { // repeating event
         while (begin < dateOnly) {
-          begin += 86400000 * conf.event[i].repeat;
+//          begin += 86400000 * conf.event[i].repeat;
+          newBeginDate = new Date(begin);
+          newBeginDate.setDate(newBeginDate.getDate() + conf.event[i].repeat);
+          begin = newBeginDate.getTime();
         }
       }
       if (begin == dateOnly) {
