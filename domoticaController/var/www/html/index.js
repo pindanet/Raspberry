@@ -510,9 +510,9 @@ function tempAdjustment(room) {
         newBeginDate = new Date(begin);
         newBeginDate.setDate(newBeginDate.getDate() + conf.event[i].repeat);
         begin = newBeginDate.getTime();
-if (conf.event[i].comment == "Bad Woensdag") {
-console.log(new Date(begin));
-}
+//if (conf.event[i].comment == "Bad Woensdag") {
+//console.log(new Date(begin));
+//}
       }
     }
     if (begin == dateOnly) {
