@@ -42,20 +42,19 @@ sudo apt update && sudo apt -y full-upgrade
 
 echo "Install Wayland" # https://gist.github.com/seffs/2395ca640d6d8d8228a19a9995418211
 echo "==============="
-sudo apt install wayfire seatd xdg-user-dirs libgl1-mesa-dri -y
-mkdir .config
-touch ~/.config/wayfire.init
+sudo apt install labwc seatd xdg-user-dirs libgl1-mesa-dri -y
+mkdir -p .config/labwc
 sudo raspi-config nonint do_boot_behaviour "B2"  # https://www.raspberrypi.com/documentation/computers/configuration.html
 echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
 echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
-echo '  wayfire' >> .bashrc
+echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 # Rotate the Touch Display
-echo '[output:DSI-1]' >> .config/wayfire.ini
-echo 'mode = 480x800@60' >> .config/wayfire.ini
-echo 'position = 0,0' >> .config/wayfire.ini
-echo 'transform = 270' >> .config/wayfire.ini
+mkdir -p .config/kanshi
+echo '{' > .config/kanshi/config
+echo '  output DSI-1 transform 270' >> .config/kanshi/config
+echo '}' >> .config/kanshi/config
 # Optional: Rotate the console
 sudo cp /boot/firmware/cmdline.txt /boot/firmware/cmdline.txt.ori
 sudo sed -i ' 1 s/.*/& video=DSI-1:800x480@60,rotate=270/' /boot/firmware/cmdline.txt
@@ -91,13 +90,8 @@ sudo usermod -a -G video www-data
 
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
-sudo apt install chromium-browser -y
-echo '[autostart]' >> .config/wayfire.ini
-echo 'screensaver = false' >> .config/wayfire.ini
-echo 'dpms = false' >> .config/wayfire.ini
-echo "kiosk = /usr/bin/pinctrl set $powergpio op dh; /bin/chromium-browser --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" >> .config/wayfire.ini
-# debug mode
-# echo "kiosk = /usr/bin/pinctrl set 17 op dh; /bin/chromium-browser --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" >> .config/wayfire.ini
+echo "kiosk = /usr/bin/pinctrl set $powergpio op dh; /bin/chromium-browser --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" > .config/labwc/autostart# debug mode
+# echo "kiosk = /usr/bin/pinctrl set 17 op dh; /bin/chromium-browser --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" > .config/labwc/autostart
 
 echo "Configure SSH remote login"
 echo "=========================="
