@@ -55,6 +55,7 @@ mkdir -p .config/kanshi
 echo '{' > .config/kanshi/config
 echo '  output DSI-1 transform 270' >> .config/kanshi/config
 echo '}' >> .config/kanshi/config
+echo "kanshi &" >> .config/labwc/autostart# debug mode
 # Optional: Rotate the console
 sudo cp /boot/firmware/cmdline.txt /boot/firmware/cmdline.txt.ori
 sudo sed -i ' 1 s/.*/& video=DSI-1:800x480@60,rotate=270/' /boot/firmware/cmdline.txt
@@ -90,7 +91,8 @@ sudo usermod -a -G video www-data
 
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
-echo "kiosk = /usr/bin/pinctrl set $powergpio op dh; /bin/chromium-browser --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" > .config/labwc/autostart# debug mode
+echo "kiosk = /usr/bin/pinctrl set $powergpio op dh; /bin/chromium-browser --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" >> .config/labwc/autostart
+# debug mode
 # echo "kiosk = /usr/bin/pinctrl set 17 op dh; /bin/chromium-browser --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" > .config/labwc/autostart
 
 echo "Configure SSH remote login"
