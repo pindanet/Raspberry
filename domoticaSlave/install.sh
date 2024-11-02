@@ -55,7 +55,8 @@ mkdir -p .config/kanshi
 echo '{' > .config/kanshi/config
 echo '  output DSI-1 transform 270' >> .config/kanshi/config
 echo '}' >> .config/kanshi/config
-echo "kanshi &" >> .config/labwc/autostart# debug mode
+echo "kanshi &" >> .config/labwc/autostart
+# debug mode
 # Optional: Rotate the console
 sudo cp /boot/firmware/cmdline.txt /boot/firmware/cmdline.txt.ori
 sudo sed -i ' 1 s/.*/& video=DSI-1:800x480@60,rotate=270/' /boot/firmware/cmdline.txt
