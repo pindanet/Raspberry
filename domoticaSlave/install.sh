@@ -92,7 +92,7 @@ sudo usermod -a -G video www-data
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
 sudo apt install chromium-browser -y
-echo "/usr/bin/pinctrl set $powergpio op dh" >> .config/labwc/autostart
+echo "/usr/bin/pinctrl set $powergpio op dh &" >> .config/labwc/autostart
 echo "/bin/chromium-browser --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" >> .config/labwc/autostart
 # debug mode
 # echo "kiosk = /usr/bin/pinctrl set 17 op dh; /bin/chromium-browser --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" > .config/labwc/autostart
