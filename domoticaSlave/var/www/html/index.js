@@ -253,11 +253,13 @@ function startTemp() {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
-      if (output[0] != "error") {
+      if (output[0] == "error") {
+        console.log("Reset Ds18b20");
+      } else if (output[0] == "crc") {
+        console.log("Ds18b20 CRC error");
+      } else {
         conf[room].temp = parseFloat(output[0]) / 1000 + conf[room].tempCorrection;
         document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1);
-      } else {
-        console.log("Try again");
       }
     }
   };
