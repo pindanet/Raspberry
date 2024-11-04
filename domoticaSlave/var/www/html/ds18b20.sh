@@ -6,9 +6,29 @@
 
 powergpio=17
 
-# cat /sys/devices/w1_bus_master1/28-*/temperature
-temp=$(cat /sys/bus/w1/devices/28-*/temperature)
-if [[ $temp =~ ^[0-9]+$ ]]; then
+#cat /sys/devices/w1_bus_master1/28-*/temperature
+#temp=$(cat /sys/bus/w1/devices/28-*/temperature)
+output=$(cat /sys/bus/w1/devices/28-*/w1_slave)
+if [ $? -ne 0 ]; then # error
+  # Reset DS18B20
+  # Power off
+  pinctrl set $powergpio op dl
+  sleep 3
+  # Power on
+  pinctrl set $powergpio op dh
+  sleep 5
+  echo "error"
+fi
+
+crc=$(echo "${output}" | head -1)
+if [[ $crc == *"YES" ]]; then
+  temp="${output#*t=}"
+else
+  echo "crc"
+  exit
+fi
+
+#if [[ $temp =~ ^[0-9]+$ ]]; then
   echo $temp
   echo $temp > /var/www/html/data/temp
 
@@ -30,13 +50,13 @@ if [[ $temp =~ ^[0-9]+$ ]]; then
     tempmin=$temp
     echo $tempmin > /var/www/html/data/${timestamp}tempmin
   fi
-else
-  # Reset DS18B20
-  # Power off
-  pinctrl set $powergpio op dl
-  sleep 3
-  # Power on
-  pinctrl set $powergpio op dh
-  sleep 5
-  echo "error"
-fi
+#else
+#  # Reset DS18B20
+#  # Power off
+#  pinctrl set $powergpio op dl
+#  sleep 3
+#  # Power on
+#  pinctrl set $powergpio op dh
+#  sleep 5
+#  echo "error"
+#fi
