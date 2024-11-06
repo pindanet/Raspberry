@@ -73,6 +73,9 @@ if [ $? == 1 ]; then
   echo 'w1-therm' | sudo tee -a /etc/modules
 fi
 
+echo "Shutdown/Boot button"
+echo 'dtoverlay=gpio-shutdown,gpio_pin=26' | sudo tee -a /boot/firmware/config.txt
+
 echo "Install webserver"
 echo "================="
 sudo apt install apache2 libapache2-mod-fcgid php-bcmath php-bz2 php-common php-curl php-xml php-gd php-php-gettext php-gmp php-ldap php-mbstring php-mysql php-odbc php-pgsql php-snmp php-soap php-sqlite3 php-tokenizer libapache2-mod-php -y
