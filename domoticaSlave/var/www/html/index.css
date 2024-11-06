@@ -4,6 +4,7 @@ body {
   background-color: black;
   color: white;
   font-family: sans-serif;
+  cursor: none;
 }
 a {
   color: white;
