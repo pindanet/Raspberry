@@ -28,6 +28,11 @@ powergpio=17
 # Gnd (20) > Gnd (Gray)
 # GPIO24 (18) > Output (White)
 
+# Shutdown/Boot button
+# Gnd (39) > Gnd (Black)
+# GPIO26 > Shutdown button (white)
+# GPIO3 > Boot button (Gray)
+
 # Test if executed with Bash
 case "$BASH_VERSION" in
   "") echo "usage: bash install.sh"
