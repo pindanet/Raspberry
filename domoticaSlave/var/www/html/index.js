@@ -123,7 +123,7 @@ function getConf() { // Get configuration
           clearInterval(motionTimer);
         }
         lightOff();
-        motionTimer = setInterval(startMotion, 500) // check motion sensor every 0.5s
+        motionTimer = setInterval(startMotion, 250) // check motion sensor every 0.25s
         startTemp();
         setBrightness(0);
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
@@ -322,8 +322,8 @@ function lightOff() {
   }
 }
 
-// var pirStatus;
-var pir = pir1;
+//var pirStatus;
+//var pir = pir1;
 var pictureTaken = false;
 // var lightOffTime;
 function startMotion() {
@@ -332,9 +332,9 @@ function startMotion() {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
-      const output = JSON.parse(this.responseText);
-//console.log(output[0]);
-      if (output[0].includes(" hi ")) { // Motion detected
+//      const output = JSON.parse(this.responseText);
+//console.log(this.responseText);
+      if (this.responseText.includes(" hi ")) { // Motion detected
         if (typeof screenTimer != 'undefined') {
           clearTimeout(screenTimer);
         }
@@ -362,14 +362,14 @@ function startMotion() {
       } else { // no motion
         pictureTaken = false;
       }
-      if (pir == pir1) {
-        pir = pir2;
-      } else {
-        pir = pir1;
-      }
+//      if (pir == pir1) {
+//        pir = pir2;
+//      } else {
+//        pir = pir1;
+//      }
     }
   };
-  xhr.send("cmd=pinctrl&params="+stringToHex("get " + pir));
+  xhr.send("cmd=pinctrl&params="+stringToHex("get " + pir1 + "," + pir2));
 }
 
 function startTime() {
