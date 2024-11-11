@@ -18,6 +18,7 @@ if [ $? -ne 0 ]; then # error
   pinctrl set $powergpio op dh
   sleep 5
   echo "error"
+  exit
 fi
 
 crc=$(echo "${output}" | head -1)
