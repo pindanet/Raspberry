@@ -107,6 +107,7 @@ echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/ras
 echo "============================"
 sudo apt install chromium -y
 echo "/usr/bin/pinctrl set $powergpio op dh" >> .config/labwc/autostart
+echo "/usr/bin/pinctrl set 4 ip pu" >> .config/labwc/autostart
 echo "/bin/chromium --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" >> .config/labwc/autostart
 # debug mode
 # echo "/usr/bin/pinctrl set 17 op dh; /bin/chromium --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" > .config/labwc/autostart
