@@ -3,9 +3,6 @@
 # wget https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/install.sh
 # bash install.sh
 
-# ToDo
-# SSL communication LMI_261-22 p62
-
 # Hardware
 
 # Touch Display https://www.raspberrypi.com/documentation/accessories/display.html
