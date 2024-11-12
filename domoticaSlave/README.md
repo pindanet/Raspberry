@@ -1,5 +1,8 @@
 # Temperature sensor with Weather Forecast and IR lightswitch
 For Raspberry Pi OS Bookworm Lite 64-bit
+## Hardware
+See install.sh
+
 ## Install
 
     wget https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/install.sh
