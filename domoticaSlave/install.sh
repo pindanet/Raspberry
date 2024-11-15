@@ -103,13 +103,27 @@ sudo usermod -a -G video www-data
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
 sudo apt install chromium -y
-echo "/usr/bin/pinctrl set $powergpio op dh" >> .config/labwc/autostart
-echo "/usr/bin/pinctrl set 4 ip pu" >> .config/labwc/autostart
-# Remove hostname profile Lock
-#echo "rm -rf ~/.config/chromium/Singleton*" >> .config/labwc/autostart
-echo "/bin/chromium --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" >> .config/labwc/autostart
-# debug mode
-# echo "/usr/bin/pinctrl set 17 op dh; /bin/chromium --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &" > .config/labwc/autostart
+cat > PindaNetAutostart.sh <<EOF
+#!/bin/bash
+# Activate DS18B20 temperature sensor power (Reset)
+/usr/bin/pinctrl set $powergpio op dh
+# PullUp 1-wire Data
+/usr/bin/pinctrl set 4 ip pu
+# Autostart Chromium in Kiosk & Debug mode
+/bin/chromium --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
+# Give Chromium time to start
+sleep 30
+# Check if Chromium is running
+until ps -ax | grep kiosk | grep -v grep
+do
+  # After a hostname change, chromium refuses to start, correct this
+  rm -rf $HOME/.config/chromium/Singleton*
+  # Restart chromium
+  /bin/chromium --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
+  sleep 30
+done
+EOF
+echo "/usr/bin/bash ~/PindaNetAutostart.sh &" >> .config/labwc/autostart
 
 echo "Configure SSH remote login"
 echo "=========================="
