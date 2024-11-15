@@ -76,6 +76,7 @@ function setAlarmTime(nextAlarmSec, defaultDate) {
   }
 }
 function nextalarm() {
+//  var today = new Date("November 15, 2024 03:30:00");
   var today = new Date();
   setAlarmTime(getEventAlarm(today, today), today); // Get today's alarmtime
   if (today > nextAlarm) { // Alarmtime has expired
@@ -84,7 +85,9 @@ function nextalarm() {
     nextDate.setHours(0,0,0,0);
     setAlarmTime(getEventAlarm(nextDate, today), nextDate); // Get tomorrow's alarmtime
   }
-  var alarmtime = timeDate (conf.alarmtime, new Date());
+// Waarschijnlijk niet gebruikt
+// var alarmtime = timeDate (conf.alarmtime, new Date());
+console.log("nextAlarm = " + nextAlarm);
 
   var sunTimes = SunCalc.getTimes(nextAlarm, conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
   morningTimerLightsOut = new Date(nextAlarm.getTime() + (conf.lights.lightsOut.Offset * 60000)); // 79 min (1 hour 19 min) after wakeup
@@ -96,7 +99,9 @@ function nextalarm() {
   }
 
   sunTimes = SunCalc.getTimes(new Date(), conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
+//  sunTimes = SunCalc.getTimes(new Date("November 15, 2024 03:30:00"), conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
   var eveningShutterDown = timeDate(conf.lights.eveningShutterDown, eveningShutterDown = new Date());
+//  var eveningShutterDown = timeDate(conf.lights.eveningShutterDown, eveningShutterDown = new Date("November 15, 2024 03:30:00"));
   if (eveningShutterDown.getTime() > sunTimes.sunset.getTime()) { // Already dark
     eveningLightsOn = new Date(sunTimes.sunset.getTime()).getTime();
   } else { // Still daylight
@@ -105,9 +110,12 @@ function nextalarm() {
   if (eveningLightsOn < morningLightsOut) { // next day
     morningLightsOut -= 86400000;
   }
+console.log("eveningLightsOn = " + new Date(eveningLightsOn));
+console.log("morningLightsOut = " + new Date(morningLightsOut));
 }
 function calcConf() {
-  lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
+//  lightOffTime = new Date(new Date().getTime() + conf.lights.lightTimer*1000).getTime();
+//console.log("lichtOffTime = " + new Date(lightOffTime));
   nextalarm();
 }
 function getConf() { // Get configuration
