@@ -102,7 +102,6 @@
     "htmlElementId": "clockmonthday",
     "temp": 20,
     "tempCorrection": 0,
-    "tempCorrectionOri": 1.6,
     "mode": "Auto",
     "heater": [
       {
