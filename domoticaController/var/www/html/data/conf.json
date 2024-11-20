@@ -101,7 +101,8 @@
     "id": "living",
     "htmlElementId": "clockmonthday",
     "temp": 20,
-    "tempCorrection": 1.6,
+    "tempCorrection": 0,
+    "tempCorrectionOri": 1.6,
     "mode": "Auto",
     "heater": [
       {
@@ -268,20 +269,6 @@
   "event": [
     {
       "repeat": 0,
-      "begindate": "2024-04-07",
-      "begin": "17:30",
-      "alarm": "07:29",
-      "enddate": "2024-04-07",
-      "end": "18:20",
-      "temp": {
-        "living": "tempComfort",
-        "dining": "tempAux",
-        "kitchen": "tempOff"
-      },
-      "comment": "Test"
-    },
-    {
-      "repeat": 0,
       "begindate": "2024-04-17",
       "begin": "11:20",
       "enddate": "2024-04-17",
@@ -370,6 +357,20 @@
         "kitchen": "tempOff"
       },
       "comment": "ACCB"
+    },
+    {
+      "repeat": 0,
+      "begindate": "2024-11-22",
+      "begin": "11:15",
+      "alarm": "07:30",
+      "enddate": "2024-11-22",
+      "end": "13:30",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
+      },
+      "comment": "Parodont"
     },
     {
       "repeat": 0,
