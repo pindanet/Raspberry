@@ -505,14 +505,9 @@ function tempAdjustment(room) {
     var begin = beginDate.getTime();
     if (conf.event[i].repeat > 0) { // repeating event
       while (begin < dateOnly) {
-//        begin += 86400000 * conf.event[i].repeat;
-//        begin = new Date(begin).setHours(0); // Compensate Daylight Saving
         newBeginDate = new Date(begin);
         newBeginDate.setDate(newBeginDate.getDate() + conf.event[i].repeat);
         begin = newBeginDate.getTime();
-//if (conf.event[i].comment == "Bad Woensdag") {
-//console.log(new Date(begin));
-//}
       }
     }
     if (begin == dateOnly) {
@@ -591,7 +586,7 @@ function getKitchenTemp(room) {
 console.log(room.tempPrev, room.temp);
         if (room.tempPrev < room.temp) {
           if (typeof room.tempDiv !== 'undefined') {
-            if (room.temp - room.tempPrev > room.tempDiv * 2) {
+            if (room.temp - room.tempPrev > room.tempDiv * 3) {
               var xhr = new XMLHttpRequest();
               xhr.open('POST', "cli.php", true);
               xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
