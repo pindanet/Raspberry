@@ -5,25 +5,11 @@
 
 # Hardware
 
-# Touch Display https://www.raspberrypi.com/documentation/accessories/display.html
-# 5v (2) > Vcc
-# GND (14) > Gnd
-
 # DS18B20 Temperature Sensor
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
 # GND (9) naar GND (Zwart)
 # GPIO17 (11) naar Vdd (Rood)
 powergpio=17
-
-# PIR1 AM312
-# 3v3 (1) > Vcc (Orange)
-# Gnd (6) > Gnd (Brown)
-# GPIO14 (8) > Output (Red)
-
-# PIR2 AM312
-# 3v3 (17) > Vcc (Blue)
-# Gnd (20) > Gnd (Gray)
-# GPIO24 (18) > Output (White)
 
 # Shutdown/Boot button
 # Gnd (39) > Gnd (Black)
