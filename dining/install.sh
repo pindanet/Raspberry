@@ -38,18 +38,6 @@ echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
-# Rotate the Touch Display 270°
-mkdir -p .config/kanshi
-echo '{' > .config/kanshi/config
-echo '  output DSI-1 transform 270' >> .config/kanshi/config
-echo '}' >> .config/kanshi/config
-echo "kanshi &" >> .config/labwc/autostart
-# Rotate Touch 270°
-sudo sed -i 's/^display_auto_detect=1/#&/' /boot/firmware/config.txt
-sudo sed -i '/display_auto_detect=1/adtoverlay=vc4-kms-dsi-7inch,invx,swapxy' /boot/firmware/config.txt
-# Optional: Rotate the console
-sudo cp /boot/firmware/cmdline.txt /boot/firmware/cmdline.txt.ori
-sudo sed -i ' 1 s/.*/& video=DSI-1:800x480@60,rotate=270/' /boot/firmware/cmdline.txt
 
 grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
 if [ $? == 1 ]; then
