@@ -76,6 +76,11 @@ echo "============================"
 sudo apt install chromium -y
 cat > PindaNetAutostart.sh <<EOF
 #!/bin/bash
+# Optional Force resolution
+# sudo apt install wlr-randr -y
+# Only for my EIZO monitor
+# wlr-randr --output HDMI-A-1 --mode 1920x1200@59.950001Hz
+
 # Activate DS18B20 temperature sensor power (Reset)
 /usr/bin/pinctrl set $powergpio op dh
 # PullUp 1-wire Data
