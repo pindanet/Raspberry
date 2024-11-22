@@ -64,6 +64,8 @@ sudo sed -i '/display_auto_detect=1/adtoverlay=vc4-kms-dsi-7inch,invx,swapxy' /b
 # Optional: Rotate the console
 sudo cp /boot/firmware/cmdline.txt /boot/firmware/cmdline.txt.ori
 sudo sed -i ' 1 s/.*/& video=DSI-1:800x480@60,rotate=270/' /boot/firmware/cmdline.txt
+# Optional: Disable Touch
+echo 'disable_touchscreen=1' | sudo tee -a /boot/firmware/config.txt
 
 grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
 if [ $? == 1 ]; then
