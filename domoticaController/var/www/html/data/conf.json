@@ -359,10 +359,10 @@
     },
     {
       "repeat": 0,
-      "begindate": "2024-11-22",
-      "begin": "11:15",
+      "begindate": "2025-11-18",
+      "begin": "10:30",
       "alarm": "07:30",
-      "enddate": "2024-11-22",
+      "enddate": "2025-11-18",
       "end": "13:30",
       "temp": {
         "living": "tempAux",
