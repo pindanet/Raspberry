@@ -148,6 +148,9 @@ sudo systemctl enable PindaNetUpdate.timer
 sudo systemctl start PindaNetUpdate.timer
 # systemctl list-timers
 
+# Test
+sudo apt install ffmpeg python3-tk
+
 echo "Ready, please restart"
 echo "====================="
 echo "sudo shutdown -r now"
