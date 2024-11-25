@@ -154,6 +154,8 @@ sudo apt install build-essential meson ninja-build scdoc git wayland-protocols l
 git clone https://git.sr.ht/~proycon/wayout
 cd wayout
 meson build
+ninja -C build
+sudo ninja -C build install
 
 echo "Ready, please restart"
 echo "====================="
