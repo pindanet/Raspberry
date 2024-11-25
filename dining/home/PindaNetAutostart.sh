@@ -11,7 +11,7 @@
 #/bin/chromium --autoplay-policy=no-user-gesture-required --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
 # Give Chromium time to start
 sleep 30
-ffplay -fs -loop 0 /var/www/html/haardvuur.mp4
+ffplay -hide_banner -loglevel error -fs -loop 0 /var/www/html/haardvuur.mp4
 # Check if Chromium is running
 #until ps -ax | grep kiosk | grep -v grep
 #do
