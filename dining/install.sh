@@ -150,12 +150,13 @@ sudo systemctl start PindaNetUpdate.timer
 
 # Test
 #sudo apt install ffmpeg python3-tk
-sudo apt install build-essential meson ninja-build scdoc git wayland-protocols libwayland-dev libcairo-dev libpango1.0-dev
-git clone https://git.sr.ht/~proycon/wayout
-cd wayout
-meson build
-ninja -C build
-sudo ninja -C build install
+sudo apt install wayout
+#sudo apt install build-essential meson ninja-build scdoc git wayland-protocols libwayland-dev libcairo-dev libpango1.0-dev
+#git clone https://git.sr.ht/~proycon/wayout
+#cd wayout
+#meson build
+#ninja -C build
+#sudo ninja -C build install
 
 echo "Ready, please restart"
 echo "====================="
