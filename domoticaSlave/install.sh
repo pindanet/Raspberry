@@ -176,7 +176,7 @@ sudo systemctl start PindaNetUpdate.timer
 # Check Avahi hostname
 cat > checkAvahi.sh <<EOF
 #!/bin/bash
-if [ $(avahi-resolve -a $(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != ${HOSTNAME}.local ]; then
+if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
   echo Restart avahi
   systemctl restart avahi-daemon.service
 fi
