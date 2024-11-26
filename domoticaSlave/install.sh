@@ -202,8 +202,8 @@ EOF
 sudo mv checkAvahi.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
-sudo systemctl enable PindaNetUpdate.timer
-sudo systemctl start PindaNetUpdate.timer
+sudo systemctl enable checkAvahi.timer
+sudo systemctl start checkAvahi.timer
 
 # systemctl list-timers
 
