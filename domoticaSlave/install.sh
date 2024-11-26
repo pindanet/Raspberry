@@ -188,8 +188,8 @@ cat > checkAvahi.timer <<EOF
 [Unit]
 Description=Check Avahi hostname
 [Timer]
-OnBootSec=1min
-OnUnitActiveSec=1min
+OnBootSec=5min
+OnUnitActiveSec=1h
 Unit=checkAvahi.service
 [Install]
 WantedBy=multi-user.target
