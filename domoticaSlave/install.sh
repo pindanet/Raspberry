@@ -201,6 +201,10 @@ ExecStart=/usr/sbin/checkAvahi.sh
 EOF
 sudo mv checkAvahi.service /etc/systemd/system/
 
+sudo systemctl daemon-reload
+sudo systemctl enable PindaNetUpdate.timer
+sudo systemctl start PindaNetUpdate.timer
+
 # systemctl list-timers
 
 echo "Ready, please restart"
