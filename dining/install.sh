@@ -197,6 +197,8 @@ ninja -C build
 sudo ninja -C build install
 cd
 
+sudo apt install vlc
+
 echo " Zaterdag, 23 november 2024   18:42   20.0°C" | DISPLAY=:0 wayout --width 800 --height 40 --layer overlay --position bottom --font "Monospace 22"
 
 echo "Ready, please restart"
