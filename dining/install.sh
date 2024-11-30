@@ -184,6 +184,7 @@ sudo systemctl enable checkAvahi.timer
 sudo systemctl start checkAvahi.timer
 
 # systemctl list-timers
+# journalctl -u checkAvahi.service
 
 # Test
 #sudo apt install ffmpeg python3-tk
