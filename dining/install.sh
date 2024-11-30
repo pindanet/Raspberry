@@ -146,6 +146,43 @@ sudo mv PindaNetUpdate.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable PindaNetUpdate.timer
 sudo systemctl start PindaNetUpdate.timer
+
+# Check Avahi hostname
+cat > checkAvahi.sh <<EOF
+#!/bin/bash
+if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
+  echo Restart avahi
+  systemctl restart avahi-daemon.service
+fi
+EOF
+sudo mv checkAvahi.sh /usr/sbin/
+sudo chmod +x /usr/sbin/checkAvahi.sh
+
+cat > checkAvahi.timer <<EOF
+[Unit]
+Description=Check Avahi hostname
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1h
+Unit=checkAvahi.service
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo mv checkAvahi.timer /etc/systemd/system/
+
+cat > checkAvahi.service <<EOF
+[Unit]
+Description=Check Avahi hostname
+[Service]
+Type=simple
+ExecStart=/usr/sbin/checkAvahi.sh
+EOF
+sudo mv checkAvahi.service /etc/systemd/system/
+
+sudo systemctl daemon-reload
+sudo systemctl enable checkAvahi.timer
+sudo systemctl start checkAvahi.timer
+
 # systemctl list-timers
 
 # Test
