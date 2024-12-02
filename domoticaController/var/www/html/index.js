@@ -79,7 +79,19 @@ function thermostatUI (event, command, id) {
         conf[room].sleepTemp = conf[room].tempManual;
       }
       setThermostatUI(event);
-    break;
+      variable[room].mode = conf[room].mode;
+      variable[room].sleepTemp = conf[room].sleepTemp;
+      variable[room].tempManual = conf[room].tempManual;
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "sendVariable.php", true);
+      xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+      xhr.onload = function(e) {
+        if (this.status == 200) {
+          console.log(this.responseText);
+        }
+      };
+      xhr.send(JSON.stringify(variable, null, 2));
+      break;
   }
 }
 function getThermostatManual (id, host) {
@@ -380,6 +392,35 @@ function startTime() {
   }
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
+function getVariable() { // Get Variables
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function(e) {
+    if (this.status == 200) {
+      variable = JSON.parse(this.responseText);
+      getConf();
+    }
+  }
+  xhttp.open("POST", "data/variable.json");
+  xhttp.send();
+}
+function variableToConf(obj, dest) {
+  for (let key in obj) {
+    if (typeof obj[key] === 'object') {
+      if (Array.isArray(obj[key])) {
+        // loop through array
+        for (let i = 0; i < obj[key].length; i++) {
+          variableToConf(obj[key][i], dest[key]);
+        }
+      } else {
+        // call function recursively for object
+        variableToConf(obj[key], dest[key]);
+      }
+    } else {
+      // do something with value
+      dest[key] = obj[key];
+    }
+  }
+}
 function getConf() { // Get configuration
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function(e) {
@@ -395,6 +436,7 @@ function getConf() { // Get configuration
         conf.lastModified = this.getResponseHeader('Last-Modified');
         calcConf();
       }
+      variableToConf(variable, conf);
       thermostat();
       if (document.getElementById("clockyear").innerHTML != conf.available[0].sleep) {
         // process lights only when not waiting for sleep
@@ -407,7 +449,7 @@ function getConf() { // Get configuration
   xhttp.open("POST", "data/conf.json");
   xhttp.send();
 }
-window.onload = getConf;
+window.onload = getVariable;
 // Thermostat
 function activeHeaters(room) {
   var activeHeaters = -1;
@@ -1030,7 +1072,6 @@ console.log(key, val);
             HTML += '<label for="' + preKey + key + '<' + i + '>Watt">Vermogen:';
             HTML += '  <input type="text" size="4" id="' + preKey + key + '>Watt" value="' + config[configTree[0]][configTree[1]][i].Watt + '"> Watt';
             HTML += '</label><br>';
-//console.log(key, preKey, val[i].name);
             document.getElementById(preKey + key + "id").innerHTML += HTML;
           }
         } else if (key == "thermostat") {
