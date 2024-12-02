@@ -1,11 +1,5 @@
 {
-  "Living": {
-    "mode": "Auto"
-  },
-  "Dining": {
-    "mode": "Auto"
-  },
-  "Kitchen": {
-    "mode": "Auto"
-  }
+  "Living": {},
+  "Dining": {},
+  "Kitchen": {}
 }
