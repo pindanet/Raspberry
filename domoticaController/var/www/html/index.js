@@ -80,7 +80,7 @@ function thermostatUI (event, command, id) {
       }
       setThermostatUI(event);
       variable[room].mode = conf[room].mode;
-      variable[room].sleepTemp = conf[room].sleepTemp;
+//      variable[room].sleepTemp = conf[room].sleepTemp;
       variable[room].tempManual = conf[room].tempManual;
       var xhr = new XMLHttpRequest();
       xhr.open('POST', "sendVariable.php", true);
