@@ -2,6 +2,9 @@
 // Alarm Temperature
 // Clean Up
 // config.html
+// Clear all buttons in thermostat, before setting
+// Done
+// Absent-, Sleep temp retore original temp
 
 var tempIncrDecr = 0.5;
 // define a function that converts a string to hex
@@ -82,6 +85,7 @@ function thermostatUI (event, command, id) {
       variable[room].mode = conf[room].mode;
 //      variable[room].sleepTemp = conf[room].sleepTemp;
       variable[room].tempManual = conf[room].tempManual;
+      conf[room].tempWanted = conf[room].tempManual;
       var xhr = new XMLHttpRequest();
       xhr.open('POST', "sendVariable.php", true);
       xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -304,6 +308,29 @@ function wakeup() {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.send("cmd=echo&params="+stringToHex("0 > /sys/class/backlight/rpi_backlight/bl_power"));
 }
+function activateAbsent(room, tempThermostat, mode, id) {
+  conf[room].absentRestoreTemp = conf[room].tempWanted;
+  conf[room].absentRestoreMode = conf[room].mode;
+  conf[room].absentRestoreTempManual = conf[room].tempManual;
+  if (conf[room].tempWanted > tempThermostat) {
+console.log(room + " absent temp: " + conf[room].absentRestoreTemp + " to " + tempThermostat);
+    thermostatUI(event, mode, id);
+  }
+}
+function deactivateAbsent(room) {
+  if (conf[room].absentRestoreMode == "Auto") {
+console.log(room + " absent restore: " + conf[room].tempWanted + " to Auto");
+    thermostatUI(event, 'Auto', room.toLowerCase() + 'temp');
+  } else {
+    if (conf[room].absentRestoreTemp == conf.tempOff) {
+console.log(room + " absent restore: " + conf[room].tempWanted + " to Off");
+      thermostatUI(event, 'Off', room.toLowerCase() + 'temp');
+    } else {
+console.log(room + " absent restore: " + conf[room].tempWanted + " to " + conf[room].absentRestoreTemp);
+      thermostatUI(event, 'Manual', room.toLowerCase() + 'aux');
+    }
+  }
+}
 function toggleAvailable(event) {
   var elem = document.getElementById("clockyear");
   switch(elem.innerHTML) {
@@ -323,16 +350,19 @@ function toggleAvailable(event) {
       var today = new Date();
       elem.innerHTML = today.getFullYear();
       elem.style.fontSize = "";
-      thermostatUI(event, 'Auto', 'livingtemp');
-      thermostatUI(event, 'Auto', 'diningtemp');
-      thermostatUI(event, 'Auto', 'kitchentemp');
+      deactivateAbsent("Living");
+      deactivateAbsent("Dining");
+      deactivateAbsent("Kitchen");
+//      thermostatUI(event, 'Auto', 'livingtemp');
+//      thermostatUI(event, 'Auto', 'diningtemp');
+//      thermostatUI(event, 'Auto', 'kitchentemp');
       break;
     default:
       elem.innerHTML = conf.available[0].absent;
       elem.style.fontSize = "64%";
-      thermostatUI(event, 'Manual', 'livingaux');
-      thermostatUI(event, 'Manual', 'diningaux');
-      thermostatUI(event, 'Off', 'kitchentemp');
+      activateAbsent("Living", conf.tempAux, "Manual", "livingaux");
+      activateAbsent("Dining", conf.tempAux, "Manual", "diningaux");
+      activateAbsent("Kitchen", conf.tempOff, "Off", "kitchentemp");
   }
   event.stopPropagation();
   event.preventDefault();
@@ -593,6 +623,7 @@ function tempAdjustment(room) {
   } else { // Store Sleeptime temp
     room.sleepTemp = tempWanted;
   }
+  room.tempWanted = tempWanted;
 // Heaters On/Off
   for (let i = 0; i < room.heater.length; i++) {
     if (room.heater[i].status != "off" && room.heater[i].status != "on") { // Initialise heater status
