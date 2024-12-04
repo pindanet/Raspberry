@@ -100,29 +100,26 @@ function thermostatUI (event, command, id) {
 }
 function getThermostatManual (id, host) {
   var room = id.charAt(0).toUpperCase() + id.slice(1);
+  document.getElementById(id+"Auto").className = "";
+  document.getElementById(id+"Manual").className = "";
+  if (id != "kitchen") {
+    document.getElementById(id+"ManualAux").className = "";
+  }
+  document.getElementById(id+"Off").className = "";
   switch(conf[room].mode) {
     case "Auto":
       document.getElementById(id+"Auto").className = "highlight";
-      document.getElementById(id+"Manual").className = "";
-      if (id != "kitchen") {
-        document.getElementById(id+"ManualAux").className = "";
-      }
-      document.getElementById(id+"Off").className = "";
       break;
     default: // Manual
-      document.getElementById(id+"Auto").className = "";
       var auxElem =  document.getElementById(id+"aux");
       if (conf[room].tempManual == conf.tempOff) { // Off
         document.getElementById(id+"Off").className = "highlight";
       } else { // Manual
-        document.getElementById(id+"Off").className = "";
         if (typeof(auxElem) != 'undefined' && auxElem != null) {  // not the kitchen
           if (conf.tempAux.toFixed(1) == conf[room].tempManual.toFixed(1)) { // Aux temp
-            document.getElementById(id+"Manual").className = "";
             document.getElementById(id+"ManualAux").className = "highlight";
           } else {
             document.getElementById(id+"Manual").className = "highlight";
-            document.getElementById(id+"ManualAux").className = "";
           }
         } else { // kitchen
           document.getElementById(id+"Manual").className = "highlight";
