@@ -112,7 +112,7 @@ function getThermostatManual (id, host) {
     default: // Manual
       document.getElementById(id+"Auto").className = "";
       var auxElem =  document.getElementById(id+"aux");
-      if (conf[room].tempManual.toFixed(1) == conf.tempOff) { // Off
+      if (conf[room].tempManual == conf.tempOff) { // Off
         document.getElementById(id+"Off").className = "highlight";
       } else { // Manual
         document.getElementById(id+"Off").className = "";
@@ -312,8 +312,8 @@ function activateAbsent(room, tempThermostat, mode, id) {
   conf[room].absentRestoreTemp = conf[room].tempWanted;
   conf[room].absentRestoreMode = conf[room].mode;
   conf[room].absentRestoreTempManual = conf[room].tempManual;
-  if (conf[room].tempWanted > tempThermostat) {
-console.log(room + " absent temp: " + conf[room].absentRestoreTemp + " to " + tempThermostat);
+  if (conf[room].tempWanted > tempThermostat || conf[room].absentRestoreMode == "Auto") {
+console.log(room + " absent temp: " + conf[room].absentRestoreMode + " ("+ conf[room].absentRestoreTemp + ") to " + tempThermostat);
     thermostatUI(event, mode, id);
   }
 }
