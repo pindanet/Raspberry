@@ -1,5 +1,5 @@
 #!/bin/bash
-killall vlc
+killall mpv
 killall wayout
 # Optional Force resolution
 # sudo apt install wlr-randr -y
@@ -10,15 +10,19 @@ killall wayout
 # PullUp 1-wire Data
 /usr/bin/pinctrl set 4 ip pu
 # Autostart VLC in Kiosk mode
-sleep 30
-videos+=("aquarium.mp4")
-videos+=("haardvuur.mp4")
+#sleep 30
+videos+=("aquarium1920.mp4")
+#videos+=("haardvuur.mp4")
 video=${videos[$(( $RANDOM % ${#videos[@]} ))]}
 if [ $video == "aquarium.mp4" ]; then
   color="black"
 else
   color="white"
 fi
-vlc --no-video-title-show --fullscreen --loop -Idummy /var/www/html/${video} &
+mpv --fs --loop --quiet /var/www/html/${video} &
+#vlc --no-video-title-show --fullscreen --loop -Idummy /var/www/html/${video} &
 # --alsa-audio-device default
-while true; do echo "<span foreground=\"${color}\">$(date +%H:%M:%S)</span>"; sleep 1; done | wayout --feed-line --width 800 --height 40 --layer overlay --position bottom --font "Monospace 22"
+while true; do
+  echo "<span foreground=\"${color}\">$(date +%H:%M:%S)</span>"
+  sleep 1
+done | wayout --feed-line --width 800 --height 40 --layer overlay --position bottom --font "Monospace 22"
