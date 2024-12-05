@@ -11,16 +11,18 @@ killall wayout
 /usr/bin/pinctrl set 4 ip pu
 # Autostart VLC in Kiosk mode
 #sleep 30
-videos+=("aquarium1920.mp4")
+readarray -d '' videos < <(find /var/www/html/ -name "*.mp4" -print0)
+#videos+=("aquarium1920.mp4")
 #videos+=("haardvuur.mp4")
 video=${videos[$(( $RANDOM % ${#videos[@]} ))]}
-if [ $video == "aquarium.mp4" ]; then
+#if [ $video == "aquarium.mp4" ]; then
+if [[ "$video" == *"aquarium"* ]]; then
   color="black"
 else
   color="white"
 fi
-mpv --fs --loop --quiet /var/www/html/${video} &
-#vlc --no-video-title-show --fullscreen --loop -Idummy /var/www/html/${video} &
+mpv --fs --loop --quiet ${video} &
+#vlc --no-video-title-show --fullscreen --loop -Idummy ${video} &
 # --alsa-audio-device default
 while true; do
   echo "<span foreground=\"${color}\">$(date +%H:%M:%S)</span>"
