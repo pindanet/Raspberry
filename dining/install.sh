@@ -74,7 +74,7 @@ sudo usermod -a -G video www-data
 echo "Autostart fullscreen video"
 echo "=========================="
 sudo apt install mpv -y
-echo "/usr/bin/bash /var/www/html/Autostart.sh &" >> .config/labwc/autostart
+echo "/usr/bin/bash /var/www/html/autostart.sh &" >> .config/labwc/autostart
 
 echo "Configure SSH remote login"
 echo "=========================="
@@ -161,8 +161,6 @@ sudo systemctl start checkAvahi.timer
 # systemctl list-timers
 # journalctl -u checkAvahi.service
 
-# Test
-#sudo apt install ffmpeg python3-tk
 #sudo apt install wayout
 sudo apt install build-essential meson ninja-build scdoc git wayland-protocols libwayland-dev libcairo-dev libpango1.0-dev
 git clone https://git.sr.ht/~proycon/wayout
@@ -171,10 +169,6 @@ meson build
 ninja -C build
 sudo ninja -C build install
 cd
-
-sudo apt install vlc
-
-echo " Zaterdag, 23 november 2024   18:42   20.0°C" | DISPLAY=:0 wayout --width 800 --height 40 --layer overlay --position bottom --font "Monospace 22"
 
 echo "Ready, please restart"
 echo "====================="
