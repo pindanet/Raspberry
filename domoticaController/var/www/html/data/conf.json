@@ -32,11 +32,43 @@
     "eveningShutterDown": "22:20",
     "timer": [
       {
+        "dev": "Kerst",
+        "begin": "breakfast",
+        "end": "morningLightsOut"
+      },
+      {
+        "dev": "LivingVoor",
+        "begin": "breakfast",
+        "end": "morningLightsOut"
+      },
+      {
+        "dev": "LivingZij",
+        "begin": "breakfast",
+        "end": "morningLightsOut"
+      },
+      { 
+        "dev": "Kerst",
+        "begin": "eveningLightsOn",
+        "end": "bedTime"
+      },
+      {
+        "dev": "LivingVoor",
+        "begin": "eveningLightsOn",
+        "end": "bedTime"
+      },
+      {
+        "dev": "LivingZij",
+        "begin": "eveningLightsOn",
+        "end": "bedTime"
+      },
+      {
+        "disabled": true,
         "dev": "Haardlamp",
         "begin": "breakfast",
         "end": "morningLightsOut"
       },
       {
+        "disabled": true,
         "dev": "Apotheek",
         "begin": "breakfast",
         "end": "morningLightsOut"
@@ -47,16 +79,19 @@
         "end": "22:15"
       },
       {
+        "disabled": true,
         "dev": "Apotheek",
         "begin": "22:24",
         "end": "bedTime"
       },
       {
+        "disabled": true,
         "dev": "Haardlamp",
         "begin": "eveningLightsOn",
         "end": "bedTime"
       },
       {
+        "disabled": false,
         "dev": "TVlamp",
         "begin": "eveningLightsOn",
         "end": "bedTime"
@@ -66,6 +101,10 @@
   "alarmtime": "07:30",
   "breakfastOffset": "11",
   "switch": {
+    "Kerst": {
+      "IP": "192.168.129.44",
+      "Watt": "20"
+    },
     "Haardlamp": {
       "IP": "192.168.129.18",
       "Watt": "20"
