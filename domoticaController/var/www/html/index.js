@@ -836,6 +836,11 @@ function lights() {
     var begin = beginDate.getTime();
     var endDate = timeDate(conf.lights.timer[i].end, new Date());
     var end = endDate.getTime();
+    if (typeof conf.lights.timer[i].disabled !== 'undefined') {
+      if(conf.lights.timer[i].disabled) {
+        continue;
+      }
+    }
 
     if (begin <= now && end > now) {
       conf.switch[conf.lights.timer[i].dev].cmd = "On";
