@@ -640,7 +640,7 @@ function tempAdjustment(room) {
     }
   }
 }
-function getKitchenTemp(room) {
+function wgetTemp(host, room) {
 // wget -qO- http://pindakeuken.local/data/temp
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -682,7 +682,7 @@ console.log("Initialise Temp");
       }
     }
   };
-  xhr.send("cmd=wget&params="+stringToHex("-qO- http://pindakeuken.local/data/temp"));
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + "/data/temp"));
 }
 function thermostat() {
   tempAdjustment(conf.Living);
@@ -692,9 +692,10 @@ function thermostat() {
   getTemp("pindadomo", "/var/www/html/ds18b20.sh", conf.Living);
   tempAdjustment(conf.Dining);
 // getDiningTemp
-  getTemp("pindadining", "cat /sys/bus/w1/devices/28-*/temperature", conf.Dining);
+  wgetTemp("pindadining.local", conf.Dining);
   tempAdjustment(conf.Kitchen);
-  getKitchenTemp(conf.Kitchen)
+  wgetTemp("pindakeuken.local", conf.Kitchen);
+//  getKitchenTemp(conf.Kitchen)
 //  getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
 //  getTemp("pindakeuken", '/var/www/html/ds18b20.sh', conf.Kitchen);
   if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort)) {
