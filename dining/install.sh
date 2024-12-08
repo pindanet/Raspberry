@@ -185,7 +185,7 @@ sudo systemctl enable ds18b20.timer
 sudo systemctl start ds18b20.timer
 
 # systemctl list-timers
-# journalctl -u checkAvahi.service
+# journalctl -u ds18b20.service
 
 #sudo apt install wayout
 sudo apt install build-essential meson ninja-build scdoc git wayland-protocols libwayland-dev libcairo-dev libpango1.0-dev
