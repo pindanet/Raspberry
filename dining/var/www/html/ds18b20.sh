@@ -5,6 +5,7 @@
 # GND (9) naar GND (Zwart)
 
 powergpio=17
+pullupgpio=27
 
 if [ ! -d data/temp.log ]; then
   mkdir -p data/temp.log
@@ -17,6 +18,7 @@ if [ $? -ne 0 ]; then # error
   # Reset DS18B20
   # Power off
   pinctrl set $powergpio op dl
+  pinctrl set $pullupgpio op dh
   sleep 3
   # Power on
   pinctrl set $powergpio op dh
