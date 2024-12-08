@@ -163,7 +163,7 @@ cat > ds18b20.timer <<EOF
 [Unit]
 Description=Read DS18B20 Temperature sensor
 [Timer]
-#OnBootSec=5min
+OnBootSec=1min
 OnUnitActiveSec=1min
 Unit=ds18b20.service
 [Install]
