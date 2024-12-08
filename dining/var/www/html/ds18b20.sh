@@ -7,8 +7,8 @@
 powergpio=17
 pullupgpio=27
 
-if [ ! -d data/temp.log ]; then
-  mkdir -p data/temp.log
+if [ ! -d /var/www/html/data/temp.log ]; then
+  mkdir -p /var/www/html/data/temp.log
 fi
 
 #cat /sys/devices/w1_bus_master1/28-*/temperature
