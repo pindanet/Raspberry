@@ -1,5 +1,5 @@
 #!/bin/bash
-killall mpv
+killall vlc
 killall wayout
 # Optional Force resolution
 # sudo apt install wlr-randr -y
@@ -7,24 +7,21 @@ killall wayout
 #wlr-randr --output HDMI-A-1 --mode 1920x1200@59.950001Hz
 # Activate DS18B20 temperature sensor power (Reset)
 /usr/bin/pinctrl set 17 op dh
+/usr/bin/pinctrl set 27 op dh
 # PullUp 1-wire Data
 /usr/bin/pinctrl set 4 ip pu
 # Autostart VLC in Kiosk mode
-#sleep 30
+sleep 30
 readarray -d '' videos < <(find /var/www/html/ -name "*.mp4" -print0)
-#videos+=("aquarium1920.mp4")
-#videos+=("haardvuur.mp4")
 video=${videos[$(( $RANDOM % ${#videos[@]} ))]}
-#if [ $video == "aquarium.mp4" ]; then
 if [[ "$video" == *"aquarium"* ]]; then
   color="black"
 else
   color="white"
 fi
-mpv --fs --loop --quiet ${video} &
-#vlc --no-video-title-show --fullscreen --loop -Idummy ${video} &
-# --alsa-audio-device default
+vlc --no-video-title-show --fullscreen --loop -Idummy ${video} &
 while true; do
-  echo "<span foreground=\"${color}\">$(date +%H:%M:%S)</span>"
+  text=$(date +%H:%M:%S)$(printf " %.1f" $((10**1 * $(($(cat /var/www/html/data/temp) + 700))/1000))e-1)
+  echo "<b><span foreground=\"${color}\">${text}</span></b>"
   sleep 1
-done | wayout --feed-line --width 800 --height 40 --layer overlay --position bottom --font "Monospace 22"
+done | wayout --feed-line --width 1920 --height 80 --layer overlay --position bottom --font "Monospace 44"
