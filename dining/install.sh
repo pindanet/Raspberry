@@ -3,6 +3,10 @@
 # wget https://github.com/pindanet/Raspberry/raw/master/dining/install.sh
 # bash install.sh
 
+# ToDo
+# ====
+# add video=HDMI-A-1:1920x1200M@60 at start of line in /boot/firmware/cmdline.txt + space, to force screen without active monitor
+
 # Hardware
 
 # DS18B20 Temperature Sensor
