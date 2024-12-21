@@ -2,9 +2,7 @@
 For Raspberry Pi OS Bookworm Lite 64-bit
 ## Hardware
 
-### Touch Display (https://www.raspberrypi.com/documentation/accessories/display.html)
-5v (2) > Vcc<br>
-GND (14) > Gnd
+### HDMI Display
 
 ### DS18B20 Temperature Sensor
 GPIO4 (7) > Data (Yellow) > 4k7 > 3,3 V (Orange)(GPIO27)<br>
