@@ -16,9 +16,8 @@
 powergpio=17
 
 # Shutdown/Boot button
-# Gnd (39) > Gnd (Black)
-# GPIO26 > Shutdown button (white)
-# GPIO3 > Boot button (Gray)
+# Gnd (6) > Gnd (Blue)
+# GPIO3 (5) > Shutdown/Boot button (Blue)
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
