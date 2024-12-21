@@ -7,17 +7,11 @@
 # ====
 # add video=HDMI-A-1:1920x1200M@60 at start of line in /boot/firmware/cmdline.txt + space, to force screen without active monitor
 
-# Hardware
-
 # DS18B20 Temperature Sensor
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
 # GND (9) naar GND (Zwart)
 # GPIO17 (11) naar Vdd (Rood)
 powergpio=17
-
-# Shutdown/Boot button
-# Gnd (6) > Gnd (Blue)
-# GPIO3 (5) > Shutdown/Boot button (Blue)
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
