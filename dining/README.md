@@ -25,6 +25,3 @@ Add Raspberry Pi sensor SSH key to your computer with:
 Then you can disable password SSH login (more secure) on the Raspberry Pi Sensor SSH server:
 
     sudo sed -i "s/^.*PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
-You can configure the domoticaSlave by editing /var/www/html/data/conf.json
-
-    sudo nano -P -B -l /var/www/html/data/conf.json
