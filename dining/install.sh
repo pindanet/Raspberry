@@ -54,7 +54,7 @@ fi
 
 echo "Shutdown/Boot button"
 echo "===================="
-echo 'dtoverlay=gpio-shutdown,gpio_pin=26' | sudo tee -a /boot/firmware/config.txt
+echo 'dtoverlay=gpio-shutdown' | sudo tee -a /boot/firmware/config.txt
 
 echo "Install webserver"
 echo "================="
