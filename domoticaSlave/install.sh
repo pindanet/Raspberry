@@ -195,7 +195,7 @@ Description=Take picture
 [Timer]
 OnBootSec=5min
 OnUnitActiveSec=1min
-Unit=motion.service
+Unit=PindaMotion.service
 [Install]
 WantedBy=multi-user.target
 EOF
