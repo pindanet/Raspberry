@@ -187,6 +187,32 @@ sudo systemctl daemon-reload
 sudo systemctl enable checkAvahi.timer
 sudo systemctl start checkAvahi.timer
 
+sudo chmod +x /var/www/html/motion.sh
+
+cat > PindaMotion.timer <<EOF
+[Unit]
+Description=Take picture
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1min
+Unit=motion.service
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo mv PindaMotion.timer /etc/systemd/system/
+
+cat > PindaMotion.service <<EOF
+[Unit]
+Description=Take picture
+[Service]
+Type=simple
+ExecStart=/var/www/html/motion.sh
+EOF
+sudo mv PindaMotion.service /etc/systemd/system/
+
+sudo systemctl daemon-reload
+sudo systemctl enable PindaMotion.timer
+sudo systemctl start PindaMotion.timer
 # systemctl list-timers
 
 echo "Ready, please restart"
