@@ -315,12 +315,12 @@ function setBrightness(brightness) {
   xhr.send("brightness=" + brightness);
 }
 
-function motionPicture() {
-  var xhr = new XMLHttpRequest();  // Take picture
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("cmd=bash&params="+stringToHex("./motion.sh"));
-}
+//function motionPicture() {
+//  var xhr = new XMLHttpRequest();  // Take picture
+//  xhr.open('POST', "cli.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.send("cmd=bash&params="+stringToHex("./motion.sh"));
+//}
 
 function lightOff() {
   document.getElementById("lightoff").style.display = "";
@@ -362,13 +362,13 @@ function startMotion() {
         } else {
           setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
         }
-        if (pictureTaken == false) {
-          pictureTaken = true;
-          motionPicture(); // take a photo
-        }
+//        if (pictureTaken == false) {
+//          pictureTaken = true;
+//          motionPicture(); // take a photo
+//        }
         weather();  // refresh weather
-      } else { // no motion
-        pictureTaken = false;
+//      } else { // no motion
+//        pictureTaken = false;
       }
 //      if (pir == pir1) {
 //        pir = pir2;
