@@ -10,6 +10,6 @@ if [ $brightness  -gt 0 ]; then
   fi
   find /var/www/html/motion -mmin +$((60*24)) -type f -delete
   filename=$(date +"%Y-%m-%d_%H.%M.%S.jpg")
-  /usr/bin/rpicam-still -o /var/www/html/motion/$filename --rotation 180 --immediate
+  /usr/bin/rpicam-still -o /var/www/html/motion/$filename --rotation 180 --immediate --nopreview
   /usr/bin/convert /var/www/html/motion/$filename -resize 1920 /var/www/html/motion/$filename
 fi
