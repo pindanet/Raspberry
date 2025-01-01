@@ -63,6 +63,7 @@ sudo apt install apache2 libapache2-mod-fcgid php-bcmath php-bz2 php-common php-
 
 if test -f master.zip; then rm master.zip; fi
 echo "Download and extract Github Repository"
+echo "======================================"
 wget https://github.com/pindanet/Raspberry/archive/refs/heads/master.zip
 unzip -q master.zip
 rm master.zip
