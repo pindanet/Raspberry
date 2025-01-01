@@ -107,10 +107,11 @@ echo '127.0.0.1       pindadining' | sudo tee -a /etc/hosts
 echo '127.0.0.1       pindakeuken' | sudo tee -a /etc/hosts
 
 echo "Configure SSH remote login"
+echo "=========================="
 ssh-keygen
-ssh-copy-id -i $HOME/.ssh/id_rsa.pub $(ls /home)@pindadomo
-sudo cp .ssh/id_rsa /var/www/html/data/
-sudo chown www-data:www-data /var/www/html/data/id_rsa
+# ssh-copy-id -i $HOME/.ssh/id_rsa.pub $(ls /home)@pindadomo
+# sudo cp .ssh/id_rsa /var/www/html/data/
+#sudo chown www-data:www-data /var/www/html/data/id_rsa
 
 exit
 
