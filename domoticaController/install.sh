@@ -99,13 +99,6 @@ done
 EOF
 echo "/usr/bin/bash ~/PindaNetAutostart.sh &" >> .config/labwc/autostart
 
-exit
-# Debug, Test, Demo
-echo "Configure Debug/Test/Demo"
-echo '127.0.0.1       pindadomo' | sudo tee -a /etc/hosts
-echo '127.0.0.1       pindadining' | sudo tee -a /etc/hosts
-echo '127.0.0.1       pindakeuken' | sudo tee -a /etc/hosts
-
 echo "Configure SSH remote login"
 echo "=========================="
 ssh-keygen
