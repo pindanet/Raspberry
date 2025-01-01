@@ -32,15 +32,14 @@ echo -e "\nFull Upgrade"
 echo "============"
 sudo apt update && sudo apt -y full-upgrade
 
-echo "Install Wayland" # https://gist.github.com/seffs/2395ca640d6d8d8228a19a9995418211
-sudo apt install wayfire seatd xdg-user-dirs libgl1-mesa-dri
-mkdir .config
-touch ~/.config/wayfire.init
+echo "Install Wayland"
+sudo apt install labwc seatd xdg-user-dirs libgl1-mesa-dri
+mkdir .config/labwc
 sudo raspi-config nonint do_boot_behaviour "B2"  # https://www.raspberrypi.com/documentation/computers/configuration.html
 echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
 echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
-echo '  wayfire' >> .bashrc
+echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 
 grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
