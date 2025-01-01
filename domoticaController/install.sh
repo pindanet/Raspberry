@@ -74,13 +74,32 @@ sudo chmod +x /var/www/html/ds18b20.sh
 sudo chown www-data:www-data /var/www/html/data
 
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
-echo '[autostart]' >> .config/wayfire.ini
-echo 'screensaver = false' >> .config/wayfire.ini
-echo 'dpms = false' >> .config/wayfire.ini
-echo 'kiosk = /bin/chromium-browser --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &' >> .config/wayfire.ini
-# Debug mode
-# echo 'kiosk = /bin/chromium-browser --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &' >> .config/wayfire.ini
+echo "============================"
+sudo apt install chromium -y
 
+cat > PindaNetAutostart.sh <<EOF
+#!/bin/bash
+# Activate DS18B20 temperature sensor power (Reset)
+/usr/bin/pinctrl set $powergpio op dh
+# PullUp 1-wire Data
+/usr/bin/pinctrl set 4 ip pu
+# Autostart Chromium in Kiosk & Debug mode
+/bin/chromium --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
+# Give Chromium time to start
+sleep 30
+# Check if Chromium is running
+until ps -ax | grep kiosk | grep -v grep
+do
+  # After a hostname change, chromium refuses to start, correct this
+  rm -rf $HOME/.config/chromium/Singleton*
+  # Restart chromium
+  /bin/chromium --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
+  sleep 30
+done
+EOF
+echo "/usr/bin/bash ~/PindaNetAutostart.sh &" >> .config/labwc/autostart
+
+exit
 # Debug, Test, Demo
 echo "Configure Debug/Test/Demo"
 echo '127.0.0.1       pindadomo' | sudo tee -a /etc/hosts
