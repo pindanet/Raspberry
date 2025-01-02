@@ -343,6 +343,7 @@ function toggleAvailable(event) {
 //      var timeoutTime = Math.max(30000, sleepdate.getTime() - new Date().getTime() + 30000);
 //console.log(new Date(new Date().getTime() + timeoutTime));
       setTimeout(gotoSleep, timeoutTime);
+      break;
     case conf.available[0].absent:
       var today = new Date();
       elem.innerHTML = today.getFullYear();
@@ -379,6 +380,7 @@ function startTime() {
       if (elem.innerHTML != conf.available[0].sleep) {
         elem.innerHTML = conf.available[0].sleep;
         elem.style.fontSize = "70%";
+console.log(conf.Living.sleepTemp, conf.Dining.sleepTemp, conf.Kitchen.sleepTemp);
 //        thermostatUI(event, 'Manual', 'livingtemp');
       }
     } else if (typeof conf.available[0].absentdate !== 'undefined') {
