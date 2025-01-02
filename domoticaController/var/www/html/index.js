@@ -344,7 +344,7 @@ function toggleAvailable(event) {
 //      var timeoutTime = Math.max(30000, sleepdate.getTime() - new Date().getTime() + 30000);
 //console.log(new Date(new Date().getTime() + timeoutTime));
       setTimeout(gotoSleep, timeoutTime);
-      break;
+//      break;
     case conf.available[0].absent:
       var today = new Date();
       elem.innerHTML = today.getFullYear();
