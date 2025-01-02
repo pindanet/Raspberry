@@ -233,11 +233,11 @@
       },
       {
         "begin": "10:55",
-        "end": "12:20",
+        "end": "12:25",
         "temp": "tempComfort"
       },
       {
-        "begin": "12:20",
+        "begin": "12:25",
         "end": "12:55",
         "temp": "tempAux"
       },
@@ -288,7 +288,7 @@
         "temp": "tempAux"
       },
       {
-        "begin": "12:15",
+        "begin": "12:20",
         "end": "13:00",
         "temp": "tempAux"
       },
@@ -307,16 +307,16 @@
   "event": [
     {
       "repeat": 0,
-      "begindate": "2024-04-17",
-      "begin": "11:20",
-      "enddate": "2024-04-17",
+      "begindate": "2024-12-29",
+      "begin": "13:30",
+      "enddate": "2024-12-29",
       "end": "19:45",
       "temp": {
-        "living": "tempOff",
-        "dining": "tempOff",
-        "kitchen": "tempOff"
+        "living": "tempComfort",
+        "dining": "tempComfort",
+        "kitchen": "tempAux"
       },
-      "comment": "Roos"
+      "comment": "Luc"
     },
     {
       "repeat": 0,
@@ -333,9 +333,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2024-02-26",
+      "begindate": "2025-01-13",
       "begin": "16:00",
-      "enddate": "2024-02-26",
+      "enddate": "2025-01-13",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -346,9 +346,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2024-02-02",
+      "begindate": "2025-01-03",
       "begin": "16:00",
-      "enddate": "2024-02-02",
+      "enddate": "2025-01-03",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -359,9 +359,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2024-02-02",
+      "begindate": "2025-01-03",
       "begin": "19:45",
-      "enddate": "2024-02-02",
+      "enddate": "2025-01-03",
       "end": "bedTime",
       "temp": {
         "living": "tempAux",
@@ -372,9 +372,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2024-02-07",
+      "begindate": "2025-01-08",
       "begin": "16:00",
-      "enddate": "2024-02-07",
+      "enddate": "2025-01-08",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -385,9 +385,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2024-02-07",
+      "begindate": "2025-01-08",
       "begin": "19:45",
-      "enddate": "2024-02-07",
+      "enddate": "2025-01-08",
       "end": "bedTime",
       "temp": {
         "living": "tempAux",
