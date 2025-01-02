@@ -80,7 +80,7 @@ function processLine($powerline) {
     $GLOBALS[$powerline["name"]] = $powerline["time"];
   } else if (isset($GLOBALS[$powerline["name"]])) {
     $minutes = round(($GLOBALS[$powerline["name"]] - $powerline["time"]) / 60000);
-    if ($minutes < 60 * 8) { // filter communication errors duration longer than  8 hours
+    if ($minutes < 60 * 13) { // filter communication errors duration longer than  13 hours
       $kWh = ($powerline["Watt"] / 1000) * ($minutes / 60);
       $GLOBALS['processDaykWh'] += $kWh;
       $GLOBALS['processWeekkWh'] += $kWh;
