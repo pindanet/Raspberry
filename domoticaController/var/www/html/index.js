@@ -36,6 +36,7 @@ function calcConf() { // Calculated Configuration
   document.getElementById("kitchentemp").innerHTML = conf.tempAux.toFixed(1);
   // Calculated Configuration
   var now = new Date();
+  document.getElementById("clockyear").innerHTML = now.getFullYear();
   var hourMin = conf.available[0].sleeptime.split(":");
   // one minute later before temporary freezing the light control
   conf.available[0].sleepdate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hourMin[0], parseInt(hourMin[1]) + 1, 0, 0);
@@ -513,22 +514,22 @@ function tasmotaHeater (dev, cmd, room, heater) {
   };
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
 }
-function getTemp(host, cmd, room) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200 && this.readyState === 4) {
-      const output = JSON.parse(this.responseText);
-      room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
-      document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
-      if (room.id == "living") {
-        roomTemp = room.temp.toFixed(1) + " °C";
-      }
-    }
-  };
-  xhr.send("cmd=ssh&params="+stringToHex("-v -i data/id_rsa -o StrictHostKeyChecking=no -o 'UserKnownHostsFile /dev/null' $(ls /home)@" +  host +" '" + cmd + "'"));
-}
+//function getTemp(host, cmd, room) {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "cli.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function(e) {
+//    if (this.status == 200 && this.readyState === 4) {
+//      const output = JSON.parse(this.responseText);
+//      room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
+//      document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
+//      if (room.id == "living") {
+//        roomTemp = room.temp.toFixed(1) + " °C";
+//      }
+//    }
+//  };
+//  xhr.send("cmd=ssh&params="+stringToHex("-v -i data/id_rsa -o StrictHostKeyChecking=no -o 'UserKnownHostsFile /dev/null' $(ls /home)@" +  host +" '" + cmd + "'"));
+//}
 function timeDate (time, dateObject) {
   var hourMin = [];
   if (time.indexOf(":") > -1) {
@@ -691,7 +692,28 @@ function thermostat() {
 // getLivingTemp
 //  getTemp("pindadomo", "cat /sys/bus/iio/devices/iio\:device0/in_temp_input", conf.Living);
 //  getTemp("pindadomo", "cat /sys/bus/w1/devices/28-*/temperature", conf.Living);
-  getTemp("pindadomo", "/var/www/html/ds18b20.sh", conf.Living);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      const output = JSON.parse(this.responseText);
+      if (output[0] == "error") {
+        console.log("Reset Ds18b20");
+      } else if (output[0] == "crc") {
+        console.log("Ds18b20 CRC error");
+      } else {
+//console.log(parseFloat(output[0]) / 1000 + conf.Living.tempCorrection, conf.Living.id, conf.Living.temp);
+        conf.Living.temp = parseFloat(output[0]) / 1000 + conf.Living.tempCorrection;
+//        document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1);
+      }
+    }
+  };
+  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/ds18b20.sh"));
+
+
+//  getTemp("pindadomo", "/var/www/html/ds18b20.sh", conf.Living);
   tempAdjustment(conf.Dining);
 // getDiningTemp
   wgetTemp("pindadining.local", conf.Dining);
