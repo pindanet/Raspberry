@@ -213,7 +213,7 @@
         "Watt": "300"
       },
       {
-        "name": "Eekhoorn",
+        "name": "Tropen",
         "color": "Red",
         "status": "undefined",
         "IP": "192.168.129.3",
@@ -274,7 +274,7 @@
     "light": "TVlamp",
     "heater": [
       {
-        "name": "Tropen",
+        "name": "Eekhoorn",
         "color": "Red",
         "status": "undefined",
         "IP": "192.168.129.8",
