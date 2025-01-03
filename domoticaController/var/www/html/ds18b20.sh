@@ -16,10 +16,13 @@ output=$(cat /sys/bus/w1/devices/28-*/w1_slave)
 if [ $? -ne 0 ]; then # error
   # Reset DS18B20
   # Power off
-  pinctrl set $powergpio op dl
+  # sudo adduser www-data gpio # Buster
+  raspi-gpio set $powergpio op dl  # Buster
+#  pinctrl set $powergpio op dl # Bookworm
   sleep 3
   # Power on
-  pinctrl set $powergpio op dh
+  raspi-gpio set $powergpio op dh # Buster
+#  pinctrl set $powergpio op dh # Bookworm
   sleep 5
   echo "error"
   exit
