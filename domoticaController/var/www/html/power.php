@@ -13,6 +13,7 @@ $datetime = explode(" ", date("j W n Y"));
 $processDay = $datetime[0];
 $processMonth = $datetime[2];
 $processYear = $datetime[3];
+$firstWeek = 0;
 
 $months = array(
     'Januari',
@@ -64,31 +65,57 @@ function processLine($powerline) {
     }
     $GLOBALS['powerLog'][$datetime[3]][$datetime[2]][$datetime[0]]['kWh'] += $kWh;
     $GLOBALS['powerLog'][$datetime[3]][$datetime[2]][$datetime[0]]['week'] = $datetime[1];
+    $GLOBALS['powerLog'][$datetime[3]][$datetime[2]][$datetime[0]]['date'] = $datetime[0];
     $GLOBALS['powerLog'][$datetime[3]][$datetime[2]][$datetime[0]]['month'] = $GLOBALS['months'][$datetime[2] - 1];
     $GLOBALS['powerLog'][$datetime[3]][$datetime[2]][$datetime[0]]['weekday'] = $GLOBALS['days'][$datetime[9]];
 
     if ($GLOBALS['processDay'] != $datetime[0] OR $GLOBALS['processMonth'] != $datetime[2] OR $GLOBALS['processYear'] != $datetime[3]) {
-//echo $GLOBALS['processDay'] . "/" . $GLOBALS['processMonth'] . "/" . $GLOBALS['processYear'] . "<br>";
-      echo "<pre>";
-      print_r($GLOBALS['powerLog'][$datetime[3]][$datetime[2]][$datetime[0]]);
-      echo "</pre>";
-      $GLOBALS['processDay'] = $datetime[0];
-      $GLOBALS['processMonth'] = $datetime[2];
+//      echo "<pre>";
+//      print_r($GLOBALS['powerLog'][$GLOBALS['processYear']][$GLOBALS['processMonth']][$GLOBALS['processDay']]);
+//      echo "</pre>";
+      if($GLOBALS['firstWeek'] < 8) { // next 7 days details
+        echo "<hr>";
+      }
+      $targetArray = $GLOBALS['powerLog'][$GLOBALS['processYear']][$GLOBALS['processMonth']][$GLOBALS['processDay']];
+      if ($GLOBALS['processDay'] != $datetime[0]) {
+        printf("<strong>%-10s %'02u/%'02u/%u: %.2f kWh, %.2f €</strong><br>", $targetArray['weekday'], $GLOBALS['processDay'], $GLOBALS['processMonth'], $GLOBALS['processYear'], $targetArray['kWh'], $targetArray['kWh'] * $GLOBALS['price'] / 100);
+        $GLOBALS['processDay'] = $datetime[0];
+        $GLOBALS['firstWeek'] += 1;
+      }
+      if ($GLOBALS['processMonth'] != $datetime[2]) {
+        $targetMonth = $GLOBALS['powerLog'][$GLOBALS['processYear']][$GLOBALS['processMonth']];
+        $total = 0;
+        foreach($targetMonth as $day) {
+          $total += $day['kWh'];
+//      echo "<pre>";
+//      print_r($day);
+//      echo "</pre>";
+        }
+        printf("<strong>%s %u: %.2f kWh, %.2f €</strong><br>", $targetArray['month'], $GLOBALS['processYear'], $total, $total * $GLOBALS['price'] / 100);
+        $GLOBALS['processMonth'] = $datetime[2];
+      }
       $GLOBALS['processYear'] = $datetime[3];
+      if($GLOBALS['firstWeek'] < 8) { // next 7 days details
+        echo "<hr>";
+      }
     }
 
 //echo isset($GLOBALS['powerLog'][$datetime[3]]) . " " . $datetime[2] . " <br>";
 
 
-//      if($GLOBALS['firstWeek'] < 8) { // next 7 days details
+      if($GLOBALS['firstWeek'] < 8) { // next 7 days details
         if($datetime[4] < "7") {  // Highlight night time: 00h00 - 06h59
           echo "<b style='color: red;'>";
         }
-        echo date("d/m/Y H:i:s", $powerline["time"] / 1000) . " to " . date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000) . " " . str_pad($powerline["name"], 15, " ", STR_PAD_LEFT) . " " . str_pad($minutes, 4, " ", STR_PAD_LEFT) . " min. " . number_format(round($kWh, 3), 3,',', " ") . " kWh<br>";
+//echo "<pre>";
+//print_r($powerline);
+//echo "</pre>";
+        printf("%s to %s %15s %4u Watt %4u min %6.3f kWh<br>", date("d/m/Y H:i:s", $powerline["time"] / 1000), date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000), $powerline["name"], $powerline["Watt"], $minutes, $kWh);
+//        echo date("d/m/Y H:i:s", $powerline["time"] / 1000) . " to " . date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000) . " " . str_pad($powerline["name"], 15, " ", STR_PAD_LEFT) . " " . str_pad($minutes, 4, " ", STR_PAD_LEFT) . " min. " . number_format(round($kWh, 3), 3,',', " ") . " kWh<br>";
         if($datetime[4] < "7") {  // Highlight night time: 00h00 - 06h59
           echo "</b>";
         }
-//      }
+      }
 //    } else {
 //      echo "<b style='color: red;'>";
 //      echo date("d/m/Y H:i:s", $powerline["time"] / 1000) . " to " . date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000) . " " . str_pad($powerline["name"], 15, " ", STR_PAD_LEFT) . " " . str_pad($minutes, 4, " ", STR_PAD_LEFT) . " min. " . number_format(round($kWh, 3), 3,',', " ") . " kWh  Genegeerde meting<br>";
