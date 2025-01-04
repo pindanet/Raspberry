@@ -14,6 +14,7 @@ $processDay = $datetime[0];
 $processMonth = $datetime[2];
 $processYear = $datetime[3];
 $firstWeek = 0;
+$firstMonth = 0;
 
 $months = array(
     'Januari',
@@ -78,7 +79,9 @@ function processLine($powerline) {
       }
       $targetArray = $GLOBALS['powerLog'][$GLOBALS['processYear']][$GLOBALS['processMonth']][$GLOBALS['processDay']];
       if ($GLOBALS['processDay'] != $datetime[0]) {
-        printf("<strong>%-10s %'02u/%'02u/%u: %.2f kWh, %.2f €</strong><br>", $targetArray['weekday'], $GLOBALS['processDay'], $GLOBALS['processMonth'], $GLOBALS['processYear'], $targetArray['kWh'], $targetArray['kWh'] * $GLOBALS['price'] / 100);
+        if($GLOBALS['firstMonth'] < 1 OR $GLOBALS['firstWeek'] < 8) { // First month daily totals
+          printf("<strong>%-10s %'02u/%'02u/%u: %.2f kWh, %.2f €</strong><br>", $targetArray['weekday'], $GLOBALS['processDay'], $GLOBALS['processMonth'], $GLOBALS['processYear'], $targetArray['kWh'], $targetArray['kWh'] * $GLOBALS['price'] / 100);
+        }
         $GLOBALS['processDay'] = $datetime[0];
         $GLOBALS['firstWeek'] += 1;
       }
@@ -91,7 +94,12 @@ function processLine($powerline) {
 //      print_r($day);
 //      echo "</pre>";
         }
-        printf("<strong>%s %u: %.2f kWh, %.2f €</strong><br>", $targetArray['month'], $GLOBALS['processYear'], $total, $total * $GLOBALS['price'] / 100);
+        $targetMonth['total'] = $total;
+        $GLOBALS['firstMonth'] += 1;
+        if($GLOBALS['firstMonth'] == 1) {
+          echo "<hr>";
+        }
+        printf("<strong>%-9s %u: %6.2f kWh, %6.2f €</strong><br>", $targetArray['month'], $GLOBALS['processYear'], $total, $total * $GLOBALS['price'] / 100);
         $GLOBALS['processMonth'] = $datetime[2];
       }
       $GLOBALS['processYear'] = $datetime[3];
