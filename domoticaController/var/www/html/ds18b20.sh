@@ -17,12 +17,19 @@ if [ $? -ne 0 ]; then # error
   # Reset DS18B20
   # Power off
   # sudo adduser www-data gpio # Buster
-  raspi-gpio set $powergpio op dl  # Buster
-#  pinctrl set $powergpio op dl # Bookworm
+  OS=$(cat /etc/os-release | grep VERSION_CODENAME | cut -d '=' -f 2)
+  if [ "${OS}" == "buster" ]; then
+    raspi-gpio set $powergpio op dl  # Buster
+  else
+    pinctrl set $powergpio op dl # Bookworm
+  fi
   sleep 3
   # Power on
-  raspi-gpio set $powergpio op dh # Buster
-#  pinctrl set $powergpio op dh # Bookworm
+  if [ "${OS}" == "buster" ]; then
+    raspi-gpio set $powergpio op dh # Buster
+  else
+    pinctrl set $powergpio op dh # Bookworm
+  fi
   sleep 5
   echo "error"
   exit
