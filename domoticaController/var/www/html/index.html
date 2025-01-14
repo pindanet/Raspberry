@@ -11,7 +11,7 @@
 </head>
 <body>
 <a href="#menu" onclick="wakeup();document.getElementById('miniclock').style.display = '';document.getElementById('minitemp').style.display = '';"><div onclick="radio();" id="content">
-  <div id="clockday">Zaterdag 19.4 °C</div>
+  <div id="clockday" onclick="toggleThermostat(event);">Zaterdag 19.4 °C</div>
   <div id="clock">20:23</div>
   <div id="clockdate"><span id="clockmonthday">3</span> <span id="clockmonth">april</span> <span id="clockyear" onclick="toggleAvailable(event);">2021</span></div>
 </div></a>
