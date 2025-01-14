@@ -607,6 +607,11 @@ function tempAdjustment(room) {
   } else if (room.mode == "Off") {
     tempWanted = conf.tempOff;
   }
+// Thermostat disabled
+  if (document.getElementById("clockday").style.color == "deepskyblue") {
+    tempWanted = 10;
+  }
+console.log("ToDo: Disabled thermostat in variable.conf");
 // Night temp
   if (tempWanted == conf.tempOff) {
     var nightTime = today.getHours().toString().padStart(2, '0') + ":" + today.getMinutes().toString().padStart(2, '0');
@@ -656,7 +661,6 @@ function wgetTemp(host, room) {
         room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
       }
       if (room.tempPrev != 20 && room.temp != 20 && room.temp > 5) { // Fire alarm
-console.log(room.tempPrev, room.temp);
         if (room.tempPrev < room.temp) {
           if (typeof room.tempDiv !== 'undefined') {
             if (room.temp - room.tempPrev > room.tempDiv * 3) {
@@ -674,7 +678,6 @@ console.log(firealarm);
           } else {
             room.tempDiv = room.temp - room.tempPrev;
           }
-console.log(room.temp - room.tempPrev, room.tempDiv);
         }
       } else {
 console.log("Initialise Temp");
@@ -686,6 +689,15 @@ console.log("Initialise Temp");
     }
   };
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + "/data/temp"));
+}
+function toggleThermostat(event) {
+  if (document.getElementById("clockday").style.color != "deepskyblue") {
+    document.getElementById("clockday").style.color="deepskyblue";
+  } else {
+    document.getElementById("clockday").style.color="";
+  }
+  event.stopPropagation();
+  event.preventDefault();
 }
 function thermostat() {
   tempAdjustment(conf.Living);
@@ -722,10 +734,12 @@ function thermostat() {
 //  getKitchenTemp(conf.Kitchen)
 //  getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
 //  getTemp("pindakeuken", '/var/www/html/ds18b20.sh', conf.Kitchen);
-  if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort)) {
-    document.getElementById("clockday").style.color="lime";
-  } else {
-    document.getElementById("clockday").style.color="";
+  if (document.getElementById("clockday").style.color != "deepskyblue") { // Thermostat disabled
+    if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort)) {
+      document.getElementById("clockday").style.color="lime";
+    } else {
+      document.getElementById("clockday").style.color="";
+    }
   }
 }
 // Lights
