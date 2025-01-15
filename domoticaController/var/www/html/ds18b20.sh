@@ -32,6 +32,7 @@ if [ $? -ne 0 ]; then # error
   fi
   sleep 5
   echo "error"
+  rm /tmp/PinDa.temp.count
   exit
 fi
 
@@ -40,6 +41,12 @@ if [[ $crc == *"YES" ]]; then
   temp="${output#*t=}"
 else
   echo "crc"
+  exit
+fi
+
+if [ ! -f /tmp/PinDa.temp.count ]; then
+  echo "init"
+  touch /tmp/PinDa.temp.count
   exit
 fi
 
