@@ -666,6 +666,7 @@ function wgetTemp(host, room) {
         room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
       }
       if (room.tempPrev != 20 && room.temp != 20 && room.temp > 5) { // Fire alarm
+console.log("Fire Alarm: " + room.id);
         if (room.tempPrev < room.temp) {
           if (typeof room.tempDiv !== 'undefined') {
             if (room.temp - room.tempPrev > room.tempDiv * 3) {
@@ -725,6 +726,8 @@ function thermostat() {
         console.log("Reset Ds18b20");
       } else if (output[0] == "crc") {
         console.log("Ds18b20 CRC error");
+      } else if (output[0] == "init") {
+        console.log("Ds18b20 rejected first measurement");
       } else {
 //console.log(parseFloat(output[0]) / 1000 + conf.Living.tempCorrection, conf.Living.id, conf.Living.temp);
         conf.Living.temp = parseFloat(output[0]) / 1000 + conf.Living.tempCorrection;
