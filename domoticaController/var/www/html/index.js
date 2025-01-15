@@ -653,27 +653,15 @@ function tempAdjustment(room) {
     }
   }
 }
-function wgetTemp(host, room) {
-// wget -qO- http://pindakeuken.local/data/temp
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200 && this.readyState === 4) {
-      const output = JSON.parse(this.responseText);
-      if (!isNaN(output[0])) {
-        room.tempPrev = room.temp;
-        room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
-      }
-      if (room.tempPrev != 20 && room.temp != 20 && room.temp > 5) { // Fire alarm
-console.log("Fire Alarm: " + room.id);
+function fireAlarm(room) {
+//      if (room.tempPrev != 20 && room.temp != 20 && room.temp > 5) { // Fire alarm
         if (room.tempPrev < room.temp) {
           if (typeof room.tempDiv !== 'undefined') {
             if (room.temp - room.tempPrev > room.tempDiv * 3) {
               var xhr = new XMLHttpRequest();
               xhr.open('POST', "cli.php", true);
               xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-              var firealarm = "Fire alarm on " + new Date().toString() + "at " + room.temp + " °C and rising with " + (room.temp - room.tempPrev) + " °C (Allowed rising: " + (room.tempDiv * 2) + " °C)";
+              var firealarm = "Fire alarm in " + room.id  + " on " + new Date().toString() + "at " + room.temp + " °C and rising with " + (room.temp - room.tempPrev) + " °C (Allowed rising: " + (room.tempDiv * 2) + " °C)";
 console.log(firealarm);
               xhr.send("cmd=echo&params="+stringToHex("\"" + firealarm + "\" >> data/firealarm.log"));
             } else {
@@ -685,13 +673,28 @@ console.log(firealarm);
             room.tempDiv = room.temp - room.tempPrev;
           }
         }
-      } else {
-console.log("Initialise Temp");
+//      } else {
+//console.log("Initialise Temp");
+//      }
+}
+
+function wgetTemp(host, room) {
+// wget -qO- http://pindakeuken.local/data/temp
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      const output = JSON.parse(this.responseText);
+      if (!isNaN(output[0])) {
+        room.tempPrev = room.temp;
+        room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
+        fireAlarm(room);
       }
       document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
-      if (room.id == "living") {
-        roomTemp = room.temp.toFixed(1) + " °C";
-      }
+//      if (room.id == "living") {
+//        roomTemp = room.temp.toFixed(1) + " °C";
+//      }
     }
   };
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + "/data/temp"));
@@ -731,6 +734,7 @@ function thermostat() {
       } else {
 //console.log(parseFloat(output[0]) / 1000 + conf.Living.tempCorrection, conf.Living.id, conf.Living.temp);
         conf.Living.temp = parseFloat(output[0]) / 1000 + conf.Living.tempCorrection;
+        fireAlarm(conf.Living);
 //        document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1);
       }
     }
