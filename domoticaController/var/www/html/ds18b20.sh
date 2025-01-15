@@ -32,7 +32,9 @@ if [ $? -ne 0 ]; then # error
   fi
   sleep 5
   echo "error"
-  rm /tmp/PinDa.temp.count
+  if [ -f /tmp/PinDa.temp.count ]; then
+    rm /tmp/PinDa.temp.count
+  fi
   exit
 fi
 
