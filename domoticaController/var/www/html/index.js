@@ -50,6 +50,17 @@ function calcConf() { // Calculated Configuration
   // Set weather URL
   document.getElementById('weather').contentDocument.location.href = "meteogram/meteogram.html?lat=" + conf.location.Latitude + "&lon=" + conf.location.Longitude + "&alt=" + conf.location.Altitude;
 }
+function saveVariable() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "sendVariable.php", true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+      console.log(this.responseText);
+    }
+  };
+  xhr.send(JSON.stringify(variable, null, 2));
+}
 function thermostatUI (event, command, id) {
   switch (command) {
     case "Incr":
@@ -87,15 +98,7 @@ function thermostatUI (event, command, id) {
 //      variable[room].sleepTemp = conf[room].sleepTemp;
       variable[room].tempManual = conf[room].tempManual;
       conf[room].tempWanted = conf[room].tempManual;
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', "sendVariable.php", true);
-      xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
-      xhr.onload = function(e) {
-        if (this.status == 200) {
-          console.log(this.responseText);
-        }
-      };
-      xhr.send(JSON.stringify(variable, null, 2));
+      saveVariable();
       break;
   }
 }
@@ -467,6 +470,9 @@ function getConf() { // Get configuration
         calcConf();
       }
       variableToConf(variable, conf);
+      if (conf.hasOwnProperty('thermostatDisabled')) {
+        document.getElementById("clockday").style.color = "deepskyblue";
+      }
       thermostat();
       if (document.getElementById("clockyear").innerHTML != conf.available[0].sleep) {
         // process lights only when not waiting for sleep
@@ -608,10 +614,9 @@ function tempAdjustment(room) {
     tempWanted = conf.tempOff;
   }
 // Thermostat disabled
-  if (document.getElementById("clockday").style.color == "deepskyblue") {
+  if (conf.hasOwnProperty('thermostatDisabled')) {
     tempWanted = 10;
   }
-console.log("ToDo: Disabled thermostat in variable.conf");
 // Night temp
   if (tempWanted == conf.tempOff) {
     var nightTime = today.getHours().toString().padStart(2, '0') + ":" + today.getMinutes().toString().padStart(2, '0');
@@ -693,9 +698,14 @@ console.log("Initialise Temp");
 function toggleThermostat(event) {
   if (document.getElementById("clockday").style.color != "deepskyblue") {
     document.getElementById("clockday").style.color="deepskyblue";
+    variable.thermostatDisabled = true;
+    conf.thermostatDisabled = true;
   } else {
     document.getElementById("clockday").style.color="";
+    delete variable.thermostatDisabled;
+    delete conf.thermostatDisabled;
   }
+  saveVariable();
   event.stopPropagation();
   event.preventDefault();
 }
@@ -734,7 +744,8 @@ function thermostat() {
 //  getKitchenTemp(conf.Kitchen)
 //  getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
 //  getTemp("pindakeuken", '/var/www/html/ds18b20.sh', conf.Kitchen);
-  if (document.getElementById("clockday").style.color != "deepskyblue") { // Thermostat disabled
+//  if (document.getElementById("clockday").style.color != "deepskyblue") { // Thermostat disabled
+  if (!conf.hasOwnProperty('thermostatDisabled')) {
     if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort)) {
       document.getElementById("clockday").style.color="lime";
     } else {
