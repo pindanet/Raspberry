@@ -725,33 +725,20 @@ function thermostat() {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
-      if (output[0] == "error") {
-        console.log("Reset Ds18b20");
-      } else if (output[0] == "crc") {
-        console.log("Ds18b20 CRC error");
-      } else if (output[0] == "init") {
-        console.log("Ds18b20 rejected first measurement");
+      if (isNaN(output[0])) {
+        console.log(output[0]);
       } else {
-//console.log(parseFloat(output[0]) / 1000 + conf.Living.tempCorrection, conf.Living.id, conf.Living.temp);
         conf.Living.temp = parseFloat(output[0]) / 1000 + conf.Living.tempCorrection;
         fireAlarm(conf.Living);
-//        document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1);
       }
     }
   };
   xhr.send("cmd=bash&params="+stringToHex("/var/www/html/ds18b20.sh"));
 
-
-//  getTemp("pindadomo", "/var/www/html/ds18b20.sh", conf.Living);
   tempAdjustment(conf.Dining);
-// getDiningTemp
   wgetTemp("pindadining.local", conf.Dining);
   tempAdjustment(conf.Kitchen);
   wgetTemp("pindakeuken.local", conf.Kitchen);
-//  getKitchenTemp(conf.Kitchen)
-//  getTemp("pindakeuken", '/var/www/html/mcp9808.sh', conf.Kitchen);
-//  getTemp("pindakeuken", '/var/www/html/ds18b20.sh', conf.Kitchen);
-//  if (document.getElementById("clockday").style.color != "deepskyblue") { // Thermostat disabled
   if (!conf.hasOwnProperty('thermostatDisabled')) {
     if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort)) {
       document.getElementById("clockday").style.color="lime";
