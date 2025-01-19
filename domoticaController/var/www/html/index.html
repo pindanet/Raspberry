@@ -10,11 +10,14 @@
   <script src='index.js'></script>
 </head>
 <body>
-<a href="#menu" onclick="wakeup();document.getElementById('miniclock').style.display = '';document.getElementById('minitemp').style.display = '';"><div onclick="radio();" id="content">
+<!--a href="#menu" onclick="wakeup();document.getElementById('miniclock').style.display = '';document.getElementById('minitemp').style.display = '';"-->
+<div id="content">
   <div id="clockday" onclick="toggleThermostat(event);">Zaterdag 19.4 °C</div>
-  <div id="clock">20:23</div>
+  <a href="#menu" onclick="wakeup();document.getElementById('miniclock').style.display = '';document.getElementById('minitemp').style.display = '';">
+    <div id="clock">20:23</div>
+  </a>
   <div id="clockdate"><span id="clockmonthday">3</span> <span id="clockmonth">april</span> <span id="clockyear" onclick="toggleAvailable(event);">2021</span></div>
-</div></a>
+</div><!--/a-->
 <div id="menu">
   <a href="#radio"><img class="menubutton" onclick="radioVolume(event,conf.radio.volume);" src="emoji/radio.svg"></a>
   <a href="#weather"><img class="menubutton" onclick="document.getElementById('weather').contentDocument.location.reload(true);" src="emoji/weather.svg"></a>
