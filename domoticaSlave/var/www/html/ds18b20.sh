@@ -21,7 +21,7 @@ if [ $? -ne 0 ]; then # error
   # Power on
   pinctrl set $powergpio op dh
   sleep 5
-  echo "error"
+  echo "Reset Ds18b20"
   exit
 fi
 
@@ -29,7 +29,13 @@ crc=$(echo "${output}" | head -1)
 if [[ $crc == *"YES" ]]; then
   temp="${output#*t=}"
 else
-  echo "crc"
+  echo "Ds18b20 CRC error"
+  exit
+fi
+
+if [ ! -f /tmp/PinDa.temp.count ]; then
+  echo "Ds18b20 rejected first measurement"
+  touch /tmp/PinDa.temp.count
   exit
 fi
 
