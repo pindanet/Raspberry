@@ -28,6 +28,20 @@ const stringToHex = (str) => {
 //debug("Debug active");
 
 function calcConf() { // Calculated Configuration
+// Beter eerst ophalen en dan pas rest van calcConf verder uitvoeren
+// Hoe lang duurt dit!!!
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+console.log(this.responseText);
+      const output = JSON.parse(this.responseText);
+console.log(output);
+    }
+  };
+  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/tasmotaNetScan.sh"));
+
   // Set Thermostat UI
   document.getElementById("livingaux").innerHTML = conf.tempAux.toFixed(1);
   document.getElementById("diningaux").innerHTML = conf.tempAux.toFixed(1);
@@ -334,37 +348,38 @@ console.log(room + " absent restore: " + conf[room].tempWanted + " to " + conf[r
 }
 function toggleAvailable(event) {
   var elem = document.getElementById("clockyear");
-  switch(elem.innerHTML) {
-    case conf.available[0].sleep:
-      var sleepdate = new Date(conf.available[0].sleepdate);
+  if(event.target.id == "clockyear") {
+    switch(elem.innerHTML) {
+      case conf.available[0].sleep:
+        var sleepdate = new Date(conf.available[0].sleepdate);
 //console.log(sleepdate);
 //var testdate = new Date();
 //testdate.setTime(testdate.getTime() + (+1*60*60*1000));
 //console.log(testdate);
-      // Set next Sleepdate
-      conf.available[0].sleepdate.setDate(conf.available[0].sleepdate.getDate()+1);
-      var timeoutTime = Math.max(30000, timeDate(conf.bedTime, new Date(sleepdate)).getTime() - new Date().getTime() + 30000);
-//      var timeoutTime = Math.max(30000, sleepdate.getTime() - new Date().getTime() + 30000);
+        // Set next Sleepdate
+        conf.available[0].sleepdate.setDate(conf.available[0].sleepdate.getDate()+1);
+        var timeoutTime = Math.max(30000, timeDate(conf.bedTime, new Date(sleepdate)).getTime() - new Date().getTime() + 30000);
+//        var timeoutTime = Math.max(30000, sleepdate.getTime() - new Date().getTime() + 30000);
 //console.log(new Date(new Date().getTime() + timeoutTime));
-      setTimeout(gotoSleep, timeoutTime);
-//      break;
-    case conf.available[0].absent:
-      var today = new Date();
-      elem.innerHTML = today.getFullYear();
-      elem.style.fontSize = "";
-      deactivateAbsent("Living");
-      deactivateAbsent("Dining");
-      deactivateAbsent("Kitchen");
-//      thermostatUI(event, 'Auto', 'livingtemp');
-//      thermostatUI(event, 'Auto', 'diningtemp');
-//      thermostatUI(event, 'Auto', 'kitchentemp');
-      break;
-    default:
-      elem.innerHTML = conf.available[0].absent;
-      elem.style.fontSize = "64%";
-      activateAbsent("Living", conf.tempAux, "Manual", "livingaux");
-      activateAbsent("Dining", conf.tempAux, "Manual", "diningaux");
-      activateAbsent("Kitchen", conf.tempOff, "Off", "kitchentemp");
+        setTimeout(gotoSleep, timeoutTime);
+      case conf.available[0].absent:
+        var today = new Date();
+        elem.innerHTML = today.getFullYear();
+        elem.style.fontSize = "";
+        deactivateAbsent("Living");
+        deactivateAbsent("Dining");
+        deactivateAbsent("Kitchen");
+//        thermostatUI(event, 'Auto', 'livingtemp');
+//        thermostatUI(event, 'Auto', 'diningtemp');
+//        thermostatUI(event, 'Auto', 'kitchentemp');
+        break;
+      default:
+        elem.innerHTML = conf.available[0].absent;
+        elem.style.fontSize = "64%";
+        activateAbsent("Living", conf.tempAux, "Manual", "livingaux");
+        activateAbsent("Dining", conf.tempAux, "Manual", "diningaux");
+        activateAbsent("Kitchen", conf.tempOff, "Off", "kitchentemp");
+    }
   }
   event.stopPropagation();
   event.preventDefault();
