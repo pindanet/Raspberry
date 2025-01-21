@@ -13,7 +13,8 @@ fi
 #for ip in {1..50}; do
 for (( ip=2; ip<=$untilIP; ip++)); do
   # Send Tasmota http command to device
-  status=$(wget -qO- http://$1.$ip/cm?cmnd=status%205)
+  status=$(curl --max-time 1 http://$1.$ip/cm?cmnd=status%205)
+#  status=$(wget -qO- http://$1.$ip/cm?cmnd=status%205)
   # Extract the Hostname from the reply.
   hostname=$(echo $status | grep -o '"Hostname":"[^"]*' | grep -o '[^"]*$')
   # We found a Tasmota device if a Hostname could be extracted.
