@@ -27,17 +27,31 @@ const stringToHex = (str) => {
 //}
 //debug("Debug active");
 
+function setTasmotaIP(confArray, tasmotaDev) {
+        for (let dev in confArray) {
+          if (confArray[dev].Hostname == tasmotaDev[1]) {
+console.log(confArray[dev].IP, confArray[dev].Hostname);
+            confArray[dev].IP = tasmotaDev[0];
+          }
+        }
+}
 function calcConf() { // Calculated Configuration
 // Beter eerst ophalen en dan pas rest van calcConf verder uitvoeren
 // Hoe lang duurt dit!!!
+  var hostname;
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200) {
-console.log(this.responseText);
       const output = JSON.parse(this.responseText);
-console.log(output);
+      for (let i in output) {
+        var tasmotaDev = output[i].split(" ");
+        setTasmotaIP(conf.Dining.heater, tasmotaDev);
+        setTasmotaIP(conf.Living.heater, tasmotaDev);
+        setTasmotaIP(conf.Kitchen.heater, tasmotaDev);
+        setTasmotaIP(conf.switch, tasmotaDev);
+      }
     }
   };
   xhr.send("cmd=bash&params="+stringToHex("/var/www/html/tasmotaNetScan.sh"));
