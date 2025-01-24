@@ -7,11 +7,17 @@
 # Shutdown/Reboot button
 # Gray to GPIO3 (5)
 # Black to Gnd (6)
+
 # DS18B20 Temperature Sensor Power
 # GPIO4 (7) to Data (Yellow) to 4k7 to 3,3 V (Red)(GPIO17)
 # GND (9) to GND (Black)
 # GPIO17 (11) to Vdd (Redd)
 powergpio=17
+
+# Start/Stop Radio button
+# Gray to GPIO26 (37)
+# Black to Gnd (39)
+radiogpio=26
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
