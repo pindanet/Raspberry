@@ -100,45 +100,6 @@ ssh-keygen
 # sudo cp .ssh/id_rsa /var/www/html/data/
 # sudo chown www-data:www-data /var/www/html/data/id_rsa
 
-echo "Activate daily update"
-echo "====================="
-
-cat > PindaNetUpdate.sh <<EOF
-#!/bin/bash
-sudo dpkg --configure -a
-apt-get clean
-apt autoremove -y
-apt-get update
-apt-get upgrade -y
-shutdown -r now
-EOF
-sudo mv PindaNetUpdate.sh /usr/sbin/
-sudo chmod +x /usr/sbin/PindaNetUpdate.sh
-
-cat > PindaNetUpdate.timer <<EOF
-[Unit]
-Description=Update and Reset
-[Timer]
-OnCalendar=*-*-* 03:30:00
-Unit=PindaNetUpdate.service
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo mv PindaNetUpdate.timer /etc/systemd/system/
-
-cat > PindaNetUpdate.service <<EOF
-[Unit]
-Description=Update and Reset
-[Service]
-Type=simple
-ExecStart=/usr/sbin/PindaNetUpdate.sh
-EOF
-sudo mv PindaNetUpdate.service /etc/systemd/system/
-
-sudo systemctl daemon-reload
-sudo systemctl enable PindaNetUpdate.timer
-sudo systemctl start PindaNetUpdate.timer
-
 # Check Avahi hostname
 cat > checkAvahi.sh <<EOF
 #!/bin/bash
@@ -174,33 +135,6 @@ sudo mv checkAvahi.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable checkAvahi.timer
 sudo systemctl start checkAvahi.timer
-
-sudo chmod +x /var/www/html/motion.sh
-
-cat > PindaMotion.timer <<EOF
-[Unit]
-Description=Take picture
-[Timer]
-OnBootSec=5min
-OnUnitActiveSec=1min
-Unit=PindaMotion.service
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo mv PindaMotion.timer /etc/systemd/system/
-
-cat > PindaMotion.service <<EOF
-[Unit]
-Description=Take picture
-[Service]
-Type=simple
-ExecStart=/var/www/html/motion.sh
-EOF
-sudo mv PindaMotion.service /etc/systemd/system/
-
-sudo systemctl daemon-reload
-sudo systemctl enable PindaMotion.timer
-sudo systemctl start PindaMotion.timer
 # systemctl list-timers
 
 echo "Ready, please restart"
