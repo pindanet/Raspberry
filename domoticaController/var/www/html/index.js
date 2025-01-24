@@ -30,14 +30,13 @@ const stringToHex = (str) => {
 function setTasmotaIP(confArray, tasmotaDev) {
         for (let dev in confArray) {
           if (confArray[dev].Hostname == tasmotaDev[1]) {
-console.log(confArray[dev].IP, confArray[dev].Hostname);
             confArray[dev].IP = tasmotaDev[0];
           }
         }
 }
 function calcConf() { // Calculated Configuration
-// Beter eerst ophalen en dan pas rest van calcConf verder uitvoeren
 // Hoe lang duurt dit!!!
+const tasmotaScannerTimer = new Date();
   var hostname;
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -52,6 +51,7 @@ function calcConf() { // Calculated Configuration
         setTasmotaIP(conf.Kitchen.heater, tasmotaDev);
         setTasmotaIP(conf.switch, tasmotaDev);
       }
+console.log("TasmotaScanner in " + ((new Date().getTime() - tasmotaScannerTimer.getTime())/1000) + " seconds");
     }
   };
   xhr.send("cmd=bash&params="+stringToHex("/var/www/html/tasmotaNetScan.sh"));
