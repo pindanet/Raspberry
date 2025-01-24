@@ -1,0 +1,504 @@
+{
+  "lastModified": "auto",
+  "location": {
+    "Latitude": 51.1853335,
+    "Longitude": 3.2401705,
+    "Altitude": 4
+  },
+  "available": [
+    {
+      "absent": "Afwezig",
+      "sleep": "Slapen",
+      "sleeptime": "22:24",
+      "absenttime": "13:30"
+    }
+  ],
+  "tempIncrDecr": 0.5,
+  "tempComfort": 20,
+  "tempAux": 17.5,
+  "tempOff": 15,
+  "tempNight": 10,
+  "tempNightTime": "06:30",
+  "bedTime": "22:50",
+  "hysteresis": 0.1,
+  "minBacklight": 15,
+  "maxBacklight": 110,
+  "lights": {
+    "lightTimer": 180,
+    "lightsOut": {
+      "at": "nextAlarm",
+      "Offset": "79"
+    },
+    "eveningShutterDown": "22:20",
+    "timer": [
+      {
+        "dev": "Kerst",
+        "begin": "breakfast",
+        "end": "morningLightsOut"
+      },
+      {
+        "dev": "LivingVoor",
+        "begin": "breakfast",
+        "end": "morningLightsOut"
+      },
+      {
+        "dev": "LivingZij",
+        "begin": "breakfast",
+        "end": "morningLightsOut"
+      },
+      { 
+        "dev": "Kerst",
+        "begin": "eveningLightsOn",
+        "end": "bedTime"
+      },
+      {
+        "dev": "LivingVoor",
+        "begin": "eveningLightsOn",
+        "end": "bedTime"
+      },
+      {
+        "dev": "LivingZij",
+        "begin": "eveningLightsOn",
+        "end": "bedTime"
+      },
+      {
+        "disabled": true,
+        "dev": "Haardlamp",
+        "begin": "breakfast",
+        "end": "morningLightsOut"
+      },
+      {
+        "disabled": true,
+        "dev": "Apotheek",
+        "begin": "breakfast",
+        "end": "morningLightsOut"
+      },
+      {
+        "dev": "Tandenborstel",
+        "begin": "16:00",
+        "end": "22:15"
+      },
+      {
+        "disabled": true,
+        "dev": "Apotheek",
+        "begin": "22:24",
+        "end": "bedTime"
+      },
+      {
+        "disabled": true,
+        "dev": "Haardlamp",
+        "begin": "eveningLightsOn",
+        "end": "bedTime"
+      },
+      {
+        "disabled": false,
+        "dev": "TVlamp",
+        "begin": "eveningLightsOn",
+        "end": "bedTime"
+      }
+    ]
+  },
+  "alarmtime": "07:30",
+  "breakfastOffset": "11",
+  "switch": {
+    "Kerst": {
+      "IP": "192.168.129.44",
+      "Hostname": "tasmota-E7B609-5641",
+      "Watt": "20"
+    },
+    "Haardlamp": {
+      "IP": "192.168.129.18",
+      "Hostname": "tasmota-1539F2-6642",
+      "Watt": "20"
+    },
+    "Tandenborstel": {
+      "IP": "192.168.129.7",
+      "Hostname": "tasmota-A943FA-1018",
+      "Watt": "10"
+    },
+    "Apotheek": {
+      "IP": "192.168.129.19",
+      "Hostname": "tasmota-C699B5-6581",
+      "Watt": "20"
+    },
+    "TVlamp": {
+      "IP": "192.168.129.11",
+      "Hostname": "tasmota-A94717-1815",
+      "Watt": "20"
+    },
+    "Keukenlamp": {
+      "IP": "192.168.129.14",
+      "Hostname": "tasmota-15DD89-7561",
+      "Watt": "8"
+    },
+    "LivingZij": {
+      "IP": "192.168.129.41",
+      "Hostname": "tasmota-71AC5C-3164",
+      "Watt": "8"
+    },
+    "LivingVoor": {
+      "IP": "192.168.129.41",
+      "Hostname": "tasmota-71AC5C-3164",
+      "Channel": "2",
+      "Watt": "16"
+    }
+  },
+  "Living": {
+    "host": "pindadomo.local",
+    "id": "living",
+    "htmlElementId": "clockmonthday",
+    "temp": 20,
+    "tempCorrection": 0,
+    "mode": "Auto",
+    "heater": [
+      {
+        "name": "Schilderij",
+        "color": "Yellow",
+        "status": "undefined",
+        "IP": "192.168.129.12",
+        "Hostname": "tasmota-8BBE0D-7693",
+        "Watt": "650"
+      },
+      {
+        "name": "Computertafel",
+        "color": "Orange",
+        "status": "undefined",
+        "IP": "192.168.129.0",
+        "Watt": "300"
+      },
+      {
+        "name": "Canyon",
+        "color": "Red",
+        "status": "undefined",
+        "IP": "192.168.129.4",
+        "Hostname": "tasmota-8BBE4D-7757",
+        "Watt": "650"
+      }
+    ],
+    "thermostat": [
+      {
+        "begin": "07:30",
+        "end": "13:30",
+        "temp": "tempAux"
+      },
+      {
+        "begin": "13:30",
+        "end": "17:00",
+        "temp": "tempComfort"
+      },
+      {
+        "begin": "17:00",
+        "end": "17:30",
+        "temp": "tempAux"
+      },
+      {
+        "begin": "17:30",
+        "end": "bedTime",
+        "temp": "tempComfort"
+      }
+    ]
+  },
+  "Dining": {
+    "id": "dining",
+    "htmlElementId": "clockmonth",
+    "status": "undefined",
+    "temp": 20,
+    "tempCorrection": 0.7,
+    "mode": "Auto",
+    "tempOffset": "0",
+    "subtitleColor": "white",
+    "heater": [
+      {
+        "name": "Zonsondergang",
+        "color": "Yellow",
+        "status": "undefined",
+        "IP": "192.168.129.20",
+        "Hostname": "tasmota-FB7B27-6951",
+        "Watt": "650"
+      },
+      {
+        "name": "Tafel",
+        "color": "Orange",
+        "status": "undefined",
+        "IP": "192.168.129.5",
+        "Hostname": "tasmota-8BE4AF-1199",
+        "Watt": "300"
+      },
+      {
+        "name": "Tropen",
+        "color": "Red",
+        "status": "undefined",
+        "IP": "192.168.129.3",
+        "Hostname": "tasmota-4FDD94-7572",
+        "Watt": "650"
+      }
+    ],
+    "thermostat": [
+      {
+        "begin": "07:30",
+        "end": "08:50",
+        "temp": "tempComfort"
+      },
+      {
+        "begin": "08:50",
+        "end": "10:55",
+        "temp": "tempAux"
+      },
+      {
+        "begin": "10:55",
+        "end": "12:25",
+        "temp": "tempComfort"
+      },
+      {
+        "begin": "12:25",
+        "end": "12:55",
+        "temp": "tempAux"
+      },
+      {
+        "begin": "12:55",
+        "end": "13:30",
+        "temp": "tempComfort"
+      },
+      {
+        "begin": "13:30",
+        "end": "16:55",
+        "temp": "tempAux"
+      },
+      {
+        "begin": "16:55",
+        "end": "17:30",
+        "temp": "tempComfort"
+      },
+      {
+        "begin": "17:30",
+        "end": "22:30",
+        "temp": "tempAux"
+      }
+    ]
+  },
+  "Kitchen": {
+    "id": "kitchen",
+    "htmlElementId": "clockyear",
+    "status": "undefined",
+    "temp": 20,
+    "tempCorrection": 0.6,
+    "mode": "Auto",
+    "tempOffset": "0",
+    "light": "TVlamp",
+    "heater": [
+      {
+        "name": "Eekhoorn",
+        "color": "Red",
+        "status": "undefined",
+        "IP": "192.168.129.8",
+        "Hostname": "tasmota-4FD8EE-6382",
+        "Watt": "650"
+      }
+    ],
+    "thermostat": [
+      {
+        "begin": "07:30",
+        "end": "11:00",
+        "temp": "tempAux"
+      },
+      {
+        "begin": "12:20",
+        "end": "13:00",
+        "temp": "tempAux"
+      },
+      {
+        "begin": "16:55",
+        "end": "17:45",
+        "temp": "tempAux"
+      },
+      {
+        "begin": "22:25",
+        "end": "bedTime",
+        "temp": "tempAux"
+      }
+    ]
+  },
+  "event": [
+    {
+      "repeat": 0,
+      "begindate": "2024-12-29",
+      "begin": "13:30",
+      "enddate": "2024-12-29",
+      "end": "19:45",
+      "temp": {
+        "living": "tempComfort",
+        "dining": "tempComfort",
+        "kitchen": "tempAux"
+      },
+      "comment": "Luc"
+    },
+    {
+      "repeat": 0,
+      "begindate": "2024-02-20",
+      "begin": "11:45",
+      "enddate": "2024-02-20",
+      "end": "14:00",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
+      },
+      "comment": "Kapper"
+    },
+    {
+      "repeat": 14,
+      "begindate": "2025-01-13",
+      "begin": "16:00",
+      "enddate": "2025-01-13",
+      "end": "17:00",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
+      },
+      "comment": "Bad Maandag"
+    },
+    {
+      "repeat": 14,
+      "begindate": "2025-01-03",
+      "begin": "16:00",
+      "enddate": "2025-01-03",
+      "end": "17:00",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
+      },
+      "comment": "Bad Vrijdag"
+    },
+    {
+      "repeat": 14,
+      "begindate": "2025-01-03",
+      "begin": "19:45",
+      "enddate": "2025-01-03",
+      "end": "bedTime",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
+      },
+      "comment": "MCCB"
+    },
+    {
+      "repeat": 14,
+      "begindate": "2025-01-08",
+      "begin": "16:00",
+      "enddate": "2025-01-08",
+      "end": "17:00",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
+      },
+      "comment": "Bad Woensdag"
+    },
+    {
+      "repeat": 14,
+      "begindate": "2025-01-08",
+      "begin": "19:45",
+      "enddate": "2025-01-08",
+      "end": "bedTime",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
+      },
+      "comment": "ACCB"
+    },
+    {
+      "repeat": 0,
+      "begindate": "2025-11-18",
+      "begin": "10:30",
+      "alarm": "07:30",
+      "enddate": "2025-11-18",
+      "end": "13:30",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
+      },
+      "comment": "Parodont"
+    },
+    {
+      "repeat": 0,
+      "begindate": "2025-05-26",
+      "begin": "08:40",
+      "alarm": "07:00",
+      "enddate": "2025-05-26",
+      "end": "09:40",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
+      },
+      "comment": "Tandarts"
+    }
+  ],
+  "tvvolume": 70,
+  "radio": {
+    "volume": 70,
+    "channel": {
+      "radio1": {
+        "URL": "http://icecast.vrtcdn.be/radio1-high.mp3",
+        "interval": 8192
+      },
+      "radio2": {
+        "URL": "http://icecast.vrtcdn.be/ra2wvl-high.mp3",
+        "interval": 8192
+      },
+      "klara": {
+        "URL": "http://icecast.vrtcdn.be/klara-high.mp3",
+        "interval": 8192
+      },
+      "klaracontinuo": {
+        "URL": "http://icecast.vrtcdn.be/klaracontinuo-high.mp3",
+        "interval": 8192
+      },
+      "stubru": {
+        "URL": "http://icecast.vrtcdn.be/stubru-high.mp3",
+        "interval": 8192
+      },
+      "mnm": {
+        "URL": "http://icecast.vrtcdn.be/mnm-high.mp3",
+        "interval": 8192
+      },
+      "mnmhits": {
+        "URL": "http://icecast.vrtcdn.be/mnm_hits-high.mp3",
+        "interval": 8192
+      },
+      "vrtnws": {
+        "URL": "http://progressive-audio.vrtcdn.be/content/fixed/11_11niws-snip_hi.mp3",
+        "interval": 0
+      },
+      "ketnet": {
+        "URL": "http://icecast.vrtcdn.be/ketnetradio-high.mp3",
+        "interval": 8192
+      },
+      "swissjazz": {
+        "URL": "http://stream.srg-ssr.ch/m/rsj/mp3_128",
+        "interval": 16000
+      },
+      "vbro": {
+        "URL": "http://stream.vbro.be:9100/vbro",
+        "interval": 16384
+      },
+      "joe": {
+        "URL": "https://streams.radio.dpgmedia.cloud/redirect/joe_fm/mp3",
+        "interval": 1024
+      },
+      "qmusic": {
+        "URL": "https://streams.radio.dpgmedia.cloud/redirect/qmusic_be/mp3",
+        "interval": 1024
+      },
+      "willy": {
+        "URL": "https://streams.radio.dpgmedia.cloud/redirect/willy_be/mp3",
+        "interval": 1024
+      }
+    }
+  }
+}
