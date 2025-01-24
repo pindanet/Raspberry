@@ -9,6 +9,36 @@ function checkTime(i) {
   return i;
 }
 
+const stringToHex = (str) => {
+  let hex = '';
+  for (let i = 0; i < str.length; i++) {
+    const charCode = str.charCodeAt(i);
+    const hexValue = charCode.toString(16);
+
+    // Pad with zeros to ensure two-digit representation
+    hex += hexValue.padStart(2, '0');
+  }
+  return hex;
+};
+
+function radioStatus() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+      const output = JSON.parse(this.responseText);
+      if (output.length > 0) {
+        if (output[0] > 16) {
+          fontsize = 5;
+        }
+        document.getElementById("radio").innerHTML = "<span style='font-size:" + fontsize + "vw'>" + output[0] + "</span>";
+      }
+    }
+  };
+  xhr.send("cmd=cat&params="+stringToHex("/var/www/html/data/radio.log | tail -1 | cut -d \"'\" -f 2"));
+}
+
 var nextAlarm = "07:30";
 function getNextAlarm() {
   var xhr = new XMLHttpRequest();
@@ -39,21 +69,22 @@ function startTime() {
   updateScreen++;
   if (updateScreen > 10) {
     updateScreen = 0;
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', "data/radio.log", true);
-    xhr.onload = function(e) {
-      if (this.status == 200) {
-        var lines = this.responseText.split("\n");
-        var status = lines[lines.length - 2].split("'")[1];
-        var fontsize = 10;
-        if (status.length > 16) {
-          fontsize = 5;
-        }
-console.log(status);
-        document.getElementById('radio').innerHTML = "<span style='font-size:" + fontsize + "vw'>" + status + "</span>";
-      }
-    };
-    xhr.send();
+    radioStatus();
+//    var xhr = new XMLHttpRequest();
+//    xhr.open('POST', "data/radio.log", true);
+//    xhr.onload = function(e) {
+//      if (this.status == 200) {
+//        var lines = this.responseText.split("\n");
+//        var status = lines[lines.length - 2].split("'")[1];
+//        var fontsize = 10;
+//        if (status.length > 16) {
+//          fontsize = 5;
+//        }
+//console.log(status);
+//        document.getElementById('radio').innerHTML = "<span style='font-size:" + fontsize + "vw'>" + status + "</span>";
+//      }
+//    };
+//    xhr.send();
   }
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
