@@ -4,8 +4,13 @@
 # bash install.sh
 
 # Hardware
+# Shutdown/Reboot button
+# Gray to GPIO3 (5)
+# Black to Gnd (6)
 # DS18B20 Temperature Sensor Power
-# GPIO17 (11) naar Vdd (Rood)
+# GPIO4 (7) to Data (Yellow) to 4k7 to 3,3 V (Red)(GPIO17)
+# GND (9) to GND (Black)
+# GPIO17 (11) to Vdd (Redd)
 powergpio=17
 
 # Test if executed with Bash
