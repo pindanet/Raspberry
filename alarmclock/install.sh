@@ -65,12 +65,8 @@ rm master.zip
 sudo cp -r Raspberry-master/alarmclock/var/www/html/* /var/www/html/
 rm -r Raspberry-master/
 
-sudo mkdir -p /var/www/html/motion/
-sudo chown www-data:www-data /var/www/html/motion
 sudo chown www-data:www-data /var/www/html/data
-
 sudo usermod -a -G gpio www-data
-sudo usermod -a -G video www-data
 
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
