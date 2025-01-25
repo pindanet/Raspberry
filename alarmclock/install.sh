@@ -61,6 +61,7 @@ echo 'dtoverlay=gpio-shutdown' | sudo tee -a /boot/firmware/config.txt
 echo "Install webserver"
 echo "================="
 sudo apt install apache2 libapache2-mod-fcgid php-bcmath php-bz2 php-common php-curl php-xml php-gd php-php-gettext php-gmp php-ldap php-mbstring php-mysql php-odbc php-pgsql php-snmp php-soap php-sqlite3 php-tokenizer libapache2-mod-php -y
+sudo apt install mpg123 -y
 
 if test -f master.zip; then rm master.zip; fi
 echo "Download and extract Github Repository"
