@@ -15,7 +15,7 @@
 powergpio=17
 
 # Start/Stop Radio button
-# Gray to GPIO26 (37)
+# Gray to GPIO5 (29)
 # Black to Gnd (39)
 radiogpio=26
 
