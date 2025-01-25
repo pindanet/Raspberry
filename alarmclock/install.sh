@@ -41,6 +41,8 @@ echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
 echo '# Disable Power led' >> .bashrc
 echo 'echo 0 | sudo tee /sys/class/leds/PWR/brightness' >> .bashrc
+echo '# Disable Activity led' >> .bashrc
+echo 'echo none | sudo tee /sys/class/leds/ACT/trigger' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 # Optional: Disable Touch
