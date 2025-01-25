@@ -115,6 +115,10 @@ ssh-keygen
 # Check Avahi hostname
 cat > checkAvahi.sh <<EOF
 #!/bin/bash
+# Disable Activity led
+#echo none > /sys/class/leds/ACT/trigger
+# Disable Power led
+#echo 0 > /sys/class/leds/PWR/brightness
 if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
   echo Restart avahi
   systemctl restart avahi-daemon.service
