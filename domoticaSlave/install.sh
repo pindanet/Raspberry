@@ -85,6 +85,10 @@ echo "============================"
 sudo apt install chromium -y
 cat > PindaNetAutostart.sh <<EOF
 #!/bin/bash
+# Disable Power led
+echo 0 | sudo tee /sys/class/leds/PWR/brightness
+# Disable Activity led
+echo none | sudo tee /sys/class/leds/ACT/trigger
 # Activate DS18B20 temperature sensor power (Reset)
 /usr/bin/pinctrl set $powergpio op dh
 # PullUp 1-wire Data
