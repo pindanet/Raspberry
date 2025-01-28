@@ -77,7 +77,7 @@ sudo usermod -a -G gpio www-data
 # Enable set touchscreen brightness
 sudo usermod -a -G video www-data
 # Enable Radio and MP3 play
-sudo usermod -a -G audio www-data
+#sudo usermod -a -G audio www-data
 
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
@@ -157,6 +157,30 @@ sudo systemctl daemon-reload
 sudo systemctl enable checkAvahi.timer
 sudo systemctl start checkAvahi.timer
 # systemctl list-timers
+
+# Play Radio stream with ICY-META (stderr) output logging
+cat > PindaNetRadio.path <<EOF
+[Unit]
+Description=Monitor the /var/www/html/data/radio.cmd file for changes
+[Path]
+PathModified=/var/www/html/data/radio.cmd
+Unit=PindaNetRadio.service
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo mv PindaNetRadio.path /etc/systemd/system/
+
+cat > PindaNetRadio.service <<EOF
+[Unit]
+Description=Execute the script with Radio commands
+[Service]
+ExecStart=/bin/bash /var/www/html/PindaNetRadio.sh
+EOF
+sudo mv PindaNetRadio.service /etc/systemd/system/
+
+sudo systemctl daemon-reload
+sudo systemctl enable PindaNetRadio.path
+sudo systemctl start PindaNetRadio.path
 
 echo "Ready, please restart"
 echo "====================="
