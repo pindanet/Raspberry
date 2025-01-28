@@ -28,28 +28,18 @@ function radioStatus() {
     if (this.status == 200) {
       const output = JSON.parse(this.responseText);
       if (output.length > 0) {
-        if (output[0] > 16) {
+        var fontsize = 10;
+        var status = output[0].substring(output[0].indexOf("='") + 2, output[0].indexOf("';"));
+        if (status.length > 16) {
           fontsize = 5;
         }
-        document.getElementById("radio").innerHTML = "<span style='font-size:" + fontsize + "vw'>" + output[0] + "</span>";
+        document.getElementById("radio").innerHTML = "<span style='font-size:" + fontsize + "vw'>" + status + "</span>";
+      } else {
+        document.getElementById("radio").innerHTML = "Wekkerradio";
       }
     }
   };
-  xhr.send("cmd=cat&params="+stringToHex("/var/www/html/data/radio.log | tail -1 | cut -d \"'\" -f 2"));
-}
-
-var nextAlarm = "07:30";
-function getNextAlarm() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "data/nextalarm", true);
-  xhr.onload = function(e) {
-    if (this.status == 200) {
-console.log(this.responseText);
-      nextAlarm = this.responseText;
-    }
-  };
-  xhr.send();
-  startTime();
+  xhr.send("cmd=cat&params="+stringToHex("/var/www/html/data/radio.log | tail -1"));
 }
 
 function timeDate (time, dateObject) {
@@ -131,6 +121,13 @@ function setBrightness(brightness) {
   xhr.send("brightness=" + brightness);
 }
 
+function alarm() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("cmd=touch&params="+stringToHex("/var/www/html/data/radio.cmd"));
+}
+
 var nextAlarm;
 function nextalarm() {
   var today = new Date();
@@ -141,6 +138,14 @@ function nextalarm() {
     nextDate.setHours(0,0,0,0);
     setAlarmTime(getEventAlarm(nextDate, today), nextDate); // Get tomorrow's alarmtime
   }
+
+//var testAlarm = new Date();
+//testAlarm.setTime(testAlarm.getTime() + (10*1000));
+//console.log(testAlarm);
+//setTimeout(alarm, testAlarm.getTime() - today.getTime()); // Start Alarm
+
+console.log(nextAlarm);
+  setTimeout(alarm, nextAlarm.getTime() - today.getTime()); // Start Alarm
 
   sunTimes = SunCalc.getTimes(new Date(), conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
   if (today.getTime() > sunTimes.sunset.getTime()) { // night, dim backlight Touchscreen
@@ -179,16 +184,13 @@ function getConf() { // Get configuration
       if (typeof conf === 'undefined') {
         conf = JSON.parse(this.responseText);
         conf.lastModified = this.getResponseHeader('Last-Modified');
-//        calcConf();
         nextalarm();
         startTime();
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
         conf = JSON.parse(this.responseText);
         conf.lastModified = this.getResponseHeader('Last-Modified');
-//        calcConf();
         nextalarm();
       }
-//      variableToConf(variable, conf);
       setTimeout(getConf, 60000); // Every minute
     }
   }
