@@ -19,6 +19,14 @@ powergpio=17
 # Black to Gnd (34)
 radiogpio=5
 
+# HiFiBerry MiniAmp
+# GPIO18 (12) Sound Interface
+# GPIO19 (35) Sound Interface
+# GPIO20 (38) Sound Interface
+# GPIO21 (40) Sound Interface
+# GPIO16 (36) Mute Power Stage
+# GPIO26 (37) Shutdown Power Stage
+
 # Test if executed with Bash
 case "$BASH_VERSION" in
   "") echo "usage: bash install.sh"
