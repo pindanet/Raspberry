@@ -13,17 +13,19 @@ declare -p cmd
 
 case ${cmd[0]} in
   "play")
-     volume=${cmd[1]}
-     interval=${cmd[2]}
-     radio=${cmd[3]}
+    volume=${cmd[1]}
+    interval=${cmd[2]}
+    radio=${cmd[3]}
 
-     mpg123 -f -${cmd[1]} /var/www/html/data/bintro.mp3
+    curl -H "Icy-MetaData:1" --silent -L "$radio" 2>&1 | mpg123 --icy-interval $interval -f -$volume - 2> /var/www/html/data/radio.log &
 
-     curl -H "Icy-MetaData:1" --silent -L "$radio" 2>&1 | mpg123 --icy-interval $interval -f -$volume - 2> /var/www/html/data/radio.log &
-
-     sleep 30
-
-   ;;
+    until [ -f /var/www/html/data/radio.stop ]
+    do
+      sleep 1
+    done
+    rm /var/www/html/data/radio.stop
+    rm /var/www/html/data/radio.log
+  ;;
 
   "alarm")
     volume=${cmd[1]}
