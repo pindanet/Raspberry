@@ -121,11 +121,12 @@ function setBrightness(brightness) {
   xhr.send("brightness=" + brightness);
 }
 
-function alarm() {
+function radioPlay(cmd, volume, channel) {
+console.log(cmd, volume, channel);
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("cmd=touch&params="+stringToHex("/var/www/html/data/radio.cmd"));
+  xhr.send("cmd=echo&params="+stringToHex("'" + cmd + ", " + volume + ", " + conf.radio.channel[channel].interval + ", " + conf.radio.channel[channel].URL + "' > /var/www/html/data/radio.cmd"));
 }
 
 var nextAlarm;
@@ -142,10 +143,11 @@ function nextalarm() {
 //var testAlarm = new Date();
 //testAlarm.setTime(testAlarm.getTime() + (10*1000));
 //console.log(testAlarm);
-//setTimeout(alarm, testAlarm.getTime() - today.getTime()); // Start Alarm
+//setTimeout(radioPlay, testAlarm.getTime() - today.getTime(), "alarm", conf.alarmclock.volume, conf.alarmclock.alarmradio); // Start Alarm
 
 console.log(nextAlarm);
-  setTimeout(alarm, nextAlarm.getTime() - today.getTime()); // Start Alarm
+console.log(((nextAlarm.getTime() - today.getTime()) / 1000) / 60);
+  setTimeout(radioPlay, nextAlarm.getTime() - today.getTime(), "alarm", conf.alarmclock.volume, conf.alarmclock.alarmradio); // Start Alarm
 
   sunTimes = SunCalc.getTimes(new Date(), conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
   if (today.getTime() > sunTimes.sunset.getTime()) { // night, dim backlight Touchscreen
@@ -174,6 +176,21 @@ function startTime() {
     updateScreen = 0;
     radioStatus();
   }
+// Check Play Radio button
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      if (this.responseText.includes(" lo ")) { // Play Radio Button pressed
+console.log(conf.alarmclock.volume);
+console.log(conf.radio.channel[conf.alarmclock.radio].URL);
+console.log(conf.radio.channel[conf.alarmclock.radio].interval);
+      }
+    }
+  };
+  xhr.send("cmd=pinctrl&params="+stringToHex("get 5"));
+
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
 
