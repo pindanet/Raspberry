@@ -26,6 +26,7 @@ radiogpio=5
 # GPIO21 (40) Sound Interface
 # GPIO16 (36) Mute Power Stage
 # GPIO26 (37) Shutdown Power Stage
+echo 'dtoverlay=hifiberry-dac' | sudo tee -a /boot/firmware/config.txt
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
