@@ -98,7 +98,12 @@
       }
     ]
   },
-  "alarmtime": "07:30",
+  "alarmtime": "08:00",
+  "alarmclock": {
+    "volume": 500,
+    "alarmradio": "klara",
+    "radio": "radio2"
+  },
   "breakfastOffset": "11",
   "switch": {
     "Kerst": {
