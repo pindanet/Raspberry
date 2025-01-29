@@ -121,6 +121,13 @@ function setBrightness(brightness) {
   xhr.send("brightness=" + brightness);
 }
 
+function radioStop() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("cmd=touch&params="+stringToHex("/var/www/html/data/radio.stop"));
+}
+
 function radioPlay(cmd, volume, channel) {
 console.log(cmd, volume, channel);
   var xhr = new XMLHttpRequest();
@@ -158,6 +165,7 @@ console.log(((nextAlarm.getTime() - today.getTime()) / 1000) / 60);
   }
 }
 
+var radioPlaying=false;
 function startTime() {
   clearTimeout(startTimer);
   var today = new Date();
@@ -183,9 +191,13 @@ function startTime() {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       if (this.responseText.includes(" lo ")) { // Play Radio Button pressed
-console.log(conf.alarmclock.volume);
-console.log(conf.radio.channel[conf.alarmclock.radio].URL);
-console.log(conf.radio.channel[conf.alarmclock.radio].interval);
+        if (radioPlaying == true) {
+          radioStop();
+          radioPlaying = false;
+        } else {
+          radioPlay("play", conf.alarmclock.volume, conf.alarmclock.radio);
+          radioPlaying = true;
+        }
       }
     }
   };
