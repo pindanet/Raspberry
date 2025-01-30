@@ -153,6 +153,7 @@ function nextalarm() {
 //setTimeout(radioPlay, testAlarm.getTime() - today.getTime(), "alarm", conf.alarmclock.volume, conf.alarmclock.alarmradio); // Start Alarm
 
 console.log(nextAlarm);
+console.log(today);
 console.log(((nextAlarm.getTime() - today.getTime()) / 1000) / 60);
   setTimeout(radioPlay, nextAlarm.getTime() - today.getTime(), "alarm", conf.alarmclock.volume, conf.alarmclock.alarmradio); // Start Alarm
 
@@ -216,9 +217,10 @@ function getConf() { // Get configuration
         nextalarm();
         startTime();
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
-        conf = JSON.parse(this.responseText);
-        conf.lastModified = this.getResponseHeader('Last-Modified');
-        nextalarm();
+//        conf = JSON.parse(this.responseText);
+//        conf.lastModified = this.getResponseHeader('Last-Modified');
+//        nextalarm();
+        location.reload(true);
       }
       setTimeout(getConf, 60000); // Every minute
     }
@@ -226,4 +228,22 @@ function getConf() { // Get configuration
   xhttp.open("POST", "data/conf.json");
   xhttp.send();
 }
-window.onload = getConf;
+
+function waitForTimeSync() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      if (this.responseText == '["System clock synchronized: yes"]') {
+console.log("Time Synced");
+        getConf();
+      } else {
+console.log("Wait for Time Sync");
+        setTimeout(waitForTimeSync, 1000); // wait 1 second
+      }
+    }
+  };
+  xhr.send("cmd=timedatectl&params="+stringToHex('| grep "System clock synchronized: yes"'));
+}
+window.onload = waitForTimeSync;
