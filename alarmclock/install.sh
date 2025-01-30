@@ -51,7 +51,6 @@ echo 'else' >> .bashrc
 echo '  until timedatectl | grep -q "System clock synchronized: yes"; do' >> .bashrc
 echo '    sleep 1' >> .bashrc
 echo '  done' >> .bashrc
-
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 # Optional: Disable Touch
