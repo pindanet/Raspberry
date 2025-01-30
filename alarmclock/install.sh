@@ -9,9 +9,9 @@
 # Black to Gnd (6)
 
 # DS18B20 Temperature Sensor Power
-# GPIO4 (7) to Data (Yellow) to 4k7 to 3,3 V (Red)(GPIO17)
-# GND (9) to GND (Black)
-# GPIO17 (11) to Vdd (Red)
+# GPIO 17 (11) (switchable 3,3 V) naar Vdd (Rood)
+# GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Orange)(GPIO27)(13)
+# GND (9) naar GND (Zwart)
 powergpio=17
 
 # Start/Stop Radio button
