@@ -35,7 +35,7 @@ function radioStatus() {
         }
         document.getElementById("radio").innerHTML = "<span style='font-size:" + fontsize + "vw'>" + status + "</span>";
       } else {
-        document.getElementById("radio").innerHTML = "Wekkerradio";
+        document.getElementById("radio").innerHTML = "Wekkerradio " + conf.alarmclock.temp.toFixed(1) + " &#176;C";
       }
     }
   };
@@ -207,6 +207,26 @@ function startTime() {
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
 
+function startTemp() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      const output = JSON.parse(this.responseText);
+      if (isNaN(output[0])) {
+        console.log(output[0]);
+      } else {
+        conf.alarmclock.temp = parseFloat(output[0]) / 1000 + conf.alarmclock.tempCorrection;
+//        document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1);
+      }
+    }
+  };
+  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/ds18b20.sh"));
+
+  setTimeout(startTemp, 60000); // elke minuut
+}
+
 function getConf() { // Get configuration
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function(e) {
@@ -216,6 +236,7 @@ function getConf() { // Get configuration
         conf.lastModified = this.getResponseHeader('Last-Modified');
         nextalarm();
         startTime();
+        startTemp();
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
 //        conf = JSON.parse(this.responseText);
 //        conf.lastModified = this.getResponseHeader('Last-Modified');
