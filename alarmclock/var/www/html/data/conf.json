@@ -102,7 +102,9 @@
   "alarmclock": {
     "volume": 500,
     "alarmradio": "klara",
-    "radio": "radio2"
+    "radio": "radio2",
+    "temp": 20,
+    "tempCorrection": 0
   },
   "breakfastOffset": "11",
   "switch": {
@@ -324,6 +326,34 @@
     ]
   },
   "event": [
+    {
+      "repeat": 0,
+      "begindate": "2025-02-01",
+      "begin": "08:30",
+      "alarm": "08:01",
+      "enddate": "2025-02-01",
+      "end": "08:35",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempComfort",
+        "kitchen": "tempAux"
+      },
+      "comment": "Test Event Alarm"
+    },
+    {
+      "repeat": 0,
+      "begindate": "2025-02-02",
+      "begin": "08:30",
+      "alarm": "08:02",
+      "enddate": "2025-02-02",
+      "end": "08:35",
+      "temp": {
+        "living": "tempAux",
+        "dining": "tempComfort",
+        "kitchen": "tempAux"
+      },
+      "comment": "Test Event Alarm"
+    },
     {
       "repeat": 0,
       "begindate": "2024-12-29",
