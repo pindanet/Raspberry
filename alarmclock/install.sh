@@ -48,6 +48,10 @@ sudo raspi-config nonint do_boot_behaviour "B2"  # https://www.raspberrypi.com/d
 echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
 echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
+echo '  until timedatectl | grep -q "System clock synchronized: yes"; do' >> .bashrc
+echo '    sleep 1' >> .bashrc
+echo '  done' >> .bashrc
+
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 # Optional: Disable Touch
