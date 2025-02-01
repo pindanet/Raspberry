@@ -166,7 +166,12 @@ console.log(((nextAlarm.getTime() - today.getTime()) / 1000) / 60);
   }
 }
 
+function enableRadioButton() {
+  radioButton="enabled";
+}
+
 var radioPlaying=false;
+var radioButton="enabled";
 function startTime() {
   clearTimeout(startTimer);
   var today = new Date();
@@ -186,23 +191,31 @@ function startTime() {
     radioStatus();
   }
 // Check Play Radio button
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200 && this.readyState === 4) {
-      if (this.responseText.includes(" lo ")) { // Play Radio Button pressed
-        if (radioPlaying == true) {
-          radioStop();
-          radioPlaying = false;
-        } else {
-          radioPlay("play", conf.alarmclock.volume, conf.alarmclock.radio);
-          radioPlaying = true;
+  if (radioButton == "enabled") {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function(e) {
+      if (this.status == 200 && this.readyState === 4) {
+        if (this.responseText.includes(" lo ")) { // Play Radio Button pressed
+          if (radioPlaying == true) {
+            radioStop();
+            radioPlaying = false;
+            document.getElementById("radio").innerHTML = conf.alarmclock.radio.charAt(0).toUpperCase() + conf.alarmclock.radio.slice(1) + " stoppen";
+            radioButton="disabled";
+            setTimeout(enableRadioButton, 20000); // Enable radio button after 20 seconds (debounce)
+          } else {
+            radioPlay("play", conf.alarmclock.volume, conf.alarmclock.radio);
+            radioPlaying = true;
+            document.getElementById("radio").innerHTML = conf.alarmclock.radio.charAt(0).toUpperCase() + conf.alarmclock.radio.slice(1) + " ophalen";
+            radioButton="disabled";
+            setTimeout(enableRadioButton, 20000); // Enable radio button after 20 seconds (debounce)
+          }
         }
       }
-    }
-  };
-  xhr.send("cmd=pinctrl&params="+stringToHex("get 5"));
+    };
+    xhr.send("cmd=pinctrl&params="+stringToHex("get 5"));
+  }
 
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
