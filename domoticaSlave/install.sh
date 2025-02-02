@@ -3,12 +3,12 @@
 # wget https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/install.sh
 # bash install.sh
 
+router="mymodem.home"
+
 # Hardware
 # DS18B20 Temperature Sensor Power
 # GPIO17 (11) naar Vdd (Rood)
 powergpio=17
-
-router="mymodem.home"
 
 # Test if executed with Bash
 case "$BASH_VERSION" in
