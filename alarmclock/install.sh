@@ -3,6 +3,8 @@
 # wget https://github.com/pindanet/Raspberry/raw/master/alarmclock/install.sh
 # bash install.sh
 
+router="mymodem.home"
+
 # Hardware
 # Shutdown/Reboot button
 # Gray to GPIO3 (5)
@@ -130,7 +132,6 @@ ssh-keygen
 cat > checkAvahi.sh <<EOF
 #!/bin/bash
 # Check WiFi connection
-router="mymodem.home"
 if ! ping -c 1 $router; then
   echo "Restart NetworkManager"
   systemctl restart NetworkManager.service
