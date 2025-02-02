@@ -158,6 +158,14 @@ sudo systemctl start PindaNetUpdate.timer
 # Check Avahi hostname
 cat > checkAvahi.sh <<EOF
 #!/bin/bash
+# Check WiFi connection
+router="mymodem.home"
+if ! ping -c 1 $router; then
+  echo "Restart NetworkManager"
+  systemctl restart NetworkManager.service
+  sleep 10
+fi
+# Check Avahi conflict
 if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
   echo Restart avahi
   systemctl restart avahi-daemon.service
