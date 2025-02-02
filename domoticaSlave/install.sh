@@ -8,6 +8,8 @@
 # GPIO17 (11) naar Vdd (Rood)
 powergpio=17
 
+router="mymodem.home"
+
 # Test if executed with Bash
 case "$BASH_VERSION" in
   "") echo "usage: bash install.sh"
@@ -159,7 +161,6 @@ sudo systemctl start PindaNetUpdate.timer
 cat > checkAvahi.sh <<EOF
 #!/bin/bash
 # Check WiFi connection
-router="mymodem.home"
 if ! ping -c 1 $router; then
   echo "Restart NetworkManager"
   systemctl restart NetworkManager.service
