@@ -3,6 +3,8 @@
 # GPIO 17 (11) (switchable 3,3 V) naar Vdd (Rood)
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)
 # GND (9) naar GND (Zwart)
+# ToDo
+# tempmin en tempmax samenvoegen
 
 powergpio=17
 
