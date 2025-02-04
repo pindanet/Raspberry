@@ -376,6 +376,13 @@ function toggleAvailable(event) {
 //        var timeoutTime = Math.max(30000, sleepdate.getTime() - new Date().getTime() + 30000);
 //console.log(new Date(new Date().getTime() + timeoutTime));
         setTimeout(gotoSleep, timeoutTime);
+        var today = new Date();
+        elem.innerHTML = today.getFullYear();
+        elem.style.fontSize = "";
+        deactivateSleep("Living");
+        deactivateSleep("Dining");
+        deactivateSleep("Kitchen");
+        break;
       case conf.available[0].absent:
         var today = new Date();
         elem.innerHTML = today.getFullYear();
@@ -408,15 +415,18 @@ function startTime() {
   document.getElementById("clockmonthday").innerHTML = today.getDate();
   document.getElementById("clockmonth").innerHTML = monthNames[today.getMonth()];
   if (document.getElementById("clockyear").innerHTML != conf.available[0].absent) {
-    if (conf.available[0].sleepdate - today < 0) {
-      var elem = document.getElementById("clockyear");
-      if (elem.innerHTML != conf.available[0].sleep) {
-        elem.innerHTML = conf.available[0].sleep;
-        elem.style.fontSize = "70%";
-console.log(conf.Living.sleepTemp, conf.Dining.sleepTemp, conf.Kitchen.sleepTemp);
-//        thermostatUI(event, 'Manual', 'livingtemp');
-      }
-    } else if (typeof conf.available[0].absentdate !== 'undefined') {
+//    if (conf.available[0].sleepdate - today < 0) {
+//      var elem = document.getElementById("clockyear");
+//      if (elem.innerHTML != conf.available[0].sleep) {
+//        elem.innerHTML = conf.available[0].sleep;
+//        elem.style.fontSize = "70%";
+//// see activateAbsent
+//console.log(conf.Living.tempWanted, conf.Dining.tempWanted, conf.Kitchen.tempWanted);
+//console.log(conf.Living.sleepTemp, conf.Dining.sleepTemp, conf.Kitchen.sleepTemp);
+////        thermostatUI(event, 'Manual', 'livingtemp');
+//      }
+//    } else if (typeof conf.available[0].absentdate !== 'undefined') {
+    if (typeof conf.available[0].absentdate !== 'undefined') {
       if (conf.available[0].absentdate - today < 0) {
           conf.available[0].absentdate.setDate(conf.available[0].absentdate.getDate()+1);
           document.getElementById("clockyear").click();
@@ -742,6 +752,31 @@ function toggleThermostat(event) {
   event.stopPropagation();
   event.preventDefault();
 }
+function activateSleep(room) {
+//function activateSleep(room, tempThermostat, mode, id) {
+  conf[room].sleepRestoreTemp = conf[room].tempWanted;
+  conf[room].sleepRestoreMode = conf[room].mode;
+  conf[room].sleepRestoreTempManual = conf[room].tempManual;
+console.log(room, conf[room].sleepRestoreTemp, conf[room].sleepRestoreMode, conf[room].sleepRestoreTempManual);
+//  if (conf[room].tempWanted > tempThermostat || conf[room].absentRestoreMode == "Auto") {
+//console.log(room + " absent temp: " + conf[room].absentRestoreMode + " ("+ conf[room].absentRestoreTemp + ") to " + tempThermostat);
+//    thermostatUI(event, mode, id);
+//  }
+}
+function deactivateSleep(room) {
+  if (conf[room].sleepRestoreMode == "Auto") {
+console.log(room + " sleep restore: " + conf[room].tempWanted + " to Auto");
+    thermostatUI(event, 'Auto', room.toLowerCase() + 'temp');
+  } else {
+    if (conf[room].sleepRestoreTemp == conf.tempOff) {
+console.log(room + " sleep restore: " + conf[room].tempWanted + " to Off");
+      thermostatUI(event, 'Off', room.toLowerCase() + 'temp');
+    } else {
+console.log(room + " sleep restore: " + conf[room].tempWanted + " to " + conf[room].sleepRestoreTemp);
+      thermostatUI(event, 'Manual', room.toLowerCase() + 'aux');
+    }
+  }
+}
 function thermostat() {
   tempAdjustment(conf.Living);
 // getLivingTemp
@@ -773,6 +808,18 @@ function thermostat() {
       document.getElementById("clockday").style.color="lime";
     } else {
       document.getElementById("clockday").style.color="";
+    }
+  }
+  if (document.getElementById("clockyear").innerHTML != conf.available[0].absent) {
+    if (conf.available[0].sleepdate - new Date() < 0) {
+      var elem = document.getElementById("clockyear");
+      if (elem.innerHTML != conf.available[0].sleep) {
+        elem.innerHTML = conf.available[0].sleep;
+        elem.style.fontSize = "70%";
+        activateSleep("Living");
+        activateSleep("Dining");
+        activateSleep("Kitchen");
+      }
     }
   }
 }
