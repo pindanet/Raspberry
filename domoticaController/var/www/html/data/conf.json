@@ -5,6 +5,11 @@
     "Longitude": 3.2401705,
     "Altitude": 4
   },
+  "rooms": [
+    "Living",
+    "Dining",
+    "Kitchen"
+  ],
   "available": [
     {
       "absent": "Afwezig",
@@ -32,43 +37,46 @@
     "eveningShutterDown": "22:20",
     "timer": [
       {
+        "disabled": true,
         "dev": "Kerst",
         "begin": "breakfast",
         "end": "morningLightsOut"
       },
       {
+        "disabled": true,
         "dev": "LivingVoor",
         "begin": "breakfast",
         "end": "morningLightsOut"
       },
       {
+        "disabled": true,
         "dev": "LivingZij",
         "begin": "breakfast",
         "end": "morningLightsOut"
       },
-      { 
+      {
+        "disabled": true,
         "dev": "Kerst",
-        "begin": "eveningLightsOn",
-        "end": "bedTime"
-      },
-      {
-        "dev": "LivingVoor",
-        "begin": "eveningLightsOn",
-        "end": "bedTime"
-      },
-      {
-        "dev": "LivingZij",
         "begin": "eveningLightsOn",
         "end": "bedTime"
       },
       {
         "disabled": true,
+        "dev": "LivingVoor",
+        "begin": "eveningLightsOn",
+        "end": "bedTime"
+      },
+      {
+        "dev": "LivingZij",
+        "begin": "eveningLightsOn",
+        "end": "bedTime"
+      },
+      {
         "dev": "Haardlamp",
         "begin": "breakfast",
         "end": "morningLightsOut"
       },
       {
-        "disabled": true,
         "dev": "Apotheek",
         "begin": "breakfast",
         "end": "morningLightsOut"
@@ -79,19 +87,16 @@
         "end": "22:15"
       },
       {
-        "disabled": true,
         "dev": "Apotheek",
         "begin": "22:24",
         "end": "bedTime"
       },
       {
-        "disabled": true,
         "dev": "Haardlamp",
         "begin": "eveningLightsOn",
         "end": "bedTime"
       },
       {
-        "disabled": false,
         "dev": "TVlamp",
         "begin": "eveningLightsOn",
         "end": "bedTime"
@@ -99,6 +104,13 @@
     ]
   },
   "alarmtime": "07:30",
+  "alarmclock": {
+    "volume": 500,
+    "alarmradio": "klara",
+    "radio": "radio2",
+    "temp": 20,
+    "tempCorrection": 0
+  },
   "breakfastOffset": "11",
   "switch": {
     "Kerst": {
@@ -312,7 +324,7 @@
         "temp": "tempAux"
       },
       {
-        "begin": "22:25",
+        "begin": "22:24",
         "end": "bedTime",
         "temp": "tempAux"
       }
