@@ -5,6 +5,11 @@
     "Longitude": 3.2401705,
     "Altitude": 4
   },
+  "rooms": [
+    "Living",
+    "Dining",
+    "Kitchen"
+  ],
   "available": [
     {
       "absent": "Afwezig",
@@ -319,7 +324,7 @@
         "temp": "tempAux"
       },
       {
-        "begin": "22:25",
+        "begin": "22:24",
         "end": "bedTime",
         "temp": "tempAux"
       }
