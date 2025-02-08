@@ -67,6 +67,7 @@
         "end": "bedTime"
       },
       {
+        "disabled": true,
         "dev": "LivingZij",
         "begin": "eveningLightsOn",
         "end": "bedTime"
