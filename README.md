@@ -90,41 +90,7 @@ My own All In One Raspberry Pi project.
         connect XX:XX:XX:XX:XX:XX
     # To be continued
 ## IQaudio DigiAMP+
-    # https://datasheets.raspberrypi.org/iqaudio/iqaudio-product-brief.pdf
-    sudo nano /boot/config.txt
-        disable
-            #dtparam=audio=on
-        add
-            dtoverlay=iqaudio-dacplus,auto_mute_amp
-    alsamixer
-    speaker-test -c2 -twav
-    # https://www.raspberrypi.org/forums/viewtopic.php?t=247892
-    sudo apt install bluealsa
-    sudo nano -B -P /lib/systemd/system/bluealsa.service
-        ExecStart=/usr/bin/bluealsa --profile=a2dp-sink
-    
-    sudo nano /etc/systemd/system/aplay.service
-    [Unit]
-    Description=BlueALSA aplay service
-    After=bluetooth.service
-    Requires=bluetooth.service
-
-    [Service]
-    ExecStart=/usr/bin/bluealsa-aplay 00:00:00:00:00:00 --pcm-buffer-time=10000
-
-    [Install]
-    WantedBy=multi-user.target
-    
-    sudo systemctl enable aplay
-    sudo usermod -a -G bluetooth pi
-    sudo nano /etc/bluetooth/main.conf
-        Class = 0x240414
-    sudo shutdown -r now
-    bluetoothctl
-        scan on
-        pair XX:XX:XX:XX:XX:XX
-        trust XX:XX:XX:XX:XX:XX
-        connect XX:XX:XX:XX:XX:XX
+    # https://www.raspberrypi.com/documentation/accessories/audio.html
 ## Audio streaming
 ### Compile and install on openSUSE Leap 15.2 x64 system
     #https://gavv.github.io/articles/roc-tutorial/
