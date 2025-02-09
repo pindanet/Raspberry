@@ -1,16 +1,5 @@
 # Raspberry
 My own All In One Raspberry Pi project.
-## Headless configuration
-Place a file named 'ssh', without any extension, onto the boot partition of the SD card for a one time SSH server start
-## Update
-    sudo apt-get update
-    sudo apt-get upgrade
-    wget https://github.com/zyedidia/micro/releases/download/v1.4.0/micro-1.4.0-linux-arm.tar.gz
-    tar -xvf micro-1.4.0-linux-arm.tar.gz
-## Rotate LCD Screen
-    sudo nano /boot/config.txt
-    lcd_rotate=2
-    Touch-rotate: see https://www.raspberrypi.org/forums/viewtopic.php?t=219333
 ## Brightness LCD Screen (0-255)
     sudo su
     echo 32 > /sys/class/backlight/rpi_backlight/brightness
