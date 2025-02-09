@@ -50,4 +50,4 @@ My own All In One Raspberry Pi project.
 ## IQaudio DigiAMP+
     # https://www.raspberrypi.com/documentation/accessories/audio.html
 ## Audio streaming
-
+    # https://linux.pindanet.be/faq/tips24/netwerkaudio.html
