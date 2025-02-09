@@ -45,7 +45,7 @@ Open Sonoff Basic and solder connections (see: [https://www.sigmdel.ca/michel/ha
     Save configuration, Sonoff will reboot and connect to your home AP
     
 ## HifiBerry miniAmp
-    https://www.hifiberry.com/docs/data-sheets/datasheet-miniamp/
+[https://www.hifiberry.com/docs/data-sheets/datasheet-miniamp/](https://www.hifiberry.com/docs/data-sheets/datasheet-miniamp/)
 ![MiniAmp](alarmclock/images/miniamp-connection.jpg "MiniAmp")
 
     https://www.hifiberry.com/docs/software/configuring-linux-3-18-x/
