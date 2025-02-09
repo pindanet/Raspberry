@@ -21,7 +21,7 @@ Based on [https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Ras
     Add dtoverlay=pi3-disable-bt
     Shutdown and Power off Raspberry Pi
     
-    Open Sonoff Basic and solder connections (see: [https://www.sigmdel.ca/michel/ha/sonoff/flashing_sonoff_en.html](https://www.sigmdel.ca/michel/ha/sonoff/flashing_sonoff_en.html) with PSU)
+Open Sonoff Basic and solder connections (see: [https://www.sigmdel.ca/michel/ha/sonoff/flashing_sonoff_en.html](https://www.sigmdel.ca/michel/ha/sonoff/flashing_sonoff_en.html) with PSU)
 ![Flashing Sonoff](/util/images/sonoff-rpi-2.jpg "Flashing Sonoff")
     
     Start Raspberry Pi
