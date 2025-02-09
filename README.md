@@ -4,7 +4,7 @@ My own All In One Raspberry Pi project.
     sudo su
     echo 32 > /sys/class/backlight/rpi_backlight/brightness
 ## Flash Tasmota on Sonoff Basic
-    Based on [[GitHub Pages](https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md)]([https://pages.github.com/](https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md)) 
+    Based on [GitHub Pages](https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md)]([https://pages.github.com/](https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md)) 
     Start Raspberry Pi 3
     sudo apt install python-pip
     sudo pip install esptool
