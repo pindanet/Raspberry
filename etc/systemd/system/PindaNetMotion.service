@@ -1,8 +1,0 @@
-[Unit]
-Description=Motion Detection
-
-[Service]
-ExecStart=/usr/sbin/PindaNetMotion.py
-
-[Install]
-WantedBy=multi-user.target

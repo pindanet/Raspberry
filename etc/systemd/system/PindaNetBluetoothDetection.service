@@ -1,5 +1,0 @@
-[Unit]
-Description=Bluetooth Detection
-[Service]
-Type=simple
-ExecStart=/usr/sbin/bluetooth-detection.sh

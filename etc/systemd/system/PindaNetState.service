@@ -1,5 +1,0 @@
-[Unit]
-Description=Controller state        
-[Service]
-Type=simple
-ExecStart=/usr/sbin/PindaNetState.sh

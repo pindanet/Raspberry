@@ -1,8 +1,0 @@
-[Unit]
-Description=Bluetooth Detection
-[Timer]
-OnBootSec=1min
-OnUnitActiveSec=1min
-Unit=PindaNetBluetoothDetection.service
-[Install]
-WantedBy=multi-user.target
