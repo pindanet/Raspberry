@@ -5,6 +5,7 @@
        sudo rpi-clone sda
 ## Make in Debian a clone to file
 [Raspberry Pi OS klonen en Tasmota scanner](https://linux.pindanet.be/faq/tips25/rpi-tasmota.html)
+
       sudo apt install fsarchiver cifs-utils
       sudo mount -t cifs //hostnaamNAS/netwerkmap /mnt
       ls -lh /mnt/
