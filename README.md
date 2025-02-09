@@ -4,7 +4,7 @@ My own All In One Raspberry Pi project.
     sudo su
     echo 32 > /sys/class/backlight/rpi_backlight/brightness
 ## Flash Tasmota on Sonoff Basic
-    Based on https://tasmota.github.io/docs/Flash-Sonoff-using-Raspberry-Pi/
+    Based on https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md
     Start Raspberry Pi 3
     sudo apt install python-pip
     sudo pip install esptool
@@ -20,7 +20,7 @@ My own All In One Raspberry Pi project.
     Shutdown and Power off Raspberry Pi
     
     Open Sonoff Basic and solder connections (see: https://www.sigmdel.ca/michel/ha/sonoff/flashing_sonoff_en.html with PSU)
-![Flashing Sonoff](images/sonoff-rpi-2.jpg "Flashing Sonoff")
+![Flashing Sonoff](/util/images/sonoff-rpi-2.jpg "Flashing Sonoff")
     
     Start Raspberry Pi
     wget http://ota.tasmota.com/tasmota/release/tasmota.bin
