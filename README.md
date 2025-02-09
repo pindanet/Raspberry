@@ -4,7 +4,7 @@ My own All In One Raspberry Pi project.
     sudo su
     echo 32 > /sys/class/backlight/rpi_backlight/brightness
 ## Flash Tasmota on Sonoff Basic
-Based on <a href="https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md" target="_blank">[external link](https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md)</a>
+Based on <a href="https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md" target="_blank">https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md</a>
 [https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md](https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md)
 
     https://github.com/tasmota/docs-7.1/blob/master/Flash-Sonoff-using-Raspberry-Pi.md
