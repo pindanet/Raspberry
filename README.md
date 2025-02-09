@@ -44,7 +44,7 @@ My own All In One Raspberry Pi project.
     
 ## HifiBerry miniAmp
     https://www.hifiberry.com/docs/data-sheets/datasheet-miniamp/
-![MiniAmp](images/miniamp-connection.jpg "MiniAmp")
+![MiniAmp](alarmclock/images/miniamp-connection.jpg "MiniAmp")
 
     https://www.hifiberry.com/docs/software/configuring-linux-3-18-x/
     sudo nano /boot/config.txt
