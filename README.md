@@ -3,7 +3,7 @@
 Alarmclock with 7 inch screen, mimiAmp stereo amplifier and Tempeature sensor.
 ## Dining
 Movie frame for HDMI screen with Temperature sensor
-## domoticaController
+## DomoticaController
 ### Central Domotica Controller with 7 inch Touchscreen
 - Radio with IQaudio DigiAMP+ amplifier
 - Weather forecast
