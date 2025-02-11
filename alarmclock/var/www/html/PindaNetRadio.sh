@@ -17,6 +17,9 @@ case ${cmd[0]} in
     interval=${cmd[2]}
     radio=${cmd[3]}
 
+    rm /var/www/html/data/radio.stop
+    rm /var/www/html/data/radio.log
+
     curl -H "Icy-MetaData:1" --silent -L "$radio" 2>&1 | mpg123 --icy-interval $interval -f -$volume - 2> /var/www/html/data/radio.log &
 
     until [ -f /var/www/html/data/radio.stop ]
@@ -31,6 +34,8 @@ case ${cmd[0]} in
     volume=${cmd[1]}
     interval=${cmd[2]}
     radio=${cmd[3]}
+
+    rm /var/www/html/data/radio.log
 
     mpg123 -f -${cmd[1]} /var/www/html/data/bintro.mp3
 
