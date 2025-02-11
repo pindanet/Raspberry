@@ -18,7 +18,7 @@ powergpio=17
 
 # Start/Stop Radio button
 # Gray to GPIO5 (29)
-# Black to Gnd (34)
+# Black to Gnd (30)
 radiogpio=5
 
 # HiFiBerry MiniAmp
