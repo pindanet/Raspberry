@@ -32,6 +32,8 @@ radiogpio=5
 # GPIO21 (40) Sound Interface
 # GPIO16 (36) Mute Power Stage
 # GPIO26 (37) Shutdown Power Stage
+sudo sed -i 's/^dtparam=audio=on/#&/' /boot/firmware/config.txt
+sudo sed -i 's/^dtoverlay=vc4-kms-v3d/dtoverlay=vc4-kms-v3d,noaudio/' /boot/firmware/config.txt
 echo 'dtoverlay=hifiberry-dac' | sudo tee -a /boot/firmware/config.txt
 
 # Test if executed with Bash
