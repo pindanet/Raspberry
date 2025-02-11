@@ -7,8 +7,8 @@ router="mymodem.home"
 
 # Hardware
 # Shutdown/Reboot button
-# Gray to GPIO3 (5)
-# Black to Gnd (6)
+# Brown to GPIO3 (5)
+# Brown to Gnd (6)
 
 # DS18B20 Temperature Sensor Power
 # GPIO 17 (11) (switchable 3,3 V) naar Vdd (Rood)
