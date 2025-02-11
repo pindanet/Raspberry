@@ -56,13 +56,13 @@ echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
-# Rotate the Touch Display 270°
+# Rotate the Touch Display 180°
 mkdir -p .config/kanshi
 echo '{' > .config/kanshi/config
 echo '  output DSI-1 transform 180' >> .config/kanshi/config
 echo '}' >> .config/kanshi/config
 echo "kanshi &" >> .config/labwc/autostart
-# Rotate Touch 270°
+# Rotate Touch 180°
 sudo sed -i 's/^display_auto_detect=1/#&/' /boot/firmware/config.txt
 sudo sed -i '/display_auto_detect=1/adtoverlay=vc4-kms-dsi-7inch,invx,invy' /boot/firmware/config.txt
 # Optional: Rotate the console
