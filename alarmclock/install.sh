@@ -64,7 +64,7 @@ echo '}' >> .config/kanshi/config
 echo "kanshi &" >> .config/labwc/autostart
 # Rotate Touch 270°
 sudo sed -i 's/^display_auto_detect=1/#&/' /boot/firmware/config.txt
-sudo sed -i '/display_auto_detect=1/adtoverlay=vc4-kms-dsi-7inch,invx,swapxy' /boot/firmware/config.txt
+sudo sed -i '/display_auto_detect=1/adtoverlay=vc4-kms-dsi-7inch,invx,invy' /boot/firmware/config.txt
 # Optional: Rotate the console
 sudo cp /boot/firmware/cmdline.txt /boot/firmware/cmdline.txt.ori
 sudo sed -i ' 1 s/.*/& video=DSI-1:800x480@60,rotate=270/' /boot/firmware/cmdline.txt
