@@ -1,6 +1,8 @@
 # My own Domotica Raspberry Pi project.
 ## Alarmclock
 Alarmclock with 7 inch screen, mimiAmp stereo amplifier and Tempeature sensor.
+The screen dims at night.
+![Pinda Alarmclock](alarmclock/pindaalarmclock.png "Pinda Alarmclock")
 ## Dining
 Movie frame for HDMI screen with Temperature sensor
 ## DomoticaController
