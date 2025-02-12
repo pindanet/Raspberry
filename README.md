@@ -21,3 +21,6 @@ Movie frame for HDMI screen with Temperature sensor
 - Light controller (Tasmota)
   ![Pinda Domotica Controller](domoticaController/images/pindadomolights.png "Pinda Domotica Controller")
 - Configuration with JSON file
+## DomoticaSlave
+Temperature sensor with Weather Forecast and IR sensor
+![Pinda Domotica Slave](domoticaSlave/domoticaslave.png "Pinda Domotica Slave")
