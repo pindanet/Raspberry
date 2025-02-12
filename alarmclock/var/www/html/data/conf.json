@@ -109,7 +109,7 @@
     "alarmradio": "klara",
     "radio": "radio2",
     "temp": 20,
-    "tempCorrection": 0.7
+    "tempCorrection": -0.2
   },
   "breakfastOffset": "11",
   "switch": {
