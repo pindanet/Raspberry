@@ -8,6 +8,7 @@ Movie frame for HDMI screen with Temperature sensor
 ![Pinda Movie frame](dining/dining.png "Pinda Movie frame")
 ## DomoticaController
 ### Central Domotica Controller with 7 inch Touchscreen
+![Pinda Domotica Controller](domoticacontroller/images/pindadomoclock.png "Pinda Domotica Controller")
 - Radio with IQaudio DigiAMP+ amplifier
 - Weather forecast
 - Thermostat (switching infrared panels with Tasmota)
