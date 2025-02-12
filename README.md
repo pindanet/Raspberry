@@ -5,6 +5,7 @@ The screen dims at night.
 ![Pinda Alarmclock](alarmclock/pindaalarmclock.png "Pinda Alarmclock")
 ## Dining
 Movie frame for HDMI screen with Temperature sensor
+![Pinda Movie frame](dining/dining.png "Pinda Movie frame")
 ## DomoticaController
 ### Central Domotica Controller with 7 inch Touchscreen
 - Radio with IQaudio DigiAMP+ amplifier
