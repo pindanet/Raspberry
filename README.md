@@ -13,7 +13,11 @@ Movie frame for HDMI screen with Temperature sensor
 - Menu
   ![Pinda Domotica Controller](domoticaController/images/pindadomomenu.png "Pinda Domotica Controller")
 - Radio with IQaudio DigiAMP+ amplifier
+  ![Pinda Domotica Controller](domoticaController/images/pindadomoradio.png "Pinda Domotica Controller")
 - Weather forecast
+  ![Pinda Domotica Controller](domoticaController/images/pindadomoweather.png "Pinda Domotica Controller")
 - Thermostat (switching infrared panels with Tasmota)
+  ![Pinda Domotica Controller](domoticaController/images/pindadomothermostat.png "Pinda Domotica Controller")
 - Light controller (Tasmota)
+  ![Pinda Domotica Controller](domoticaController/images/pindadomolights.png "Pinda Domotica Controller")
 - Configuration with JSON file
