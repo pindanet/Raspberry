@@ -129,7 +129,6 @@ function radioStop() {
 }
 
 function radioPlay(cmd, volume, channel) {
-console.log(cmd, volume, channel);
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -152,9 +151,9 @@ function nextalarm() {
 //console.log(testAlarm);
 //setTimeout(radioPlay, testAlarm.getTime() - today.getTime(), "alarm", conf.alarmclock.volume, conf.alarmclock.alarmradio); // Start Alarm
 
-console.log(nextAlarm);
-console.log(today);
-console.log(((nextAlarm.getTime() - today.getTime()) / 1000) / 60);
+//console.log(nextAlarm);
+//console.log(today);
+//console.log(((nextAlarm.getTime() - today.getTime()) / 1000) / 60);
   setTimeout(radioPlay, nextAlarm.getTime() - today.getTime(), "alarm", conf.alarmclock.volume, conf.alarmclock.alarmradio); // Start Alarm
 
   sunTimes = SunCalc.getTimes(new Date(), conf.location.Latitude, conf.location.Longitude, conf.location.Altitude);
@@ -170,7 +169,7 @@ function enableRadioButton() {
   radioButton="enabled";
 }
 
-var radioPlaying=false;
+//var radioPlaying=false;
 var radioButton="enabled";
 function startTime() {
   clearTimeout(startTimer);
@@ -198,19 +197,25 @@ function startTime() {
     xhr.onload = function(e) {
       if (this.status == 200 && this.readyState === 4) {
         if (this.responseText.includes(" lo ")) { // Play Radio Button pressed
-          if (radioPlaying == true) {
-            radioStop();
-            radioPlaying = false;
-            document.getElementById("radio").innerHTML = conf.alarmclock.radio.charAt(0).toUpperCase() + conf.alarmclock.radio.slice(1) + " stoppen";
-            radioButton="disabled";
-            setTimeout(enableRadioButton, 20000); // Enable radio button after 20 seconds (debounce)
-          } else {
-            radioPlay("play", conf.alarmclock.volume, conf.alarmclock.radio);
-            radioPlaying = true;
-            document.getElementById("radio").innerHTML = conf.alarmclock.radio.charAt(0).toUpperCase() + conf.alarmclock.radio.slice(1) + " ophalen";
-            radioButton="disabled";
-            setTimeout(enableRadioButton, 20000); // Enable radio button after 20 seconds (debounce)
-          }
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', "cli.php", true);
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhr.onload = function(e) {
+            if (this.status == 200 && this.readyState === 4) {
+              if (this.responseText.includes("mpg123 --icy-interval")) {
+                radioStop();
+                document.getElementById("radio").innerHTML = conf.alarmclock.radio.charAt(0).toUpperCase() + conf.alarmclock.radio.slice(1) + " stoppen";
+                radioButton="disabled";
+                setTimeout(enableRadioButton, 20000); // Enable radio button after 20 seconds (debounce)
+              } else {
+                radioPlay("play", conf.alarmclock.volume, conf.alarmclock.radio);
+                document.getElementById("radio").innerHTML = conf.alarmclock.radio.charAt(0).toUpperCase() + conf.alarmclock.radio.slice(1) + " ophalen";
+                radioButton="disabled";
+                setTimeout(enableRadioButton, 20000); // Enable radio button after 20 seconds (debounce)
+              }
+            }
+          };
+          xhr.send("cmd=ps&params="+stringToHex("-ax | grep mpg123 | grep -v grep"))
         }
       }
     };
@@ -270,7 +275,7 @@ function waitForTimeSync() {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       if (this.responseText == '["System clock synchronized: yes"]') {
-console.log("Time Synced");
+//console.log("Time Synced");
         getConf();
       } else {
 console.log("Wait for Time Sync");
