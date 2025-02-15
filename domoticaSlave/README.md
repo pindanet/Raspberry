@@ -21,6 +21,8 @@ GPIO14 (8) > Output (Green)
 Gnd (6) > Gnd (Brown)<br>
 GPIO24 (18) > Output (Green)
 
+### Raspberry Pi Camera (https://www.raspberrypi.com/documentation/accessories/camera.html)
+
 ### Shutdown/Boot button
 Gnd (39) > Gnd (Blue)<br>
 GPIO26 (37) > Shutdown button (Blue)<br>
