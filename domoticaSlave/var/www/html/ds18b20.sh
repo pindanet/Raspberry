@@ -39,6 +39,8 @@ if [ ! -f /tmp/PinDa.temp.count ]; then
   exit
 fi
 
+echo -e "$(date)" "\n$output" >> /var/www/html/data/debug.txt
+
 echo $temp
 echo $temp > /var/www/html/data/temp
 
