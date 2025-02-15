@@ -1,4 +1,4 @@
-# Temperature sensor with Weather Forecast and IR lightswitch
+# Temperature sensor with Weather Forecast and PIR motion sensors
 For Raspberry Pi OS Bookworm Lite 64-bit
 ## Hardware
 
