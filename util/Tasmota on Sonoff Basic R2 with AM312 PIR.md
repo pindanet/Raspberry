@@ -5,15 +5,15 @@ As the R2 version doesn't have GPIO14 exposed you can use GPIO3 (RX) as the AM31
 
 | AM312 |	ESP8255 device |
 | ----- | -------------- |
-|  VCC  |	3V3 or VCC |
+| VCC |	3V3 or VCC |
 | VOUT |	GPIO3 (RX) |
 | GND  |	GND |
 
-Remember to remove the lens to lower the sensitivity of the sensor.
-Configuration~
+## Configuration (https://tasmota.github.io/docs/Rules/#enable-a-pir-switch-only-at-night)
 
-    Go to IP of the device, next Configuration --> Configure Module --> set "GPIO3 Serial In" to "Switch1 (9)"
-    Go to Console and type "SwitchMode 4" (detailed description of SwitchModes) to enable toggle switch type.
+Go to IP of the device, next Configuration --> Module --> set "GPIO3" to "Switch1"
+
+Go to Console and type "SwitchMode 4" to enable toggle switch type.
     Set rule to turn off light after X amount of seconds (mentioned workaround):
 
     rule1 on Switch1#State=2 do backlog Power1 1; RuleTimer1 180 endon on Rules#Timer=1 do backlog Power1 0 endon
