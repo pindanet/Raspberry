@@ -13,19 +13,20 @@ As the R2 version doesn't have GPIO14 exposed you can use GPIO3 (RX) as the AM31
 
 Go to IP of the device, next Configuration --> Module --> set "GPIO3" to "Switch1"
 
-Latitude and Longitude need to be set in config. Use PulseTime to specify the duration the light should remains on. Every PIR trigger will restart for that amount of time.
+Latitude and Longitude need to be set in config. Use PulseTime to specify the duration the light should remains on. PulseTime = 100 + 60 seconden (one minute) (https://tasmota.github.io/docs/Commands/#control).
+Every PIR trigger will restart for that amount of time.
 
 Go to Console
 
     Latitude 51.1853335
     Longitude 3.2401705
     SwitchMode1 14
-    PulseTime 60
+    PulseTime1 160
 
-Rule1
-  ON Switch1#state=1 DO Backlog event checksunrise=%time%; event checksunset=%time% ENDON
-  ON event#checksunrise<%sunrise% DO Power1 1 ENDON
-  ON event#checksunset>%sunset% DO Power1 1 ENDON
+    Rule1
+      ON Switch1#state=1 DO Backlog event checksunrise=%time%; event checksunset=%time% ENDON
+      ON event#checksunrise<%sunrise% DO Power1 1 ENDON
+      ON event#checksunset>%sunset% DO Power1 1 ENDON
 
 
 Go to Console and type "SwitchMode 4" to enable toggle switch type.
