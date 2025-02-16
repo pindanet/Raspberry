@@ -27,3 +27,4 @@ Go to Console
       ON Switch1#state=1 DO Backlog event checksunrise=%time%; event checksunset=%time% ENDON
       ON event#checksunrise<%sunrise% DO Power1 1 ENDON
       ON event#checksunset>%sunset% DO Power1 1 ENDON
+    rule1 1
