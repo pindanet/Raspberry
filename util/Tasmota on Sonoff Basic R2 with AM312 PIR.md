@@ -23,6 +23,7 @@ Go to Console
     SwitchMode1 14
     PulseTime1 160
     SwitchDebounce 261
+    SetOption55 on # mDNS On
 
     Rule1
       ON Switch1#state=1 DO Backlog event checksunrise=%time%; event checksunset=%time% ENDON
