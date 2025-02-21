@@ -180,8 +180,23 @@ sudo mv checkAvahi.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable checkAvahi.timer
 sudo systemctl start checkAvahi.timer
-
 # systemctl list-timers
+
+cat > mqtt_log.service <<EOF
+[Unit]
+Description=Log MQTT Power
+[Service]
+Type=simple
+ExecStart=/var/www/html/mqtt_log.sh
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo mv mqtt_log.service /etc/systemd/system/
+sudo chmod +x /var/www/html/mqtt_log.sh
+
+sudo systemctl daemon-reload
+sudo systemctl enable mqtt_log.service
+sudo systemctl start mqtt_log.service
 
 exit
 
