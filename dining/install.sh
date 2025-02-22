@@ -7,6 +7,8 @@
 # ====
 # add video=HDMI-A-1:1920x1200M@60 at start of line in /boot/firmware/cmdline.txt + space, to force screen without active monitor
 
+router="mymodem.home"
+
 # DS18B20 Temperature Sensor
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
 # GND (9) naar GND (Zwart)
@@ -122,6 +124,13 @@ sudo systemctl start PindaNetUpdate.timer
 # Check Avahi hostname
 cat > checkAvahi.sh <<EOF
 #!/bin/bash
+# Check WiFi connection
+if ! ping -c 1 $router; then
+  echo "Restart NetworkManager"
+  systemctl restart NetworkManager.service
+  sleep 10
+fi
+# Check Avahi conflict
 if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
   echo Restart avahi
   systemctl restart avahi-daemon.service
