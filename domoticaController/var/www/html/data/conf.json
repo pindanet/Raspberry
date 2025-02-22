@@ -110,48 +110,48 @@
     "alarmradio": "klara",
     "radio": "radio2",
     "temp": 20,
-    "tempCorrection": -0.2
+    "tempCorrection": 0
   },
   "breakfastOffset": "11",
   "switch": {
     "Kerst": {
       "IP": "192.168.129.44",
-      "Hostname": "tasmota-E7B609-5641",
+      "Hostname": "Kerst_20",
       "Watt": "20"
     },
     "Haardlamp": {
       "IP": "192.168.129.18",
-      "Hostname": "tasmota-1539F2-6642",
+      "Hostname": "Haardlamp_20",
       "Watt": "20"
     },
     "Tandenborstel": {
       "IP": "192.168.129.7",
-      "Hostname": "tasmota-A943FA-1018",
+      "Hostname": "Tandenborstel_10",
       "Watt": "10"
     },
     "Apotheek": {
       "IP": "192.168.129.19",
-      "Hostname": "tasmota-C699B5-6581",
+      "Hostname": "Apotheek_20",
       "Watt": "20"
     },
     "TVlamp": {
       "IP": "192.168.129.11",
-      "Hostname": "tasmota-A94717-1815",
+      "Hostname": "TVlamp_20",
       "Watt": "20"
     },
     "Keukenlamp": {
       "IP": "192.168.129.14",
-      "Hostname": "tasmota-15DD89-7561",
+      "Hostname": "Keukenlamp_8",
       "Watt": "8"
     },
     "LivingZij": {
       "IP": "192.168.129.41",
-      "Hostname": "tasmota-71AC5C-3164",
+      "Hostname": "Livinglamp_24",
       "Watt": "8"
     },
     "LivingVoor": {
       "IP": "192.168.129.41",
-      "Hostname": "tasmota-71AC5C-3164",
+      "Hostname": "Livinglamp_24",
       "Channel": "2",
       "Watt": "16"
     }
@@ -169,7 +169,7 @@
         "color": "Yellow",
         "status": "undefined",
         "IP": "192.168.129.12",
-        "Hostname": "tasmota-8BBE0D-7693",
+        "Hostname": "Schilderij_650",
         "Watt": "650"
       },
       {
@@ -177,6 +177,7 @@
         "color": "Orange",
         "status": "undefined",
         "IP": "192.168.129.0",
+        "Hostname": "Computertafel_300",
         "Watt": "300"
       },
       {
@@ -184,7 +185,7 @@
         "color": "Red",
         "status": "undefined",
         "IP": "192.168.129.4",
-        "Hostname": "tasmota-8BBE4D-7757",
+        "Hostname": "Canyon_650",
         "Watt": "650"
       }
     ],
@@ -226,15 +227,15 @@
         "color": "Yellow",
         "status": "undefined",
         "IP": "192.168.129.20",
-        "Hostname": "tasmota-FB7B27-6951",
+        "Hostname": "Zonsondergang_650",
         "Watt": "650"
       },
       {
-        "name": "Tafel",
+        "name": "Eettafel",
         "color": "Orange",
         "status": "undefined",
         "IP": "192.168.129.5",
-        "Hostname": "tasmota-8BE4AF-1199",
+        "Hostname": "Eettafel_300",
         "Watt": "300"
       },
       {
@@ -242,7 +243,7 @@
         "color": "Red",
         "status": "undefined",
         "IP": "192.168.129.3",
-        "Hostname": "tasmota-4FDD94-7572",
+        "Hostname": "Tropen_650",
         "Watt": "650"
       }
     ],
@@ -304,7 +305,7 @@
         "color": "Red",
         "status": "undefined",
         "IP": "192.168.129.8",
-        "Hostname": "tasmota-4FD8EE-6382",
+        "Hostname": "Eekhoorn_650",
         "Watt": "650"
       }
     ],
