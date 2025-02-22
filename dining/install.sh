@@ -35,6 +35,10 @@ sudo raspi-config nonint do_boot_behaviour "B2"  # https://www.raspberrypi.com/d
 echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
 echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
+echo '  # Disable Power led' >> .bashrc
+echo '  echo 0 | sudo tee /sys/class/leds/PWR/brightness' >> .bashrc
+echo '  # Disable Activity led' >> .bashrc
+echo '  echo none | sudo tee /sys/class/leds/ACT/trigger' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 
