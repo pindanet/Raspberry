@@ -8,6 +8,7 @@ As the R2 version doesn't have GPIO14 exposed you can use GPIO3 (RX) as the AM31
 | VCC |	3V3 or VCC |
 | VOUT |	GPIO3 (RX) |
 | GND  |	GND |
+
 ![AM312 Sensor](images/am312_out.jpg "AM312 Sensor")
 ![AM312 Sensor](images/am312_in.jpg "AM312 Sensor")
 
