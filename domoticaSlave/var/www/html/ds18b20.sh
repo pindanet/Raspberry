@@ -28,6 +28,12 @@ fi
 crc=$(echo "${output}" | head -1)
 if [[ $crc == *"YES" ]]; then
   temp="${output#*t=}"
+  if [ ! -f /tmp/PinDa.temp.count ]; then
+    if [[ $temp == 0 ]]; then
+      echo "Ds18b20 rejected first 0"
+      exit
+    fi
+  fi
 else
   echo "Ds18b20 CRC error"
   exit
