@@ -6,9 +6,9 @@
 
 powergpio=17
 
-if [ ! -d data/temp.log ]; then
-  mkdir -p data/temp.log
-fi
+#if [ ! -d data/temp.log ]; then
+#  mkdir -p data/temp.log
+#fi
 
 #cat /sys/devices/w1_bus_master1/28-*/temperature
 #temp=$(cat /sys/bus/w1/devices/28-*/temperature)
@@ -50,21 +50,47 @@ echo -e "$(date)" "\n$output" >> /var/www/html/data/debug.txt
 echo $temp
 echo $temp > /var/www/html/data/temp
 
+#timestamp=$(date +"%m-%d_")
+#if [ ! -f /var/www/html/data/temp.log/${timestamp}tempmax ]; then
+#  echo 0 > /var/www/html/data/temp.log/${timestamp}tempmax
+#fi
+#tempmax=$(cat /var/www/html/data/temp.log/${timestamp}tempmax)
+#if [ ! -f /var/www/html/data/temp.log/${timestamp}tempmin ]; then
+#  echo 100000 > /var/www/html/data/temp.log/${timestamp}tempmin
+#fi
+#tempmin=$(cat /var/www/html/data/temp.log/${timestamp}tempmin)
+#if [ ${temp%.*} -eq ${tempmax%.*} ] && [ ${temp#*.} \> ${tempmax#*.} ] || [ ${temp%.*} -gt ${tempmax%.*} ]; then
+#  tempmax=$temp
+#  echo $tempmax > /var/www/html/data/temp.log/${timestamp}tempmax
+#fi
+#if [ ${temp%.*} -eq ${tempmin%.*} ] && [ ${temp#*.} \< ${tempmin#*.} ] || [ ${temp%.*} -lt ${tempmin%.*} ]; then
+#  tempmin=$temp
+#  echo $tempmin > /var/www/html/data/temp.log/${timestamp}tempmin
+#fi
+
 # minimum maximum temp
-timestamp=$(date +"%m-%d_")
-if [ ! -f /var/www/html/data/temp.log/${timestamp}tempmax ]; then
-  echo 0 > /var/www/html/data/temp.log/${timestamp}tempmax
-fi
-tempmax=$(cat /var/www/html/data/temp.log/${timestamp}tempmax)
-if [ ! -f /var/www/html/data/temp.log/${timestamp}tempmin ]; then
-  echo 100000 > /var/www/html/data/temp.log/${timestamp}tempmin
-fi
-tempmin=$(cat /var/www/html/data/temp.log/${timestamp}tempmin)
-if [ ${temp%.*} -eq ${tempmax%.*} ] && [ ${temp#*.} \> ${tempmax#*.} ] || [ ${temp%.*} -gt ${tempmax%.*} ]; then
-  tempmax=$temp
-  echo $tempmax > /var/www/html/data/temp.log/${timestamp}tempmax
-fi
-if [ ${temp%.*} -eq ${tempmin%.*} ] && [ ${temp#*.} \< ${tempmin#*.} ] || [ ${temp%.*} -lt ${tempmin%.*} ]; then
-  tempmin=$temp
-  echo $tempmin > /var/www/html/data/temp.log/${timestamp}tempmin
+logfile="/var/www/html/data/temp.log"
+month=$(date +"%m")
+day=$(date +"%d")
+timestamp="${month}/${day}"
+if [ -f "${logfile}" ]; then
+  dateminmax=$(grep "^${timestamp}," ${logfile})
+  if [ -z ${dateminmax} ]; then # first entry for date
+    echo "${timestamp},${temp},${temp}" >> ${logfile}
+  else # adjust min and max temp
+    CSVarray=($(echo $dateminmax | tr ',' "\n"))
+    tempmin=${CSVarray[1]}
+    tempmax=${CSVarray[2]}
+    if [ ${temp%.*} -eq ${tempmax%.*} ] && [ ${temp#*.} \> ${tempmax#*.} ] || [ ${temp%.*} -gt ${tempmax%.*} ]; then
+      tempmax=$temp
+    fi
+    if [ ${temp%.*} -eq ${tempmin%.*} ] && [ ${temp#*.} \< ${tempmin#*.} ] || [ ${temp%.*} -lt ${tempmin%.*} ]; then
+      tempmin=$temp
+    fi
+    if [ ${tempmin} -lt ${CSVarray[1]} ] || [ ${tempmax} -gt ${CSVarray[2]} ]; then
+      sed -i "/${month}\/${day}/c${month}\/${day},${tempmin},${tempmax}" ${logfile}
+    fi
+  fi
+else # Initialise log file
+  echo "${timestamp},${temp},${temp}" >> $logfile
 fi
