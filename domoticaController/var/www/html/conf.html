@@ -11,11 +11,19 @@
     }
   </style>
   <script src="jsoneditor/jsoneditor.js"></script>
+  <script src="jsoneditor/FileSaver.js"></script>
+  <script src="jsoneditor/filereader.js"></script>
 </head>
 <body>
   <div id="jsoneditor" style="width: 450px; height: 800px"></div>
-  <div id="footer" style="text-align: right;"><button style="margin-right: 1em;">Save</button> <button>Close</button></div>
+  <div id="footer" style="text-align: right; color: white;">
+    <label for="loadDocument">Upload: </label><input type="file" style="margin-right: 1em;" id="loadDocument"></input>
+    <button style="margin-right: 1em;" id="saveDocument">Download</button>
+    <button style="margin-right: 1em;" id="sendDocument">OK</button>
+    <button onclick="window.location.href = '/';">Cancel</button>
+  </div>
   <script>
+    var editor;
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function(e) {
       if (this.status == 200) {
@@ -24,7 +32,7 @@
         const options = {
           modes: ['tree', 'text']
         }
-        const editor = new JSONEditor(container, options)
+        editor = new JSONEditor(container, options)
 
         // set json
         const initialJson = JSON.parse(this.responseText);
@@ -37,6 +45,51 @@
     xhttp.open("POST", "data/conf.json");
     xhttp.send();
 
+    // Download JSON configuration
+    document.getElementById('saveDocument').onclick = function () {
+      // Save Dialog
+      let fname = window.prompt("Save as...", "conf.json")
+
+      // Check json extension in file name
+      if (fname.indexOf(".") === -1) {
+        fname = fname + ".json"
+      } else {
+        if (fname.split('.').pop().toLowerCase() === "json") {
+          // Nothing to do
+        } else {
+          fname = fname.split('.')[0] + ".json"
+        }
+      }
+      const blob = new Blob([JSON.stringify(editor.get(), null, 2)], {type: 'application/json;charset=utf-8'})
+      saveAs(blob, fname)
+    }
+    // Upload JSON configuration
+    document.getElementById('loadDocument').onclick = function () {
+      // Load a JSON document
+      FileReaderJS.setupInput(document.getElementById('loadDocument'), {
+        readAsDefault: 'Text',
+        on: {
+          load: function (event, file) {
+            editor.setText(event.target.result)
+          }
+        }
+      })
+    }
+    // Activate JSON configuration
+    document.getElementById('sendDocument').onclick = function () {
+      // Send JSON configuration to Pindadomo, Pindakeuken, PindaDining, PindaAlarmclock
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "sendConf.php", true);
+      xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+      xhr.onload = function(e) {
+        if (this.status == 200) {
+          console.log(this.responseText);
+        }
+      };
+      xhr.send(JSON.stringify(editor.get(), null, 2));
+console.log("Send JSON configuration to Pindadomo, Pindakeuken, PindaDining, PindaAlarmclock");
+//      window.location.href = "/";
+    }
   </script>
 </body>
 </html>
