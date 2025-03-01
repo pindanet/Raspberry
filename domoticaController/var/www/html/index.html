@@ -118,6 +118,8 @@
   <a href="javascript:location.reload();scroll(0,0)"><img class="menubutton" src="emoji/refresh.svg"></a>
   <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -r now');" src="emoji/reboot.svg">
   <img class="menubutton" onclick="clearTimeout(startTimer);cli('sudo', '/sbin/shutdown -h now');" src="emoji/shutdown.svg">
+  <p style="font-size: x-large;">Voor de Domotica instellingen surf je best vanaf een ander apparaat in dit netwerk naar <a href="http://pindadomo.local/conf.html">http://pindadomo.local/conf.html</a></p>
+<!--
   <img class="menubutton" onclick="saveConfig();" src="emoji/save.svg">
   <h1><img src="emoji/location.svg"> Locatie</h1>
   <label for="location>Latitude">Latitude:
@@ -185,6 +187,7 @@
   </label>
   <h1><img src="emoji/light_bulb.svg"> Timers</h1>
   <div id="timers"></div>
+-->
 </div>
 <div id="miniclock" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('minitemp').style.display = 'none';" style="display:none">20:00</div>
 <div id="minitemp" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('miniclock').style.display = 'none';" style="display:none">20.0</div>
