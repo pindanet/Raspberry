@@ -12,12 +12,12 @@ GND (9) > GND (Black)<br>
 GPIO17 (11) > Vdd (Red)
 
 ### PIR1 AM312
-3v3 (1) > Vcc (Orange)<br>
+5v (4) > Vcc (Orange)<br>
 Gnd (6) > Gnd (Brown)<br>
 GPIO14 (8) > Output (Green)
 
 ### PIR2 AM312
-3v3 (1) > Vcc (Orange)<br>
+5v (4) > Vcc (Orange)<br>
 Gnd (6) > Gnd (Brown)<br>
 GPIO24 (18) > Output (Green)
 
