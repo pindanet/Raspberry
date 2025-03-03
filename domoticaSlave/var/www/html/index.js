@@ -339,8 +339,8 @@ function startMotion() {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
 //      const output = JSON.parse(this.responseText);
-//console.log(this.responseText);
       if (this.responseText.includes(" hi ")) { // Motion detected
+//console.log(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), this.responseText);
         if (typeof screenTimer != 'undefined') {
           clearTimeout(screenTimer);
         }
