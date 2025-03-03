@@ -298,7 +298,7 @@
     "tempCorrection": 0.6,
     "mode": "Auto",
     "tempOffset": "0",
-    "light": "TVlamp",
+    "light": "Keukenlamp",
     "heater": [
       {
         "name": "Eekhoorn",
