@@ -23,6 +23,18 @@
     <button onclick="window.location.href = '/';">Cancel</button>
   </div>
   <script>
+    // define a function that converts a string to hex
+    const stringToHex = (str) => {
+      let hex = '';
+      for (let i = 0; i < str.length; i++) {
+        const charCode = str.charCodeAt(i);
+        const hexValue = charCode.toString(16);
+
+        // Pad with zeros to ensure two-digit representation
+        hex += hexValue.padStart(2, '0');
+      }
+      return hex;
+    };
     var editor;
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function(e) {
@@ -77,17 +89,27 @@
     }
     // Activate JSON configuration
     document.getElementById('sendDocument').onclick = function () {
-      // Send JSON configuration to Pindadomo, Pindakeuken, PindaDining, PindaAlarmclock
+      // Send JSON configuration to Pindadomo, Pindakeuken, PindaAlarmclock
       var xhr = new XMLHttpRequest();
       xhr.open('POST', "sendConf.php", true);
       xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
       xhr.onload = function(e) {
         if (this.status == 200) {
           console.log(this.responseText);
+
+          // Send to pindakeuken.local
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', "cli.php", true);
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhr.onload = function(e) {
+            if (this.status == 200) {
+              console.log("PindaKeuken: ", this.responseText);
+            }
+          };
+          xhr.send("cmd=wget&params="+stringToHex("-q -O- --post-file data/conf.json -H 'http://pindakeuken.local/sendconf.php' --header 'content-type: application/json'"));
         }
       };
       xhr.send(JSON.stringify(editor.get(), null, 2));
-console.log("Send JSON configuration to Pindadomo, Pindakeuken, PindaDining, PindaAlarmclock");
 //      window.location.href = "/";
     }
   </script>
