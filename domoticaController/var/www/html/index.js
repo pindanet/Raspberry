@@ -79,6 +79,19 @@ console.log("TasmotaScanner in " + ((new Date().getTime() - tasmotaScannerTimer.
   document.getElementById('weather').contentDocument.location.href = "meteogram/meteogram.html?lat=" + conf.location.Latitude + "&lon=" + conf.location.Longitude + "&alt=" + conf.location.Altitude;
 }
 function saveVariable() {
+console.log(variable);
+  for (i in conf.rooms) {
+    variable[conf.rooms[i]].mode = conf[conf.rooms[i]].mode;
+    variable[conf.rooms[i]].tempManual = conf[conf.rooms[i]].tempManual;
+  }
+
+  if (typeof conf.thermostatDisabled !== 'undefined') {
+    variable.thermostatDisabled = conf.thermostatDisabled;
+  }
+  variable.clockyear = document.getElementById("clockyear").innerHTML;
+
+console.log(variable);
+
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "sendVariable.php", true);
   xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -315,27 +328,35 @@ function getApp(id) {
 }
 waitMinute=0;
 function gotoSleep() {
-      // Backlight uitschakelen
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', "cli.php", true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.onload = function(e) {
-        if (this.status == 200) { //Sleep commands
-          thermostatUI(event, 'Auto', 'livingtemp');
-          thermostatUI(event, 'Auto', 'diningtemp');
-          thermostatUI(event, 'Auto', 'kitchentemp');
-          radioStop(event);
-          // network leds out
-        }
-      };
-      xhr.send("cmd=echo&params="+stringToHex("1 > /sys/class/backlight/rpi_backlight/bl_power"));
+  if (window.location.hostname === 'localhost') {
+    // Backlight uitschakelen
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function(e) {
+      if (this.status == 200) { //Sleep commands
+        thermostatUI(event, 'Auto', 'livingtemp');
+        thermostatUI(event, 'Auto', 'diningtemp');
+        thermostatUI(event, 'Auto', 'kitchentemp');
+        radioStop(event);
+        // network leds out
+      }
+    };
+    xhr.send("cmd=echo&params="+stringToHex("1 > /sys/class/backlight/rpi_backlight/bl_power"));
+  } else {
+    console.log('Remote gotoSleep()');
+  }
 }
 function wakeup() {
-  // Backlight inschakelen
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("cmd=echo&params="+stringToHex("0 > /sys/class/backlight/rpi_backlight/bl_power"));
+  if (window.location.hostname === 'localhost') {
+    // Backlight inschakelen
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send("cmd=echo&params="+stringToHex("0 > /sys/class/backlight/rpi_backlight/bl_power"));
+  } else {
+    console.log('Remote wakeup()');
+  }
 }
 function activateAbsent(room, tempThermostat, mode, id) {
   conf[room].absentRestoreTemp = conf[room].tempWanted;
@@ -540,24 +561,28 @@ function activeHeaters(room) {
   }
 }
 function tasmotaHeater (dev, cmd, room, heater) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200) {
-      const output = JSON.parse(this.responseText);
-      if (output[0] == '{"POWER":"OFF"}') {
-        room.heater[heater].status = "off";
-        activeHeaters(room);
-        powerLog(room.heater[heater], room.heater[heater].name);
-      } else if (output[0] == '{"POWER":"ON"}') {
-        room.heater[heater].status = "on";
-        activeHeaters(room);
-        powerLog(room.heater[heater], room.heater[heater].name);
+  if (window.location.hostname === 'localhost') {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        const output = JSON.parse(this.responseText);
+        if (output[0] == '{"POWER":"OFF"}') {
+          room.heater[heater].status = "off";
+          activeHeaters(room);
+          powerLog(room.heater[heater], room.heater[heater].name);
+        } else if (output[0] == '{"POWER":"ON"}') {
+          room.heater[heater].status = "on";
+          activeHeaters(room);
+          powerLog(room.heater[heater], room.heater[heater].name);
+        }
       }
-    }
-  };
-  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
+    };
+    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
+  } else {
+    console.log('Remote tasmotaHeater()');
+  }
 }
 //function getTemp(host, cmd, room) {
 //  var xhr = new XMLHttpRequest();
@@ -831,34 +856,38 @@ var morningLightsOut;
 var eveningLightsOn;
 //var bedTime;
 function lightSwitch(name, cmd) {
-  var tasmotaSwitch = conf.switch[name];
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200) {
-      if (this.responseText != "[]") { // no response
-        const output = JSON.parse(this.responseText);
-        if (output[0].includes(':"OFF"}')) {
-          tasmotaSwitch.status = "Off";
-        } else if (output[0].includes(':"ON"}')) {
-          tasmotaSwitch.status = "On";
-        }
-        powerLog(tasmotaSwitch, name);
-        if (cmd == "Toggle") {
-          if (Object.keys(tasmotaSwitch).includes("manual")) {
-            delete tasmotaSwitch.manual;
-          } else {
-            tasmotaSwitch.manual = tasmotaSwitch.status;
+  if (window.location.hostname === 'localhost') {
+    var tasmotaSwitch = conf.switch[name];
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        if (this.responseText != "[]") { // no response
+          const output = JSON.parse(this.responseText);
+          if (output[0].includes(':"OFF"}')) {
+            tasmotaSwitch.status = "Off";
+          } else if (output[0].includes(':"ON"}')) {
+            tasmotaSwitch.status = "On";
+          }
+          powerLog(tasmotaSwitch, name);
+          if (cmd == "Toggle") {
+            if (Object.keys(tasmotaSwitch).includes("manual")) {
+              delete tasmotaSwitch.manual;
+            } else {
+              tasmotaSwitch.manual = tasmotaSwitch.status;
+            }
           }
         }
       }
+    };
+    if (typeof tasmotaSwitch.Channel !== 'undefined') {
+      xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch.IP + "/cm?cmnd=Power"+ tasmotaSwitch.Channel + "%20" + cmd));
+    } else {
+      xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch.IP + "/cm?cmnd=Power%20" + cmd));
     }
-  };
-  if (typeof tasmotaSwitch.Channel !== 'undefined') {
-    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch.IP + "/cm?cmnd=Power"+ tasmotaSwitch.Channel + "%20" + cmd));
   } else {
-    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch.IP + "/cm?cmnd=Power%20" + cmd));
+    console.log('Remote lichtSwitch()');
   }
 }
 function getEventAlarm(nowDate, ref) {
