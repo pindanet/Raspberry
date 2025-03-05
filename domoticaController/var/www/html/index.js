@@ -540,6 +540,9 @@ function getConf() { // Get configuration
       }
       brightness();
       setTimeout(getConf, 60000); // Every minute
+      if (window.location.hostname === 'localhost') {
+        getRemote();
+      }
     }
   }
   xhttp.open("POST", "data/conf.json");
@@ -1373,4 +1376,47 @@ function toTop() {
   window.scrollTo(0, 0);
   document.getElementById('miniclock').style.display = 'none';
   document.getElementById('minitemp').style.display = 'none';
+}
+var remoteModified=""
+function getRemote() {
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function(e) {
+    if (this.status === 200) {
+      if (remoteModified == "") {
+        remoteModified = this.getResponseHeader('Last-Modified');
+      }
+      if (remoteModified !== this.getResponseHeader('Last-Modified')) { // new remote click
+console.log("Remote click: " + this.responseText);
+        remoteModified = this.getResponseHeader('Last-Modified');
+      }
+    } else { // initialise
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "cli.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.send("cmd=echo&params="+stringToHex("'miniclock' > data/remote.click"));
+    }
+  }
+  xhttp.open("POST", "data/remote.click");
+  xhttp.responseType = "text";
+  xhttp.send();
+}
+function remote(event) {
+  if (window.location.hostname === 'localhost') {
+    switch(event.target.id) {
+      case "clock":
+        wakeup();
+        document.getElementById('miniclock').style.display = '';
+        document.getElementById('minitemp').style.display = '';
+        location.href = "#menu";
+        break;
+      default:
+        console.log(event.target.id);
+    }
+  } else {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send("cmd=echo&params="+stringToHex("'" + event.target.id + "' > data/remote.click"));
+//    console.log(event.target.id);
+  }
 }
