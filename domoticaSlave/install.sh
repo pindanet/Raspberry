@@ -162,8 +162,8 @@ cat > checkAvahi.sh <<EOF
 #!/bin/bash
 # Check WiFi connection
 if ! ping -c 1 $router; then
-  echo "Restart NetworkManager"
-  systemctl restart NetworkManager.service
+  echo "$(date) Restart Network" >> /var/www/html/data/debug.txt
+  /sbin/shutdown -r now
   sleep 10
 fi
 # Check Avahi conflict
