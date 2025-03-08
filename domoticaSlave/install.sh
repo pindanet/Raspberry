@@ -28,7 +28,7 @@ sudo apt install labwc seatd xdg-user-dirs libgl1-mesa-dri -y
 mkdir -p .config/labwc
 sudo raspi-config nonint do_boot_behaviour "B2"  # https://www.raspberrypi.com/documentation/computers/configuration.html
 echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
-echo '  echo "SSH"' >> .bashrc
+echo '  tail /var/www/html/data/debug.txt' >> .bashrc
 echo 'else' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
