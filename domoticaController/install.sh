@@ -40,6 +40,7 @@ sudo raspi-config nonint do_boot_behaviour "B2"  # https://www.raspberrypi.com/d
 echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
 echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
+echo '  php /var/www/html/websocket.php &' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 
