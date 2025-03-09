@@ -40,7 +40,6 @@ sudo raspi-config nonint do_boot_behaviour "B2"  # https://www.raspberrypi.com/d
 echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
 echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
-echo '  php /var/www/html/websocket.php &' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 
@@ -84,6 +83,8 @@ cat > PindaNetAutostart.sh <<EOF
 /usr/bin/pinctrl set $powergpio op dh
 # PullUp 1-wire Data
 /usr/bin/pinctrl set 4 ip pu
+# Start Websocket
+php /var/www/html/websocket.php &
 # Autostart Chromium in Kiosk & Debug mode
 /bin/chromium --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
 # Give Chromium time to start
