@@ -10,9 +10,8 @@
   <script src='index.js'></script>
 </head>
 <body>
-<!--a href="#menu" onclick="wakeup();document.getElementById('miniclock').style.display = '';document.getElementById('minitemp').style.display = '';"-->
 <div id="content">
-  <div id="clockday" onclick="toggleThermostat(event);">Zaterdag 19.4 °C</div>
+  <div id="clockday" onclick="remote(event);">Zaterdag 19.4 °C</div>
   <div id="clock" onclick="remote(event);">20:23</div>
 <!--  <a href="#menu" onclick="wakeup();document.getElementById('miniclock').style.display = '';document.getElementById('minitemp').style.display = '';">-->
 <!--    <div id="clock">20:23</div>-->
@@ -190,7 +189,7 @@
   <div id="timers"></div>
 -->
 </div>
-<div id="miniclock" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('minitemp').style.display = 'none';" style="display:none">20:00</div>
+<div id="miniclock" onclick="remote(event);" style="display:none">20:00</div>
 <div id="minitemp" onclick="window.scrollTo(0,0); this.style.display = 'none'; document.getElementById('miniclock').style.display = 'none';" style="display:none">20.0</div>
 </body>
 </html>
