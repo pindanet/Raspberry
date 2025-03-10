@@ -4,7 +4,7 @@
 // config.html
 // Clear all buttons in thermostat, before setting
 // Done
-// Absent-, Sleep temp retore original temp
+// Absent-, Sleep temp restore original temp
 
 var tempIncrDecr = 0.5;
 // define a function that converts a string to hex
@@ -491,6 +491,7 @@ function getVariable() { // Get Variables
     if (this.status == 200) {
       variable = JSON.parse(this.responseText);
       getConf();
+      connect(); // Activate Webconnect
     }
   }
   xhttp.open("POST", "data/variable.json");
@@ -540,9 +541,9 @@ function getConf() { // Get configuration
       }
       brightness();
       setTimeout(getConf, 60000); // Every minute
-      if (window.location.hostname === 'localhost') {
-        getRemote();
-      }
+//      if (window.location.hostname === 'localhost') {
+//        getRemote();
+//      }
     }
   }
   xhttp.open("POST", "data/conf.json");
@@ -1377,46 +1378,47 @@ function toTop() {
   document.getElementById('miniclock').style.display = 'none';
   document.getElementById('minitemp').style.display = 'none';
 }
-var remoteModified=""
-function getRemote() {
-  const xhttp = new XMLHttpRequest();
-  xhttp.onload = function(e) {
-    if (this.status === 200) {
-      if (remoteModified == "") {
-        remoteModified = this.getResponseHeader('Last-Modified');
-      }
-      if (remoteModified !== this.getResponseHeader('Last-Modified')) { // new remote click
-console.log("Remote click: " + this.responseText);
-        remoteModified = this.getResponseHeader('Last-Modified');
-      }
-    } else { // initialise
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', "cli.php", true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.send("cmd=echo&params="+stringToHex("'miniclock' > data/remote.click"));
-    }
-  }
-  xhttp.open("POST", "data/remote.click");
-  xhttp.responseType = "text";
-  xhttp.send();
+
+let socket;
+function connect() {
+  socket = new WebSocket("ws://pindadomo.local:8080");
+//  socket = new WebSocket("ws://192.168.129.2:8080");
+  socket.onopen = function(event) {
+    console.log("Connected to server");
+  };
+  socket.onmessage = function(event) {
+    console.log("Message received: " + event.data);
+    document.getElementById(event.data).click();
+  };
+  socket.onclose = function(event) {
+    console.log("Disconnected from server");
+  };
 }
+function sendMessage(message) {
+  socket.send(message);
+  console.log("Message sent: " + message);
+}
+
 function remote(event) {
-  if (window.location.hostname === 'localhost') {
-    switch(event.target.id) {
-      case "clock":
-        wakeup();
-        document.getElementById('miniclock').style.display = '';
-        document.getElementById('minitemp').style.display = '';
-        location.href = "#menu";
-        break;
-      default:
-        console.log(event.target.id);
-    }
-  } else {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', "cli.php", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send("cmd=echo&params="+stringToHex("'" + event.target.id + "' > data/remote.click"));
-//    console.log(event.target.id);
+  switch(event.target.id) {
+    case "clock":
+      wakeup();
+      document.getElementById('miniclock').style.display = '';
+      document.getElementById('minitemp').style.display = '';
+      location.href = "#menu";
+      break;
+    case "miniclock":
+      window.scrollTo(0,0);
+      event.target.style.display = 'none';
+      document.getElementById('minitemp').style.display = 'none';
+      break;
+    case "clockday":
+      toggleThermostat(event);
+      break;
+    default:
+      console.log(event.target.id);
+  }
+  if (window.location.hostname !== 'localhost') {
+    sendMessage(event.target.id);
   }
 }
