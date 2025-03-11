@@ -1415,6 +1415,23 @@ function remote(event) {
     case "clockday":
       toggleThermostat(event);
       break;
+    case "clockyear":
+      toggleAvailable(event);
+      break;
+    case "menuradio":
+      radioVolume(event,conf.radio.volume);
+      location.href = "#radio";
+      break;
+    case "menuweather":
+      document.getElementById('weather').contentDocument.location.reload(true);
+      location.href = "#weather";
+      break;
+    case "menuthermostatUI":
+      location.href = "#thermostatUI";
+      break;
+    case "menulights":
+      location.href = "#lights";
+      break;
     default:
       console.log(event.target.id);
   }
