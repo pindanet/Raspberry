@@ -20,8 +20,8 @@
   <img id="menuweather" class="menubutton" onclick="remote(event);" src="emoji/weather.svg">
   <img id="menuthermostatUI" class="menubutton" onclick="remote(event);" src="emoji/thermostat.svg">
   <img id="menulights" class="menubutton" onclick="remote(event);" src="emoji/light_bulb.svg">
-  <a><img class="menubutton" onclick="gotoSleep();" src="emoji/sleep.svg"></a>
-  <a href="#configUI"><img class="menubutton" onclick="getConfig();" src="emoji/config.svg"></a>
+  <img class="menubutton" onclick="gotoSleep();" src="emoji/sleep.svg">
+  <img class="menubutton" onclick="location.href='#configUI'" src="emoji/config.svg">
 </div>
 <div id="radio">
   <h1><img src="emoji/radio.svg">His Master's Voice</h1>
@@ -41,10 +41,10 @@
   <img onclick="radioPlay(event, 'willy');" src="radiologos/willy.svg">
   <br>
   <div>
-  <img class="imgbutton" onclick="radioStop(event);" src="emoji/stop.svg">
-  <img class="imgbutton" onclick="radioVolume(event, 'voldown');" src="emoji/voldown.svg">
+  <img id="radioStop" class="imgbutton" onclick="remote(event);" src="emoji/stop.svg">
+  <img id="radioVolumeDown" class="imgbutton" onclick="remote(event);" src="emoji/voldown.svg">
   <span class="terminalbox" id="volumeinfo"></span>
-  <img class="imgbutton" onclick="radioVolume(event, 'volup');" src="emoji/volup.svg">
+  <img id="radioVolumeUp" class="imgbutton" onclick="remote(event);" src="emoji/volup.svg">
   </div>
   <br>
   <p class="terminalbox" style="text-align: center; display: inline-block; max-width: 736px;" id="radioinfo"></p>
@@ -52,61 +52,61 @@
 <div id="thermostatUI">
   <div class="room">
     <h1><img src="emoji/thermostat.svg"> Living <span id="livingRoomTemp">--.- °C</span></h1>
-    <button id="livingAuto" onclick="thermostatUI(event, 'Auto', 'livingtemp');">Auto</button>
-    <button id="livingOff" onclick="thermostatUI(event, 'Off', 'livingtemp');">Uit</button>
-    <button id="livingManualAux" onclick="thermostatUI(event, 'Manual', 'livingaux');"><span id="livingaux">17.5</span> °C</button>
-    <button id="livingManual" onclick="thermostatUI(event, 'Manual', 'livingtemp');"><span id="livingtemp">20.0</span> °C</button>
-    <button onclick="thermostatUI(event, 'Incr', 'livingtemp');">+</button>
-    <button onclick="thermostatUI(event, 'Decr', 'livingtemp');">-</button>
+    <button id="livingAuto" onclick="remote(event); thermostatUI(event, 'Auto', 'livingtemp');">Auto</button>
+    <button id="livingOff" onclick="remote(event); thermostatUI(event, 'Off', 'livingtemp');">Uit</button>
+    <button id="livingManualAux" onclick="remote(event); thermostatUI(event, 'Manual', 'livingaux');"><span id="livingaux">17.5</span> °C</button>
+    <button id="livingManual" onclick="remote(event); thermostatUI(event, 'Manual', 'livingtemp');"><span id="livingtemp">20.0</span> °C</button>
+    <button id="livingIncr" onclick="remote(event); thermostatUI(event, 'Incr', 'livingtemp');">+</button>
+    <button id="livingDecr" onclick="remote(event); thermostatUI(event, 'Decr', 'livingtemp');">-</button>
   </div>
   <div class="room">
     <h1><img src="emoji/thermostat.svg"> Dining <span id="diningRoomTemp">--.- °C</span></h1>
-    <button id="diningAuto" onclick="thermostatUI(event, 'Auto', 'diningtemp');">Auto</button>
-    <button id="diningOff" onclick="thermostatUI(event, 'Off', 'diningtemp');">Uit</button>
-    <button id="diningManualAux" onclick="thermostatUI(event, 'Manual', 'diningaux');"><span id="diningaux">17.0</span> °C</button>
-    <button id="diningManual" onclick="thermostatUI(event, 'Manual', 'diningtemp');"><span id="diningtemp">20.0</span> °C</button>
-    <button onclick="thermostatUI(event, 'Incr', 'diningtemp');">+</button>
-    <button onclick="thermostatUI(event, 'Decr', 'diningtemp');">-</button>
+    <button id="diningAuto" onclick="remote(event); thermostatUI(event, 'Auto', 'diningtemp');">Auto</button>
+    <button id="diningOff" onclick="remote(event); thermostatUI(event, 'Off', 'diningtemp');">Uit</button>
+    <button id="diningManualAux" onclick="remote(event); thermostatUI(event, 'Manual', 'diningaux');"><span id="diningaux">17.0</span> °C</button>
+    <button id="diningManual" onclick="remote(event); thermostatUI(event, 'Manual', 'diningtemp');"><span id="diningtemp">20.0</span> °C</button>
+    <button id="diningIncr" onclick="remote(event); thermostatUI(event, 'Incr', 'diningtemp');">+</button>
+    <button id="diningDecr" onclick="remote(event); thermostatUI(event, 'Decr', 'diningtemp');">-</button>
   </div>
   <div class="room">
     <h1><img src="emoji/thermostat.svg"> Keuken <span id="kitchenRoomTemp">--.- °C</span></h1>
-    <button id="kitchenAuto" onclick="thermostatUI(event, 'Auto', 'kitchentemp');">Auto</button>
-    <button id="kitchenOff" onclick="thermostatUI(event, 'Off', 'kitchentemp');">Uit</button>
-    <button id="kitchenManual"onclick="thermostatUI(event, 'Manual', 'kitchentemp');"><span id="kitchentemp">17.5</span> °C</button>
-    <button onclick="thermostatUI(event, 'Incr', 'kitchentemp');">+</button>
-    <button onclick="thermostatUI(event, 'Decr', 'kitchentemp');">-</button>
+    <button id="kitchenAuto" onclick="remote(event); thermostatUI(event, 'Auto', 'kitchentemp');">Auto</button>
+    <button id="kitchenOff" onclick="remote(event); thermostatUI(event, 'Off', 'kitchentemp');">Uit</button>
+    <button id="kitchenManual" onclick="remote(event); thermostatUI(event, 'Manual', 'kitchentemp');"><span id="kitchentemp">17.5</span> °C</button>
+    <button id="kitchenIncr" onclick="remote(event); thermostatUI(event, 'Incr', 'kitchentemp');">+</button>
+    <button id="kitchenDecr" onclick="remote(event); thermostatUI(event, 'Decr', 'kitchentemp');">-</button>
   </div>
 </div>
 <iframe id="weather" src="meteogram/meteogram.html" height="480" width="800" style="border:none; padding: 0; margin: 0;"></iframe>
 <div id="lights">
   <h1><img src="emoji/light_bulb.svg">Verlichting</h1>
   <figure>
-    <img onclick="lightSwitch('Haardlamp','Toggle');" src="emoji/fireplace.svg">
+    <img id="Haardlamp" onclick="remote(event);" src="emoji/fireplace.svg">
     <figcaption>Haard</figcaption>
   </figure>
   <figure>
-    <img onclick="lightSwitch('TVlamp','Toggle');" src="emoji/lcdmonitor.svg">
+    <img id="TVlamp" onclick="remote(event);" src="emoji/lcdmonitor.svg">
     <figcaption>TV</figcaption>
   </figure>
   <figure>
-    <img onclick="lightSwitch('Keukenlamp','Toggle');" src="emoji/kitchen.svg">
+    <img id="Keukenlamp" onclick="remote(event);" src="emoji/kitchen.svg">
      <figcaption>Keuken</figcaption>
   </figure>
   </figure>
   <figure>
-    <img onclick="lightSwitch('Apotheek','Toggle');" src="emoji/medicinecabinet.png">
+    <img id="Apotheek" onclick="remote(event);" src="emoji/medicinecabinet.png">
      <figcaption>Apotheek</figcaption>
   </figure>
   <figure>
-    <img onclick="lightSwitch('Kerst','Toggle');" src="emoji/christmassspheres.svg">
+    <img id="Kerst" onclick="remote(event);" src="emoji/christmassspheres.svg">
      <figcaption>Kerst</figcaption>
   </figure>
   <figure>
-    <img onclick="lightSwitch('LivingVoor','Toggle');" src="emoji/ledlamp.svg">
+    <img id="LivingVoor" onclick="remote(event);" src="emoji/ledlamp.svg">
      <figcaption>Living Voor</figcaption>
   </figure>
   <figure>
-    <img onclick="lightSwitch('LivingZij','Toggle');" src="emoji/ledlampzij.svg">
+    <img id="LivingZij" onclick="remote(event);" src="emoji/ledlampzij.svg">
      <figcaption>Living Zij</figcaption>
   </figure>
 </div>
