@@ -1,7 +1,6 @@
 // Todo
 // Alarm Temperature
 // Clean Up
-// config.html
 // Clear all buttons in thermostat, before setting
 // Done
 // Absent-, Sleep temp restore original temp
@@ -482,12 +481,17 @@ function startTime() {
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
 function getVariable() { // Get Variables
+  connect(); // Activate Webconnect
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function(e) {
     if (this.status == 200) {
       variable = JSON.parse(this.responseText);
       getConf();
-      connect(); // Activate Webconnect
+      if (window.location.hostname !== 'localhost') {
+        const message = {};
+        message.function = "heaterColors";
+        sendMessage(JSON.stringify(message));
+      }
     }
   }
   xhttp.open("POST", "data/variable.json");
@@ -537,9 +541,6 @@ function getConf() { // Get configuration
       }
       brightness();
       setTimeout(getConf, 60000); // Every minute
-//      if (window.location.hostname === 'localhost') {
-//        getRemote();
-//      }
     }
   }
   xhttp.open("POST", "data/conf.json");
@@ -554,34 +555,43 @@ function activeHeaters(room) {
       activeHeaters++;
     }
   }
+  const message = {};
+  message.function = "activeHeaters";
+  message.id = room.htmlElementId;
   if (activeHeaters > -1) {
     document.getElementById(room.htmlElementId).style.color = room.heater[activeHeaters].color;
+    message.color = room.heater[activeHeaters].color; 
+    sendMessage(JSON.stringify(message));
   } else {
     document.getElementById(room.htmlElementId).style.color = "";
+    message.color = ""; 
+    sendMessage(JSON.stringify(message));
   }
 }
 function tasmotaHeater (dev, cmd, room, heater) {
-  if (window.location.hostname === 'localhost') {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', "cli.php", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onload = function(e) {
-      if (this.status == 200) {
-        const output = JSON.parse(this.responseText);
-        if (output[0] == '{"POWER":"OFF"}') {
-          room.heater[heater].status = "off";
-          activeHeaters(room);
-          powerLog(room.heater[heater], room.heater[heater].name);
-        } else if (output[0] == '{"POWER":"ON"}') {
-          room.heater[heater].status = "on";
-          activeHeaters(room);
-          powerLog(room.heater[heater], room.heater[heater].name);
+  if (! Object.keys(room.heater[heater]).includes("manual")) {
+    if (window.location.hostname === 'localhost') {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "cli.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function(e) {
+        if (this.status == 200) {
+          const output = JSON.parse(this.responseText);
+          if (output[0] == '{"POWER":"OFF"}') {
+            room.heater[heater].status = "off";
+            activeHeaters(room);
+            powerLog(room.heater[heater], room.heater[heater].name);
+          } else if (output[0] == '{"POWER":"ON"}') {
+            room.heater[heater].status = "on";
+            activeHeaters(room);
+            powerLog(room.heater[heater], room.heater[heater].name);
+          }
         }
-      }
-    };
-    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
-  } else {
-    console.log('Remote tasmotaHeater()');
+      };
+      xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
+    } else {
+      console.log('Remote tasmotaHeater()');
+    }
   }
 }
 //function getTemp(host, cmd, room) {
@@ -1099,277 +1109,6 @@ function brightness() {
   xhr.send("cmd=cat&params="+stringToHex("/sys/class/i2c-adapter/i2c-1/1-0023/iio:device0/in_illuminance_raw"));
 }
 
-//var preKey = "";
-//var devOptionsHTML = "";
-//function devOptions() {
-//  for (const [key, value] of Object.entries(config.switch)) {
-//    devOptionsHTML += '\n       <option value="' + key + '">' + key + '</option>';
-//  }
-//}
-//function inputBegin(preKey, key, i, configTree, prop, txt) {
-//  var HTMLBegin =  '<label for="' + preKey + key + '>' + i + '>' + prop + '">' + txt;
-//  HTMLBegin += '     <select id="' + preKey + key + '>' + i + '>' + prop + '" onchange="selectInputBegin(' + i + ')">';
-//  HTMLBegin += '       <option value="breakfast">Ontbijt</option>';
-//  HTMLBegin += '       <option value="eveningLightsOn">Valavond</option>';
-//  HTMLBegin += '       <option value="time">Tijdstip</option>';
-//  HTMLBegin += '     </select>';
-//  if (config[configTree[0]][configTree[1]][i][prop].indexOf(':') > -1) { // time
-//    HTMLBegin += '</label><input type="time" id="' + preKey + key + '>' + i + '>' + prop + 'time" value="' + config[configTree[0]][configTree[1]][i][prop] + '">';
-//    HTMLBegin = HTMLBegin.replace(' value="time"', ' selected value="time"');
-//  } else { // placeholder
-//    HTMLBegin += '</label><input type="time" id="' + preKey + key + '>' + i + '>' + prop + 'time" style="visibility: hidden">';
-//    HTMLBegin = HTMLBegin.replace(' value="' + config[configTree[0]][configTree[1]][i][prop] + '"', ' selected value="' + config[configTree[0]][configTree[1]][i][prop] + '"');
-//  }
-//  HTMLBegin += '</label> ';
-//  return HTMLBegin;
-//}
-//function inputEnd(preKey, key, i, configTree, prop, txt) {
-//  var HTMLEnd =  '<label for="' + preKey + key + '>' + i + '>' + prop + '">' + txt;
-//  HTMLEnd += '     <select id="' + preKey + key + '>' + i + '>' + prop + '" onchange="selectInputEnd(' + i + ')">';
-//  HTMLEnd += '       <option value="morningLightsOut">Na ontbijt</option>';
-//  HTMLEnd += '       <option value="bedTime">Bedtijd</option>';
-//  HTMLEnd += '       <option value="time">Tijdstip</option>';
-//  HTMLEnd += '     </select>';
-//  if (config[configTree[0]][configTree[1]][i][prop].indexOf(':') > -1) { // time
-//    HTMLEnd += '</label><input type="time" id="' + preKey + key + '>' + i + '>' + prop + 'time" value="' + config[configTree[0]][configTree[1]][i][prop] + '">';
-//    HTMLEnd = HTMLEnd.replace(' value="time"', ' selected value="time"');
-//  } else { // placeholder
-//    HTMLEnd += '</label><input type="time" id="' + preKey + key + '>' + i + '>' + prop + 'time" style="visibility: hidden">';
-//    HTMLEnd = HTMLEnd.replace(' value="' + config[configTree[0]][configTree[1]][i][prop] + '"', ' selected value="' + config[configTree[0]][configTree[1]][i][prop] + '"');
-//  }
-//  HTMLEnd += '</label> ';
-//  return HTMLEnd;
-//}
-////ToDo functions selectInputBegin, selectInputEnd, selectInputTemp
-//function inputTemp(preKey, key, i, configTree, prop, txt) {
-//  var HTMLTemp =  '<label for="' + preKey + key + '>' + i + '>' + prop + '">' + txt;
-//  HTMLTemp += '     <select id="' + preKey + key + '>' + i + '>' + prop + '" onchange="selectInputTemp(' + i + ')">';
-//  HTMLTemp += '       <option value="tempComfort">Comfort</option>';
-//  HTMLTemp += '       <option value="tempAux">Werk</option>';
-//  HTMLTemp += '     </select>';
-//  HTMLTemp += '</label><input type="time" id="' + preKey + key + '>' + i + '>' + prop + 'time" style="visibility: hidden">';
-//  HTMLTemp = HTMLTemp.replace(' value="' + config[configTree[0]][configTree[1]][i][prop] + '"', ' selected value="' + config[configTree[0]][configTree[1]][i][prop] + '"');
-//  HTMLTemp += '</label> ';
-//  return HTMLTemp;
-//}
-//
-//function selectBegin(id) {
-//  var elem = document.getElementById("lights>timer>" + id + ">begin");
-//  if (elem.value == "time") {
-//    document.getElementById("lights>timer>" + id + ">begintime").style.visibility = "";
-//  } else {
-//    document.getElementById("lights>timer>" + id + ">begintime").style.visibility = "hidden";
-//  }
-//}
-//function selectEnd(id) {
-//  var elem = document.getElementById("lights>timer>" + id + ">end");
-//  if (elem.value == "time") {
-//    document.getElementById("lights>timer>" + id + ">endtime").style.visibility = "";
-//  } else {
-//    document.getElementById("lights>timer>" + id + ">endtime").style.visibility = "hidden";
-//  }
-//}
-//function removeTimer(id) {
-//  var tmpArray = [];
-//  for (let i = 0; i < config.lights.timer.length; i++) {
-//    if (i != id) {
-//      tmpArray.push(config.lights.timer[i]);
-//    }
-//  }
-//  config.lights.timer.pop();
-//  for (let i = 0; i < tmpArray.length; i++) {
-//    config.lights.timer[i] = tmpArray[i];
-//  }
-//  keyValuePairFuncs(config);
-//}
-//function addTimer() {
-//  config.lights.timer.push({dev:"Haardlamp", begin:"breakfast", end:"morningLightsOut"});
-//  keyValuePairFuncs(config);
-//}
-//const keyValuePairFuncs = (obj) => {
-//  if(!obj) return;  // Added a null check for  Uncaught TypeError: Cannot convert undefined or null to object
-//    configElem = document.getElementById("configUI");
-//    for (const [key, val] of Object.entries(obj)) {
-//      elem = configElem.querySelector('*[id="'+preKey+key+'"]');
-//      if (elem) {
-//        elem.value = val;
-//console.log(key, val);
-////      } else {
-////console.log(preKey+key);
-//      }
-//      if (typeof val === "object") {
-//        if (key == "timer") { // timers
-//          document.getElementById("timers").innerHTML = "";
-//          for (let i = 0; i < val.length; i++) {
-//            var HTML = i + ': ';
-//            HTML += '  <label for="lights>timer>' + i + '>dev">Apparaat';
-//            HTML += '     <select id="lights>timer>' + i + '>dev">';
-//            HTML += devOptionsHTML;
-//            HTML += '     </select>';
-//            HTML += '  </label>';
-//            HTML = HTML.replace(' value="' + config.lights.timer[i].dev + '"', ' selected value="' + config.lights.timer[i].dev + '"');
-//
-//            var HTMLBegin = '  <label for="lights>timer>' + i + '>begin">Begin';
-//            HTMLBegin += '     <select id="lights>timer>' + i + '>begin" onchange="selectBegin(' + i + ')">';
-//            HTMLBegin += '       <option value="breakfast">Ontbijt</option>';
-//            HTMLBegin += '       <option value="eveningLightsOn">Valavond</option>';
-//            HTMLBegin += '       <option value="time">Tijdstip</option>';
-//            HTMLBegin += '     </select>';
-//            if (config.lights.timer[i].begin.indexOf(':') > -1) { // time
-//              HTMLBegin += '</label><input type="time" id="lights>timer>' + i + '>begintime" value="' + config.lights.timer[i].begin + '">';
-//              HTMLBegin = HTMLBegin.replace(' value="time"', ' selected value="time"');
-//            } else { // placeholder
-//              HTMLBegin += '</label><input type="time" id="lights>timer>' + i + '>begintime" style="visibility: hidden">';
-//              HTMLBegin = HTMLBegin.replace(' value="' + config.lights.timer[i].begin + '"', ' selected value="' + config.lights.timer[i].begin + '"');
-//            }
-//            HTML += HTMLBegin;
-//
-//            var HTMLEnd = '  <label for="lights>timer>' + i + '>end">Einde';
-//            HTMLEnd += '     <select id="lights>timer>' + i + '>end" onchange="selectEnd(' + i + ')">';
-//            HTMLEnd += '       <option value="morningLightsOut">Na ontbijt</option>';
-//            HTMLEnd += '       <option value="bedTime">Bedtijd</option>';
-//            HTMLEnd += '       <option value="time">Tijdstip</option>';
-//            HTMLEnd += '     </select>';
-//            if (config.lights.timer[i].end.indexOf(':') > -1) { // time
-//              HTMLEnd += '</label><input type="time" id="lights>timer>' + i + '>endtime" value="' + config.lights.timer[i].end + '">';
-//              HTMLEnd = HTMLEnd.replace(' value="time"', ' selected value="time"');
-//            } else { // placeholder
-//              HTMLEnd += '</label><input type="time" id="lights>timer>' + i + '>endtime" style="visibility: hidden">';
-//              HTMLEnd = HTMLEnd.replace(' value="' + config.lights.timer[i].end + '"', ' selected value="' + config.lights.timer[i].end + '"');
-//            }
-//            HTML += HTMLEnd;
-//            document.getElementById("timers").innerHTML += HTML + '<button onclick="removeTimer('+ i + ');">-</button><br>';
-//          }
-//          document.getElementById("timers").innerHTML += '<br><button onclick="addTimer();">+</button><br>';
-//        } else if (key == "heater") {
-//          document.getElementById(preKey + key + "id").innerHTML = "";
-//          for (let i = 0; i < val.length; i++) {
-//            var configId = preKey + key;
-//            var configTree = configId.split(">");
-//            var HTML =  '<label for="' + preKey + key + '<' + i + '>name">Naam:';
-//            HTML += '  <input type="text" id="' + preKey + key + '>name" value="' + config[configTree[0]][configTree[1]][i].name + '">';
-//            HTML += '</label> ';
-//            HTML += '<label for="' + preKey + key + '<' + i + '>IP">IP:';
-//            HTML += '  <input type="text" id="' + preKey + key + '>name" value="' + config[configTree[0]][configTree[1]][i].IP + '">';
-//            HTML += '</label> ';
-//            HTML += '<label for="' + preKey + key + '<' + i + '>Watt">Vermogen:';
-//            HTML += '  <input type="text" size="4" id="' + preKey + key + '>Watt" value="' + config[configTree[0]][configTree[1]][i].Watt + '"> Watt';
-//            HTML += '</label><br>';
-//            document.getElementById(preKey + key + "id").innerHTML += HTML;
-//          }
-//        } else if (key == "thermostat") {
-//          document.getElementById(preKey + key + "id").innerHTML = "";
-//          for (let i = 0; i < val.length; i++) {
-//            var configId = preKey + key;
-//            var configTree = configId.split(">");
-//            var HTML = inputBegin(preKey, key, i, configTree, "begin", "Van ");
-//            HTML += inputEnd(preKey, key, i, configTree, "end", "tot ");
-//            HTML += inputTemp(preKey, key, i, configTree, "temp", "Temp: ");
-//            HTML += '<br>';
-//
-//console.log(key, preKey, val[i].name);
-//            document.getElementById(preKey + key + "id").innerHTML += HTML;
-//          }
-//        } else {
-//          preKey += key + ">";
-//          keyValuePairFuncs(val);   // recursively call the function
-//        }
-//      }
-//    }
-//    if (preKey.indexOf('>')) {
-//      if (preKey.indexOf('>') == preKey.lastIndexOf('>')) {
-//        preKey = "";
-//      } else {
-//        preKey = preKey.substring(0, preKey.length - 1);
-//        preKey = preKey.substring(0, preKey.lastIndexOf('>') + 1);
-//      }
-//    }
-//  }
-//function getConfig() { // Get configuration
-//  const xhttp = new XMLHttpRequest();
-//  xhttp.onload = function(e) {
-//    if (this.status == 200) {
-//      config = JSON.parse(this.responseText);
-//      devOptions();
-//      keyValuePairFuncs(config);
-//    }
-//  }
-//  xhttp.open("POST", "data/conf.json");
-//  xhttp.send();
-//}
-//const keyValuePairFuncsSet = (obj) => {
-//  if(!obj) return;  // Added a null check for  Uncaught TypeError: Cannot convert undefined or null to object
-//    configElem = document.getElementById("configUI");
-//    for (const [key, val] of Object.entries(obj)) {
-//      if (typeof val === "object" && key == "timer") {
-//        var selectNodeList = configElem.querySelectorAll('*[id=timers] select');
-//        for (let i = 0; i < selectNodeList.length; i++) {
-//          var configTree = selectNodeList[i].id.split(">");
-//          elem = selectNodeList[i];
-//          if (selectNodeList[i].value == "time") {
-//            elem = document.getElementById(selectNodeList[i].id + "time");
-//          }
-//console.log(config[configTree[0]][configTree[1]][configTree[2]][configTree[3]], elem.value);
-//          config[configTree[0]][configTree[1]][configTree[2]][configTree[3]] = elem.value;
-//        }
-//      } else {
-//        elem = configElem.querySelector('*[id="' + preKey + key+'"]');
-//        if (elem) {
-//          var configTreeObj = config;
-//          if (preKey.indexOf('>')) {
-//            const configTree = preKey.split(">");
-//            for (let i = 0; i < configTree.length - 1; i++) {
-//              configTreeObj = configTreeObj[configTree[i]];
-//            }
-//          }
-//          switch(typeof configTreeObj[key] + elem.type) {
-//            case "numbernumber":
-//console.log(key, configTreeObj[key], parseFloat(elem.value));
-//              configTreeObj[key] = parseFloat(elem.value);
-//              break;
-//            case "stringtext":
-//            case "stringtime":
-//console.log(key, configTreeObj[key], elem.value);
-//              configTreeObj[key] = elem.value;
-//              break;
-//            case "stringtime":
-//console.log(key, configTreeObj[key], elem.value);
-//              configTreeObj[key] = elem.value;
-//              break;
-//            default:
-//console.log(preKey, key, typeof configTreeObj[key], elem.type);
-//          }
-//        }
-//        if (typeof val === "object") {
-//          preKey += key + ">";
-//          keyValuePairFuncsSet(val);   // recursively call the function
-//        }
-//    }
-//    }
-//    if (preKey.indexOf('>')) {
-//      if (preKey.indexOf('>') == preKey.lastIndexOf('>')) {
-//        preKey = "";
-//      } else {
-//        preKey = preKey.substring(0, preKey.length - 1);
-//        preKey = preKey.substring(0, preKey.lastIndexOf('>') + 1);
-//      }
-//    }
-//  }
-//function saveConfig() {
-//  if (typeof config === 'object') {
-//    keyValuePairFuncsSet(config);
-//    var xhr = new XMLHttpRequest();
-//    xhr.open('POST', "sendConf.php", true);
-//    xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
-//    xhr.onload = function(e) {
-//      if (this.status == 200) {
-//        console.log(this.responseText);
-//      }
-//    };
-//    xhr.send(JSON.stringify(config, null, 2));
-//    toTop();
-//  }
-//}
 function toTop() {
   window.scrollTo(0, 0);
   document.getElementById('miniclock').style.display = 'none';
@@ -1385,15 +1124,60 @@ function connect() {
   };
   socket.onmessage = function(event) {
     console.log("Message received: " + event.data);
-    document.getElementById(event.data).click();
+    if (event.data[0] == "["  || event.data[0] == "{") {
+      var message = JSON.parse(event.data);
+      switch (message.function) {
+        case "activeHeaters":
+          document.getElementById(message.id).style.color = message.color;
+          break;
+        case "heaterColors":
+          const answer = {};
+          answer.function = "activeHeaters";
+          for (i in conf.rooms) {
+            answer.id = conf[conf.rooms[i]].htmlElementId;
+            answer.color = document.getElementById(answer.id).style.color;
+            sendMessage(JSON.stringify(answer));
+          }
+          break;
+      }
+    } else {
+       document.getElementById(event.data).click();
+    }
   };
   socket.onclose = function(event) {
     console.log("Disconnected from server");
   };
 }
-function sendMessage(message) {
-  socket.send(message);
-  console.log("Message sent: " + message);
+const waitForOpenConnection = (socket) => {
+    return new Promise((resolve, reject) => {
+        const maxNumberOfAttempts = 10
+        const intervalTime = 200 //ms
+
+        let currentAttempt = 0
+        const interval = setInterval(() => {
+            if (currentAttempt > maxNumberOfAttempts - 1) {
+                clearInterval(interval)
+                reject(new Error('Maximum number of attempts exceeded'))
+            } else if (socket.readyState === socket.OPEN) {
+                clearInterval(interval)
+                resolve()
+            }
+            currentAttempt++
+        }, intervalTime)
+    })
+}
+
+const sendMessage = async (msg) => {
+    if (socket.readyState !== socket.OPEN) {
+        try {
+            await waitForOpenConnection(socket)
+            socket.send(msg)
+console.log("Try Message sent: " + msg);
+        } catch (err) { console.error(err) }
+    } else {
+        socket.send(msg)
+console.log("Ready Message sent: " + msg);
+    }
 }
 
 function remote(event) {
@@ -1425,6 +1209,9 @@ function remote(event) {
       break;
     case "menuthermostatUI":
       location.href = "#thermostatUI";
+      break;
+    case "menuheaters":
+      location.href = "#heaters";
       break;
     case "menulights":
       location.href = "#lights";
@@ -1458,6 +1245,49 @@ function remote(event) {
     case "LivingVoor":
     case "LivingZij":
       lightSwitch(event.target.id,'Toggle');
+      break;
+    case "Schilderij":
+    case "Computertafel":
+    case "Canyon":
+    case "Zonsondergang":
+    case "Eettafel":
+    case "Tropen":
+    case "Eekhoorn":
+      var heaterIP;
+      for (let room in conf.rooms) {
+        looproom:
+        for (let heater in conf[conf.rooms[room]].heater) {
+          if (conf[conf.rooms[room]].heater[heater].name == event.target.id) {
+            if (window.location.hostname === 'localhost') {
+              var tasmotaHeater = conf[conf.rooms[room]].heater[heater];
+              var xhr = new XMLHttpRequest();
+              xhr.open('POST', "cli.php", true);
+              xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+              xhr.onload = function(e) {
+                if (this.status == 200) {
+                  if (this.responseText != "[]") { // no response
+                    const output = JSON.parse(this.responseText);
+                    if (output[0].includes(':"OFF"}')) {
+                      tasmotaHeater.status = "off";
+                    } else if (output[0].includes(':"ON"}')) {
+                      tasmotaHeater.status = "on";
+                    }
+                    powerLog(tasmotaHeater, tasmotaHeater.name);
+                    if (Object.keys(tasmotaHeater).includes("manual")) {
+                      delete tasmotaHeater.manual;
+                    } else {
+                      tasmotaHeater.manual = tasmotaHeater.status;
+                    }
+                    activeHeaters(conf[conf.rooms[room]]);
+                  }
+                }
+              };
+              xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaHeater.IP + "/cm?cmnd=Power%20Toggle"));
+            }
+            break looproom;
+          }
+        }
+      }
       break;
     default:
       console.log(event.target.id);
