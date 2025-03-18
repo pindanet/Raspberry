@@ -50,7 +50,7 @@ button {
   text-align: center;
   padding-bottom: 1vw;
 }
-#lights, #radio, #menu, #thermostatUI, #weather, PINform, #configUI {
+#lights, #radio, #menu, #thermostatUI, #weather, #configUI, #heaters {
   text-align: center;
   vertical-align: middle;
   height: 60vw;
@@ -59,9 +59,9 @@ button {
 label {
   white-space: nowrap;
 }
-#photoframe {
-  height: 60vw;
-}
+/*#photoframe {*/
+/*  height: 60vw;*/
+/*}*/
 #thermostatUI h1 {
   font-size: 10vw;
   margin-bottom: 0;
@@ -84,6 +84,19 @@ label {
   margin-top: 0.5vw;
   margin-right: 1vw;;
   vertical-align: middle;
+}
+#heaters .square, #heaters .landscape, #heaters .portret {
+  padding: 0.5vw 1vw;
+  margin-bottom: 0.5vw;
+  margin-top: 1.5vw;
+  margin-right: 1vw;;
+  vertical-align: middle;
+}
+#heaters .square, #heaters .portret {
+  width: 120px;
+}
+#heaters .landscape {
+  width: 200px;
 }
 #volumeinfo {
   font-size: 56px;
