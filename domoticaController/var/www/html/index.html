@@ -19,6 +19,7 @@
   <img id="menuradio" class="menubutton" onclick="remote(event);" src="emoji/radio.svg">
   <img id="menuweather" class="menubutton" onclick="remote(event);" src="emoji/weather.svg">
   <img id="menuthermostatUI" class="menubutton" onclick="remote(event);" src="emoji/thermostat.svg">
+  <img id="menuheaters" class="menubutton" onclick="remote(event);" src="images/stars_in_heaven.png">
   <img id="menulights" class="menubutton" onclick="remote(event);" src="emoji/light_bulb.svg">
   <img class="menubutton" onclick="gotoSleep();" src="emoji/sleep.svg">
   <img class="menubutton" onclick="location.href='#configUI'" src="emoji/config.svg">
@@ -76,6 +77,22 @@
     <button id="kitchenIncr" onclick="remote(event); thermostatUI(event, 'Incr', 'kitchentemp');">+</button>
     <button id="kitchenDecr" onclick="remote(event); thermostatUI(event, 'Decr', 'kitchentemp');">-</button>
   </div>
+</div>
+<div id="heaters">
+  <div class="room">
+    <img id="Schilderij" class="landscape" onclick="remote(event);" src="images/schaatsen.png">
+    <img id="Computertafel" class="square" onclick="remote(event);" src="images/computertafel.png">
+    <img id="Canyon" class="landscape" onclick="remote(event);" src="images/colorado.png">
+  </div>
+  <div class="room">
+    <img id="Zonsondergang" class="portret" onclick="remote(event);" src="images/stars_in_heaven.png">
+    <img id="Eettafel" class="square" onclick="remote(event);" src="images/eettafel.png">
+    <img id="Tropen" class="landscape" onclick="remote(event);" src="images/tropical_sunset.png">
+    <img id="Eekhoorn" class="portret" onclick="remote(event);" src="images/eekhoorn.png">
+  </div>
+<!--  <div class="room">-->
+<!--    <img id="Eekhoorn" class="imgbutton" onclick="remote(event);" src="images/eekhoorn.png">-->
+<!--  </div>-->
 </div>
 <iframe id="weather" src="meteogram/meteogram.html" height="480" width="800" style="border:none; padding: 0; margin: 0;"></iframe>
 <div id="lights">
