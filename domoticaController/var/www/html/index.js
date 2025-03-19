@@ -481,17 +481,17 @@ function startTime() {
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
 function getVariable() { // Get Variables
-//  connect(); // Activate Webconnect
+  connect(); // Activate Webconnect
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function(e) {
     if (this.status == 200) {
       variable = JSON.parse(this.responseText);
       getConf();
-      if (window.location.hostname !== 'localhost') {
-        const message = {};
-        message.function = "heaterColors";
-        sendMessage(JSON.stringify(message));
-      }
+//      if (window.location.hostname !== 'localhost') {
+//        const message = {};
+//        message.function = "heaterColors";
+//        sendMessage(JSON.stringify(message));
+//      }
     }
   }
   xhttp.open("POST", "data/variable.json");
@@ -1115,75 +1115,15 @@ function toTop() {
   document.getElementById('minitemp').style.display = 'none';
 }
 
-//let socket;
-//function connect() {
-//  socket = new WebSocket("ws://pindadomo.local:8080");
-////  socket = new WebSocket("ws://192.168.129.2:8080");
-//  socket.onopen = function(event) {
-//    console.log("Connected to server");
-//  };
-//  socket.onmessage = function(event) {
-//    console.log("Message received: " + event.data);
-//    if (event.data[0] == "["  || event.data[0] == "{") {
-//      var message = JSON.parse(event.data);
-//      switch (message.function) {
-//        case "activeHeaters":
-//          document.getElementById(message.id).style.color = message.color;
-//          break;
-//        case "heaterColors":
-//          const answer = {};
-//          answer.function = "activeHeaters";
-//          for (i in conf.rooms) {
-//            answer.id = conf[conf.rooms[i]].htmlElementId;
-//            answer.color = document.getElementById(answer.id).style.color;
-//            sendMessage(JSON.stringify(answer));
-//          }
-//          break;
-//      }
-//    } else {
-//       document.getElementById(event.data).click();
-//    }
-//  };
-//  socket.onclose = function(event) {
-//    console.log("Disconnected from server");
-//  };
-//}
-//const waitForOpenConnection = (socket) => {
-//    return new Promise((resolve, reject) => {
-//        const maxNumberOfAttempts = 10
-//        const intervalTime = 200 //ms
-//
-//        let currentAttempt = 0
-//        const interval = setInterval(() => {
-//            if (currentAttempt > maxNumberOfAttempts - 1) {
-//                clearInterval(interval)
-//                reject(new Error('Maximum number of attempts exceeded'))
-//            } else if (socket.readyState === socket.OPEN) {
-//                clearInterval(interval)
-//                resolve()
-//            }
-//            currentAttempt++
-//        }, intervalTime)
-//    })
-//}
-//
-//const sendMessage = async (msg) => {
-//    if (socket.readyState !== socket.OPEN) {
-//        try {
-//            await waitForOpenConnection(socket)
-//            socket.send(msg)
-//console.log("Try Message sent: " + msg);
-//        } catch (err) { console.error(err) }
-//    } else {
-//        socket.send(msg)
-//console.log("Ready Message sent: " + msg);
-//    }
-//}
-
-var socket;
-
-var socketOnMessage = function(event) {
-    console.log("WebSocket received: " + event.data);
+let socket;
+function connect() {
+  socket = new WebSocket("ws://pindadomo.local:8080");
+//  socket = new WebSocket("ws://192.168.129.2:8080");
+  socket.onopen = function(event) {
+    console.log("Connected to server");
+  };
+  socket.onmessage = function(event) {
+    console.log("Message received: " + event.data);
     if (event.data[0] == "["  || event.data[0] == "{") {
       var message = JSON.parse(event.data);
       switch (message.function) {
@@ -1203,36 +1143,15 @@ var socketOnMessage = function(event) {
     } else {
        document.getElementById(event.data).click();
     }
-};
+  };
+  socket.onclose = function(event) {
+    console.log("Disconnected from server");
+  };
+}
 
-var socketOnOpen = function(event) {
-    console.log("WebSocket opened");
-};
-
-var socketOnClose = function(event) {
-    console.log('WebSocket disconnected - waiting for connection');
-    websocketWaiter();
-};
-
-function websocketWaiter(){
-    setTimeout(function(){
-        socket = new WebSocket("ws://pindadomo.local:8080");
-        socket.onopen = socketOnOpen;
-        socket.onclose = socketOnClose;
-        socket.onmessage = socketOnMessage;
-    }, 1000);
-};
-
-websocketWaiter();
-
-function sendMessage(msg) {
-  if (typeof socket !== 'undefined') {
-    socket.send(msg);
-console.log("Ready Message sent: " + msg);
-  } else {
-console.log("WebSocket Message delayd");
-    setTimeout(sendMessage, 1000, msg);
-  }
+function sendMessage(message) {
+  socket.send(message);
+  console.log("Message sent: " + message);
 }
 
 function remote(event) {
