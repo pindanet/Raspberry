@@ -158,6 +158,7 @@ sudo systemctl enable PindaNetUpdate.timer
 sudo systemctl start PindaNetUpdate.timer
 
 # Check Avahi hostname
+sudo apt install avahi-utils -y
 cat > checkAvahi.sh <<EOF
 #!/bin/bash
 # Check WiFi connection
