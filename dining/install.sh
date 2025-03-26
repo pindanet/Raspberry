@@ -126,11 +126,12 @@ sudo systemctl enable PindaNetUpdate.timer
 sudo systemctl start PindaNetUpdate.timer
 
 # Check Avahi hostname
+sudo apt install avahi-utils -y
 cat > checkAvahi.sh <<EOF
 #!/bin/bash
 # Check WiFi connection
 if ! ping -c 1 $router; then
-  echo "Restart NetworkManager"
+  echo "\$(date) Restart Network" >> /var/www/html/data/debug.txt
   systemctl restart NetworkManager.service
   sleep 10
 fi
@@ -151,7 +152,7 @@ OnBootSec=5min
 OnUnitActiveSec=1h
 Unit=checkAvahi.service
 [Install]
-WantedBy=multi-user.target
+WantedBy=basic.target
 EOF
 sudo mv checkAvahi.timer /etc/systemd/system/
 
