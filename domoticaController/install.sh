@@ -8,6 +8,8 @@
 # Activate Serial Hardware
 # Activate PiCamera
 
+router="mymodem.home"
+
 # Hardware
 # DS18B20 Temperature Sensor
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
