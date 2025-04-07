@@ -215,6 +215,25 @@ sudo systemctl daemon-reload
 sudo systemctl enable mqtt_log.service
 sudo systemctl start mqtt_log.service
 
+cat > websocket.service <<EOF
+[Unit]
+Description=WebSocket Server Daemon
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/php /var/www/html/websocket.php
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo mv websocket.service /etc/systemd/system/
+
+sudo systemctl daemon-reload
+sudo systemctl enable websocket.service
+sudo systemctl start websocket.service
+
 exit
 
 KEYMAP="be"
