@@ -156,8 +156,17 @@ sudo systemctl enable PindaNetUpdate.timer
 sudo systemctl start PindaNetUpdate.timer
 
 # Check Avahi hostname
+sudo apt install avahi-utils -y
 cat > checkAvahi.sh <<EOF
 #!/bin/bash
+# Check WiFi connection
+if ! ping -c 1 $router; then
+  echo "\$(date) Restart Network" >> /var/www/html/data/debug.txt
+  systemctl restart NetworkManager.service
+#  /sbin/shutdown -r now
+  sleep 10
+fi
+# Check Avahi conflict
 if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
   echo Restart avahi
   systemctl restart avahi-daemon.service
