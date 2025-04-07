@@ -40,8 +40,13 @@ sudo apt install labwc seatd xdg-user-dirs libgl1-mesa-dri
 mkdir -p .config/labwc
 sudo raspi-config nonint do_boot_behaviour "B2"  # https://www.raspberrypi.com/documentation/computers/configuration.html
 echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
-echo '  echo "SSH"' >> .bashrc
+echo '  tail /var/www/html/data/debug.txt' >> .bashrc
+#echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
+echo '  # Disable Power led' >> .bashrc
+echo '  echo 0 | sudo tee /sys/class/leds/PWR/brightness' >> .bashrc
+echo '  # Disable Activity led' >> .bashrc
+echo '  echo none | sudo tee /sys/class/leds/ACT/trigger' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 
