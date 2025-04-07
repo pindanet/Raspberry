@@ -48,8 +48,6 @@ echo '  # Disable Power led' >> .bashrc
 echo '  echo 0 | sudo tee /sys/class/leds/PWR/brightness' >> .bashrc
 echo '  # Disable Activity led' >> .bashrc
 echo '  echo none | sudo tee /sys/class/leds/ACT/trigger' >> .bashrc
-echo '  # Start Websocket' >> .bashrc
-echo '  php /var/www/html/websocket.php &' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 
