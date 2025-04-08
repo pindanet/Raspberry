@@ -387,9 +387,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2025-01-03",
+      "begindate": "2025-04-11",
       "begin": "19:45",
-      "enddate": "2025-01-03",
+      "enddate": "2025-04-11",
       "end": "bedTime",
       "temp": {
         "living": "tempAux",
