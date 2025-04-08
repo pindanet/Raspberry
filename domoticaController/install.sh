@@ -230,6 +230,28 @@ sudo systemctl daemon-reload
 sudo systemctl enable websocket.service
 sudo systemctl start websocket.service
 
+# Play Radio stream with ICY-META (stderr) output logging
+sudo tee /etc/systemd/system/PindaNetRadio.path > /dev/null <<EOF
+[Unit]
+Description=Monitor the /var/www/html/data/radio.cmd file for changes
+[Path]
+PathModified=/var/www/html/data/radio.cmd
+Unit=PindaNetRadio.service
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo tee /etc/systemd/system/PindaNetRadio.service > /dev/null <<EOF
+[Unit]
+Description=Execute the script with Radio commands
+[Service]
+ExecStart=/bin/bash /var/www/html/PindaNetRadio.sh
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable PindaNetRadio.path
+sudo systemctl start PindaNetRadio.path
+
 # Install Roc Network Audio
 sudo apt install g++ pkg-config scons ragel gengetopt libuv1-dev libunwind-dev libspeexdsp-dev libsox-dev libsndfile1-dev libssl-dev libpulse-dev git -y
 sudo apt install libtool intltool autoconf automake make cmake meson -y
