@@ -228,6 +228,15 @@ sudo systemctl daemon-reload
 sudo systemctl enable websocket.service
 sudo systemctl start websocket.service
 
+# Install Roc Network Audio
+sudo apt install g++ pkg-config scons ragel gengetopt libuv1-dev libunwind-dev libspeexdsp-dev libsox-dev libsndfile1-dev libssl-dev libpulse-dev git -y
+sudo apt install libtool intltool autoconf automake make cmake meson -y
+git clone https://github.com/roc-streaming/roc-toolkit.git
+cd roc-toolkit
+scons -Q --build-3rdparty=openfec
+sudo scons -Q --build-3rdparty=openfec install
+cd
+
 exit
 
 KEYMAP="be"
