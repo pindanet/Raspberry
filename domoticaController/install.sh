@@ -117,7 +117,7 @@ ssh-keygen
 echo "Activate daily update"
 echo "====================="
 
-cat > PindaNetUpdate.sh <<EOF
+sudo tee /usr/sbin/PindaNetUpdate.sh > /dev/null <<EOF
 #!/bin/bash
 sudo dpkg --configure -a
 apt-get clean
@@ -126,10 +126,9 @@ apt-get update
 apt-get upgrade -y
 shutdown -r now
 EOF
-sudo mv PindaNetUpdate.sh /usr/sbin/
 sudo chmod +x /usr/sbin/PindaNetUpdate.sh
 
-cat > PindaNetUpdate.timer <<EOF
+sudo tee /etc/systemd/system/PindaNetUpdate.timer > /dev/null <<EOF
 [Unit]
 Description=Update and Reset
 [Timer]
@@ -138,16 +137,14 @@ Unit=PindaNetUpdate.service
 [Install]
 WantedBy=multi-user.target
 EOF
-sudo mv PindaNetUpdate.timer /etc/systemd/system/
 
-cat > PindaNetUpdate.service <<EOF
+sudo tee /etc/systemd/system/PindaNetUpdate.service > /dev/null <<EOF
 [Unit]
 Description=Update and Reset
 [Service]
 Type=simple
 ExecStart=/usr/sbin/PindaNetUpdate.sh
 EOF
-sudo mv PindaNetUpdate.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
 sudo systemctl enable PindaNetUpdate.timer
@@ -155,7 +152,7 @@ sudo systemctl start PindaNetUpdate.timer
 
 # Check Avahi hostname
 sudo apt install avahi-utils -y
-cat > checkAvahi.sh <<EOF
+sudo tee /usr/sbin/checkAvahi.sh > /dev/null <<EOF
 #!/bin/bash
 # Check WiFi connection
 if ! ping -c 1 $router; then
@@ -170,10 +167,9 @@ if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\
   systemctl restart avahi-daemon.service
 fi
 EOF
-sudo mv checkAvahi.sh /usr/sbin/
 sudo chmod +x /usr/sbin/checkAvahi.sh
 
-cat > checkAvahi.timer <<EOF
+sudo tee /etc/systemd/system/checkAvahi.timer > /dev/null <<EOF
 [Unit]
 Description=Check Avahi hostname
 [Timer]
@@ -183,23 +179,21 @@ Unit=checkAvahi.service
 [Install]
 WantedBy=multi-user.target
 EOF
-sudo mv checkAvahi.timer /etc/systemd/system/
 
-cat > checkAvahi.service <<EOF
+sudo tee /etc/systemd/system/checkAvahi.service > /dev/null <<EOF
 [Unit]
 Description=Check Avahi hostname
 [Service]
 Type=simple
 ExecStart=/usr/sbin/checkAvahi.sh
 EOF
-sudo mv checkAvahi.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
 sudo systemctl enable checkAvahi.timer
 sudo systemctl start checkAvahi.timer
 # systemctl list-timers
 
-cat > mqtt_log.service <<EOF
+sudo tee /etc/systemd/system/mqtt_log.service > /dev/null <<EOF
 [Unit]
 Description=Log MQTT Power
 [Service]
@@ -208,14 +202,13 @@ ExecStart=/var/www/html/mqtt_log.sh
 [Install]
 WantedBy=multi-user.target
 EOF
-sudo mv mqtt_log.service /etc/systemd/system/
 sudo chmod +x /var/www/html/mqtt_log.sh
 
 sudo systemctl daemon-reload
 sudo systemctl enable mqtt_log.service
 sudo systemctl start mqtt_log.service
 
-cat > websocket.service <<EOF
+sudo tee /etc/systemd/system/websocket.service > /dev/null <<EOF
 [Unit]
 Description=WebSocket Server Daemon
 After=network-online.target
@@ -228,7 +221,6 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-sudo mv websocket.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
 sudo systemctl enable websocket.service
