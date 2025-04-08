@@ -19,6 +19,7 @@ case ${cmd[0]} in
 
     rm /var/www/html/data/radio.stop
     rm /var/www/html/data/radio.log
+    killall roc-recv
 
     curl -H "Icy-MetaData:1" --silent -L "$radio" 2>&1 | mpg123 --icy-interval $interval -f -$volume - 2> /var/www/html/data/radio.log &
 
