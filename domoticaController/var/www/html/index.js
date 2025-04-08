@@ -1145,7 +1145,10 @@ function connect() {
     }
   };
   socket.onclose = function(event) {
-    console.log("Disconnected from server");
+    console.log("WebSocket connection has been closed successfully.");
+  };
+  socket.onerror = function(event) {
+    console.log("WebSocket error: ", event);
   };
 }
 
