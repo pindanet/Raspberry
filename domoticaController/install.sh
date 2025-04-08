@@ -7,6 +7,8 @@
 #/boot/firmware/config.txt
 #dtparam=i2c_arm=on
 #dtoverlay=i2c-sensor,bh1750
+# /etc/modules
+# i2c-dev
 
 # SSL communication LMI_261-22 p62
 # Activate Serial Hardware
