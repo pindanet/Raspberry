@@ -1,4 +1,5 @@
-<?php
+<?php // https://piehost.com/websocket/build-a-websocket-server-in-php-without-any-library
+// Alternative: https://github.com/sirn-se/websocket-php/tree/v3.3-main
 $host = 'pindadomo.local';
 //$host = '192.168.129.2';
 $port = 8080;
