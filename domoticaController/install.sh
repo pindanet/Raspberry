@@ -4,9 +4,10 @@
 # bash install.sh
 
 # ToDo
-#/boot/firmware/config.txt
-#dtparam=i2c_arm=on
-#dtoverlay=i2c-sensor,bh1750
+# https://forums.raspberrypi.com/viewtopic.php?t=376072
+# /boot/firmware/config.txt
+# dtparam=i2c_arm=on
+# dtoverlay=i2c-sensor,bh1750
 # /etc/modules
 # i2c-dev
 
