@@ -4,6 +4,10 @@
 # bash install.sh
 
 # ToDo
+#/boot/firmware/config.txt
+#dtparam=i2c_arm=on
+#dtoverlay=i2c-sensor,bh1750
+
 # SSL communication LMI_261-22 p62
 # Activate Serial Hardware
 # Activate PiCamera
