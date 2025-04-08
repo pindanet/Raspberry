@@ -59,6 +59,8 @@ if [ $? == 1 ]; then
   # Activate DS18B20 Temperature Sensor
   echo 'w1-gpio' | sudo tee -a /etc/modules
   echo 'w1-therm' | sudo tee -a /etc/modules
+  # Set IQaudIODAC DigiAMP+ default
+  sudo sed -i 's/^dtparam=audio=on/#&/' /boot/firmware/config.txt
 fi
 
 echo "Shutdown/Boot button"
