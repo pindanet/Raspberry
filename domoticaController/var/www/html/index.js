@@ -1095,18 +1095,18 @@ function brightness() {
             const output = JSON.parse(this.responseText);
             current = output[0];
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', "cli.php", true);
+            xhr.open('POST', "brightness.php", true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send("cmd=echo&params="+stringToHex(backlight + " > /sys/class/backlight/rpi_backlight/brightness"));
+            xhr.send("brightness=" + backlight);
           }
         };
-        xhr.send("cmd=cat&params="+stringToHex("/sys/class/backlight/rpi_backlight/brightness"));
+        xhr.send("cmd=cat&params="+stringToHex("/sys/class/backlight/10-0045/brightness"));
       }
     };
     xhr.send("cmd=cat&params="+stringToHex("data/luxmaxtls"));
   };
 //  xhr.send("cmd=python3&params="+stringToHex("/var/www/html/tls2591.py"));
-  xhr.send("cmd=cat&params="+stringToHex("/sys/class/i2c-adapter/i2c-1/1-0023/iio:device0/in_illuminance_raw"));
+  xhr.send("cmd=cat&params="+stringToHex("/sys/bus/i2c/drivers/bh1750/1-0023/iio:device0/in_illuminance_raw"));
 }
 
 function toTop() {
