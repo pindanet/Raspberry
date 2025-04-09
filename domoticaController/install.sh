@@ -88,7 +88,7 @@ sudo cp -r Raspberry-master/domoticaController/var/www/html/* /var/www/html/
 rm -r Raspberry-master/
 
 sudo chmod +x /var/www/html/ds18b20.sh
-sudo chown www-data:www-data /var/www/html/data
+sudo chown -R www-data:www-data /var/www/html/data
 # Enable set touchscreen brightness
 sudo usermod -a -G video www-data
 # Enable set audio volume
