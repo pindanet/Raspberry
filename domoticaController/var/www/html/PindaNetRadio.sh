@@ -27,6 +27,7 @@ case ${cmd[0]} in
     do
       sleep 1
     done
+    killall curl mpg123
     rm /var/www/html/data/radio.stop
     rm /var/www/html/data/radio.log
   ;;
