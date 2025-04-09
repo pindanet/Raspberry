@@ -68,6 +68,12 @@ if [ $? == 1 ]; then
   echo 'w1-therm' | sudo tee -a /etc/modules
   # Set IQaudIODAC DigiAMP+ default
   sudo sed -i 's/^dtparam=audio=on/#&/' /boot/firmware/config.txt
+  echo "Activate I2C and BH1750 Light Sensor"
+  # Activate I2C
+  sudo sed -i 's/^#dtparam=i2c_arm=on/dtparam=i2c_arm=on/' /boot/firmware/config.txt
+  echo 'i2c-dev' | sudo tee -a /etc/modules
+  # Activate BH1750 Light Sensor
+  echo 'dtoverlay=i2c-sensor,bh1750' | sudo tee -a /boot/firmware/config.txt
 fi
 
 echo "Shutdown/Boot button"
