@@ -93,6 +93,8 @@ sudo chown -R www-data:www-data /var/www/html/data
 sudo usermod -a -G video www-data
 # Enable set audio volume
 sudo usermod -a -G audio www-data
+# Enable GPIO use
+sudo usermod -a -G gpio www-data
 
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
