@@ -1153,7 +1153,7 @@ function connect() {
 }
 
 function sendMessage(message) {
-  socket.send(message);
+//  socket.send(message);
   console.log("Message sent: " + message);
 }
 
