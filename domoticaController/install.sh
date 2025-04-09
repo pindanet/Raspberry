@@ -91,6 +91,8 @@ sudo chmod +x /var/www/html/ds18b20.sh
 sudo chown www-data:www-data /var/www/html/data
 # Enable set touchscreen brightness
 sudo usermod -a -G video www-data
+# Enable set audio volume
+sudo usermod -a -G audio www-data
 
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
