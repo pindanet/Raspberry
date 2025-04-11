@@ -177,7 +177,7 @@ if ! ping -c 1 $router; then
   sleep 10
 fi
 # Check Avahi conflict
-if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
+if [ \$(avahi-resolve -a \$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
   echo Restart avahi
   systemctl restart avahi-daemon.service
 fi
