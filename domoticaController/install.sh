@@ -91,6 +91,12 @@ sudo chmod +x /var/www/html/ds18b20.sh
 sudo chown -R www-data:www-data /var/www/html/data
 # Enable set touchscreen brightness
 sudo usermod -a -G video www-data
+sudo tee /etc/udev/rules.d/99-brightness.rules > /dev/null <<EOF
+# allow brightness power control for everyone
+ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="10-0045", RUN+="/bin/chmod a+w /sys/class/backlight/10-0045/bl_power"
+EOF
+# Test with: udevadm test /sys/class/backlight/10-0045
+# Activate without restart with: sudo udevadm trigger --verbose --action=add /sys/class/backlight/10-0045
 # Enable set audio volume
 sudo usermod -a -G audio www-data
 # Enable GPIO use
