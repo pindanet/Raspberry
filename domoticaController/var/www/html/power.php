@@ -46,7 +46,6 @@ $days = array(
 $powerLog = [];
 
 function processLine($powerline) {
-
   $datetime = explode(" ", date("j W n Y G i s l F w", $powerline["time"] / 1000));
   if(strtolower($powerline["status"]) == "off") {
     $GLOBALS[$powerline["name"]] = $powerline["time"];
