@@ -200,20 +200,6 @@ function radio(event) {
   radioVolume(event, 'getvol');
   radioStatus();
 }
-//function radioStop(event) {
-//  var xhr = new XMLHttpRequest();
-//  xhr.open('POST', "cli.php", true);
-//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//  xhr.send("cmd=rm&params="+stringToHex("/var/www/html/data/radio.log; killall mpg123 curl"));
-//  toTop();
-////  window.scrollTo(0, 0);
-////  document.getElementById('miniclock').style.display = 'none';
-////  document.getElementById('minitemp').style.display = 'none';
-//  radioVolume(event, conf.tvvolume);
-//  if (typeof event !== 'undefined') {
-//    event.stopPropagation();
-//  }
-//}
 function radioStop() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -279,20 +265,6 @@ function radioVolume(event, command) {
       xhr.send("cmd=amixer&params="+stringToHex("set 'Digital' " + command + "% | awk -F'[][]' '/Left:/ { print $2 }'"));
   }
 }
-//function radioStatus() {
-//  var xhr = new XMLHttpRequest();
-//  xhr.open('POST', "cli.php", true);
-//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//  xhr.onload = function(e) {
-//    if (this.status == 200) {
-//      const output = JSON.parse(this.responseText);
-//      if (output.length > 0) {
-//        document.getElementById("radioinfo").innerHTML = output[0];
-//      }
-//    }
-//  };
-//  xhr.send("cmd=cat&params="+stringToHex("/var/www/html/data/radio.log | tail -1 | cut -d \"'\" -f 2"));
-//}
 function radioStatus() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -301,31 +273,13 @@ function radioStatus() {
     if (this.status == 200) {
       const output = JSON.parse(this.responseText);
       if (output.length > 0) {
-//        var fontsize = 10;
         var status = output[0].substring(output[0].indexOf("='") + 2, output[0].indexOf("';"));
-//        if (status.length > 16) {
-//          fontsize = 5;
-//        }
-//        document.getElementById("radio").innerHTML = "<span style='font-size:" + fontsize + "vw'>" + status + "</span>";
         document.getElementById("radioinfo").innerHTML = status;
-//      } else {
-//        document.getElementById("radio").innerHTML = "Wekkerradio " + conf.alarmclock.temp.toFixed(1) + " &#176;C";
       }
     }
   };
   xhr.send("cmd=cat&params="+stringToHex("/var/www/html/data/radio.log | tail -1"));
 }
-//function radioPlay(event, channel) {
-//  if (typeof event !== 'undefined') {
-//    event.stopPropagation();
-//  }
-//  var xhr = new XMLHttpRequest();
-//  xhr.open('POST', "cli.php", true);
-//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//  xhr.send("cmd=killall&params="+stringToHex("mpg123 curl; sudo killall roc-recv;curl -H 'Icy-MetaData:1' --silent -L " + conf.radio.channel[channel].URL + " 2>&1 | mpg123 --icy-interval " + conf.radio.channel[channel].interval + " -f -12000 - 2> /var/www/html/data/radio.log"));
-//  document.getElementById("radioinfo").innerHTML = "Even geduld, de zenderinformatie wordt opgehaald...";
-//  setTimeout(function () { radioStatus(); }, 10000);
-//}
 function playRadio(event, cmd, channel) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -378,7 +332,8 @@ waitMinute=0;
 function gotoSleep() {
   // Backlight uitschakelen
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
+//  xhr.open('POST', "cli.php", true);
+  xhr.open('POST', "brightness.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200) { //Sleep commands
@@ -389,15 +344,18 @@ function gotoSleep() {
       // network leds out
     }
   };
-  xhr.send("cmd=echo&params="+stringToHex("1 > /sys/class/backlight/rpi_backlight/bl_power"));
+//  xhr.send("cmd=echo&params="+stringToHex("1 > /sys/class/backlight/10-0045/bl_power"));
+  xhr.send("power=1");
 }
 function wakeup() {
   if (window.location.hostname === 'localhost') {
     // Backlight inschakelen
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', "cli.php", true);
+//    xhr.open('POST', "cli.php", true);
+    xhr.open('POST', "brightness.php", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send("cmd=echo&params="+stringToHex("0 > /sys/class/backlight/rpi_backlight/bl_power"));
+//    xhr.send("cmd=echo&params="+stringToHex("0 > /sys/class/backlight/10-0045/bl_power"));
+  xhr.send("power=0");
   } else {
     console.log('Remote wakeup()');
   }
@@ -531,6 +489,9 @@ function startTime() {
 }
 function getVariable() { // Get Variables
   connect(); // Activate Webconnect
+  if (window.location.hostname === 'localhost') { // Hide cursor on touchscreen
+    document.body.style.cursor = "none";
+  }
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function(e) {
     if (this.status == 200) {
