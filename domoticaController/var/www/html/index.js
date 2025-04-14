@@ -487,11 +487,53 @@ function startTime() {
   }
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
+function connectWebsocket() {
+  var http = new XMLHttpRequest()
+  http.open('HEAD', "data/websocket.log", false)
+  http.send()
+  if (http.status === 200) {
+// console.log("websocket.log exist!");
+    connect(); // Activate Webconnect
+  } else {
+// console.log("websocket.log does not exist!");
+    setTimeout(connectWebsocket, 1000);
+  }
+}
+function startWebsocket() {
+  if (window.location.hostname === 'localhost') {
+    // Close Websocket server
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function(e) {
+      if (this.status == 200 && this.readyState === 4) {
+        // Kill Websocket server
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "cli.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function(e) {
+          if (this.status == 200 && this.readyState === 4) {
+            // Start Websocket server
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', "cli.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("cmd=bash&params="+stringToHex("/var/www/html/websocket.sh"));
+          }
+        };
+        xhr.send("cmd=kill&params="+stringToHex("$(ps -ax | grep websocket | grep -v grep | awk '{print $1}')"));
+        setTimeout(connectWebsocket, 1000);
+      }
+    };
+    xhr.send("cmd=touch&params="+stringToHex("/var/www/html/data/websocket.stop"));
+  } else {
+    connect(); // Connect to Websocket server
+  }
+}
 function getVariable() { // Get Variables
-  connect(); // Activate Webconnect
   if (window.location.hostname === 'localhost') { // Hide cursor on touchscreen
     document.body.style.cursor = "none";
   }
+  startWebsocket();
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function(e) {
     if (this.status == 200) {
@@ -1160,6 +1202,7 @@ function connect() {
   };
   socket.onclose = function(event) {
     console.log("WebSocket connection has been closed successfully.");
+    startWebsocket();
   };
   socket.onerror = function(event) {
     console.log("WebSocket error: ", event);
@@ -1167,8 +1210,14 @@ function connect() {
 }
 
 function sendMessage(message) {
-//  socket.send(message);
-  console.log("Message sent: " + message);
+  if (typeof socket !== 'undefined') {
+    if (socket.readyState) {
+      socket.send(message);
+      console.log("Message sent: " + message);
+    }
+  } else {
+console.log("Websocket not ready yet!");
+  }
 }
 
 function remote(event) {
