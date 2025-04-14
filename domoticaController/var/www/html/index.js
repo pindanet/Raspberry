@@ -539,11 +539,6 @@ function getVariable() { // Get Variables
     if (this.status == 200) {
       variable = JSON.parse(this.responseText);
       getConf();
-//      if (window.location.hostname !== 'localhost') {
-//        const message = {};
-//        message.function = "heaterColors";
-//        sendMessage(JSON.stringify(message));
-//      }
     }
   }
   xhttp.open("POST", "data/variable.json");
@@ -1177,6 +1172,11 @@ function connect() {
 //  socket = new WebSocket("ws://192.168.129.2:8080");
   socket.onopen = function(event) {
     console.log("Connected to server");
+    if (window.location.hostname !== 'localhost') {
+      const message = {};
+      message.function = "heaterColors";
+      sendMessage(JSON.stringify(message));
+    }
   };
   socket.onmessage = function(event) {
     console.log("Message received: " + event.data);
