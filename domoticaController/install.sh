@@ -113,7 +113,7 @@ cat > PindaNetAutostart.sh <<EOF
 # PullUp 1-wire Data
 /usr/bin/pinctrl set 4 ip pu
 # Autostart Chromium in Kiosk & Debug mode
-/bin/chromium --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
+/bin/chromium --disable-gpu --remote-debugging-port=9222 --kiosk --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar http://localhost/ &
 # Give Chromium time to start
 sleep 30
 # Check if Chromium is running
@@ -122,7 +122,7 @@ do
   # After a hostname change, chromium refuses to start, correct this
   rm -rf $HOME/.config/chromium/Singleton*
   # Restart chromium
-  /bin/chromium --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
+  /bin/chromium --disable-gpu --remote-debugging-port=9222 --kiosk --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar http://localhost/ &
   sleep 30
 done
 EOF
