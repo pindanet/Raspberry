@@ -348,22 +348,22 @@
     },
     {
       "repeat": 0,
-      "begindate": "2024-02-20",
-      "begin": "11:45",
-      "enddate": "2024-02-20",
-      "end": "14:00",
+      "begindate": "2025-04-21",
+      "begin": "13:00",
+      "enddate": "2025-04-21",
+      "end": "20:30",
       "temp": {
         "living": "tempAux",
         "dining": "tempAux",
         "kitchen": "tempOff"
       },
-      "comment": "Kapper"
+      "comment": "Gent"
     },
     {
       "repeat": 14,
-      "begindate": "2025-01-13",
+      "begindate": "2025-04-20",
       "begin": "16:00",
-      "enddate": "2025-01-13",
+      "enddate": "2025-04-20",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
