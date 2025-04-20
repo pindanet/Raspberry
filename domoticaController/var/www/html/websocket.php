@@ -21,6 +21,8 @@ while (true) {
     $except = [];
 
     socket_select($changedSockets, $write, $except, 0, 10);
+//if(!empty($changedSockets))
+//print_r($socket);
 
     if (in_array($socket, $changedSockets)) {
         $newSocket = socket_accept($socket);
@@ -43,22 +45,38 @@ while (true) {
         if (!$handshake) {
             performHandshake($clientSocket, $buffer);
             $handshake = true;
-        } else {
+        } else if (!is_null($buffer)){
+// payload structure: https://ably.com/topic/websockets
+            $opcode = ord($buffer) & 15;
+//echo $opcode, "\n";
             $message = unmask($buffer);
-// https://ably.com/topic/websockets#closing-a-web-socket-connection-at-the-protocol-level
-//print_r (bin2hex($message));
-            if (bin2hex($message) == "03e9") {  // dec 1001
-              echo "Client going away\n";
-              $clientKey = array_search($clientSocket, $clients);
-              unset($clients[$clientKey]);
-              socket_close($clientSocket);
-            } elseif (!empty($message)) {
-                echo "Received: $message\n";
-                foreach ($clients as $client) {
+            switch ($opcode) {
+              case 1:
+                echo "UTF-8 text data\n";
+                if (!empty($message)) {
+                  echo "Received: $message\n";
+                  foreach ($clients as $client) {
                     if ($client != $clientSocket) {
-                        sendMessage($client, $message);
+                      sendMessage($client, $message);
                     }
+                  }
                 }
+                break;
+              case 8:
+                $log="Connection close: ";
+                $statuscode=ord($message)*256 + ord($message[1]);
+                switch ($statuscode) {
+                  case 1000:
+                    echo $log, "Normal closure\n";
+                    break;
+                  case 1001:
+                    echo $log, "Client going away\n";
+                    break;
+                }
+                $clientKey = array_search($clientSocket, $clients);
+                unset($clients[$clientKey]);
+                socket_close($clientSocket);
+                break;
             }
         }
     }
@@ -90,14 +108,19 @@ function parseHeaders($headers) {
 }
 
 function unmask($payload)
-{
+{ // payload structure: https://ably.com/topic/websockets
     $length = ord($payload[1]) & 127;
     if ($length == 126) {
         $masks = substr($payload, 4, 4);
         $data = substr($payload, 8);
+        $length = ord($payload[2])*256 + ord($payload[3]);
     } elseif ($length == 127) {
         $masks = substr($payload, 10, 4);
         $data = substr($payload, 14);
+        $length = ord($payload[2])*pow(2, 56) + ord($payload[3]*pow(2, 48));
+        $length += ord($payload[4])*pow(2, 40) + ord($payload[5]*pow(2, 32));
+        $length += ord($payload[6])*pow(2, 24) + ord($payload[7]*pow(2, 16));
+        $length += ord($payload[8])*pow(2, 8) + ord($payload[9]);
     } else {
         $masks = substr($payload, 2, 4);
         $data = substr($payload, 6);
@@ -106,7 +129,8 @@ function unmask($payload)
     for ($i = 0; $i < strlen($data); ++$i) {
         $unmaskedtext .= $data[$i] ^ $masks[$i % 4];
     }
-    return $unmaskedtext;
+//echo $length, "\n";
+    return substr($unmaskedtext, 0, $length);
 }
 
 function sendMessage($clientSocket, $message)
