@@ -47,20 +47,24 @@ while (true) {
             $handshake = true;
         } else if (!is_null($buffer)){
 // payload structure: https://ably.com/topic/websockets
+// https://en.wikipedia.org/wiki/WebSocket
             $opcode = ord($buffer) & 15;
 //echo $opcode, "\n";
             $message = unmask($buffer);
             switch ($opcode) {
               case 1:
-                echo "UTF-8 text data\n";
+                $log="UTF-8 text data: ";
                 if (!empty($message)) {
-                  echo "Received: $message\n";
+                  echo $log, "$message\n";
                   foreach ($clients as $client) {
                     if ($client != $clientSocket) {
                       sendMessage($client, $message);
                     }
                   }
                 }
+                break;
+              case 2:
+                echo "Binary data: Not implemented\n";
                 break;
               case 8:
                 $log="Connection close: ";
@@ -72,16 +76,69 @@ while (true) {
                   case 1001:
                     echo $log, "Client going away\n";
                     break;
+                  case 1002:
+                    echo $log, "Protocol error\n";
+                    break;
+                  case 1003:
+                    echo $log, "Unsupported data\n";
+                    break;
+                  case 1004:
+                    echo $log, "Reserved\n";
+                    break;
+                  case 1005:
+                    echo $log, "No status received\n";
+                    break;
+                  case 1006:
+                    echo $log, "Abnormal closure\n";
+                    break;
+                  case 1007:
+                    echo $log, "Invalid payload data\n";
+                    break;
+                  case 1008:
+                    echo $log, "Policy violation\n";
+                    break;
+                  case 1009:
+                    echo $log, "Message too big\n";
+                    break;
+                  case 1010:
+                    echo $log, "Mandatory extension\n";
+                    break;
+                  case 1011:
+                    echo $log, "Internal error\n";
+                    break;
+                  case 1012:
+                    echo $log, "Service restart\n";
+                    break;
+                  case 1013:
+                    echo $log, "Try again later\n";
+                    break;
+                  case 1014:
+                    echo $log, "Bad gateway\n";
+                    break;
+                  case 1015:
+                    echo $log, "TLS handshake\n";
+                    break;
+                  default:
+                    echo $log, "Unknown Status code\n";
+                    break;
                 }
                 $clientKey = array_search($clientSocket, $clients);
                 unset($clients[$clientKey]);
                 socket_close($clientSocket);
                 break;
+              case 9:
+                echo "Ping: Not implemented\n";
+                break;
+              case 10:
+                echo "Pong: Not implemented\n";
+                break;
+              default:
+                echo "Opcode ", $opcode, " reserved\n";
+                break;
             }
         }
     }
 }
-
 
 function performHandshake($clientSocket, $headers) {
     $headers = parseHeaders($headers);
