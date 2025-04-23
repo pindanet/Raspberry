@@ -132,7 +132,8 @@ function getConf() { // Get configuration
         }
         lightOff();
         motionTimer = setInterval(startMotion, 250) // check motion sensor every 0.25s
-        startTemp();
+        setInterval(wgetTemp, 60000, "pindakeuken.local", conf.Kitchen);
+//        startTemp();
         setBrightness(0);
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
         conf = JSON.parse(this.responseText);
@@ -254,25 +255,43 @@ function checkTime(i) {
   return i;
 }
 
-function startTemp() {
+function wgetTemp(host, room) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
-      if (isNaN(output[0])) {
-        console.log(output[0]);
-      } else {
-        conf[room].temp = parseFloat(output[0]) / 1000 + conf[room].tempCorrection;
-        document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1);
+      if (!isNaN(output[0])) {
+        room.tempPrev = room.temp;
+        room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
+//        fireAlarm(room);
       }
+      document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
     }
   };
-  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/ds18b20.sh"));
-
-  setTimeout(startTemp, 60000); // elke minuut
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + "/data/temp"));
 }
+
+//function startTemp() {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "cli.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function(e) {
+//    if (this.status == 200 && this.readyState === 4) {
+//      const output = JSON.parse(this.responseText);
+//      if (isNaN(output[0])) {
+//        console.log(output[0]);
+//      } else {
+//        conf[room].temp = parseFloat(output[0]) / 1000 + conf[room].tempCorrection;
+//        document.getElementById(conf[room].id + "RoomTemp").innerHTML = conf[room].temp.toFixed(1);
+//      }
+//    }
+//  };
+//  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/ds18b20.sh"));
+//
+//  setTimeout(startTemp, 60000); // elke minuut
+//}
 
 function powerLog(dev, name) {
   const d = new Date();
