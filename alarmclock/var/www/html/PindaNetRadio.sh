@@ -18,7 +18,7 @@ case ${cmd[0]} in
     radio=${cmd[3]}
 
     rm /var/www/html/data/radio.stop
-    rm /var/www/html/data/radio.log
+    mv /var/www/html/data/radio.log /var/www/html/data/radio.log.bak
 
     curl -H "Icy-MetaData:1" --silent -L "$radio" 2>&1 | mpg123 --icy-interval $interval -f -$volume - 2> /var/www/html/data/radio.log &
 
@@ -27,7 +27,7 @@ case ${cmd[0]} in
       sleep 1
     done
     rm /var/www/html/data/radio.stop
-    rm /var/www/html/data/radio.log
+    mv /var/www/html/data/radio.log /var/www/html/data/radio.log.bak
   ;;
 
   "alarm")
@@ -35,7 +35,7 @@ case ${cmd[0]} in
     interval=${cmd[2]}
     radio=${cmd[3]}
 
-    rm /var/www/html/data/radio.log
+    mv /var/www/html/data/radio.log /var/www/html/data/radio.log.bak
 
     mpg123 -f -${cmd[1]} /var/www/html/data/bintro.mp3
 
@@ -51,7 +51,7 @@ case ${cmd[0]} in
     apt-get update
     apt-get upgrade -y
 
-    rm /var/www/html/data/radio.log
+    mv /var/www/html/data/radio.log /var/www/html/data/radio.log.bak
 
     shutdown -r now
   ;;
