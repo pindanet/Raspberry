@@ -861,25 +861,22 @@ console.log(room + " sleep restore: " + conf[room].tempWanted + " to " + conf[ro
 }
 function thermostat() {
   tempAdjustment(conf.Living);
-// getLivingTemp
-//  getTemp("pindadomo", "cat /sys/bus/iio/devices/iio\:device0/in_temp_input", conf.Living);
-//  getTemp("pindadomo", "cat /sys/bus/w1/devices/28-*/temperature", conf.Living);
-
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200 && this.readyState === 4) {
-      const output = JSON.parse(this.responseText);
-      if (isNaN(output[0])) {
-        console.log(output[0]);
-      } else {
-        conf.Living.temp = parseFloat(output[0]) / 1000 + conf.Living.tempCorrection;
-        fireAlarm(conf.Living);
-      }
-    }
-  };
-  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/ds18b20.sh"));
+  wgetTemp("pindadomo.local", conf.Living);
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "cli.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function(e) {
+//    if (this.status == 200 && this.readyState === 4) {
+//      const output = JSON.parse(this.responseText);
+//      if (isNaN(output[0])) {
+//        console.log(output[0]);
+//      } else {
+//        conf.Living.temp = parseFloat(output[0]) / 1000 + conf.Living.tempCorrection;
+//        fireAlarm(conf.Living);
+//      }
+//    }
+//  };
+//  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/ds18b20.sh"));
 
   tempAdjustment(conf.Dining);
   wgetTemp("pindadining.local", conf.Dining);
@@ -1213,7 +1210,7 @@ function sendMessage(message) {
   if (typeof socket !== 'undefined') {
     if (socket.readyState) {
       socket.send(message);
-      console.log("Message sent: " + message);
+//      console.log("Message sent: " + message);
     }
   } else {
 console.log("Websocket not ready yet!");
