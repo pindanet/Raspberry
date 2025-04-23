@@ -811,11 +811,11 @@ function wgetTemp(host, room) {
         room.tempPrev = room.temp;
         room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
         fireAlarm(room);
+        document.getElementById(room.htmlElementId).style.opacity="";
+      } else { // Fetching temp error
+        document.getElementById(room.htmlElementId).style.opacity=".5";
       }
       document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
-//      if (room.id == "living") {
-//        roomTemp = room.temp.toFixed(1) + " °C";
-//      }
     }
   };
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + "/data/temp"));
