@@ -228,6 +228,31 @@ sudo mv PindaMotion.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable PindaMotion.timer
 sudo systemctl start PindaMotion.timer
+
+sudo chmod +x /var/www/html/ds18b20.sh
+sudo tee /etc/systemd/system/ds18b20.timer > /dev/null <<EOF
+[Unit]
+Description=Read DS18B20 Temperature sensor
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+Unit=ds18b20.service
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo tee /etc/systemd/system/ds18b20.service > /dev/null <<EOF
+[Unit]
+Description=Read DS18B20 Temperature sensor
+[Service]
+Type=simple
+ExecStart=/var/www/html/ds18b20.sh
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable ds18b20.timer
+sudo systemctl start ds18b20.timer
+
 # systemctl list-timers
 
 echo "Ready, please restart"
