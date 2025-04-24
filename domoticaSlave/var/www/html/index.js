@@ -267,7 +267,7 @@ function wgetTemp(host, room) {
         room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
 //        fireAlarm(room);
       }
-      document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
+      document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1);
     }
   };
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + "/data/temp"));
