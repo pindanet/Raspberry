@@ -136,9 +136,10 @@ function getConf() { // Get configuration
 //        startTemp();
         setBrightness(0);
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
-        conf = JSON.parse(this.responseText);
-        conf.lastModified = this.getResponseHeader('Last-Modified');
-        calcConf();
+//        conf = JSON.parse(this.responseText);
+//        conf.lastModified = this.getResponseHeader('Last-Modified');
+//        calcConf();
+        location.reload(true);
       }
       setTimeout(getConf, 60000); // Every minute
     }
