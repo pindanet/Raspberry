@@ -20,7 +20,7 @@
     <label for="loadDocument">Upload: </label><input type="file" style="margin-right: 1em;" id="loadDocument"></input>
     <button style="margin-right: 1em;" id="saveDocument">Download</button>
     <button style="margin-right: 1em;" id="sendDocument">OK</button>
-    <button onclick="window.location.href = '/';">Cancel</button>
+    <button onclick="window.location.href = '/';">Domotica controller</button>
   </div>
   <script>
     // define a function that converts a string to hex
@@ -112,7 +112,8 @@
               xhr.onload = function(e) {
                 if (this.status == 200) {
                   console.log("PindaAlarmclock: ", this.responseText);
-                  window.location.href = "/";
+//                  window.location.href = "/";
+                  alert("Configuratie verzonden naar alle apparaten.");
                 }
               };
               xhr.send("cmd=wget&params="+stringToHex("-q -O- --post-file data/conf.json -H 'http://pindaalarmclock.local/sendconf.php' --header 'content-type: application/json'"));
