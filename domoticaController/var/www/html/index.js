@@ -573,9 +573,10 @@ function getConf() { // Get configuration
         nextalarm();
         startTime();
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
-        conf = JSON.parse(this.responseText);
-        conf.lastModified = this.getResponseHeader('Last-Modified');
-        calcConf();
+//        conf = JSON.parse(this.responseText);
+//        conf.lastModified = this.getResponseHeader('Last-Modified');
+//        calcConf();
+        location.reload(true);
       }
       variableToConf(variable, conf);
       if (conf.hasOwnProperty('thermostatDisabled')) {
