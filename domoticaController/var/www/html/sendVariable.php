@@ -4,6 +4,7 @@ $data = json_decode($json, true);
 // Check if decoding was successful
 if ($data !== null) {
   rename("data/variable.json","data/variable.json.bak");
+  sleep(1);
   // Perform further processing or respond to the request
   if (file_put_contents("data/variable.json", $json))
     echo "Variable is saved.";
