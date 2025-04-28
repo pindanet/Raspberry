@@ -135,6 +135,7 @@ function getConf() { // Get configuration
         setInterval(wgetTemp, 60000, "pindakeuken.local", conf.Kitchen);
 //        startTemp();
         setBrightness(0);
+        connect(); // Connect to Websocket server
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
 //        conf = JSON.parse(this.responseText);
 //        conf.lastModified = this.getResponseHeader('Last-Modified');
@@ -409,7 +410,47 @@ function startTime() {
 
   document.getElementById('day').innerHTML = dayNames[today.getDay()];
   document.getElementById('clock').innerHTML = h + ":" + m;
-  document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
+  var elem = document.getElementById("clockdate");
+  if (elem.innerHTML !== conf.available[0].sleep && elem.innerHTML !== conf.available[0].absent) {
+    document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
+  }
 
   setTimeout(startTime, 1000); // elke seconde
+}
+function connect() {
+  socket = new WebSocket("ws://pindadomo.local:8080");
+//  socket = new WebSocket("ws://192.168.129.2:8080");
+  socket.onopen = function(event) {
+    console.log("Connected to server");
+//    if (window.location.hostname !== 'localhost') {
+//      const message = {};
+//      message.function = "heaterColors";
+//      sendMessage(JSON.stringify(message));
+//    }
+  };
+  socket.onmessage = function(event) {
+    console.log("Message received: " + event.data);
+    if (event.data[0] == "["  || event.data[0] == "{") {
+      var message = JSON.parse(event.data);
+      switch (message.function) {
+        case "available":
+          if (message.value == conf.available[0].sleep || message.value == conf.available[0].absent) {
+            document.getElementById("clockdate").innerHTML = message.value;
+          } else {
+              var today = new Date();
+              document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
+          }
+          break;
+      }
+//    } else {
+//       document.getElementById(event.data).click();
+    }
+  };
+  socket.onclose = function(event) {
+    console.log("WebSocket connection has been closed successfully.");
+    setTimeout(connect, 1000);
+  };
+  socket.onerror = function(event) {
+    console.log("WebSocket error: ", event);
+  };
 }
