@@ -836,6 +836,12 @@ function toggleThermostat(event) {
     delete conf.thermostatDisabled;
   }
   saveVariable();
+
+  const message = {};
+  message.function = "thermostatClockday";
+  message.value = document.getElementById("clockday").style.color;
+  sendMessage(JSON.stringify(message));
+
   event.stopPropagation();
   event.preventDefault();
 }
@@ -890,9 +896,18 @@ function thermostat() {
   if (!conf.hasOwnProperty('thermostatDisabled')) {
     if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort)) {
       document.getElementById("clockday").style.color="lime";
-    } else {
+
+      const message = {};
+      message.function = "thermostatClockday";
+      message.value = document.getElementById("clockday").style.color;
+      sendMessage(JSON.stringify(message));
+    } else if (document.getElementById("clockday").style.color == "lime") {
       document.getElementById("clockday").style.color="";
-    }
+
+      const message = {};
+      message.function = "thermostatClockday";
+      message.value = document.getElementById("clockday").style.color;
+      sendMessage(JSON.stringify(message));    }
   }
   if (document.getElementById("clockyear").innerHTML != conf.available[0].absent) {
     if (conf.available[0].sleepdate - new Date() < 0) {
