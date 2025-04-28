@@ -427,6 +427,10 @@ function toggleAvailable(event) {
   }
   event.stopPropagation();
   event.preventDefault();
+  const message = {};
+  message.function = "available";
+  message.value = elem.innerHTML;
+  sendMessage(JSON.stringify(message));
 }
 function startTime() {
   clearTimeout(startTimer);
@@ -899,6 +903,11 @@ function thermostat() {
         activateSleep("Living");
         activateSleep("Dining");
         activateSleep("Kitchen");
+
+        const message = {};
+        message.function = "available";
+        message.value = elem.innerHTML;
+        sendMessage(JSON.stringify(message));
       }
     }
   }
