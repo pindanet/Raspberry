@@ -117,6 +117,7 @@ cat > PindaNetAutostart.sh <<EOF
 # PullUp 1-wire Data
 /usr/bin/pinctrl set 4 ip pu
 # Autostart Chromium in Kiosk & Debug mode
+# --kiosk can be replaced by --fullscreen
 /bin/chromium --disable-gpu --remote-debugging-port=9222 --kiosk --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar http://localhost/ &
 # Give Chromium time to start
 sleep 30
