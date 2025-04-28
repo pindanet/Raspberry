@@ -10,9 +10,9 @@
 </body>
 <!-- curl -s wttr.in/Brugge?lang=nl | head -7 | tail -5 | aha -->
 <div id="content">
-  <div id="day">Donderdag</div>
+  <div id="day" onclick="sendMessage('clockday');">Donderdag</div>
   <div id="clock">20:23</div>
-  <div id="clockdate">23 augustus</div>
+  <div id="clockdate" onclick="sendMessage('clockyear');">23 augustus</div>
   <table>
     <tr>
       <td style="text-align: center;">
