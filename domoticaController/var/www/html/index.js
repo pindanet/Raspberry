@@ -894,14 +894,16 @@ function thermostat() {
   tempAdjustment(conf.Kitchen);
   wgetTemp("pindakeuken.local", conf.Kitchen);
   if (!conf.hasOwnProperty('thermostatDisabled')) {
-    if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort)) {
+    if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort) && (document.getElementById("clockday").style.color !== "lime")) {
       document.getElementById("clockday").style.color="lime";
 
       const message = {};
       message.function = "thermostatClockday";
       message.value = document.getElementById("clockday").style.color;
       sendMessage(JSON.stringify(message));
-    } else if (document.getElementById("clockday").style.color == "lime") {
+//    } else if (document.getElementById("clockday").style.color == "lime") {
+    } else if (((conf.Living.temp < conf.tempComfort) || (conf.Dining.temp < conf.tempComfort) || (conf.Kitchen.temp < conf.tempComfort)) && (document.getElementById("clockday").style.color == "lime")) {
+
       document.getElementById("clockday").style.color="";
 
       const message = {};
