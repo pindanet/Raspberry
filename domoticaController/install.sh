@@ -16,9 +16,9 @@ router="mymodem.home"
 # GND (14) > Gnd
 
 # DS18B20 Temperature Sensor
-# GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Rood)(GPIO17)
-# GND (9) naar GND (Zwart)
-# GPIO17 (11) naar Vdd (Rood)
+# GPIO4 (7) naar Data (Yellow) naar 4k7 naar 3,3 V (Red or Orange)(GPIO17)
+# GND (9) naar GND (Black or White)
+# GPIO17 (11) naar Vdd (Red or Orange)
 powergpio=17
 
 # BH1750 Light Sensor
