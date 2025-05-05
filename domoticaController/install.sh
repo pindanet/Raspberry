@@ -276,8 +276,8 @@ EOF
 sudo chmod +x /var/www/html/luxmotion.sh
 
 sudo systemctl daemon-reload
-sudo systemctl enable mqtt_log.service
-sudo systemctl start mqtt_log.service
+sudo systemctl enable luxmotion.service
+sudo systemctl start luxmotion.service
 
 # Play Radio stream with ICY-META (stderr) output logging
 sudo tee /etc/systemd/system/PindaNetRadio.path > /dev/null <<EOF
