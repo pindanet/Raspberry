@@ -264,6 +264,21 @@ sudo systemctl daemon-reload
 sudo systemctl enable mqtt_log.service
 sudo systemctl start mqtt_log.service
 
+sudo tee /etc/systemd/system/luxmotion.service > /dev/null <<EOF
+[Unit]
+Description=Lux sensor and Motion detection
+[Service]
+Type=simple
+ExecStart=/var/www/html/luxmotion.sh
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo chmod +x /var/www/html/luxmotion.sh
+
+sudo systemctl daemon-reload
+sudo systemctl enable mqtt_log.service
+sudo systemctl start mqtt_log.service
+
 # Play Radio stream with ICY-META (stderr) output logging
 sudo tee /etc/systemd/system/PindaNetRadio.path > /dev/null <<EOF
 [Unit]
