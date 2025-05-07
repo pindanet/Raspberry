@@ -790,7 +790,11 @@ if (!location.hash) {
     const lat = urlParams.get('lat');
     const lon = urlParams.get('lon');
     const alt = urlParams.get('alt');
-    location.hash = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=' + lat + '&lon=' + lon +'&altitude=' + alt;
+    if (alt && lon && lat) {
+      location.hash = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=' + lat + '&lon=' + lon +'&altitude=' + alt;
+    } else {
+      location.hash = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=0&lon=0';
+    }
 }
 
 const url = location.hash.substr(1);
