@@ -21,7 +21,7 @@ router="mymodem.home"
 # GPIO17 (11) naar Vdd (Red or Orange)
 powergpio=17
 
-# BH1750 Light Sensor
+# BH1750 Light Sensor (not used)
 # 3.3 V (1) naar VIN (Rood)
 # SDA (3) naar SDA   (Grijs)
 # SCL (5) naar SCL   (Wit)
@@ -72,10 +72,10 @@ if [ $? == 1 ]; then
   sudo sed -i 's/^dtparam=audio=on/#&/' /boot/firmware/config.txt
   echo "Activate I2C and BH1750 Light Sensor"
   # Activate I2C
-  sudo sed -i 's/^#dtparam=i2c_arm=on/dtparam=i2c_arm=on/' /boot/firmware/config.txt
-  echo 'i2c-dev' | sudo tee -a /etc/modules
+#  sudo sed -i 's/^#dtparam=i2c_arm=on/dtparam=i2c_arm=on/' /boot/firmware/config.txt
+#  echo 'i2c-dev' | sudo tee -a /etc/modules
   # Activate BH1750 Light Sensor
-  echo 'dtoverlay=i2c-sensor,bh1750' | sudo tee -a /boot/firmware/config.txt
+#  echo 'dtoverlay=i2c-sensor,bh1750' | sudo tee -a /boot/firmware/config.txt
 fi
 
 echo "Shutdown/Boot button"
