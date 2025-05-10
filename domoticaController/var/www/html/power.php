@@ -123,7 +123,7 @@ function processLine($powerline) {
       }
     } else {
       echo "<b style='color: red;'>";
-      printf("%s to %s %15s %4u Watt %4u uur %u min genegeerd.<br>", date("d/m/Y H:i:s", $powerline["time"] / 1000), date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000), $powerline["name"], $powerline["Watt"], $minutes/60, $minutes % 60);
+      printf("%s to %s %15s %4u Watt %4u uur %u min genegeerd (regels: %s - %s).<br>", date("d/m/Y H:i:s", $powerline["time"] / 1000), date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000), $powerline["name"], $powerline["Watt"], $minutes/60, $minutes % 60, $GLOBALS[$powerline["name"]], $powerline["time"]);
       echo "</b>";
     }
     unset($GLOBALS[$powerline["name"]]);
