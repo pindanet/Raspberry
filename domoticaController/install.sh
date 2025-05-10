@@ -70,6 +70,7 @@ if [ $? == 1 ]; then
   echo 'w1-therm' | sudo tee -a /etc/modules
   # Set IQaudIODAC DigiAMP+ default
   sudo sed -i 's/^dtparam=audio=on/#&/' /boot/firmware/config.txt
+  sudo sed "/auto_initramfs=1/a \\\n# Some magic to prevent the normal HAT overlay from being loaded\ndtoverlay=\n# And then choose one of the following, according to the model:\ndtoverlay=rpi-digiampplus" /boot/firmware/config.txt
   echo "Activate I2C and BH1750 Light Sensor"
   # Activate I2C
 #  sudo sed -i 's/^#dtparam=i2c_arm=on/dtparam=i2c_arm=on/' /boot/firmware/config.txt
