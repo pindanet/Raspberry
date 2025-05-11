@@ -334,12 +334,16 @@ function setBrightness(brightness) {
   xhr.send("brightness=" + brightness);
 }
 
-//function motionPicture() {
-//  var xhr = new XMLHttpRequest();  // Take picture
-//  xhr.open('POST', "cli.php", true);
-//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//  xhr.send("cmd=bash&params="+stringToHex("./motion.sh"));
-//}
+function toggleLight() {
+  sendMessage("Keukenlamp");
+  if (document.getElementById("lightoff").style.display == "none") { // if light is on > light off
+    document.getElementById("lightoff").style.display = "";
+    document.getElementById("lighton").style.display = "none";
+  } else {
+    document.getElementById("lightoff").style.display = "none";
+    document.getElementById("lighton").style.display = "";
+  }
+}
 
 function lightOff() {
   document.getElementById("lightoff").style.display = "";
@@ -349,17 +353,13 @@ function lightOff() {
   }
 }
 
-//var pirStatus;
-//var pir = pir1;
 var pictureTaken = false;
-// var lightOffTime;
 function startMotion() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
-//      const output = JSON.parse(this.responseText);
       if (this.responseText.includes(" hi ")) { // Motion detected
 //console.log(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), this.responseText);
         if (typeof screenTimer != 'undefined') {
@@ -381,19 +381,8 @@ function startMotion() {
         } else {
           setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
         }
-//        if (pictureTaken == false) {
-//          pictureTaken = true;
-//          motionPicture(); // take a photo
-//        }
         weather();  // refresh weather
-//      } else { // no motion
-//        pictureTaken = false;
       }
-//      if (pir == pir1) {
-//        pir = pir2;
-//      } else {
-//        pir = pir1;
-//      }
     }
   };
   xhr.send("cmd=pinctrl&params="+stringToHex("get " + pir1 + "," + pir2));
