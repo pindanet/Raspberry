@@ -21,6 +21,10 @@ router="mymodem.home"
 # GPIO17 (11) naar Vdd (Red or Orange)
 powergpio=17
 
+# Shutdown/Boot button
+# Gnd (6) > Gnd (Black)
+# GPIO3 (5) > Shutdown/Boot button (White)
+
 # BH1750 Light Sensor (not used)
 # 3.3 V (1) naar VIN (Rood)
 # SDA (3) naar SDA   (Grijs)
