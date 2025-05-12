@@ -83,9 +83,9 @@ if [ $? == 1 ]; then
 #  echo 'dtoverlay=i2c-sensor,bh1750' | sudo tee -a /boot/firmware/config.txt
 fi
 
-echo "Shutdown/Boot button"
-echo "===================="
-echo 'dtoverlay=gpio-shutdown' | sudo tee -a /boot/firmware/config.txt
+echo "Shutdown button"
+echo "==============="
+echo 'dtoverlay=gpio-shutdown,gpio_pin=10,active_low=1,gpio_pull=up' | sudo tee -a /boot/firmware/config.txt
 
 echo "Install webserver"
 echo "================="
