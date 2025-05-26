@@ -26,8 +26,8 @@
   "tempNightTime": "06:30",
   "bedTime": "22:50",
   "hysteresis": 0.1,
-  "minBacklight": 15,
-  "maxBacklight": 110,
+  "minBacklight": 20,
+  "maxBacklight": 115,
   "lights": {
     "lightTimer": 180,
     "lightsOut": {
@@ -191,7 +191,7 @@
     ],
     "thermostat": [
       {
-        "begin": "07:30",
+        "begin": "breakfast",
         "end": "13:30",
         "temp": "tempAux"
       },
@@ -249,12 +249,12 @@
     ],
     "thermostat": [
       {
-        "begin": "07:30",
-        "end": "08:50",
+        "begin": "breakfast",
+        "end": "morningLightsOut",
         "temp": "tempComfort"
       },
       {
-        "begin": "08:50",
+        "begin": "morningLightsOut",
         "end": "10:55",
         "temp": "tempAux"
       },
@@ -311,7 +311,7 @@
     ],
     "thermostat": [
       {
-        "begin": "07:30",
+        "begin": "breakfast",
         "end": "11:00",
         "temp": "tempAux"
       },
@@ -349,7 +349,7 @@
     {
       "repeat": 0,
       "begindate": "2025-04-21",
-      "begin": "13:00",
+      "begin": "12:45",
       "enddate": "2025-04-21",
       "end": "20:30",
       "temp": {
@@ -361,9 +361,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2025-04-20",
+      "begindate": "2025-04-21",
       "begin": "16:00",
-      "enddate": "2025-04-20",
+      "enddate": "2025-04-21",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
