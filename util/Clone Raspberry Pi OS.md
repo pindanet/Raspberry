@@ -1,4 +1,9 @@
 # Clone Raspberry Pi OS
+## Script to make a clone to file in Debian
+       wget https://raw.githubusercontent.com/pindanet/Raspberry/refs/heads/master/util/rpiclone.sh
+Edit in the script the first variable (backupDir).
+
+       bash rpiclone.sh
 ## Make a clone of a SD-card
        curl https://raw.githubusercontent.com/geerlingguy/rpi-clone/master/install | sudo bash
 ### Clone to USB Card reader      
