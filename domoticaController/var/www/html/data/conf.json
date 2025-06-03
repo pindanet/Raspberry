@@ -495,7 +495,7 @@
       },
       "swissjazz": {
         "URL": "http://stream.srg-ssr.ch/m/rsj/mp3_128",
-        "interval": 16000
+        "interval": 16384
       },
       "vbro": {
         "URL": "http://stream.vbro.be:9100/vbro",
