@@ -152,7 +152,8 @@ cat > checkAvahi.sh <<EOF
 # Check WiFi connection
 if ! ping -c 1 $router; then
   echo "Restart NetworkManager"
-  systemctl restart NetworkManager.service
+#  systemctl restart NetworkManager.service
+  /sbin/shutdown -r now
   sleep 10
 fi
 # Check Avahi conflict
@@ -168,7 +169,7 @@ cat > checkAvahi.timer <<EOF
 [Unit]
 Description=Check Avahi hostname
 [Timer]
-OnBootSec=5min
+#OnBootSec=5min
 OnUnitActiveSec=1h
 Unit=checkAvahi.service
 [Install]
