@@ -157,6 +157,13 @@ sudo systemctl daemon-reload
 sudo systemctl enable PindaNetUpdate.timer
 sudo systemctl start PindaNetUpdate.timer
 
+# Disable NetworkManager mDNS (Avahi conflict)
+# https://feeding.cloud.geek.nz/posts/proper-multicast-dns-handling-network-manager-systemd-resolved/
+sudo tee /etc/NetworkManager/conf.d/mdns.conf > /dev/null <<EOF
+[connection]
+connection.mdns=1
+EOF
+
 # Check Avahi hostname
 sudo apt install avahi-utils -y
 cat > checkAvahi.sh <<EOF
@@ -169,7 +176,6 @@ if ! ping -c 1 $router; then
   sleep 10
 fi
 # Check Avahi conflict
-# Solution: https://feeding.cloud.geek.nz/posts/proper-multicast-dns-handling-network-manager-systemd-resolved/
 #if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
 #  echo Restart avahi
 #  systemctl restart avahi-daemon.service
