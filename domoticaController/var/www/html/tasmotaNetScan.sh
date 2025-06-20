@@ -3,7 +3,7 @@
 # Prints the IP address and Hostname of the Tasmota device.
 untilIP=50
 if [ -z "$1" ]; then
-  set -- $(ip -o -f inet addr show | awk '/scope global/ {print $4}' | sed 's/\(.*\)\..*/\1/')
+  set -- $(ip -o -f inet addr show | awk '/scope global dynamic/ {print $4}' | sed 's/\(.*\)\..*/\1/')
 fi
 if [[ ! $1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   echo "Networkrange not accepted."
