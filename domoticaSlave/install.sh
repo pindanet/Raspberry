@@ -159,6 +159,8 @@ sudo systemctl start PindaNetUpdate.timer
 
 # Disable NetworkManager mDNS (Avahi conflict)
 # https://feeding.cloud.geek.nz/posts/proper-multicast-dns-handling-network-manager-systemd-resolved/
+sudo nmcli connection modify preconfigured connection.mdns 1
+nmcli connection show preconfigured | grep "connection.mdns"
 #sudo tee /etc/NetworkManager/conf.d/mdns.conf > /dev/null <<EOF
 #[connection]
 #connection.mdns=1
