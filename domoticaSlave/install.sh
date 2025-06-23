@@ -162,6 +162,11 @@ sudo systemctl start PindaNetUpdate.timer
 activeConnection=$(nmcli con show --active | grep -v loopback | tail -1 | awk '{print $1}')
 sudo nmcli connection modify $activeConnection connection.mdns 1
 nmcli connection show $activeConnection | grep "connection.mdns"
+# Should also work
+#sudo tee -a /etc/NetworkManager/NetworkManager.conf > /dev/null <<EOF
+#[connection]
+#connection.mdns=1
+#EOF
 
 # Check Avahi hostname
 sudo apt install avahi-utils -y
