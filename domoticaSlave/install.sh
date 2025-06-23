@@ -159,10 +159,10 @@ sudo systemctl start PindaNetUpdate.timer
 
 # Disable NetworkManager mDNS (Avahi conflict)
 # https://feeding.cloud.geek.nz/posts/proper-multicast-dns-handling-network-manager-systemd-resolved/
-sudo tee /etc/NetworkManager/conf.d/mdns.conf > /dev/null <<EOF
-[connection]
-connection.mdns=1
-EOF
+#sudo tee /etc/NetworkManager/conf.d/mdns.conf > /dev/null <<EOF
+#[connection]
+#connection.mdns=1
+#EOF
 
 # Check Avahi hostname
 sudo apt install avahi-utils -y
