@@ -278,7 +278,7 @@ function radioStatus() {
       }
     }
   };
-  xhr.send("cmd=cat&params="+stringToHex("/var/www/html/data/radio.log | tail -1"));
+  xhr.send("cmd=cat&params="+stringToHex("/var/www/html/data/radio.log | grep -v '\[' | tail -1"));
 }
 function playRadio(event, cmd, channel) {
   var xhr = new XMLHttpRequest();
