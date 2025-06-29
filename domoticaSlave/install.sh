@@ -98,7 +98,7 @@ echo none | sudo tee /sys/class/leds/ACT/trigger
 # PullUp 1-wire Data
 /usr/bin/pinctrl set 4 ip pu
 # PullDown PIR1 and PIR2
-pinctrl get $pir1gpio,$pir2gpio ip pd
+/usr/bin/pinctrl get $pir1gpio,$pir2gpio ip pd
 # Autostart Chromium in Kiosk & Debug mode
 /bin/chromium --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
 # Give Chromium time to start
