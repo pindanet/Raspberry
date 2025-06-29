@@ -192,7 +192,7 @@ cat > checkAvahi.timer <<EOF
 [Unit]
 Description=Check Avahi hostname
 [Timer]
-#OnBootSec=5min
+OnBootSec=1h
 OnUnitActiveSec=1h
 Unit=checkAvahi.service
 [Install]
