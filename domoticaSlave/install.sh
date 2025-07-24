@@ -100,7 +100,7 @@ echo none | sudo tee /sys/class/leds/ACT/trigger
 # PullDown PIR1 and PIR2
 /usr/bin/pinctrl set $pir1gpio,$pir2gpio ip pd
 # Autostart Chromium in Kiosk & Debug mode
-/bin/chromium --remote-debugging-port=9222 --kiosk --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
+/bin/chromium --remote-debugging-port=9222 --kiosk --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
 # Give Chromium time to start
 sleep 30
 # Check if Chromium is running
