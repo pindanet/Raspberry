@@ -35,7 +35,7 @@ while true; do
     # Start VLC met Wayland in Kiosk mode
     unset DISPLAY
     QT_QPA_PLATFORM=wayland vlc --no-video-title-show --fullscreen --loop -Idummy ${video} &
-    locDate=${days[$(($(date '+%u') - 1))]}$(date "+, %-d ${months[$(($(date '+%m') - 1))]} %Y")
+    locDate=${days[$(($(date +'%-u') - 1))]}$(date "+, %-d ${months[$(($(date +'%-m') - 1))]} %Y")
     counter=$(((33 - ${#locDate}) / 2))
     while [ $counter -gt 0 ]
     do
