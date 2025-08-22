@@ -805,7 +805,6 @@ console.log(firealarm);
 }
 
 function wgetTemp(host, room) {
-// wget -qO- http://pindakeuken.local/data/temp
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -872,7 +871,7 @@ console.log(room + " sleep restore: " + conf[room].tempWanted + " to " + conf[ro
 }
 function thermostat() {
   tempAdjustment(conf.Living);
-  wgetTemp("pindadomo.local", conf.Living);
+  wgetTemp("pindadomo", conf.Living);
 //  var xhr = new XMLHttpRequest();
 //  xhr.open('POST', "cli.php", true);
 //  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -890,9 +889,9 @@ function thermostat() {
 //  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/ds18b20.sh"));
 
   tempAdjustment(conf.Dining);
-  wgetTemp("pindadining.local", conf.Dining);
+  wgetTemp("pindadining", conf.Dining);
   tempAdjustment(conf.Kitchen);
-  wgetTemp("pindakeuken.local", conf.Kitchen);
+  wgetTemp("pindakeuken", conf.Kitchen);
   if (!conf.hasOwnProperty('thermostatDisabled')) {
     if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort) && (document.getElementById("clockday").style.color !== "lime")) {
       document.getElementById("clockday").style.color="lime";
@@ -1162,7 +1161,7 @@ function toTop() {
 
 let socket;
 function connect() {
-  socket = new WebSocket("ws://pindadomo.local:8080");
+  socket = new WebSocket("ws://pindadomo.home:8080");
 //  socket = new WebSocket("ws://192.168.129.2:8080");
   socket.onopen = function(event) {
     console.log("Connected to server");
