@@ -12,7 +12,7 @@
   }
   if (file_exists("/tmp/wttr")) { // first time
     if ((time()-filectime("/tmp/wttr")) >= 3600) { // older than 1 hour or 3600 sec
-      exec("cat /sys/class/backlight/rpi_backlight/brightness", $output);
+      exec("cat /sys/class/backlight/10-0045/brightness", $output);
       if ($output[0] > 0) { // screen lit, somebody in the room
         getWeather();
       }
