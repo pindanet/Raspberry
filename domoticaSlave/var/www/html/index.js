@@ -132,7 +132,7 @@ function getConf() { // Get configuration
         }
         lightOff();
         motionTimer = setInterval(startMotion, 250) // check motion sensor every 0.25s
-        setInterval(wgetTemp, 60000, "pindakeuken.local", conf.Kitchen);
+        setInterval(wgetTemp, 60000, "pindakeuken", conf.Kitchen);
 //        startTemp();
         setBrightness(0);
         connect(); // Connect to Websocket server
@@ -361,7 +361,6 @@ function startMotion() {
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       if (this.responseText.includes(" hi ")) { // Motion detected
-//console.log(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), this.responseText);
         if (typeof screenTimer != 'undefined') {
           clearTimeout(screenTimer);
         }
@@ -375,6 +374,7 @@ function startMotion() {
           document.getElementById("lightoff").style.display = "none";
           document.getElementById("lighton").style.display = "";
           if (conf.switch[conf[room].light].status != "on") { // if light is out > light on
+console.log(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), this.responseText);
             tasmotaSwitch (conf[room].light, "Power%20On");
           }
           lightTimer = setTimeout(lightOff, conf.lights.lightTimer*1000); // Reset Timeoff
@@ -407,7 +407,7 @@ function startTime() {
   setTimeout(startTime, 1000); // elke seconde
 }
 function connect() {
-  socket = new WebSocket("ws://pindadomo.local:8080");
+  socket = new WebSocket("ws://pindadomo.home:8080");
 //  socket = new WebSocket("ws://192.168.129.2:8080");
   socket.onopen = function(event) {
     console.log("Connected to server");
