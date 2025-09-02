@@ -533,11 +533,22 @@ function startWebsocket() {
     connect(); // Connect to Websocket server
   }
 }
+let domain;
 function getVariable() { // Get Variables
   if (window.location.hostname === 'localhost') { // Hide cursor on touchscreen
     document.body.style.cursor = "none";
   }
-  startWebsocket();
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      domain = JSON.parse(this.responseText)[0];
+      startWebsocket();
+    }
+  };
+  xhr.send("cmd=cat&params="+stringToHex("/etc/resolv.conf | grep search | awk '{print $2}'"));
+
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function(e) {
     if (this.status == 200) {
@@ -1161,7 +1172,7 @@ function toTop() {
 
 let socket;
 function connect() {
-  socket = new WebSocket("ws://pindadomo.home:8080");
+  socket = new WebSocket("ws://pindadomo." + domain + ":8080");
 //  socket = new WebSocket("ws://192.168.129.2:8080");
   socket.onopen = function(event) {
     console.log("Connected to server");
