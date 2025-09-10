@@ -213,7 +213,14 @@ function weather(event) {
     if (this.status == 200) {
       var d = new Date();
       var UTCHour = d.getUTCHours() + ":00";
-      const weatherObj = JSON.parse(this.responseText);
+      var weatherObj;
+      try {
+        weatherObj = JSON.parse(this.responseText);
+      } catch (err) {
+        console.log(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), err);
+        console.log(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), this.responseText);
+        return;
+      }
       for (let x in weatherObj.properties.timeseries) {
 	if (weatherObj.properties.timeseries[x].time.includes(UTCHour)) {
         for (let col = 1; col < 5; col++) {
