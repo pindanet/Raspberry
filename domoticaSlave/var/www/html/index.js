@@ -371,6 +371,7 @@ function startMotion() {
         if (typeof screenTimer != 'undefined') {
           clearTimeout(screenTimer);
         }
+console.log(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), this.responseText);
         screenTimer = setTimeout(setBrightness, conf.lights.lightTimer*1000, 0); // Reset Timeoff
         var now = new Date().getTime();
         if (now > eveningLightsOn || now < morningLightsOut) { // dark
@@ -381,7 +382,6 @@ function startMotion() {
           document.getElementById("lightoff").style.display = "none";
           document.getElementById("lighton").style.display = "";
           if (conf.switch[conf[room].light].status != "on") { // if light is out > light on
-console.log(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), this.responseText);
             tasmotaSwitch (conf[room].light, "Power%20On");
           }
           lightTimer = setTimeout(lightOff, conf.lights.lightTimer*1000); // Reset Timeoff
