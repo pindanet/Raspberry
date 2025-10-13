@@ -494,7 +494,6 @@ function startTime() {
 function connectWebsocket() {
   var http = new XMLHttpRequest()
   http.open('HEAD', "data/websocket.log", true)
-  http.send()
   http.onload = function(e) {
     if (this.status == 200) {
 // console.log("websocket.log exist!");
@@ -504,6 +503,7 @@ function connectWebsocket() {
       setTimeout(connectWebsocket, 1000);
     }
   }
+  http.send()
 }
 function startWebsocket() {
   if (window.location.hostname === 'localhost') {
