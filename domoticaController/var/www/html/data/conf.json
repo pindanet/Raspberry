@@ -374,9 +374,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2025-01-03",
+      "begindate": "2025-04-11",
       "begin": "16:00",
-      "enddate": "2025-01-03",
+      "enddate": "2025-04-11",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -400,9 +400,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2025-01-08",
+      "begindate": "2025-09-03",
       "begin": "16:00",
-      "enddate": "2025-01-08",
+      "enddate": "2025-09-03",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -413,9 +413,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2025-01-08",
+      "begindate": "2025-09-03",
       "begin": "19:45",
-      "enddate": "2025-01-08",
+      "enddate": "2025-09-03",
       "end": "bedTime",
       "temp": {
         "living": "tempAux",
