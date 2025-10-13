@@ -493,14 +493,16 @@ function startTime() {
 }
 function connectWebsocket() {
   var http = new XMLHttpRequest()
-  http.open('HEAD', "data/websocket.log", false)
+  http.open('HEAD', "data/websocket.log", true)
   http.send()
-  if (http.status === 200) {
+  http.onload = function(e) {
+    if (this.status == 200) {
 // console.log("websocket.log exist!");
-    connect(); // Activate Webconnect
-  } else {
+      connect(); // Activate Webconnect
+    } else {
 // console.log("websocket.log does not exist!");
-    setTimeout(connectWebsocket, 1000);
+      setTimeout(connectWebsocket, 1000);
+    }
   }
 }
 function startWebsocket() {
@@ -544,6 +546,7 @@ function getVariable() { // Get Variables
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       domain = JSON.parse(this.responseText)[0];
+console.log("getVariable: startWebsocket");
       startWebsocket();
     }
   };
@@ -553,11 +556,13 @@ function getVariable() { // Get Variables
   xhttp.onload = function(e) {
     if (this.status == 200) {
       variable = JSON.parse(this.responseText);
+console.log("getVariable: getConf");
       getConf();
     }
   }
   xhttp.open("POST", "data/variable.json");
   xhttp.send();
+console.log("getVariable");
 }
 function variableToConf(obj, dest) {
   for (let key in obj) {
@@ -736,6 +741,7 @@ function tempAdjustment(room) {
       beginDate.setTime(begin);
       beginDate = timeDate(conf.event[i].begin, beginDate);
       begin = beginDate.getTime();
+console.log("Event: " + beginDate.toString() + " tot " + endDate.toString());
       if (begin <= now && end > now) {
         tempWanted = conf[conf.event[i].temp[room.id]];
         conf.eventDots = true;
