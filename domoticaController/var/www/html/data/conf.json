@@ -165,20 +165,20 @@
     "mode": "Auto",
     "heater": [
       {
-        "name": "Schilderij",
-        "color": "Yellow",
-        "status": "undefined",
-        "IP": "192.168.129.12",
-        "Hostname": "Schilderij_650",
-        "Watt": "650"
-      },
-      {
         "name": "Computertafel",
-        "color": "Orange",
+        "color": "Yellow",
         "status": "undefined",
         "IP": "192.168.129.0",
         "Hostname": "Computertafel_300",
         "Watt": "300"
+      },
+      {
+        "name": "Schilderij",
+        "color": "Orange",
+        "status": "undefined",
+        "IP": "192.168.129.12",
+        "Hostname": "Schilderij_650",
+        "Watt": "650"
       },
       {
         "name": "Canyon",
@@ -223,20 +223,20 @@
     "subtitleColor": "white",
     "heater": [
       {
-        "name": "Zonsondergang",
-        "color": "Yellow",
-        "status": "undefined",
-        "IP": "192.168.129.20",
-        "Hostname": "Zonsondergang_650",
-        "Watt": "650"
-      },
-      {
         "name": "Eettafel",
-        "color": "Orange",
+        "color": "Yellow",
         "status": "undefined",
         "IP": "192.168.129.5",
         "Hostname": "Eettafel_300",
         "Watt": "300"
+      },
+      {
+        "name": "Zonsondergang",
+        "color": "Orange",
+        "status": "undefined",
+        "IP": "192.168.129.20",
+        "Hostname": "Zonsondergang_650",
+        "Watt": "650"
       },
       {
         "name": "Tropen",
