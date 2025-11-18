@@ -287,6 +287,35 @@ sudo systemctl daemon-reload
 sudo systemctl enable luxmotion.service
 sudo systemctl start luxmotion.service
 
+# Experimental PHP Lichtswitch
+sudo tee /etc/systemd/system/PindaLights.service > /dev/null <<EOF
+[Unit]
+Description=My PHP Script Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/php /var/www/html/lights.php
+Restart=always
+RestartSec=5
+
+User=www-data
+Group=www-data
+
+WorkingDirectory=/var/www/html/
+Environment="ENV_VAR=production"
+StandardOutput=journal
+StandardError=journal
+ExecStop=/bin/kill $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+#sudo systemctl enable PindaLights.service
+sudo systemctl start PindaLights.service
+
 # Play Radio stream with ICY-META (stderr) output logging
 sudo tee /etc/systemd/system/PindaNetRadio.path > /dev/null <<EOF
 [Unit]
