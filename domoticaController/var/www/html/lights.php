@@ -19,6 +19,23 @@ if (!isset($_SERVER["HTTP_HOST"])) {
 
 $switchingPoint = 30;
 $hysteresis = 1;
+$lightStart = "12:00";
+$lightStop = "02:00";
+
+$now = date("H:i");
+//$now = "03:00";
+echo $now . "\n";
+if ($lightStart > $lightStop) { // lightStop on next day
+  if (($now > $lightStart && $now > $lightStop) || ($now < $lightStart && $now < $lightStop)) {
+    echo date("Y-m-d H:i:s") . ": Licht aan tussen " . $lightStart . " en " . $lightStop . "\n";
+  }
+} else { // lightStart and lightStop on same day
+  if ($now > $lightStart && $now < $lightStop) {
+    echo date("Y-m-d H:i:s") . ": Licht aan tussen " . $lightStart . " en " . $lightStop . "\n";
+  }
+}
+
+exit("Afgebroken.\n");
 
 $power = file_get_contents("http://192.168.129.41/cm?cmnd=Power1");
 
