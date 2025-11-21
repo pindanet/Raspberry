@@ -3,62 +3,79 @@
 error_reporting(E_ALL);
 
 /**
- * Light switch on brightness.
+ * Light switch on Illuminance.
  * @author Dany Pinoy https://github.com/pindanet/Raspberry/
- * @version 2025-11-18
+ * @version 2025-11-19
  */
 
 $logfile = '/var/www/html/data/php.log';
 
-// Use terminal arg as POST en GET arg, example: php -e /var/www/html/websocket/client.php message=Cli%20PHP%20Client
-// Use terminal arg as POST en GET arg, example: php -e /var/www/html/websocket/client.php message=$(bash /var/www/html/websocket/urlencode.sh '{"target":"server", "message":"JSON bericht"}')
+// Use terminal arg as POST en GET arg, example: sudo -u www-data php -e /var/www/html/lights.php message=Cli%20PHP%20Client
+// Use terminal arg as POST en GET arg, example: sudo -u www-data php -e /var/www/html/lights.php message=$(bash /var/www/html/websocket/urlencode.sh '{"target":"server", "message":"JSON bericht"}')
 if (!isset($_SERVER["HTTP_HOST"])) {
   parse_str(implode('&', array_slice($argv, 1)), $_GET);
   parse_str(implode('&', array_slice($argv, 1)), $_POST);
 }
+// Settings
+$conf = json_decode(file_get_contents(__DIR__ . "/data/conf.php.json"));
+date_default_timezone_set($conf->Timezone);
 
-$switchingPoint = 30;
-$hysteresis = 1;
-$lightStart = "12:00";
-$lightStop = "02:00";
+function writeLog($text) {
+  $handle = fopen($GLOBALS['logfile'], 'a');
+  $data = date("Y-m-d H:i:s") . ": " . $text . "\n";
+  fwrite($handle, $data);
+  fclose($handle);
+}
 
-$now = date("H:i");
-//$now = "03:00";
-echo $now . "\n";
-if ($lightStart > $lightStop) { // lightStop on next day
-  if (($now > $lightStart && $now > $lightStop) || ($now < $lightStart && $now < $lightStop)) {
-    echo date("Y-m-d H:i:s") . ": Licht aan tussen " . $lightStart . " en " . $lightStop . "\n";
+function lightSwitch(&$switch, $lux, $event) {
+  if (isset ($switch->Channel)) {
+    $channel = $switch->Channel;
+  } else {
+    $channel = "";
   }
-} else { // lightStart and lightStop on same day
-  if ($now > $lightStart && $now < $lightStop) {
-    echo date("Y-m-d H:i:s") . ": Licht aan tussen " . $lightStart . " en " . $lightStop . "\n";
+  if (! isset($switch->power)) { // Initialize
+    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
+writeLog("Create power for " . $switch->Hostname . ": " . $switch->power);
+  } elseif (! str_contains($switch->power, ':"OFF"}') && ! str_contains($switch->power, ':"ON"}')) { // Connection error
+    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
+writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch->power);
+  } else {
+    if ($lux < $event->switchingIlluminance - $event->hysteresis) {
+      if (str_contains($switch->power, ':"OFF"}')) {
+        writeLog(sprintf("%s aan bij %s lux", $switch->Hostname, $lux));
+        $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
+      }
+    } elseif ($lux > $event->switchingIlluminance + $event->hysteresis) {
+      if (str_contains($switch->power, ':"ON"}')) {
+        writeLog(sprintf("%s uit bij %s lux", $switch->Hostname, $lux));
+        $switch->power = file_get_contents('http://" . $switch->IP . "" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF');
+      }
+    }
   }
 }
 
-exit("Afgebroken.\n");
-
-$power = file_get_contents("http://192.168.129.41/cm?cmnd=Power1");
-
 while (true) {
-  $lux = file_get_contents(__DIR__ . "/data/lux");
-  echo $lux;
-  if ($lux < $switchingPoint - $hysteresis) {
-    if (str_contains($power, ':"OFF"}')) {
-      $handle = fopen($logfile, 'a');
-      $data = date("Y-m-d H:i:s") . ": Licht aan bij " . $lux . "\n";
-      fwrite($handle, $data);
-      fclose($handle);
-      $power = file_get_contents('http://192.168.129.41/cm?cmnd=Power1%20ON');
-    }
-  } elseif ($lux > $switchingPoint + $hysteresis) {
-    if (str_contains($power, ':"ON"}')) {
-      $handle = fopen($logfile, 'a');
-      $data = date("Y-m-d H:i:s") . ": Licht uit bij " . $lux . "\n";
-      fwrite($handle, $data);
-      fclose($handle);
-      $power = file_get_contents('http://192.168.129.41/cm?cmnd=Power1%20OFF');
+  $lux = intval(file_get_contents(__DIR__ . "/data/lux"));
+  $now = date("H:i");
+  foreach ($conf->switch as $switch) {
+  //echo sprintf("%d: Type switch: %s.\n", __LINE__, $switch->type);
+    if (isset($switch->type)) {
+      if ($switch->type == "light" && isset($switch->events)) {
+        foreach ($switch->events as $event) {
+          if ($event->startTime > $event->stopTime) { // stopTime on next day
+            if (($now > $event->startTime && $now > $event->stopTime) || ($now < $event->startTime && $now < $event->stopTime)) {
+              lightSwitch($switch, $lux, $event);
+            }
+          } else { // startTime and stopTime on same day
+            if ($now > $event->startTime && $now < $event->stopTime) {
+              lightSwitch($switch, $lux, $event);
+            }
+          }
+//var_dump($event->switchingIlluminance);
+        }
+      }
     }
   }
-  sleep(60);
+  sleep(60); //every minute
 }
 ?>
