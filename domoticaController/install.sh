@@ -309,11 +309,11 @@ StandardError=journal
 ExecStop=/bin/kill $MAINPID
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=network-online.target
 EOF
 
 sudo systemctl daemon-reload
-#sudo systemctl enable PindaLights.service
+sudo systemctl enable PindaLights.service
 sudo systemctl start PindaLights.service
 
 # Play Radio stream with ICY-META (stderr) output logging
