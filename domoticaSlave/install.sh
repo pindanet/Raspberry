@@ -244,6 +244,35 @@ sudo systemctl daemon-reload
 sudo systemctl enable PindaMotion.timer
 sudo systemctl start PindaMotion.timer
 
+# Experimental PHP Motion
+sudo tee /etc/systemd/system/PindaPHPMotion.service > /dev/null <<EOF
+[Unit]
+Description=My PHP Motion Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/php /var/www/html/motion.php
+Restart=always
+RestartSec=5
+
+User=www-data
+Group=www-data
+
+WorkingDirectory=/var/www/html/
+Environment="ENV_VAR=production"
+StandardOutput=journal
+StandardError=journal
+ExecStop=/bin/kill $MAINPID
+
+[Install]
+WantedBy=network-online.target
+EOF
+
+sudo systemctl daemon-reload
+#sudo systemctl enable PindaPHPMotion.service
+sudo systemctl start PindaPHPMotion.service
+
 sudo chmod +x /var/www/html/ds18b20.sh
 sudo tee /etc/systemd/system/ds18b20.timer > /dev/null <<EOF
 [Unit]
