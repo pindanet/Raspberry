@@ -48,7 +48,7 @@ writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch-
     } elseif ($lux > $event->switchingIlluminance + $event->hysteresis) {
       if (str_contains($switch->power, ':"ON"}')) {
         writeLog(sprintf("%s uit bij %s lux", $switch->Hostname, $lux));
-        $switch->power = file_get_contents('http://" . $switch->IP . "" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF');
+        $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
       }
     }
   }
