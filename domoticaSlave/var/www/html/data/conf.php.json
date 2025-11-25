@@ -13,9 +13,13 @@
       "Name": "Keuken",
       "Hostname": "pindakeuken",
       "Motion": {
+        "switchingIlluminance": 143,
+        "hysteresis": 2,
+        "timer": 180,
+        "light": "Keukenlamp",
         "GPIO": [
           14,
-          24 
+          24
         ]
       }
     }
