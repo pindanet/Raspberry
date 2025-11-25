@@ -40,12 +40,12 @@ writeLog("Create power for " . $switch->Hostname . ": " . $switch->power);
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
 writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch->power);
   } else {
-    if ($lux < $event->switchingIlluminance - $event->hysteresis) {
+    if ($lux < $event->lowerThreshold) {
       if (str_contains($switch->power, ':"OFF"}')) {
         writeLog(sprintf("%s aan bij %s lux", $switch->Hostname, $lux));
         $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
       }
-    } elseif ($lux > $event->switchingIlluminance + $event->hysteresis) {
+    } elseif ($lux > $event->upperThreshold) {
       if (str_contains($switch->power, ':"ON"}')) {
         writeLog(sprintf("%s uit bij %s lux", $switch->Hostname, $lux));
         $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
