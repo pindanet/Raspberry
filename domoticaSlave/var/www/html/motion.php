@@ -24,17 +24,90 @@ foreach ($conf->rooms as $room) {
     break;
   }
 }
+$motionCmd = sprintf("pinctrl get %s", implode(',', $room->Motion->GPIO));
+
+$lux = 0;
+$luxTimer = time() - 61; // initialise lux measurement
+
+function writeLog($text) {
+  $handle = fopen($GLOBALS['logfile'], 'a');
+  $data = date("Y-m-d H:i:s") . ": " . $text . "\n";
+  fwrite($handle, $data);
+  fclose($handle);
+}
+
+function tasmotaSwitch(&$switch, $cmd) { // ToDo
+  return;
+
+  if (isset ($switch->Channel)) {
+    $channel = $switch->Channel;
+  } else {
+    $channel = "";
+  }
+  if (! isset($switch->power)) { // Initialize
+    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
+writeLog("Create power for " . $switch->Hostname . ": " . $switch->power);
+  } elseif (! str_contains($switch->power, ':"OFF"}') && ! str_contains($switch->power, ':"ON"}')) { // Connection error
+    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
+writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch->power);
+  } else {
+//    if ($lux < $event->switchingIlluminance - $event->hysteresis) {
+      if (str_contains($switch->power, ':"OFF"}') && $cmd == "ON") {
+        writeLog(sprintf("%s aan", $switch->Hostname));
+        $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
+      }
+//    } elseif ($lux > $event->switchingIlluminance + $event->hysteresis) {
+      if (str_contains($switch->power, ':"ON"}')) {
+        writeLog(sprintf("%s uit bij %s lux", $switch->Hostname, $lux));
+        $switch->power = file_get_contents('http://" . $switch->IP . "" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF');
+      }
+//    }
+  }
+}
 
 
-$motionCmd=sprintf("pinctrl get %s", implode(',', $room->Motion->GPIO));
-exec($motionCmd, $output, $return);
+// Debug
+tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
 
-var_dump($output);
-foreach($output as $line) {
-  if ( str_contains($line, ' lo ') === true)
+while (true) { // Main loop
+  unset($output);
+  exec($motionCmd, $output, $return);
 
-echo sprintf("%d: Motion detected: %s.\n", __LINE__, $line);
+  foreach($output as $line) {
+    if (str_contains($line, ' hi ') === true) { // Motion detected
+      if (isset($room->Motion->light)) {
 
+//var_dump($conf->switch->{$room->Motion->light}->Hostname);
+echo sprintf("%d: Licht %s %d s inschakelen bij %d Lux (schakeldrempel: %d en hysteresis: %d).\n", __LINE__, $room->Motion->light, $room->Motion->timer , $lux, $room->Motion->switchingIlluminance, $room->Motion->hysteresis);
+        tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
+        $room->Motion->timerTime = time();
+      }
+      break;
+    }
+  }
+  if (time() - $luxTimer > 60) { // Measure every minute the light intensity
+    unset($rpicam);
+    exec('/usr/bin/rpicam-still --nopreview --immediate --metadata - -o /dev/zero 2>&1', $rpicam, $return);
+
+    foreach($rpicam as $property) {
+      if (str_contains($property, '"Lux": ') === true) {
+        $lux = intval(substr($property, 11));
+        $luxTimer = time();
+echo sprintf("%d: Lichtintensiteit: %d.\n", __LINE__, $lux);
+        break;
+      }
+    }
+    if (isset($room->Motion->timerTime)) { // Lighttimer
+      if (time() - $room->Motion->timerTime > $room->Motion->timer) { // Light out
+        unset($room->Motion->timerTime);
+
+echo sprintf("%d: Licht uit na %d s.\n", __LINE__, $room->Motion->timer);
+
+        tasmotaSwitch($conf->switch->{$room->Motion->light}, "OFF");
+      }
+    }
+  }
+  usleep(250000); //every 0.25 s
 }
 exit("Afgebroken\n");
 ?>
