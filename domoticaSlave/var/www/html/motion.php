@@ -37,8 +37,7 @@ function writeLog($text) {
 }
 
 function tasmotaSwitch(&$switch, $cmd) { // ToDo
-  return;
-
+//var_dump($switch->Hostname);
   if (isset ($switch->Channel)) {
     $channel = $switch->Channel;
   } else {
@@ -51,23 +50,16 @@ writeLog("Create power for " . $switch->Hostname . ": " . $switch->power);
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
 writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch->power);
   } else {
-//    if ($lux < $event->switchingIlluminance - $event->hysteresis) {
       if (str_contains($switch->power, ':"OFF"}') && $cmd == "ON") {
         writeLog(sprintf("%s aan", $switch->Hostname));
         $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
+      } elseif (str_contains($switch->power, ':"ON"}') && $cmd == "OFF") {
+        writeLog(sprintf("%s uit", $switch->Hostname));
+        $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
       }
-//    } elseif ($lux > $event->switchingIlluminance + $event->hysteresis) {
-      if (str_contains($switch->power, ':"ON"}')) {
-        writeLog(sprintf("%s uit bij %s lux", $switch->Hostname, $lux));
-        $switch->power = file_get_contents('http://" . $switch->IP . "" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF');
-      }
-//    }
   }
+//echo sprintf("%d: Licht %s %s.\n", __LINE__, $switch->Hostname, $cmd);
 }
-
-
-// Debug
-tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
 
 while (true) { // Main loop
   unset($output);
@@ -75,10 +67,9 @@ while (true) { // Main loop
 
   foreach($output as $line) {
     if (str_contains($line, ' hi ') === true) { // Motion detected
-      if (isset($room->Motion->light)) {
+      if (isset($room->Motion->light) && $lux < $room->Motion->lowerThreshold) {
 
-//var_dump($conf->switch->{$room->Motion->light}->Hostname);
-echo sprintf("%d: Licht %s %d s inschakelen bij %d Lux (schakeldrempel: %d en hysteresis: %d).\n", __LINE__, $room->Motion->light, $room->Motion->timer , $lux, $room->Motion->switchingIlluminance, $room->Motion->hysteresis);
+//echo sprintf("%d: Licht %s %d s inschakelen bij %d Lux (inschakelen bij %d lux, uitschakelen %d lux).\n", __LINE__, $room->Motion->light, $room->Motion->timer , $lux, $room->Motion->lowerThreshold, $room->Motion->upperThreshold);
         tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
         $room->Motion->timerTime = time();
       }
