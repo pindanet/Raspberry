@@ -38,8 +38,8 @@
       "type": "light",
       "events": [
         {
-          "switchingIlluminance": 25,
-          "hysteresis": 2,
+          "lowerThreshold": 20,
+          "upperThreshold": 40,
           "startTime": "13:30",
           "stopTime": "02:00"
         }
@@ -53,8 +53,8 @@
       "type": "light",
       "events": [
         {
-          "switchingIlluminance": 25,
-          "hysteresis": 2,
+          "lowerThreshold": 20,
+          "upperThreshold": 40,
           "startTime": "13:30",
           "stopTime": "02:00"
         }
