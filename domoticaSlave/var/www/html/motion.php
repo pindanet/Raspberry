@@ -44,6 +44,9 @@ function tasmotaSwitch(&$switch, $cmd) { // ToDo
   } else {
     $channel = "";
   }
+
+// Errors opvangen
+
   if (! isset($switch->power)) { // Initialize
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
 writeLog("Create power for " . $switch->Hostname . ": " . $switch->power);
@@ -51,13 +54,13 @@ writeLog("Create power for " . $switch->Hostname . ": " . $switch->power);
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
 writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch->power);
   } else {
-      if (str_contains($switch->power, ':"OFF"}') && $cmd == "ON") {
-        writeLog(sprintf("%s aan", $switch->Hostname));
-        $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
-      } elseif (str_contains($switch->power, ':"ON"}') && $cmd == "OFF") {
-        writeLog(sprintf("%s uit", $switch->Hostname));
-        $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
-      }
+    if (str_contains($switch->power, ':"OFF"}') && $cmd == "ON") {
+      writeLog(sprintf("%s aan", $switch->Hostname));
+      $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
+    } elseif (str_contains($switch->power, ':"ON"}') && $cmd == "OFF") {
+      writeLog(sprintf("%s uit", $switch->Hostname));
+      $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
+    }
   }
 //echo sprintf("%d: Licht %s %s.\n", __LINE__, $switch->Hostname, $cmd);
 }
@@ -67,7 +70,7 @@ function backlight($lux) {
   $minHelderheid = 33;
   $rellux = $lux / max(2000, $lux); // luxmax;
   $backlight = (int)($minHelderheid + $rellux * $maxHelderheid);
-echo sprintf("%d: Lichtintensiteit: %d, Backlight: %d.\n", __LINE__, $lux, $backlight);
+//echo sprintf("%d: Lichtintensiteit: %d, Backlight: %d.\n", __LINE__, $lux, $backlight);
   return $backlight;
 }
 
@@ -84,7 +87,7 @@ while (true) { // Main loop
       }
       if (str_contains($conf->switch->{$room->Motion->light}->power, ':"ON"}')) {
         $room->Motion->timerTime = time();  // (Re)Activate timer
-echo sprintf("%d: Lichttimer voor Licht %s %d s (her)activeren bij %d Lux (inschakelen bij %d lux, uitschakelen %d lux).\n", __LINE__, $room->Motion->light, $room->Motion->timer , $lux, $room->Motion->lowerThreshold, $room->Motion->upperThreshold);
+//echo sprintf("%d: Lichttimer voor Licht %s %d s (her)activeren bij %d Lux (inschakelen bij %d lux).\n", __LINE__, $room->Motion->light, $room->Motion->timer , $lux, $room->Motion->lowerThreshold);
       }
       file_put_contents("/sys/class/backlight/10-0045/brightness", backlight($lux)); // LCD brightness
       break;
