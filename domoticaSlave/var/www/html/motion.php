@@ -26,6 +26,8 @@ foreach ($conf->rooms as $room) {
 }
 $motionCmd = sprintf("pinctrl get %s", implode(',', $room->Motion->GPIO));
 
+//var_dump($conf->switch->{$room->Motion->light}->IP);
+
 $lux = 0;
 $luxTimer = time() - 61; // initialise lux measurement
 
@@ -37,7 +39,6 @@ function writeLog($text) {
 }
 
 function tasmotaSwitch(&$switch, $cmd) { // ToDo
-//var_dump($switch->Hostname);
   if (isset ($switch->Channel)) {
     $channel = $switch->Channel;
   } else {
@@ -61,6 +62,15 @@ writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch-
 //echo sprintf("%d: Licht %s %s.\n", __LINE__, $switch->Hostname, $cmd);
 }
 
+function backlight($lux) {
+  $maxHelderheid = 128;
+  $minHelderheid = 33;
+  $rellux = $lux / max(2000, $lux); // luxmax;
+  $backlight = (int)($minHelderheid + $rellux * $maxHelderheid);
+echo sprintf("%d: Lichtintensiteit: %d, Backlight: %d.\n", __LINE__, $lux, $backlight);
+  return $backlight;
+}
+
 while (true) { // Main loop
   unset($output);
   exec($motionCmd, $output, $return);
@@ -69,10 +79,14 @@ while (true) { // Main loop
     if (str_contains($line, ' hi ') === true) { // Motion detected
       if (isset($room->Motion->light) && $lux < $room->Motion->lowerThreshold) {
 
-//echo sprintf("%d: Licht %s %d s inschakelen bij %d Lux (inschakelen bij %d lux, uitschakelen %d lux).\n", __LINE__, $room->Motion->light, $room->Motion->timer , $lux, $room->Motion->lowerThreshold, $room->Motion->upperThreshold);
+//        $room->Motion->timerTime = time();
         tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
-        $room->Motion->timerTime = time();
       }
+      if (str_contains($conf->switch->{$room->Motion->light}->power, ':"ON"}')) {
+        $room->Motion->timerTime = time();  // (Re)Activate timer
+echo sprintf("%d: Lichttimer voor Licht %s %d s (her)activeren bij %d Lux (inschakelen bij %d lux, uitschakelen %d lux).\n", __LINE__, $room->Motion->light, $room->Motion->timer , $lux, $room->Motion->lowerThreshold, $room->Motion->upperThreshold);
+      }
+      file_put_contents("/sys/class/backlight/10-0045/brightness", backlight($lux)); // LCD brightness
       break;
     }
   }
@@ -84,7 +98,6 @@ while (true) { // Main loop
       if (str_contains($property, '"Lux": ') === true) {
         $lux = intval(substr($property, 11));
         $luxTimer = time();
-echo sprintf("%d: Lichtintensiteit: %d.\n", __LINE__, $lux);
         break;
       }
     }
@@ -95,6 +108,7 @@ echo sprintf("%d: Lichtintensiteit: %d.\n", __LINE__, $lux);
 echo sprintf("%d: Licht uit na %d s.\n", __LINE__, $room->Motion->timer);
 
         tasmotaSwitch($conf->switch->{$room->Motion->light}, "OFF");
+        file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // LCD brightness
       }
     }
   }
