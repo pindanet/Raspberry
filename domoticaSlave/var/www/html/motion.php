@@ -1,10 +1,13 @@
 <?php
 error_reporting(E_ALL);
-/**
+/*
  * Motion detector
  * Light switch on Illuminance.
  * @author Dany Pinoy https://github.com/pindanet/Raspberry/
  * @version 2025-11-22
+ * ToDo
+ * Initialize
+ * conf / room
  */
 
 $logfile = '/var/www/html/data/php.log';
@@ -38,29 +41,31 @@ function writeLog($text) {
   fclose($handle);
 }
 
-function tasmotaSwitch(&$switch, $cmd) { // ToDo
+function tasmotaSwitch(&$switch, $cmd) {
   if (isset ($switch->Channel)) {
     $channel = $switch->Channel;
   } else {
     $channel = "";
   }
-
-// Errors opvangen
-
   if (! isset($switch->power)) { // Initialize
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
 writeLog("Create power for " . $switch->Hostname . ": " . $switch->power);
+    if (false === $switch->power) {
+      return;
+    }
   } elseif (! str_contains($switch->power, ':"OFF"}') && ! str_contains($switch->power, ':"ON"}')) { // Connection error
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
 writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch->power);
-  } else {
-    if (str_contains($switch->power, ':"OFF"}') && $cmd == "ON") {
-      writeLog(sprintf("%s aan", $switch->Hostname));
-      $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
-    } elseif (str_contains($switch->power, ':"ON"}') && $cmd == "OFF") {
-      writeLog(sprintf("%s uit", $switch->Hostname));
-      $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
+    if (false === $switch->power) {
+      return;
     }
+  }
+  if (str_contains($switch->power, ':"OFF"}') && $cmd == "ON") {
+    writeLog(sprintf("%s aan", $switch->Hostname));
+    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
+  } elseif (str_contains($switch->power, ':"ON"}') && $cmd == "OFF") {
+    writeLog(sprintf("%s uit", $switch->Hostname));
+    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
   }
 //echo sprintf("%d: Licht %s %s.\n", __LINE__, $switch->Hostname, $cmd);
 }
@@ -80,6 +85,7 @@ while (true) { // Main loop
 
   foreach($output as $line) {
     if (str_contains($line, ' hi ') === true) { // Motion detected
+//echo sprintf("%d: Debounce: %d.\n", __LINE__, time() - $luxTimer);
       if (isset($room->Motion->light) && $lux < $room->Motion->lowerThreshold) {
 
 //        $room->Motion->timerTime = time();
@@ -87,9 +93,9 @@ while (true) { // Main loop
       }
       if (str_contains($conf->switch->{$room->Motion->light}->power, ':"ON"}')) {
         $room->Motion->timerTime = time();  // (Re)Activate timer
-//echo sprintf("%d: Lichttimer voor Licht %s %d s (her)activeren bij %d Lux (inschakelen bij %d lux).\n", __LINE__, $room->Motion->light, $room->Motion->timer , $lux, $room->Motion->lowerThreshold);
       }
       file_put_contents("/sys/class/backlight/10-0045/brightness", backlight($lux)); // LCD brightness
+      sleep(5); // Debounce
       break;
     }
   }
