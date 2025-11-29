@@ -6,7 +6,8 @@ error_reporting(E_ALL);
  * @author Dany Pinoy https://github.com/pindanet/Raspberry/
  * @version 2025-11-22
  * ToDo
- * Initialize
+ * Take picture
+ * maxlux
  * conf / room
  */
 
@@ -75,8 +76,23 @@ function backlight($lux) {
   $minHelderheid = 33;
   $rellux = $lux / max(2000, $lux); // luxmax;
   $backlight = (int)($minHelderheid + $rellux * $maxHelderheid);
-//echo sprintf("%d: Lichtintensiteit: %d, Backlight: %d.\n", __LINE__, $lux, $backlight);
   return $backlight;
+}
+
+function deleteOldFiles($path) {
+  if ($handle = opendir($path)) {
+    while (false !== ($file = readdir($handle))) {
+      $filelastmodified = filemtime($path . $file);
+      if((time() - $filelastmodified) > 24*3600)
+      {
+        if(is_file($path . $file)) {
+echo sprintf("%d: Verwijder %s.\n", __LINE__, $path . $file);
+//          unlink($path . $file);
+        }
+      }
+    }
+    closedir($handle);
+  }
 }
 
 while (true) { // Main loop
@@ -85,14 +101,20 @@ while (true) { // Main loop
 
   foreach($output as $line) {
     if (str_contains($line, ' hi ') === true) { // Motion detected
-//echo sprintf("%d: Debounce: %d.\n", __LINE__, time() - $luxTimer);
       if (isset($room->Motion->light) && $lux < $room->Motion->lowerThreshold) {
 
 //        $room->Motion->timerTime = time();
         tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
+
+//        deleteOldFiles("/var/www/html/motion/");
+
+//echo sprintf("%d: Filename: %s.\n", __LINE__, date('Y-m-d_H:i:s') . '.jpg');
+
       }
-      if (str_contains($conf->switch->{$room->Motion->light}->power, ':"ON"}')) {
-        $room->Motion->timerTime = time();  // (Re)Activate timer
+      if (isset($conf->switch->{$room->Motion->light}->power)) {
+        if (str_contains($conf->switch->{$room->Motion->light}->power, ':"ON"}')) {
+          $room->Motion->timerTime = time();  // (Re)Activate timer
+        }
       }
       file_put_contents("/sys/class/backlight/10-0045/brightness", backlight($lux)); // LCD brightness
       sleep(5); // Debounce
