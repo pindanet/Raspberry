@@ -13,7 +13,7 @@
       "Name": "Keuken",
       "Hostname": "pindakeuken",
       "Motion": {
-        "lowerThreshold": 75,
+        "lowerThreshold": 30,
         "timer": 180,
         "light": "Keukenlamp",
         "GPIO": [
