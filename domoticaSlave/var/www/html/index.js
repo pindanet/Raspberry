@@ -131,7 +131,7 @@ function getConf() { // Get configuration
           clearInterval(motionTimer);
         }
         lightOff();
-        motionTimer = setInterval(startMotion, 250) // check motion sensor every 0.25s
+        motionTimer = setInterval(startMotion, 60000) // check motion sensor every 0.25s (1 min)
         setInterval(wgetTemp, 60000, "pindakeuken", conf.Kitchen);
 //        startTemp();
         setBrightness(0);
@@ -361,32 +361,43 @@ function lightOff() {
 }
 
 var pictureTaken = false;
+
 function startMotion() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
+    if (this.responseText !== '["0"]') {
+      weather();  // refresh weather
+//console.log(this.responseText);
+    }
+  };
+  xhr.send("cmd=cat&params="+stringToHex("/sys/class/backlight/10-0045/brightness"));
+}
+
+/*
     if (this.status == 200 && this.readyState === 4) {
       if (this.responseText.includes(" hi ")) { // Motion detected
         if (typeof screenTimer != 'undefined') {
           clearTimeout(screenTimer);
         }
-console.log(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), this.responseText);
+//console.log(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), this.responseText);
         screenTimer = setTimeout(setBrightness, conf.lights.lightTimer*1000, 0); // Reset Timeoff
         var now = new Date().getTime();
         if (now > eveningLightsOn || now < morningLightsOut) { // dark
-          setBrightness(conf.minBacklight * 2); // activate dimmed screen
+//          setBrightness(conf.minBacklight * 2); // activate dimmed screen
           if (typeof lightTimer != 'undefined') {
             clearTimeout(lightTimer);
           }
           document.getElementById("lightoff").style.display = "none";
           document.getElementById("lighton").style.display = "";
           if (conf.switch[conf[room].light].status != "on") { // if light is out > light on
-            tasmotaSwitch (conf[room].light, "Power%20On");
+console.log("Power%20On");
+//            tasmotaSwitch (conf[room].light, "Power%20On");
           }
           lightTimer = setTimeout(lightOff, conf.lights.lightTimer*1000); // Reset Timeoff
         } else {
-          setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
+//          setBrightness(conf.maxBacklight + conf.minBacklight); // activate bright screen
         }
         weather();  // refresh weather
       }
@@ -394,7 +405,7 @@ console.log(new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'
   };
   xhr.send("cmd=pinctrl&params="+stringToHex("get " + pir1 + "," + pir2));
 }
-
+*/
 function startTime() {
 //  clearTimeout(startTimer);
   var today = new Date();
