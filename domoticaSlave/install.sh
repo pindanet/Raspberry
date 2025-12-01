@@ -270,7 +270,7 @@ WantedBy=network-online.target
 EOF
 
 sudo systemctl daemon-reload
-#sudo systemctl enable PindaPHPMotion.service
+sudo systemctl enable PindaPHPMotion.service
 sudo systemctl start PindaPHPMotion.service
 
 sudo chmod +x /var/www/html/ds18b20.sh
