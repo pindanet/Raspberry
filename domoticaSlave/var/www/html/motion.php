@@ -32,8 +32,11 @@ $motionCmd = sprintf("pinctrl get %s", implode(',', $room->Motion->GPIO));
 
 //var_dump($conf->switch->{$room->Motion->light}->IP);
 
+// Initialise
 $lux = 0;
 $luxTimer = time() - 61; // initialise lux measurement
+file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // Initialise LCD brightness
+$room->Motion->timerTime = time();  // Initialise lighttimer
 
 function writeLog($text) {
   $handle = fopen($GLOBALS['logfile'], 'a');
@@ -48,19 +51,21 @@ function tasmotaSwitch(&$switch, $cmd) {
   } else {
     $channel = "";
   }
-  if (! isset($switch->power)) { // Initialize
-    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
+  if (! isset($switch->power)) { // Initialize Power Off
+    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
 writeLog("Create power for " . $switch->Hostname . ": " . $switch->power);
-    if (false === $switch->power) {
-      return;
-    }
-  } elseif (! str_contains($switch->power, ':"OFF"}') && ! str_contains($switch->power, ':"ON"}')) { // Connection error
-    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
+    sleep(1);
+  }
+  if (! str_contains($switch->power, ':"OFF"}') && ! str_contains($switch->power, ':"ON"}')) { // Connection error
+    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
 writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch->power);
-    if (false === $switch->power) {
-      return;
+    sleep(1);
+    if (! str_contains($switch->power, ':"OFF"}')) { // Persistent Connection error
+      $switch->power = '{"POWER":"OFF"}';
+writeLog("Recreate power after persistent error for " . $switch->Hostname . ": " . $switch->power);
     }
   }
+//echo sprintf("%d: tasmotaSwitch Power: %s.\n", __LINE__, $switch->power);
   if (str_contains($switch->power, ':"OFF"}') && $cmd == "ON") {
     writeLog(sprintf("%s aan", $switch->Hostname));
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
@@ -68,7 +73,6 @@ writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch-
     writeLog(sprintf("%s uit", $switch->Hostname));
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
   }
-//echo sprintf("%d: Licht %s %s.\n", __LINE__, $switch->Hostname, $cmd);
 }
 
 function backlight($lux) {
@@ -102,20 +106,18 @@ while (true) { // Main loop
   foreach($output as $line) {
     if (str_contains($line, ' hi ') === true) { // Motion detected
       if (isset($room->Motion->light) && $lux < $room->Motion->lowerThreshold) {
-
-//        $room->Motion->timerTime = time();
         tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
+      }
+//      if (isset($conf->switch->{$room->Motion->light}->power)) {
+//        if (str_contains($conf->switch->{$room->Motion->light}->power, ':"ON"}')) {
 
-//        deleteOldFiles("/var/www/html/motion/");
+//      deleteOldFiles("/var/www/html/motion/");
 
 //echo sprintf("%d: Filename: %s.\n", __LINE__, date('Y-m-d_H:i:s') . '.jpg');
 
-      }
-      if (isset($conf->switch->{$room->Motion->light}->power)) {
-        if (str_contains($conf->switch->{$room->Motion->light}->power, ':"ON"}')) {
-          $room->Motion->timerTime = time();  // (Re)Activate timer
-        }
-      }
+      $room->Motion->timerTime = time();  // (Re)Activate timer
+//        }
+//      }
       file_put_contents("/sys/class/backlight/10-0045/brightness", backlight($lux)); // LCD brightness
       sleep(5); // Debounce
       break;
@@ -132,15 +134,12 @@ while (true) { // Main loop
         break;
       }
     }
-    if (isset($room->Motion->timerTime)) { // Lighttimer
-      if (time() - $room->Motion->timerTime > $room->Motion->timer) { // Light out
-        unset($room->Motion->timerTime);
-
-echo sprintf("%d: Licht uit na %d s.\n", __LINE__, $room->Motion->timer);
-
-        tasmotaSwitch($conf->switch->{$room->Motion->light}, "OFF");
-        file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // LCD brightness
-      }
+  }
+  if (isset($room->Motion->timerTime)) { // Lighttimer
+    if (time() - $room->Motion->timerTime > $room->Motion->timer) { // Light out
+      unset($room->Motion->timerTime);
+      tasmotaSwitch($conf->switch->{$room->Motion->light}, "OFF");
+      file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // LCD brightness
     }
   }
   usleep(250000); //every 0.25 s
