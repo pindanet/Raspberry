@@ -131,7 +131,7 @@ function getConf() { // Get configuration
           clearInterval(motionTimer);
         }
         lightOff();
-        motionTimer = setInterval(startMotion, 60000) // check motion sensor every 0.25s (1 min)
+//        motionTimer = setInterval(startMotion, 60000) // check motion sensor every 0.25s (1 min)
         setInterval(wgetTemp, 60000, "pindakeuken", conf.Kitchen);
 //        startTemp();
         setBrightness(0);
@@ -361,7 +361,7 @@ function lightOff() {
 }
 
 var pictureTaken = false;
-
+/*
 function startMotion() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -429,16 +429,18 @@ function connect() {
 //  socket = new WebSocket("ws://192.168.129.2:8080");
   socket.onopen = function(event) {
     console.log("Connected to server");
-//    if (window.location.hostname !== 'localhost') {
-//      const message = {};
-//      message.function = "heaterColors";
-//      sendMessage(JSON.stringify(message));
-//    }
   };
   socket.onmessage = function(event) {
     console.log("Message received: " + event.data);
     if (event.data[0] == "["  || event.data[0] == "{") {
       var message = JSON.parse(event.data);
+      if(message.target == "pindakeuken") {
+        switch (message.message) {
+          case "weather":
+            weather();
+            break;
+        }
+      }
       switch (message.function) {
         case "thermostatClockday":
           document.getElementById("day").style.color = message.value;
@@ -447,8 +449,8 @@ function connect() {
           if (message.value == conf.available[0].sleep || message.value == conf.available[0].absent) {
             document.getElementById("clockdate").innerHTML = message.value;
           } else {
-              var today = new Date();
-              document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
+            var today = new Date();
+            document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
           }
           break;
       }
