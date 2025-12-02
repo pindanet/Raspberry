@@ -16,6 +16,8 @@
     "Kitchen": {
       "Name": "Keuken",
       "Hostname": "pindakeuken",
+      "minBacklight": 33,
+      "maxBacklight": 128,
       "Motion": {
         "lowerThreshold": 30,
         "timer": 180,
