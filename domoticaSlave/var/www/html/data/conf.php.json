@@ -1,5 +1,9 @@
 {
   "Timezone": "Europe/Brussels",
+  "websocket": {
+    "server": "pindadomo.home",
+    "port": 8080
+  },
   "rooms": {
     "Living": {
       "Name": "Living",
