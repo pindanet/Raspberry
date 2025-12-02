@@ -154,14 +154,6 @@ writeLog("Recreate power after persistent error for " . $switch->Hostname . ": "
   }
 }
 
-function backlight($lux, $luxmax) {
-  $maxHelderheid = 128;
-  $minHelderheid = 33;
-  $rellux = $lux / $luxmax;
-  $backlight = (int)($minHelderheid + $rellux * $maxHelderheid);
-  return $backlight;
-}
-
 function deleteOldFiles($path) {
   if ($handle = opendir($path)) {
     while (false !== ($file = readdir($handle))) {
@@ -187,7 +179,10 @@ while (true) { // Main loop
         tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
       }
 
-      file_put_contents("/sys/class/backlight/10-0045/brightness", backlight($lux, $luxmax)); // LCD brightness
+      //Calculate backlight
+      $rellux = $lux / $luxmax;
+      $backlight = (int)($room->minBacklight + $rellux * $room->maxBacklight);
+      file_put_contents("/sys/class/backlight/10-0045/brightness", $backlight); // LCD brightness
 
       $room->Motion->timerTime = time();  // (Re)Activate timer
 
