@@ -6,7 +6,6 @@ error_reporting(E_ALL);
  * @author Dany Pinoy https://github.com/pindanet/Raspberry/
  * @version 2025-11-22
  * ToDo
- * Take picture
  * maxlux
  * conf / room
  */
@@ -37,6 +36,11 @@ $lux = 0;
 $luxTimer = time() - 61; // initialise lux measurement
 file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // Initialise LCD brightness
 $room->Motion->timerTime = time();  // Initialise lighttimer
+/*
+if (!is_dir('/var/www/html/motion')) {
+    mkdir('/var/www/html/motion', 0755, true);
+}
+*/
 
 function writeLog($text) {
   $handle = fopen($GLOBALS['logfile'], 'a');
@@ -54,12 +58,10 @@ function tasmotaSwitch(&$switch, $cmd) {
   if (! isset($switch->power)) { // Initialize Power Off
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
 writeLog("Create power for " . $switch->Hostname . ": " . $switch->power);
-    sleep(1);
   }
   if (! str_contains($switch->power, ':"OFF"}') && ! str_contains($switch->power, ':"ON"}')) { // Connection error
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
 writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch->power);
-    sleep(1);
     if (! str_contains($switch->power, ':"OFF"}')) { // Persistent Connection error
       $switch->power = '{"POWER":"OFF"}';
 writeLog("Recreate power after persistent error for " . $switch->Hostname . ": " . $switch->power);
@@ -90,8 +92,7 @@ function deleteOldFiles($path) {
       if((time() - $filelastmodified) > 24*3600)
       {
         if(is_file($path . $file)) {
-echo sprintf("%d: Verwijder %s.\n", __LINE__, $path . $file);
-//          unlink($path . $file);
+          unlink($path . $file);
         }
       }
     }
@@ -108,17 +109,18 @@ while (true) { // Main loop
       if (isset($room->Motion->light) && $lux < $room->Motion->lowerThreshold) {
         tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
       }
-//      if (isset($conf->switch->{$room->Motion->light}->power)) {
-//        if (str_contains($conf->switch->{$room->Motion->light}->power, ':"ON"}')) {
 
-//      deleteOldFiles("/var/www/html/motion/");
-
-//echo sprintf("%d: Filename: %s.\n", __LINE__, date('Y-m-d_H:i:s') . '.jpg');
+      file_put_contents("/sys/class/backlight/10-0045/brightness", backlight($lux)); // LCD brightness
 
       $room->Motion->timerTime = time();  // (Re)Activate timer
-//        }
-//      }
-      file_put_contents("/sys/class/backlight/10-0045/brightness", backlight($lux)); // LCD brightness
+
+      deleteOldFiles("/var/www/html/motion/");
+      if (!isset($room->Motion->photo)) { // take photo
+//echo sprintf("%d: Filename: %s.\n", __LINE__, "/var/www/html/motion/" . date('Y-m-d_H:i:s') . '.jpg');
+        $room->Motion->photo = date('Y-m-d_H:i:s');
+        exec('/usr/bin/rpicam-still -v 0 -o /var/www/html/motion/' . $room->Motion->photo . '.jpg --rotation 180 --nopreview');
+        exec('/usr/bin/convert /var/www/html/motion/' . $room->Motion->photo . '.jpg -resize 1920 /var/www/html/motion/' . $room->Motion->photo . '.jpg');
+      }
       sleep(5); // Debounce
       break;
     }
@@ -140,6 +142,7 @@ while (true) { // Main loop
       unset($room->Motion->timerTime);
       tasmotaSwitch($conf->switch->{$room->Motion->light}, "OFF");
       file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // LCD brightness
+      unset($room->Motion->photo);
     }
   }
   usleep(250000); //every 0.25 s
