@@ -6,11 +6,11 @@ error_reporting(E_ALL);
  * @author Dany Pinoy https://github.com/pindanet/Raspberry/
  * @version 2025-11-22
  * ToDo
- * maxlux
+ * /var/www/html to __DIR__ .
  * conf / room
  */
 
-$logfile = '/var/www/html/data/php.log';
+$logfile = __DIR__ . '/data/php.log';
 
 // Use terminal arg as POST en GET arg, example: sudo -u www-data php -e /var/www/html/lights.php message=Cli%20PHP%20Client
 // Use terminal arg as POST en GET arg, example: sudo -u www-data php -e /var/www/html/lights.php message=$(bash /var/www/html/websocket/urlencode.sh '{"target":"server", "message":"JSON bericht"}')
@@ -154,10 +154,10 @@ writeLog("Recreate power after persistent error for " . $switch->Hostname . ": "
   }
 }
 
-function backlight($lux) {
+function backlight($lux, $luxmax) {
   $maxHelderheid = 128;
   $minHelderheid = 33;
-  $rellux = $lux / max(2000, $lux); // luxmax;
+  $rellux = $lux / $luxmax;
   $backlight = (int)($minHelderheid + $rellux * $maxHelderheid);
   return $backlight;
 }
@@ -187,7 +187,7 @@ while (true) { // Main loop
         tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
       }
 
-      file_put_contents("/sys/class/backlight/10-0045/brightness", backlight($lux)); // LCD brightness
+      file_put_contents("/sys/class/backlight/10-0045/brightness", backlight($lux, $luxmax)); // LCD brightness
 
       $room->Motion->timerTime = time();  // (Re)Activate timer
 
@@ -210,6 +210,17 @@ while (true) { // Main loop
     foreach($rpicam as $property) {
       if (str_contains($property, '"Lux": ') === true) {
         $lux = intval(substr($property, 11));
+        if (!isset($luxmax)) {
+          if(is_file(__DIR__ . "/data/luxmax")) {
+            $luxmax = intval(file_get_contents(__DIR__ . "/data/luxmax"));
+          } else {
+            $luxmax = $lux - 1;
+          }
+        }
+        if ($lux > $luxmax) {
+          $luxmax = $lux;
+          file_put_contents(__DIR__ . "/data/luxmax", $luxmax);
+        }
         $luxTimer = time();
         break;
       }
