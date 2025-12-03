@@ -33,7 +33,6 @@ $motionCmd = sprintf("pinctrl get %s", implode(',', $room->Motion->GPIO));
 
 // Initialise
 $lux = 0;
-//$luxTimer = time() - 61; // initialise lux measurement
 file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // Initialise LCD brightness
 $room->Motion->timerTime = time();  // Initialise lighttimer
 /*
@@ -177,6 +176,7 @@ while (true) { // Main loop
     if (str_contains($line, ' hi ') === true) { // Motion detected
       if (isset($room->Motion->light) && $lux < $room->Motion->lowerThreshold) {
         tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
+        sendWebsocket('{"target":"pindakeuken", "message":"lightOn"}');
       }
 
       //Calculate lux
@@ -219,12 +219,11 @@ while (true) { // Main loop
       break;
     }
   }
-//  if (time() - $luxTimer > 60) { // Measure every minute the light intensity
-//  }
   if (isset($room->Motion->timerTime)) { // Lighttimer
     if (time() - $room->Motion->timerTime > $room->Motion->timer) { // Light out
       unset($room->Motion->timerTime);
       tasmotaSwitch($conf->switch->{$room->Motion->light}, "OFF");
+      sendWebsocket('{"target":"pindakeuken", "message":"lightOff"}');
       file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // LCD brightness
       unset($room->Motion->photo);
     }
