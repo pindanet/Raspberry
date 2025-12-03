@@ -127,10 +127,10 @@ function getConf() { // Get configuration
         conf.lastModified = this.getResponseHeader('Last-Modified');
         calcConf();
         startTime();
-        if (typeof motionTimer != 'undefined') {
-          clearInterval(motionTimer);
-        }
-        lightOff();
+//        if (typeof motionTimer != 'undefined') {
+//          clearInterval(motionTimer);
+//        }
+//        lightOff();
 //        motionTimer = setInterval(startMotion, 60000) // check motion sensor every 0.25s (1 min)
         setInterval(wgetTemp, 60000, "pindakeuken", conf.Kitchen);
 //        startTemp();
@@ -351,7 +351,7 @@ function toggleLight() {
     document.getElementById("lighton").style.display = "";
   }
 }
-
+/*
 function lightOff() {
   document.getElementById("lightoff").style.display = "";
   document.getElementById("lighton").style.display = "none";
@@ -359,8 +359,8 @@ function lightOff() {
     tasmotaSwitch (conf[room].light, "Power%20Off");
   }
 }
-
-var pictureTaken = false;
+*/
+//var pictureTaken = false;
 /*
 function startMotion() {
   var xhr = new XMLHttpRequest();
@@ -438,6 +438,16 @@ function connect() {
         switch (message.message) {
           case "weather":
             weather();
+            break;
+          case "lightOn":
+            weather();
+            document.getElementById("lightoff").style.display = "none";
+            document.getElementById("lighton").style.display = "";
+            break;
+          case "lightOff":
+            weather();
+            document.getElementById("lightoff").style.display = "";
+            document.getElementById("lighton").style.display = "none";
             break;
         }
       }
