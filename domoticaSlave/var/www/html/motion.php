@@ -33,7 +33,7 @@ $motionCmd = sprintf("pinctrl get %s", implode(',', $room->Motion->GPIO));
 
 // Initialise
 $lux = 0;
-$luxTimer = time() - 61; // initialise lux measurement
+//$luxTimer = time() - 61; // initialise lux measurement
 file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // Initialise LCD brightness
 $room->Motion->timerTime = time();  // Initialise lighttimer
 /*
@@ -179,6 +179,27 @@ while (true) { // Main loop
         tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
       }
 
+      //Calculate lux
+      unset($rpicam);
+      exec('/usr/bin/rpicam-still --nopreview --immediate --metadata - -o /dev/zero 2>&1', $rpicam, $return);
+      foreach($rpicam as $property) {
+        if (str_contains($property, '"Lux": ') === true) {
+          $lux = intval(substr($property, 11));
+          if (!isset($luxmax)) {
+            if(is_file(__DIR__ . "/data/luxmax")) {
+              $luxmax = intval(file_get_contents(__DIR__ . "/data/luxmax"));
+            } else {
+              $luxmax = $lux - 1;
+            }
+          }
+          if ($lux > $luxmax) {
+            $luxmax = $lux;
+            file_put_contents(__DIR__ . "/data/luxmax", $luxmax);
+          }
+          $luxTimer = time();
+          break;
+        }
+      }
       //Calculate backlight
       $rellux = $lux / $luxmax;
       $backlight = (int)($room->minBacklight + $rellux * $room->maxBacklight);
@@ -198,29 +219,8 @@ while (true) { // Main loop
       break;
     }
   }
-  if (time() - $luxTimer > 60) { // Measure every minute the light intensity
-    unset($rpicam);
-    exec('/usr/bin/rpicam-still --nopreview --immediate --metadata - -o /dev/zero 2>&1', $rpicam, $return);
-
-    foreach($rpicam as $property) {
-      if (str_contains($property, '"Lux": ') === true) {
-        $lux = intval(substr($property, 11));
-        if (!isset($luxmax)) {
-          if(is_file(__DIR__ . "/data/luxmax")) {
-            $luxmax = intval(file_get_contents(__DIR__ . "/data/luxmax"));
-          } else {
-            $luxmax = $lux - 1;
-          }
-        }
-        if ($lux > $luxmax) {
-          $luxmax = $lux;
-          file_put_contents(__DIR__ . "/data/luxmax", $luxmax);
-        }
-        $luxTimer = time();
-        break;
-      }
-    }
-  }
+//  if (time() - $luxTimer > 60) { // Measure every minute the light intensity
+//  }
   if (isset($room->Motion->timerTime)) { // Lighttimer
     if (time() - $room->Motion->timerTime > $room->Motion->timer) { // Light out
       unset($room->Motion->timerTime);
