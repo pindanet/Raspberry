@@ -31,6 +31,20 @@
       "Hostname": "Keukenlamp_8",
       "Watt": "8"
     },
+    "Kerst": {
+      "IP": "192.168.129.44",
+      "Hostname": "Kerst_20",
+      "Watt": "20",
+      "type": "light",
+      "events": [
+        {
+          "lowerThreshold": 20,
+          "upperThreshold": 35,
+          "startTime": "07:40",
+          "stopTime": "22:50"
+        }
+      ]
+    },
     "LivingZij": {
       "IP": "192.168.129.41",
       "Hostname": "Livinglamp_24",
@@ -39,8 +53,8 @@
       "events": [
         {
           "lowerThreshold": 20,
-          "upperThreshold": 40,
-          "startTime": "13:30",
+          "upperThreshold": 35,
+          "startTime": "07:40",
           "stopTime": "02:00"
         }
       ]
@@ -54,8 +68,8 @@
       "events": [
         {
           "lowerThreshold": 20,
-          "upperThreshold": 40,
-          "startTime": "13:30",
+          "upperThreshold": 35,
+          "startTime": "07:40",
           "stopTime": "02:00"
         }
       ]
