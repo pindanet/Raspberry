@@ -4,7 +4,7 @@ error_reporting(E_ALL);
  * Motion detector
  * Light switch on Illuminance.
  * @author Dany Pinoy https://github.com/pindanet/Raspberry/
- * @version 2025-11-22
+ * @version 2025-12-04
  * ToDo
  * /var/www/html to __DIR__ .
  * conf / room
@@ -19,6 +19,7 @@ if (!isset($_SERVER["HTTP_HOST"])) {
   parse_str(implode('&', array_slice($argv, 1)), $_POST);
 }
 // Settings
+$luxTime= time() - 601; // Initialise lux measurement
 $conf = json_decode(file_get_contents(__DIR__ . "/data/conf.php.json"));
 date_default_timezone_set($conf->Timezone);
 $hostname = trim(file_get_contents("/etc/hostname"));
@@ -34,7 +35,7 @@ $motionCmd = sprintf("pinctrl get %s", implode(',', $room->Motion->GPIO));
 // Initialise
 $lux = 0;
 file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // Initialise LCD brightness
-$room->Motion->timerTime = time();  // Initialise lighttimer
+$room->Motion->timerTime = time() - $room->Motion->timer - 1;  // Initialise lighttimer
 /*
 if (!is_dir('/var/www/html/motion')) {
     mkdir('/var/www/html/motion', 0755, true);
@@ -169,6 +170,7 @@ function deleteOldFiles($path) {
 }
 
 while (true) { // Main loop
+//  unset($motionDetected);
   unset($output);
   exec($motionCmd, $output, $return);
 
@@ -176,10 +178,34 @@ while (true) { // Main loop
     if (str_contains($line, ' hi ') === true) { // Motion detected
       if (isset($room->Motion->light) && $lux < $room->Motion->lowerThreshold) {
         tasmotaSwitch($conf->switch->{$room->Motion->light}, "ON");
-        sendWebsocket('{"target":"pindakeuken", "message":"lightOn"}');
+//        sendWebsocket('{"target":"pindakeuken", "message":"lightOn"}');
+// USE LOCALHOST WebSocket on all devices
+// or exec "client.php &"
       }
+      $room->Motion->timerTime = time();  // (Re)Activate timer
+//      $motionDetected = true;
 
-      //Calculate lux
+      if (!isset($room->Motion->photo)) { // take photo
+        if (isset($lux) && isset($luxmax)) { //Calculate backlight
+          $rellux = $lux / $luxmax;
+          $backlight = (int)($room->minBacklight + $rellux * $room->maxBacklight);
+          file_put_contents("/sys/class/backlight/10-0045/brightness", $backlight); // LCD brightness
+        }
+        deleteOldFiles("/var/www/html/motion/");
+        sendWebsocket('{"target":"pindakeuken", "message":"weather"}');
+//echo sprintf("%d: Filename: %s.\n", __LINE__, "/var/www/html/motion/" . date('Y-m-d_H:i:s') . '.jpg');
+        $room->Motion->photo = date('Y-m-d_H:i:s');
+        exec('/usr/bin/rpicam-still -v 0 -o /var/www/html/motion/' . $room->Motion->photo . '.jpg --rotation 180 --nopreview');
+        exec('/usr/bin/convert /var/www/html/motion/' . $room->Motion->photo . '.jpg -resize 1920 /var/www/html/motion/' . $room->Motion->photo . '.jpg');
+      }
+//      sleep(5); // Debounce
+      break;
+    }
+  }
+  if (!isset($room->Motion->timerTime)) { // Calculate lux if no motion
+//echo sprintf("%d: LuxTime: %d.\n", __LINE__, time() - $luxTime);
+    if (time() - $luxTime > 600) { // every 10 minutes
+//      if (!isset($room->Motion->lux)) { //Calculate lux
       unset($rpicam);
       exec('/usr/bin/rpicam-still --nopreview --immediate --metadata - -o /dev/zero 2>&1', $rpicam, $return);
       foreach($rpicam as $property) {
@@ -196,36 +222,23 @@ while (true) { // Main loop
             $luxmax = $lux;
             file_put_contents(__DIR__ . "/data/luxmax", $luxmax);
           }
-          $luxTimer = time();
+//echo sprintf("%d: Lux: %d, LuxMax: %d.\n", __LINE__, $lux, $luxmax);
           break;
         }
       }
-      //Calculate backlight
-      $rellux = $lux / $luxmax;
-      $backlight = (int)($room->minBacklight + $rellux * $room->maxBacklight);
-      file_put_contents("/sys/class/backlight/10-0045/brightness", $backlight); // LCD brightness
-
-      $room->Motion->timerTime = time();  // (Re)Activate timer
-
-      deleteOldFiles("/var/www/html/motion/");
-      if (!isset($room->Motion->photo)) { // take photo
-        sendWebsocket('{"target":"pindakeuken", "message":"weather"}');
-//echo sprintf("%d: Filename: %s.\n", __LINE__, "/var/www/html/motion/" . date('Y-m-d_H:i:s') . '.jpg');
-        $room->Motion->photo = date('Y-m-d_H:i:s');
-        exec('/usr/bin/rpicam-still -v 0 -o /var/www/html/motion/' . $room->Motion->photo . '.jpg --rotation 180 --nopreview');
-        exec('/usr/bin/convert /var/www/html/motion/' . $room->Motion->photo . '.jpg -resize 1920 /var/www/html/motion/' . $room->Motion->photo . '.jpg');
-      }
-//      sleep(5); // Debounce
-      break;
+      $luxTime = time();
+//        $room->Motion->lux = $lux;
+//      }
     }
   }
   if (isset($room->Motion->timerTime)) { // Lighttimer
     if (time() - $room->Motion->timerTime > $room->Motion->timer) { // Light out
       unset($room->Motion->timerTime);
       tasmotaSwitch($conf->switch->{$room->Motion->light}, "OFF");
-      sendWebsocket('{"target":"pindakeuken", "message":"lightOff"}');
+//      sendWebsocket('{"target":"pindakeuken", "message":"lightOff"}');
       file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // LCD brightness
       unset($room->Motion->photo);
+//      unset($room->Motion->lux);
     }
   }
   usleep(250000); //every 0.25 s
