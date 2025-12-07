@@ -32,37 +32,37 @@
   "switch": {
     "Kerst": {
       "IP": "192.168.129.44",
-      "Hostname": "Kerst_20",
+      "Hostname": "Kerst-20",
       "Watt": "20"
     },
     "Haardlamp": {
       "IP": "192.168.129.18",
-      "Hostname": "Haardlamp_20",
+      "Hostname": "Haardlamp-20",
       "Watt": "20"
     },
     "Tandenborstel": {
       "IP": "192.168.129.7",
-      "Hostname": "Tandenborstel_10",
+      "Hostname": "Tandenborstel-10",
       "Watt": "10"
     },
     "Apotheek": {
       "IP": "192.168.129.19",
-      "Hostname": "Apotheek_20",
+      "Hostname": "Apotheek-20",
       "Watt": "20"
     },
     "TVlamp": {
       "IP": "192.168.129.11",
-      "Hostname": "TVlamp_20",
+      "Hostname": "TVlamp-20",
       "Watt": "20"
     },
     "Keukenlamp": {
       "IP": "192.168.129.14",
-      "Hostname": "Keukenlamp_8",
+      "Hostname": "Keukenlamp-8",
       "Watt": "8"
     },
     "LivingZij": {
       "IP": "192.168.129.41",
-      "Hostname": "Livinglamp_24",
+      "Hostname": "Livinglamp-24",
       "Watt": "8",
       "type": "light",
       "events": [
@@ -76,7 +76,7 @@
     },
     "LivingVoor": {
       "IP": "192.168.129.41",
-      "Hostname": "Livinglamp_24",
+      "Hostname": "Livinglamp-24",
       "Channel": "2",
       "Watt": "16",
       "type": "light",
