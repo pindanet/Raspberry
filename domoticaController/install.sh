@@ -257,7 +257,7 @@ sudo systemctl start ds18b20.timer
 # systemctl list-timers
 
 sudo apt install -y mosquitto mosquitto-clients
-sudo tee /etc/systemd/system/mqtt_log.service > /dev/null <<EOF
+sudo tee /etc/mosquitto/conf.d/pindadomo.conf > /dev/null <<EOF
 listener 1883 0.0.0.0
 allow_anonymous true
 EOF
