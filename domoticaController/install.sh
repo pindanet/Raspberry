@@ -256,26 +256,26 @@ sudo systemctl start ds18b20.timer
 
 # systemctl list-timers
 
-sudo apt install -y mosquitto mosquitto-clients
-sudo tee /etc/mosquitto/conf.d/pindadomo.conf > /dev/null <<EOF
-listener 1883 0.0.0.0
-allow_anonymous true
-EOF
-sudo tee /etc/systemd/system/mqtt_log.service > /dev/null <<EOF
-[Unit]
-Description=Log MQTT Power
-[Service]
-Type=simple
-ExecStart=/var/www/html/mqtt_log.sh
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo chmod +x /var/www/html/mqtt_log.sh
+#sudo apt install -y mosquitto mosquitto-clients
+#sudo tee /etc/mosquitto/conf.d/pindadomo.conf > /dev/null <<EOF
+#listener 1883 0.0.0.0
+#allow_anonymous true
+#EOF
+#sudo tee /etc/systemd/system/mqtt_log.service > /dev/null <<EOF
+#[Unit]
+#Description=Log MQTT Power
+#[Service]
+#Type=simple
+#ExecStart=/var/www/html/mqtt_log.sh
+#[Install]
+#WantedBy=multi-user.target
+#EOF
+#sudo chmod +x /var/www/html/mqtt_log.sh
 
-sudo systemctl daemon-reload
-sudo systemctl restart mosquitto.service
-sudo systemctl enable mqtt_log.service
-sudo systemctl start mqtt_log.service
+#sudo systemctl daemon-reload
+#sudo systemctl restart mosquitto.service
+#sudo systemctl enable mqtt_log.service
+#sudo systemctl start mqtt_log.service
 
 sudo apt install imagemagick -y
 sudo tee /etc/systemd/system/luxmotion.service > /dev/null <<EOF
