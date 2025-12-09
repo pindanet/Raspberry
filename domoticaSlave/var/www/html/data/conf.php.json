@@ -16,6 +16,13 @@
     "Kitchen": {
       "Name": "Keuken",
       "Hostname": "pindakeuken",
+      "tasmota": {
+        "Keukenlamp": {
+          "IP": "192.168.129.14",
+          "Hostname": "Keukenlamp-8",
+          "Watt": "8"
+        }
+      },
       "minBacklight": 33,
       "maxBacklight": 128,
       "Motion": {
@@ -54,11 +61,6 @@
       "IP": "192.168.129.11",
       "Hostname": "TVlamp-20",
       "Watt": "20"
-    },
-    "Keukenlamp": {
-      "IP": "192.168.129.14",
-      "Hostname": "Keukenlamp-8",
-      "Watt": "8"
     },
     "LivingZij": {
       "IP": "192.168.129.41",
