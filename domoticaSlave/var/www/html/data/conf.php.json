@@ -33,6 +33,13 @@
           14,
           24
         ]
+      },
+      "thermostat": {
+        "tempComfort": 20,
+        "tempAux": 17.5,
+        "tempOff": 15,
+        "tempNight": 10,
+        "tempNightTime": "06:30"
       }
     }
   },
