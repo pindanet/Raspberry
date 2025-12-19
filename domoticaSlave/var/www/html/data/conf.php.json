@@ -39,7 +39,11 @@
         "tempAux": 17.5,
         "tempOff": 15,
         "tempNight": 10,
-        "tempNightTime": "06:30"
+        "tempNightTime": "06:30",
+        "ds18b20": {
+          "powerGPIO": 17,
+          "dataGPIO": 4
+        }
       }
     }
   },
