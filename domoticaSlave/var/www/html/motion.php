@@ -6,11 +6,13 @@ error_reporting(E_ALL);
  * @author Dany Pinoy https://github.com/pindanet/Raspberry/
  * @version 2025-12-04
  * ToDo
+ * Tasmota WebSend
  * Thermostat motion
  */
 
 $logfile = __DIR__ . '/data/php.log';
 $motionDir = __DIR__ . '/motion/';
+$dataDir = __DIR__ . '/data/';
 
 // Use terminal arg as POST en GET arg, example: sudo -u www-data php -e /var/www/html/lights.php message=Cli%20PHP%20Client
 // Use terminal arg as POST en GET arg, example: sudo -u www-data php -e /var/www/html/lights.php message=$(bash /var/www/html/websocket/urlencode.sh '{"target":"server", "message":"JSON bericht"}')
@@ -37,6 +39,7 @@ $motionCmd = sprintf("pinctrl get %s", implode(',', $room->Motion->GPIO));
 $lux = 0;
 file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // Initialise LCD brightness
 $room->Motion->timerTime = time() - $room->Motion->timer - 1;  // Initialise lighttimer
+$room->Motion->tempTime = time() - 61;  // Initialise temptimer
 
 class WebsocketClient
 {
@@ -164,6 +167,44 @@ function deleteOldFiles($path) {
   }
 }
 
+function thermostat($room) {
+//  unset($output);
+  exec("cat /sys/bus/w1/devices/28-*/w1_slave", $output, $return);
+//var_dump($room -> thermostat -> ds18b20 -> powerGPIO);
+  if ($return != 0) { // Error > Reset DS18B20
+    exec("pinctrl set " . $room -> thermostat -> ds18b20 -> powerGPIO . "op dl"); // Power Off
+    sleep(3);
+    exec("pinctrl set " . $room -> thermostat -> ds18b20 -> powerGPIO . "op dh"); // Power On
+    sleep(5);
+    writeLog("Reset Ds18b20");
+    return;
+  }
+  if (str_contains($output[0], "YES")) {
+  if(preg_match_all('/\d+/', $output[1], $numbers))
+    $temp = end($numbers[0]);
+    if (! isset($room->thermostat->tempcount)) {
+      if ($temp == 0) {
+        writeLog("Ds18b20 rejected first 0");
+        return;
+      }
+    }
+  } else {
+    writeLog("Ds18b20 CRC error");
+    return;
+  }
+  if (! isset($room->thermostat->tempcount)) {
+    writeLog("Ds18b20 rejected first measurement");
+    $room->thermostat->tempcount = 1;
+    return;
+  }
+
+
+
+
+  file_put_contents($GLOBALS['dataDir'] . "temp", $temp, LOCK_EX);
+echo sprintf("%d: Temp: %d, TempMax: %d.\n", __LINE__, $temp, 20);
+}
+
 while (true) { // Main loop
   unset($output);
   exec($motionCmd, $output, $return);
@@ -212,7 +253,6 @@ while (true) { // Main loop
             $luxmax = $lux;
             file_put_contents(__DIR__ . "/data/luxmax", $luxmax);
           }
-//echo sprintf("%d: Lux: %d, LuxMax: %d.\n", __LINE__, $lux, $luxmax);
           break;
         }
       }
@@ -228,6 +268,12 @@ while (true) { // Main loop
       unset($room->Motion->photo);
     }
   }
+/*
+  if (time() - $room->Motion->tempTime > 60) { // Thermostat every minute
+    $room->Motion->tempTime = time();
+    thermostat($room);
+  }
+*/
   usleep(250000); //every 0.25 s
 }
 exit("Afgebroken\n");
