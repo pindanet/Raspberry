@@ -167,10 +167,16 @@ function deleteOldFiles($path) {
   }
 }
 
-function thermostat($room) {
-//  unset($output);
+function array_search_partial($arr, $keyword) {
+    foreach($arr as $index => $string) {
+        if (strpos($string, $keyword) !== FALSE)
+            return $index;
+    }
+}
+
+function thermostat($room, $motion = false) {
+//  Get temperature
   exec("cat /sys/bus/w1/devices/28-*/w1_slave", $output, $return);
-//var_dump($room -> thermostat -> ds18b20 -> powerGPIO);
   if ($return != 0) { // Error > Reset DS18B20
     exec("pinctrl set " . $room -> thermostat -> ds18b20 -> powerGPIO . "op dl"); // Power Off
     sleep(3);
@@ -197,7 +203,33 @@ function thermostat($room) {
     $room->thermostat->tempcount = 1;
     return;
   }
-
+  $room->thermostat->tempcount = $temp;
+// Minimum maximum temp
+  if (! isset($room->thermostat->tempminmax)) {
+    $room->thermostat->tempminmaxLog = file($GLOBALS['dataDir'] . "temp.log", FILE_IGNORE_NEW_LINES);
+    $room->thermostat->tempminmaxIndex = array_search_partial($room->thermostat->tempminmaxLog, date("m/d"));
+    if (! isset($room->thermostat->tempminmaxIndex)) {
+      $room->thermostat->tempminmaxLog[] = date("m/d") . ",100000,0";
+      $room->thermostat->tempminmaxIndex = array_key_last($room->thermostat->tempminmaxLog);
+    }
+    $room->thermostat->tempminmax = explode(",", $room->thermostat->tempminmaxLog[$room->thermostat->tempminmaxIndex]);
+//$room->thermostat->tempminmax[1] = 100000;
+//$room->thermostat->tempminmax[2] = 0;
+  }
+  if ($temp < $room->thermostat->tempminmax[1]) {
+    $writeTemp = true;
+    $room->thermostat->tempminmax[1] = $temp;
+  }
+  if ($temp > $room->thermostat->tempminmax[2]) {
+    $writeTemp = true;
+    $room->thermostat->tempminmax[2] = $temp;
+  }
+  if (isset($writeTemp)) {
+    $room->thermostat->tempminmaxLog[$room->thermostat->tempminmaxIndex] = implode(",", $room->thermostat->tempminmax);
+    sort($room->thermostat->tempminmaxLog);
+//var_dump($room -> thermostat -> tempminmaxLog);
+    file_put_contents($GLOBALS['dataDir'] . "temp.log", implode(PHP_EOL, $room -> thermostat -> tempminmaxLog), LOCK_EX);
+  }
 
 
 
