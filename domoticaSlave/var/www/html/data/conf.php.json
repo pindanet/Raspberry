@@ -43,7 +43,16 @@
         "ds18b20": {
           "powerGPIO": 17,
           "dataGPIO": 4
-        }
+        },
+        "heater": [
+          {
+            "name": "Tropen",
+            "color": "Red",
+            "status": "undefined",
+            "IP": "192.168.129.8",
+            "Watt": "650"
+          }
+        ]
       }
     }
   },
