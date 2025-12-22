@@ -44,13 +44,14 @@
           "powerGPIO": 17,
           "dataGPIO": 4
         },
+        "tempCorrection": 0.6,
         "heater": [
           {
             "name": "Eekhoorn",
             "color": "Red",
             "status": "undefined",
             "IP": "192.168.129.8",
-            "Hostname": "Eekhoorn_650",
+            "Hostname": "Eekhoorn-650",
             "Watt": "650"
           }
         ]
