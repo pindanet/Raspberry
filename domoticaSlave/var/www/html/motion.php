@@ -146,9 +146,11 @@ writeLog("Recreate power after persistent error for " . $switch->Hostname . ": "
   if (str_contains($switch->power, ':"OFF"}') && $cmd == "ON") {
     writeLog(sprintf("%s aan", $switch->Hostname));
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
+//    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":"red"}');
   } elseif (str_contains($switch->power, ':"ON"}') && $cmd == "OFF") {
     writeLog(sprintf("%s uit", $switch->Hostname));
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
+//    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":""}');
   }
 }
 
@@ -239,6 +241,7 @@ function thermostat($room, $motion = false) {
      later dan nighttime > altijd aan
    motion
      lager dan aux (17,5) > altijd aan
+     hoger of gelijk aan aux (17,5) > altijd uit
    altijd uit
 */
   $temp += $room -> thermostat -> tempCorrection * 1000;
@@ -257,6 +260,9 @@ function thermostat($room, $motion = false) {
     if ($temp < $room -> thermostat -> tempAux * 1000) {
 //writeLog("Verwarming inschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room -> thermostat -> tempAux);
       tasmotaSwitch($room->thermostat->heater[0], "ON");
+      return;
+    } else { // Motion, Temp OK
+      tasmotaSwitch($room->thermostat->heater[0], "OFF");
       return;
     }
   } else {
