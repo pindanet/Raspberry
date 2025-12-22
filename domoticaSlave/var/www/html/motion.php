@@ -203,6 +203,7 @@ function thermostat($room, $motion = false) {
     $room->thermostat->tempcount = 1;
     return;
   }
+  file_put_contents($GLOBALS['dataDir'] . "temp", $temp, LOCK_EX);
   $room->thermostat->tempcount = $temp;
 // Minimum maximum temp
   if (! isset($room->thermostat->tempminmax)) {
@@ -227,14 +228,41 @@ function thermostat($room, $motion = false) {
   if (isset($writeTemp)) {
     $room->thermostat->tempminmaxLog[$room->thermostat->tempminmaxIndex] = implode(",", $room->thermostat->tempminmax);
     sort($room->thermostat->tempminmaxLog);
-//var_dump($room -> thermostat -> tempminmaxLog);
     file_put_contents($GLOBALS['dataDir'] . "temp.log", implode(PHP_EOL, $room -> thermostat -> tempminmaxLog), LOCK_EX);
   }
-
-
-
-  file_put_contents($GLOBALS['dataDir'] . "temp", $temp, LOCK_EX);
-echo sprintf("%d: Temp: %d, TempMax: %d.\n", __LINE__, $temp, 20);
+// Heaters
+//$temp = 14000;
+//$room->thermostat->tempNightTime = "18:00";
+//var_dump($room -> thermostat -> heater[0]);
+/* lager dan night (10) > altijd aan
+   lager dan off (15)
+     later dan nighttime > altijd aan
+   motion
+     lager dan aux (17,5) > altijd aan
+   altijd uit
+*/
+  $temp += $room -> thermostat -> tempCorrection * 1000;
+//echo sprintf("%d: Temp after correction %f C.\n", __LINE__, $temp/1000);
+  if ($temp < $room -> thermostat -> tempNight * 1000) {
+//writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempNight: " . $room -> thermostat -> tempNight);
+    tasmotaSwitch($room->thermostat->heater[0], "ON");
+    return;
+  } elseif ($temp < $room -> thermostat -> tempOff * 1000) {
+    if (date("H:i") > $room->thermostat->tempNightTime) {
+//writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempOff: " . $room -> thermostat -> tempOff);
+      tasmotaSwitch($room->thermostat->heater[0], "ON");
+      return;
+    }
+  } elseif (isset($room->Motion->timerTime)) { // Motion
+    if ($temp < $room -> thermostat -> tempAux * 1000) {
+//writeLog("Verwarming inschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room -> thermostat -> tempAux);
+      tasmotaSwitch($room->thermostat->heater[0], "ON");
+      return;
+    }
+  } else {
+//writeLog("Verwarming uitschakelen bij " . $temp/1000 . " C.");
+    tasmotaSwitch($room->thermostat->heater[0], "OFF");
+  }
 }
 
 while (true) { // Main loop
@@ -250,6 +278,9 @@ while (true) { // Main loop
 // or exec "client.php &"
       }
       $room->Motion->timerTime = time();  // (Re)Activate timer
+
+      $room->Motion->tempTime = time();
+      thermostat($room);
 
       if (!isset($room->Motion->photo)) { // take photo
         if (isset($lux) && isset($luxmax)) { //Calculate backlight
@@ -300,12 +331,10 @@ while (true) { // Main loop
       unset($room->Motion->photo);
     }
   }
-/*
   if (time() - $room->Motion->tempTime > 60) { // Thermostat every minute
     $room->Motion->tempTime = time();
     thermostat($room);
   }
-*/
   usleep(250000); //every 0.25 s
 }
 exit("Afgebroken\n");
