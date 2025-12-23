@@ -246,18 +246,18 @@ function thermostat($room) {
 */
   $temp += $room -> thermostat -> tempCorrection * 1000;
 //echo sprintf("%d: Temp after correction %f C.\n", __LINE__, $temp/1000);
-  if ($temp < $room -> thermostat -> tempNight * 1000 - 100) {
+  if ($temp < $room -> thermostat -> tempNight * 1000) {
 //writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempNight: " . $room -> thermostat -> tempNight);
     tasmotaSwitch($room->thermostat->heater[0], "ON");
     return;
-  } elseif ($temp < $room -> thermostat -> tempOff * 1000 - 100) {
+  } elseif ($temp < $room -> thermostat -> tempOff * 1000) {
     if (date("H:i") > $room->thermostat->tempNightTime) {
 //writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempOff: " . $room -> thermostat -> tempOff);
       tasmotaSwitch($room->thermostat->heater[0], "ON");
       return;
     }
   } elseif (isset($room->Motion->timerTime)) { // Motion
-    if ($temp < $room -> thermostat -> tempAux * 1000 - 100) {
+    if ($temp < $room -> thermostat -> tempAux * 1000) {
 //writeLog("Verwarming inschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room -> thermostat -> tempAux);
       tasmotaSwitch($room->thermostat->heater[0], "ON");
       return;
