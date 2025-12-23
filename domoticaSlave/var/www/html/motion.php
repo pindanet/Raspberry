@@ -242,32 +242,49 @@ function thermostat($room) {
    motion
      lager dan aux (17,5) > altijd aan
      hoger of gelijk aan aux (17,5) > altijd uit
-   altijd uit (geen motion en > off (15)
+   no motion
+     vroeger dan nighttime
+       hoger dan night (10) > uit
+     hoger dan aux (15) > uit
 */
   $temp += $room -> thermostat -> tempCorrection * 1000;
 //echo sprintf("%d: Temp after correction %f C.\n", __LINE__, $temp/1000);
-  if ($temp < $room -> thermostat -> tempNight * 1000) {
-//writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempNight: " . $room -> thermostat -> tempNight);
+  if ($temp < $room -> thermostat -> tempNight * 1000 - 100) {
+writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempNight: " . $room -> thermostat -> tempNight);
     tasmotaSwitch($room->thermostat->heater[0], "ON");
     return;
-  } elseif ($temp < $room -> thermostat -> tempOff * 1000) {
+  } elseif ($temp < $room -> thermostat -> tempOff * 1000 - 100) {
     if (date("H:i") > $room->thermostat->tempNightTime) {
-//writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempOff: " . $room -> thermostat -> tempOff);
+writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempOff: " . $room -> thermostat -> tempOff);
       tasmotaSwitch($room->thermostat->heater[0], "ON");
       return;
     }
   } elseif (isset($room->Motion->timerTime)) { // Motion
-    if ($temp < $room -> thermostat -> tempAux * 1000) {
-//writeLog("Verwarming inschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room -> thermostat -> tempAux);
+    if ($temp < $room -> thermostat -> tempAux * 1000 - 100) {
+writeLog("Verwarming inschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room -> thermostat -> tempAux);
       tasmotaSwitch($room->thermostat->heater[0], "ON");
       return;
-    } else { // Motion, Temp OK
-      tasmotaSwitch($room->thermostat->heater[0], "OFF");
-      return;
+    } else { // Motion
+      if ($temp > $room -> thermostat -> tempAux * 1000) { // Temp OK
+writeLog("Verwarming uitschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room -> thermostat -> tempAux);
+        tasmotaSwitch($room->thermostat->heater[0], "OFF");
+        return;
+      }
     }
-  } else {
-//writeLog("Verwarming uitschakelen bij " . $temp/1000 . " C.");
-    tasmotaSwitch($room->thermostat->heater[0], "OFF");
+  } else { // No motion
+    if (date("H:i") < $room->thermostat->tempNightTime) {
+      if ($temp > $room -> thermostat -> tempNight * 1000) { // Temp OK
+writeLog("Nacht Verwarming uitschakelen bij " . $temp/1000 . " C.");
+        tasmotaSwitch($room->thermostat->heater[0], "OFF");
+        return;
+      }
+    } else {
+      if ($temp > $room -> thermostat -> tempOff * 1000) { // Temp OK
+writeLog("Dag Verwarming uitschakelen bij " . $temp/1000 . " C.");
+        tasmotaSwitch($room->thermostat->heater[0], "OFF");
+        return;
+      }
+    }
   }
 }
 
@@ -285,8 +302,11 @@ while (true) { // Main loop
       }
       $room->Motion->timerTime = time();  // (Re)Activate timer
 
-      $room->Motion->tempTime = time();
-      thermostat($room);
+      if (date("H:i") > $room->thermostat->tempNightTime) { // only add daytime
+        $room->Motion->tempTime = time();
+writeLog("Verwarming aanpassen bij Beweging");
+        thermostat($room);
+      }
 
       if (!isset($room->Motion->photo)) { // take photo
         if (isset($lux) && isset($luxmax)) { //Calculate backlight
@@ -336,10 +356,11 @@ while (true) { // Main loop
       }
       $luxTime = time();
     }
-    if (time() - $room->Motion->tempTime > 60) { // Thermostat every minute
-      $room->Motion->tempTime = time();
-      thermostat($room);
-    }
+  }
+  if (time() - $room->Motion->tempTime > 60) { // Thermostat every minute
+writeLog("Verwarming aanpassen na 1 minuut");
+    $room->Motion->tempTime = time();
+    thermostat($room);
   }
   usleep(250000); //every 0.25 s
 }
