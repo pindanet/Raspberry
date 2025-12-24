@@ -114,6 +114,7 @@ class WebsocketClient
 function sendWebsocket($message) {
   $WebSocketClient = new WebsocketClient($GLOBALS['conf']->websocket->server, $GLOBALS['conf']->websocket->port, bin2hex(random_bytes(7)));
   $WebSocketClient->sendData($message);
+sleep(1);
   unset($WebSocketClient);
 }
 
