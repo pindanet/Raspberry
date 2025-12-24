@@ -126,6 +126,7 @@ function writeLog($text) {
 }
 
 function tasmotaSwitch(&$switch, $cmd) {
+//print_r($GLOBALS['conf']);
   if (isset ($switch->Channel)) {
     $channel = $switch->Channel;
   } else {
@@ -144,11 +145,19 @@ writeLog("Recreate power after persistent error for " . $switch->Hostname . ": "
     }
   }
   if (str_contains($switch->power, ':"OFF"}') && $cmd == "ON") {
-    writeLog(sprintf("%s aan", $switch->Hostname));
+if ($switch->Hostname == "Eekhoorn-650") {
+  writeLog(sprintf("%s aan bij %f Celcius na %d seconden beweging", $switch->Hostname, $GLOBALS['conf']->rooms->Kitchen -> thermostat -> temp / 1000, time() - $GLOBALS['conf']->rooms->Kitchen->Motion->tempTime));
+} else {
+  writeLog(sprintf("%s aan", $switch->Hostname));
+}
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
 //    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":"red"}');
   } elseif (str_contains($switch->power, ':"ON"}') && $cmd == "OFF") {
-    writeLog(sprintf("%s uit", $switch->Hostname));
+if ($switch->Hostname == "Eekhoorn-650") {
+  writeLog(sprintf("%s uit bij %f Celcius na %d seconden beweging", $switch->Hostname, $GLOBALS['conf']->rooms->Kitchen -> thermostat -> temp / 1000, time() - $GLOBALS['conf']->rooms->Kitchen->Motion->tempTime));
+} else {
+  writeLog(sprintf("%s uit", $switch->Hostname));
+}
     $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
 //    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":""}');
   }
@@ -190,7 +199,7 @@ function thermostat($room) {
   if (str_contains($output[0], "YES")) {
   if(preg_match_all('/\d+/', $output[1], $numbers))
     $temp = end($numbers[0]);
-    if (! isset($room->thermostat->tempcount)) {
+    if (! isset($room->thermostat->temp)) {
       if ($temp == 0) {
         writeLog("Ds18b20 rejected first 0");
         return;
@@ -200,13 +209,13 @@ function thermostat($room) {
     writeLog("Ds18b20 CRC error");
     return;
   }
-  if (! isset($room->thermostat->tempcount)) {
+  if (! isset($room->thermostat->temp)) {
     writeLog("Ds18b20 rejected first measurement");
-    $room->thermostat->tempcount = 1;
+    $room->thermostat->temp = 1;
     return;
   }
   file_put_contents($GLOBALS['dataDir'] . "temp", $temp, LOCK_EX);
-  $room->thermostat->tempcount = $temp;
+  $room->thermostat->temp = $temp;
 // Minimum maximum temp
   if (! isset($room->thermostat->tempminmax)) {
     $room->thermostat->tempminmaxLog = file($GLOBALS['dataDir'] . "temp.log", FILE_IGNORE_NEW_LINES);
@@ -250,23 +259,23 @@ function thermostat($room) {
   $temp += $room -> thermostat -> tempCorrection * 1000;
 //echo sprintf("%d: Temp after correction %f C.\n", __LINE__, $temp/1000);
   if ($temp < $room -> thermostat -> tempNight * 1000 - 100) {
-writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempNight: " . $room -> thermostat -> tempNight);
+//writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempNight: " . $room -> thermostat -> tempNight);
     tasmotaSwitch($room->thermostat->heater[0], "ON");
     return;
   } elseif ($temp < $room -> thermostat -> tempOff * 1000 - 100) {
     if (date("H:i") > $room->thermostat->tempNightTime) {
-writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempOff: " . $room -> thermostat -> tempOff);
+//writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempOff: " . $room -> thermostat -> tempOff);
       tasmotaSwitch($room->thermostat->heater[0], "ON");
       return;
     }
   } elseif (isset($room->Motion->timerTime)) { // Motion
     if ($temp < $room -> thermostat -> tempAux * 1000 - 100) {
-writeLog("Verwarming inschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room -> thermostat -> tempAux);
+//writeLog("Verwarming inschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room -> thermostat -> tempAux);
       tasmotaSwitch($room->thermostat->heater[0], "ON");
       return;
     } else { // Motion
       if ($temp > $room -> thermostat -> tempAux * 1000) { // Temp OK
-writeLog("Verwarming uitschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room -> thermostat -> tempAux);
+//writeLog("Verwarming uitschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room -> thermostat -> tempAux);
         tasmotaSwitch($room->thermostat->heater[0], "OFF");
         return;
       }
@@ -274,13 +283,13 @@ writeLog("Verwarming uitschakelen door Motion bij " . $temp/1000 . " C door Temp
   } else { // No motion
     if (date("H:i") < $room->thermostat->tempNightTime) {
       if ($temp > $room -> thermostat -> tempNight * 1000) { // Temp OK
-writeLog("Nacht Verwarming uitschakelen bij " . $temp/1000 . " C.");
+//writeLog("Nacht Verwarming uitschakelen bij " . $temp/1000 . " C.");
         tasmotaSwitch($room->thermostat->heater[0], "OFF");
         return;
       }
     } else {
       if ($temp > $room -> thermostat -> tempOff * 1000) { // Temp OK
-writeLog("Dag Verwarming uitschakelen bij " . $temp/1000 . " C.");
+//writeLog("Dag Verwarming uitschakelen bij " . $temp/1000 . " C.");
         tasmotaSwitch($room->thermostat->heater[0], "OFF");
         return;
       }
@@ -304,7 +313,7 @@ while (true) { // Main loop
 
       if (date("H:i") > $room->thermostat->tempNightTime) { // only add daytime
         $room->Motion->tempTime = time();
-writeLog("Verwarming aanpassen bij Beweging");
+//writeLog("Verwarming aanpassen bij Beweging");
         thermostat($room);
       }
 
@@ -358,7 +367,7 @@ writeLog("Verwarming aanpassen bij Beweging");
     }
   }
   if (time() - $room->Motion->tempTime > 60) { // Thermostat every minute
-writeLog("Verwarming aanpassen na 1 minuut");
+//writeLog("Verwarming aanpassen na 1 minuut");
     $room->Motion->tempTime = time();
     thermostat($room);
   }
