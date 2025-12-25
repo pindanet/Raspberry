@@ -51,6 +51,13 @@ const tasmotaScannerTimer = new Date();
         setTasmotaIP(conf.switch, tasmotaDev);
       }
 console.log("TasmotaScanner in " + ((new Date().getTime() - tasmotaScannerTimer.getTime())/1000) + " seconds");
+/*
+        setTimeout(() => { // 60 seconds later
+          console.log("Delayed for 1 second.");
+          lightSwitch('LivingVoor','Toggle');
+          lightSwitch('LivingZij','Toggle');
+        }, 5000);
+*/
     }
   };
   xhr.send("cmd=bash&params="+stringToHex("/var/www/html/tasmotaNetScan.sh"));
@@ -399,6 +406,12 @@ function toggleAvailable(event) {
 //        var timeoutTime = Math.max(30000, sleepdate.getTime() - new Date().getTime() + 30000);
 //console.log(new Date(new Date().getTime() + timeoutTime));
         setTimeout(gotoSleep, timeoutTime);
+/*
+        setTimeout(() => { // 60 seconds later
+          lightSwitch('LivingVoor','Toggle');
+          lightSwitch('LivingZij','Toggle');
+        }, timeoutTime + 60000);
+*/
         var today = new Date();
         elem.innerHTML = today.getFullYear();
         elem.style.fontSize = "";
@@ -430,7 +443,8 @@ function toggleAvailable(event) {
   const message = {};
   message.function = "available";
   message.value = elem.innerHTML;
-  sendMessage(JSON.stringify(message));
+  sendToRoom("pindakeuken", JSON.stringify(message));
+//  sendMessage(JSON.stringify(message));
 }
 function startTime() {
   clearTimeout(startTimer);
@@ -628,12 +642,14 @@ function activeHeaters(room) {
   message.id = room.htmlElementId;
   if (activeHeaters > -1) {
     document.getElementById(room.htmlElementId).style.color = room.heater[activeHeaters].color;
-    message.color = room.heater[activeHeaters].color; 
-    sendMessage(JSON.stringify(message));
+    message.color = room.heater[activeHeaters].color;
+    sendToRoom("pindakeuken", JSON.stringify(message));
+//    sendMessage(JSON.stringify(message));
   } else {
     document.getElementById(room.htmlElementId).style.color = "";
-    message.color = ""; 
-    sendMessage(JSON.stringify(message));
+    message.color = "";
+    sendToRoom("pindakeuken", JSON.stringify(message));
+//    sendMessage(JSON.stringify(message));
   }
 }
 function tasmotaHeater (dev, cmd, room, heater) {
@@ -856,7 +872,8 @@ function toggleThermostat(event) {
   const message = {};
   message.function = "thermostatClockday";
   message.value = document.getElementById("clockday").style.color;
-  sendMessage(JSON.stringify(message));
+  sendToRoom("pindakeuken", JSON.stringify(message));
+//  sendMessage(JSON.stringify(message));
 
   event.stopPropagation();
   event.preventDefault();
@@ -907,7 +924,7 @@ function thermostat() {
 
   tempAdjustment(conf.Dining);
   wgetTemp("pindadining", conf.Dining);
-  tempAdjustment(conf.Kitchen);
+//  tempAdjustment(conf.Kitchen);
   wgetTemp("pindakeuken", conf.Kitchen);
   if (!conf.hasOwnProperty('thermostatDisabled')) {
     if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort) && (document.getElementById("clockday").style.color !== "lime")) {
@@ -916,7 +933,8 @@ function thermostat() {
       const message = {};
       message.function = "thermostatClockday";
       message.value = document.getElementById("clockday").style.color;
-      sendMessage(JSON.stringify(message));
+      sendToRoom("pindakeuken", JSON.stringify(message));
+//      sendMessage(JSON.stringify(message));
 //    } else if (document.getElementById("clockday").style.color == "lime") {
     } else if (((conf.Living.temp < conf.tempComfort) || (conf.Dining.temp < conf.tempComfort) || (conf.Kitchen.temp < conf.tempComfort)) && (document.getElementById("clockday").style.color == "lime")) {
 
@@ -925,7 +943,9 @@ function thermostat() {
       const message = {};
       message.function = "thermostatClockday";
       message.value = document.getElementById("clockday").style.color;
-      sendMessage(JSON.stringify(message));    }
+      sendToRoom("pindakeuken", JSON.stringify(message));
+//      sendMessage(JSON.stringify(message));
+    }
   }
   if (document.getElementById("clockyear").innerHTML != conf.available[0].absent) {
     if (conf.available[0].sleepdate - new Date() < 0) {
@@ -940,7 +960,8 @@ function thermostat() {
         const message = {};
         message.function = "available";
         message.value = elem.innerHTML;
-        sendMessage(JSON.stringify(message));
+        sendToRoom("pindakeuken", JSON.stringify(message));
+//        sendMessage(JSON.stringify(message));
       }
     }
   }
@@ -1185,7 +1206,8 @@ function connect() {
     if (window.location.hostname !== 'localhost') {
       const message = {};
       message.function = "heaterColors";
-      sendMessage(JSON.stringify(message));
+      sendToRoom("pindakeuken", JSON.stringify(message));
+//      sendMessage(JSON.stringify(message));
     }
   };
   socket.onmessage = function(event) {
@@ -1202,7 +1224,8 @@ function connect() {
           for (i in conf.rooms) {
             answer.id = conf[conf.rooms[i]].htmlElementId;
             answer.color = document.getElementById(answer.id).style.color;
-            sendMessage(JSON.stringify(answer));
+            sendToRoom("pindakeuken", JSON.stringify(message));
+//            sendMessage(JSON.stringify(answer));
           }
           break;
       }
@@ -1219,6 +1242,14 @@ function connect() {
   };
 }
 
+function sendToRoom(room, message) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + room + "/wssend.php?message=" + encodeURI(message)));
+}
+
+/*
 function sendMessage(message) {
   if (typeof socket !== 'undefined') {
     if (socket.readyState) {
@@ -1229,7 +1260,7 @@ function sendMessage(message) {
 console.log("Websocket not ready yet!");
   }
 }
-
+*/
 function remote(event) {
   switch(event.target.id) {
     case "clock":
@@ -1343,6 +1374,7 @@ function remote(event) {
       console.log(event.target.id);
   }
   if (window.location.hostname !== 'localhost') {
-    sendMessage(event.target.id);
+    sendToRoom("localhost", event.target.id);
+//    sendMessage(event.target.id);
   }
 }
