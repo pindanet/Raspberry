@@ -32,8 +32,6 @@ foreach ($conf->rooms as $room) {
 }
 $motionCmd = sprintf("pinctrl get %s", implode(',', $room->Motion->GPIO));
 
-//var_dump($conf->switch->{$room->Motion->light}->Hostname);
-
 // Initialise
 $lux = 0;
 file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // Initialise LCD brightness
@@ -136,7 +134,6 @@ function writeLog($text) {
 }
 
 function tasmotaSwitch(&$switch, $cmd) {
-//print_r($GLOBALS['conf']);
   if (isset ($switch->Channel)) {
     $channel = $switch->Channel;
   } else {
@@ -155,21 +152,27 @@ writeLog("Recreate power after persistent error for " . $switch->Hostname . ": "
     }
   }
   if (str_contains($switch->power, ':"OFF"}') && $cmd == "ON") {
+// Debug
 if ($switch->Hostname == "Eekhoorn-650") {
   writeLog(sprintf("%s aan bij %f Celcius na %d seconden beweging", $switch->Hostname, $GLOBALS['conf']->rooms->Kitchen->thermostat->temp / 1000, time() - $GLOBALS['conf']->rooms->Kitchen->Motion->tempTime));
 } else {
   writeLog(sprintf("%s aan", $switch->Hostname));
 }
+
     $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel . "%20ON");
 //    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":"red"}');
+    exec("wget -O- http://pindadomo/wssend.php?message=" . urlencode('{"function":"activeHeaters", "id":"clockyear", "color":"red"}'));
   } elseif (str_contains($switch->power, ':"ON"}') && $cmd == "OFF") {
+// Debug
 if ($switch->Hostname == "Eekhoorn-650") {
   writeLog(sprintf("%s uit bij %f Celcius na %d seconden beweging", $switch->Hostname, $GLOBALS['conf']->rooms->Kitchen->thermostat->temp / 1000, time() - $GLOBALS['conf']->rooms->Kitchen->Motion->tempTime));
 } else {
   writeLog(sprintf("%s uit", $switch->Hostname));
 }
+//
     $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel . "%20OFF");
 //    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":""}');
+    exec("wget -O- http://pindadomo/wssend.php?message=" . urlencode('{"function":"activeHeaters", "id":"clockyear", "color":""}'));
   }
 }
 
@@ -235,8 +238,6 @@ function thermostat($room) {
       $room->thermostat->tempminmaxIndex = array_key_last($room->thermostat->tempminmaxLog);
     }
     $room->thermostat->tempminmax = explode(",", $room->thermostat->tempminmaxLog[$room->thermostat->tempminmaxIndex]);
-//$room->thermostat->tempminmax[1] = 100000;
-//$room->thermostat->tempminmax[2] = 0;
   }
   if ($temp < $room->thermostat->tempminmax[1]) {
     $writeTemp = true;
@@ -252,9 +253,6 @@ function thermostat($room) {
     file_put_contents($GLOBALS['dataDir'] . "temp.log", implode(PHP_EOL, $room->thermostat->tempminmaxLog), LOCK_EX);
   }
 // Heaters
-//$temp = 14000;
-//$room->thermostat->tempNightTime = "18:00";
-//var_dump($room->thermostat->heater[0]);
 /* lager dan night (10) > altijd aan
    lager dan off (15)
      later dan nighttime > altijd aan
@@ -270,23 +268,19 @@ function thermostat($room) {
 //  sendWebsocket('{"function":"temp", "value":' . $temp/1000 . '}');
 //echo sprintf("%d: Temp after correction %f C.\n", __LINE__, $temp/1000);
   if ($temp < $room->thermostat->tempNight * 1000 - 100) {
-//writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempNight: " . $room->thermostat->tempNight);
     tasmotaSwitch($room->thermostat->heater[0], "ON");
     return;
   } elseif ($temp < $room->thermostat->tempOff * 1000 - 100) {
     if (date("H:i") > $room->thermostat->tempNightTime) {
-//writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempOff: " . $room->thermostat->tempOff);
       tasmotaSwitch($room->thermostat->heater[0], "ON");
       return;
     }
   } elseif (isset($room->Motion->timerTime)) { // Motion
     if ($temp < $room->thermostat->tempAux * 1000 - 100) {
-//writeLog("Verwarming inschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room->thermostat->tempAux);
       tasmotaSwitch($room->thermostat->heater[0], "ON");
       return;
     } else { // Motion
       if ($temp > $room->thermostat->tempAux * 1000) { // Temp OK
-//writeLog("Verwarming uitschakelen door Motion bij " . $temp/1000 . " C door TempAux: " . $room->thermostat->tempAux);
         tasmotaSwitch($room->thermostat->heater[0], "OFF");
         return;
       }
@@ -294,13 +288,11 @@ function thermostat($room) {
   } else { // No motion
     if (date("H:i") < $room->thermostat->tempNightTime) {
       if ($temp > $room->thermostat->tempNight * 1000) { // Temp OK
-//writeLog("Nacht Verwarming uitschakelen bij " . $temp/1000 . " C.");
         tasmotaSwitch($room->thermostat->heater[0], "OFF");
         return;
       }
     } else {
       if ($temp > $room->thermostat->tempOff * 1000) { // Temp OK
-//writeLog("Dag Verwarming uitschakelen bij " . $temp/1000 . " C.");
         tasmotaSwitch($room->thermostat->heater[0], "OFF");
         return;
       }
@@ -316,15 +308,11 @@ while (true) { // Main loop
     if (str_contains($line, ' hi ') === true) { // Motion detected
       if (isset($room->Motion->light) && $lux < $room->Motion->lowerThreshold) {
         tasmotaSwitch($room->tasmota->{$room->Motion->light}, "ON");
-//        sendWebsocket('{"target":"pindakeuken", "message":"lightOn"}');
-// USE LOCALHOST WebSocket on all devices
-// or exec "client.php &"
       }
       $room->Motion->timerTime = time();  // (Re)Activate timer
 
       if (date("H:i") > $room->thermostat->tempNightTime) { // only add daytime
         $room->Motion->tempTime = time();
-//writeLog("Verwarming aanpassen bij Beweging");
         thermostat($room);
       }
 
@@ -340,7 +328,6 @@ while (true) { // Main loop
         exec('/usr/bin/rpicam-still -v 0 -o ' . $motionDir . $room->Motion->photo . '.jpg --rotation 180 --nopreview');
         exec('/usr/bin/convert ' . $motionDir . $room->Motion->photo . '.jpg -resize 1920 ' . $motionDir . $room->Motion->photo . '.jpg');
       }
-//      sleep(5); // Debounce
       break;
     }
   }
@@ -348,12 +335,10 @@ while (true) { // Main loop
     if (time() - $room->Motion->timerTime > $room->Motion->timer) { // Light out
       unset($room->Motion->timerTime);
       tasmotaSwitch($room->tasmota->{$room->Motion->light}, "OFF");
-//      sendWebsocket('{"target":"pindakeuken", "message":"lightOff"}');
       file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // LCD brightness
       unset($room->Motion->photo);
     }
   } else { // If no motion: Calculate lux and adjust temperature
-//  if (!isset($room->Motion->timerTime)) { // Calculate lux if no motion
     if (time() - $luxTime > 600) { // Calculate lux every 10 minutes
       unset($rpicam);
       exec('/usr/bin/rpicam-still --nopreview --immediate --metadata - -o /dev/zero 2>&1', $rpicam, $return);
@@ -378,11 +363,9 @@ while (true) { // Main loop
     }
   }
   if (time() - $room->Motion->tempTime > 60) { // Thermostat every minute
-//writeLog("Verwarming aanpassen na 1 minuut");
     $room->Motion->tempTime = time();
     thermostat($room);
   }
   usleep(250000); //every 0.25 s
 }
-exit("Afgebroken\n");
 ?>
