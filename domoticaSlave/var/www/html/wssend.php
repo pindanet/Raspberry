@@ -90,13 +90,8 @@ class WebsocketClient
     return $randomString;
   }
 }
-//function sendWebsocket($message) {
 $WebSocketClient = new WebsocketClient('localhost', 9090, bin2hex(random_bytes(7)));
-//$WebSocketClient->sendData('{"function":"available","value":"Afwezig"}');
 $WebSocketClient->sendData($message);
-//$WebSocketClient->sendData($message);
 sleep(1);
 unset($WebSocketClient);
-//}
-
 ?>
