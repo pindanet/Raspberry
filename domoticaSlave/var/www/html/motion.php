@@ -82,6 +82,15 @@ class WebsocketClient
     $header .= "Origin: http://pindakeuken.home\r\n";
     $header .= "\r\n";
     $this->_Socket = fsockopen($host, $port, $errno, $errstr, 2);
+/*
+if (!$this->_Socket) { // Start Websocket Server
+  echo "Websocket open fout\n";
+  // ps -ax | grep websocket.php | grep -v grep| awk '{print $1}'
+  shell_exec("/usr/bin/php -e /var/www/html/websocket.php &");
+  sleep(1);
+  $this->_Socket = fsockopen($host, $port, $errno, $errstr, 2);
+}
+*/
     fwrite($this->_Socket, $header) or die('Error: ' . $errno . ':' . $errstr);
     $response = fread($this->_Socket, 2000);
     return true;
@@ -112,7 +121,8 @@ class WebsocketClient
   }
 }
 function sendWebsocket($message) {
-  $WebSocketClient = new WebsocketClient($GLOBALS['conf']->websocket->server, $GLOBALS['conf']->websocket->port, bin2hex(random_bytes(7)));
+  $WebSocketClient = new WebsocketClient("localhost", "9090", bin2hex(random_bytes(7)));
+//  $WebSocketClient = new WebsocketClient($GLOBALS['conf']->websocket->server, $GLOBALS['conf']->websocket->port, bin2hex(random_bytes(7)));
   $WebSocketClient->sendData($message);
 sleep(1);
   unset($WebSocketClient);
@@ -257,6 +267,7 @@ function thermostat($room) {
      hoger dan aux (15) > uit
 */
   $temp += $room->thermostat->tempCorrection * 1000;
+//  sendWebsocket('{"function":"temp", "value":' . $temp/1000 . '}');
 //echo sprintf("%d: Temp after correction %f C.\n", __LINE__, $temp/1000);
   if ($temp < $room->thermostat->tempNight * 1000 - 100) {
 //writeLog("Verwarming inschakelen bij " . $temp/1000 . " C door TempNight: " . $room->thermostat->tempNight);
