@@ -265,7 +265,7 @@ WorkingDirectory=/var/www/html/
 Environment="ENV_VAR=production"
 StandardOutput=journal
 StandardError=journal
-ExecStop=/bin/kill $MAINPID
+ExecStop=/bin/kill /$MAINPID
 
 [Install]
 WantedBy=network-online.target
