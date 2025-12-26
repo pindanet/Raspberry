@@ -271,7 +271,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable systemd-networkd
 sudo systemctl start systemd-networkd
 sudo systemctl enable systemd-networkd-wait-online.service
-sudo systemctl systemd-networkd-wait-online.service
+sudo systemctl start systemd-networkd-wait-online.service
 sudo systemctl enable PindaPHPMotion.service
 sudo systemctl start PindaPHPMotion.service
 
