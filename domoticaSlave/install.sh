@@ -246,7 +246,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable PindaMotion.timer
 sudo systemctl start PindaMotion.timer
 
-# Experimental PHP Motion
+# PHP Motion
 sudo tee /etc/systemd/system/PindaPHPMotion.service > /dev/null <<EOF
 [Unit]
 Description=My PHP Motion Service
@@ -275,29 +275,54 @@ sudo systemctl daemon-reload
 sudo systemctl enable PindaPHPMotion.service
 sudo systemctl start PindaPHPMotion.service
 
-sudo chmod +x /var/www/html/ds18b20.sh
-sudo tee /etc/systemd/system/ds18b20.timer > /dev/null <<EOF
+# PHP Websocket
+sudo tee /etc/systemd/system/PindaWebsocket.service > /dev/null <<EOF
 [Unit]
-Description=Read DS18B20 Temperature sensor
-[Timer]
-OnBootSec=1min
-OnUnitActiveSec=1min
-Unit=ds18b20.service
-[Install]
-WantedBy=multi-user.target
-EOF
+Description=PHP Websocket Service
+After=network.target
 
-sudo tee /etc/systemd/system/ds18b20.service > /dev/null <<EOF
-[Unit]
-Description=Read DS18B20 Temperature sensor
 [Service]
 Type=simple
-ExecStart=/var/www/html/ds18b20.sh
+ExecStart=/usr/bin/php /var/www/html/websocket.php
+Restart=always
+RestartSec=5
+
+User=$USER
+Group=$(id -gn)
+
+ExecStop=/bin/kill \$MAINPID
+
+[Install]
+WantedBy=network-online.target
 EOF
 
 sudo systemctl daemon-reload
-sudo systemctl enable ds18b20.timer
-sudo systemctl start ds18b20.timer
+sudo systemctl enable PindaWebsocket.service
+sudo systemctl start PindaWebsocket.service
+
+#sudo chmod +x /var/www/html/ds18b20.sh
+#sudo tee /etc/systemd/system/ds18b20.timer > /dev/null <<EOF
+#[Unit]
+#Description=Read DS18B20 Temperature sensor
+#[Timer]
+#OnBootSec=1min
+#OnUnitActiveSec=1min
+#Unit=ds18b20.service
+#[Install]
+#WantedBy=multi-user.target
+#EOF
+
+#sudo tee /etc/systemd/system/ds18b20.service > /dev/null <<EOF
+#[Unit]
+#Description=Read DS18B20 Temperature sensor
+#[Service]
+#Type=simple
+#ExecStart=/var/www/html/ds18b20.sh
+#EOF
+
+#sudo systemctl daemon-reload
+#sudo systemctl enable ds18b20.timer
+#sudo systemctl start ds18b20.timer
 
 # systemctl list-timers
 
