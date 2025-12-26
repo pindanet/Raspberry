@@ -248,8 +248,7 @@ sudo systemctl start PindaMotion.timer
 sudo tee /etc/systemd/system/PindaPHPMotion.service > /dev/null <<EOF
 [Unit]
 Description=PHP Motion Service
-After=systemd-networkd-wait-online.service
-Wants=systemd-networkd-wait-online.service
+After=network.target
 
 [Service]
 Type=simple
@@ -268,10 +267,6 @@ WantedBy=network-online.target
 EOF
 
 sudo systemctl daemon-reload
-sudo systemctl enable systemd-networkd
-sudo systemctl start systemd-networkd
-sudo systemctl enable systemd-networkd-wait-online.service
-sudo systemctl start systemd-networkd-wait-online.service
 sudo systemctl enable PindaPHPMotion.service
 sudo systemctl start PindaPHPMotion.service
 
