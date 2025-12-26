@@ -248,7 +248,7 @@ sudo systemctl start PindaMotion.timer
 sudo tee /etc/systemd/system/PindaPHPMotion.service > /dev/null <<EOF
 [Unit]
 Description=PHP Motion Service
-After=network.target
+After=network-online.target
 
 [Service]
 Type=simple
