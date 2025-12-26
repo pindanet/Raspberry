@@ -247,8 +247,9 @@ sudo systemctl start PindaMotion.timer
 # PHP Motion
 sudo tee /etc/systemd/system/PindaPHPMotion.service > /dev/null <<EOF
 [Unit]
-Description=My PHP Motion Service
-After=network.target
+Description=PHP Motion Service
+After=systemd-networkd-wait-online.service
+Wants=systemd-networkd-wait-online.service
 
 [Service]
 Type=simple
@@ -260,9 +261,6 @@ User=www-data
 Group=www-data
 
 WorkingDirectory=/var/www/html/
-Environment="ENV_VAR=production"
-StandardOutput=journal
-StandardError=journal
 ExecStop=/bin/kill \$MAINPID
 
 [Install]
@@ -270,6 +268,10 @@ WantedBy=network-online.target
 EOF
 
 sudo systemctl daemon-reload
+sudo systemctl enable systemd-networkd
+sudo systemctl start systemd-networkd
+sudo systemctl enable systemd-networkd-wait-online.service
+sudo systemctl systemd-networkd-wait-online.service
 sudo systemctl enable PindaPHPMotion.service
 sudo systemctl start PindaPHPMotion.service
 
