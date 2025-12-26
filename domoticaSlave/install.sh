@@ -99,8 +99,6 @@ echo none | sudo tee /sys/class/leds/ACT/trigger
 /usr/bin/pinctrl set 4 ip pu
 # PullDown PIR1 and PIR2
 /usr/bin/pinctrl set $pir1gpio,$pir2gpio ip pd
-# Start WebSocket server
-/usr/bin/php /var/www/html/websocket.php &
 # Autostart Chromium in Kiosk & Debug mode
 /bin/chromium --remote-debugging-port=9222 --kiosk --disable-extensions --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
 # Give Chromium time to start
