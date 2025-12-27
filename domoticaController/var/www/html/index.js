@@ -1215,9 +1215,20 @@ function connect() {
     if (event.data[0] == "["  || event.data[0] == "{") {
       var message = JSON.parse(event.data);
       switch (message.function) {
+        case "tasmota":
+          if (message.name == "Eekhoorn") {
+             if (message.state == 1) {
+               document.getElementById("clockyear").style.color = "red";
+             } else {
+               document.getElementById("clockyear").style.color = "";
+             }
+          }
+          break;
+/*
         case "activeHeaters":
           document.getElementById(message.id).style.color = message.color;
           break;
+*/
         case "heaterColors":
           const answer = {};
           answer.function = "activeHeaters";
