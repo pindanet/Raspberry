@@ -161,7 +161,7 @@ if ($switch->Hostname == "Eekhoorn-650") {
 
     $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel . "%20ON");
 //    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":"red"}');
-    exec("wget -O- http://pindadomo/wssend.php?message=" . urlencode('{"function":"activeHeaters", "id":"clockyear", "color":"red"}'));
+//    exec("wget -q -O- http://pindadomo/wssend.php?message=" . urlencode('{"function":"activeHeaters", "id":"clockyear", "color":"red"}'));
   } elseif (str_contains($switch->power, ':"ON"}') && $cmd == "OFF") {
 // Debug
 if ($switch->Hostname == "Eekhoorn-650") {
@@ -172,7 +172,7 @@ if ($switch->Hostname == "Eekhoorn-650") {
 //
     $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel . "%20OFF");
 //    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":""}');
-    exec("wget -O- http://pindadomo/wssend.php?message=" . urlencode('{"function":"activeHeaters", "id":"clockyear", "color":""}'));
+//    exec("wget -q -O- http://pindadomo/wssend.php?message=" . urlencode('{"function":"activeHeaters", "id":"clockyear", "color":""}'));
   }
 }
 
@@ -293,6 +293,14 @@ function thermostat($room) {
       }
     } else {
       if ($temp > $room->thermostat->tempOff * 1000) { // Temp OK
+/*
+        if (isset($room->thermostat->heater[0]->power)) {
+          if (!str_contains($switch->power, ':"OFF"}')) {
+writeLog(sprintf("%s uit bij %f Celcius na %d seconden beweging", $room->thermostat->heater[0]->Hostname, $room->thermostat->temp / 1000, time() - $GLOBALS['conf']->rooms->Kitchen->Motion->tempTime));
+            exec("wget -O- http://pindadomo/wssend.php?message=" . urlencode('{"function":"activeHeaters", "id":"clockyear", "color":""}'));
+          }
+        }
+*/
         tasmotaSwitch($room->thermostat->heater[0], "OFF");
         return;
       }
@@ -306,16 +314,15 @@ while (true) { // Main loop
 
   foreach($output as $line) {
     if (str_contains($line, ' hi ') === true) { // Motion detected
+//echo sprintf("%d: %s Motion High \n", __LINE__, date("Y-m-d_H:i:s"));
       if (isset($room->Motion->light) && $lux < $room->Motion->lowerThreshold) {
         tasmotaSwitch($room->tasmota->{$room->Motion->light}, "ON");
       }
       $room->Motion->timerTime = time();  // (Re)Activate timer
-
       if (date("H:i") > $room->thermostat->tempNightTime) { // only add daytime
         $room->Motion->tempTime = time();
         thermostat($room);
       }
-
       if (!isset($room->Motion->photo)) { // take photo
         if (isset($lux) && isset($luxmax)) { //Calculate backlight
           $rellux = $lux / $luxmax;
@@ -333,6 +340,7 @@ while (true) { // Main loop
   }
   if (isset($room->Motion->timerTime)) { // Lighttimer
     if (time() - $room->Motion->timerTime > $room->Motion->timer) { // Light out
+//echo sprintf("%d: %s Motion off after 3 minutes \n", __LINE__, date("Y-m-d_H:i:s"));
       unset($room->Motion->timerTime);
       tasmotaSwitch($room->tasmota->{$room->Motion->light}, "OFF");
       file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // LCD brightness
