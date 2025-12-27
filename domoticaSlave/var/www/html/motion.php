@@ -294,11 +294,11 @@ while (true) { // Main loop
         tasmotaSwitch($room->tasmota->{$room->Motion->light}, "ON");
       }
       $room->Motion->timerTime = time();  // (Re)Activate timer
-      if (date("H:i") > $room->thermostat->tempNightTime) { // only add daytime
-        $room->Motion->tempTime = time();
-        thermostat($room);
-      }
-      if (!isset($room->Motion->photo)) { // take photo
+      if (!isset($room->Motion->photo)) { // Thermostat and take photo
+        if (date("H:i") > $room->thermostat->tempNightTime) { // Thermostat only add daytime
+          $room->Motion->tempTime = time();
+          thermostat($room);
+        }
         if (isset($lux) && isset($luxmax)) { //Calculate backlight
           $rellux = $lux / $luxmax;
           $backlight = (int)($room->minBacklight + $rellux * $room->maxBacklight);
