@@ -118,7 +118,7 @@ if (!$this->_Socket) { // Start Websocket Server
   }
 }
 function sendWebsocket($message) {
-  $WebSocketClient = new WebsocketClient("localhost", "9090", bin2hex(random_bytes(7)));
+  $WebSocketClient = new WebsocketClient("localhost", "8080", bin2hex(random_bytes(7)));
   $WebSocketClient->sendData($message);
   sleep(1); // Let the websocket server process the message
   unset($WebSocketClient);
