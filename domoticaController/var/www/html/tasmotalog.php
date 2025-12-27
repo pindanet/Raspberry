@@ -14,6 +14,8 @@ $websocketServer = "pindadomo.home";
 $websocketPort = 8080;
 
 $logfile = __DIR__ . '/data/tasmota.log';
+$logstatus = array("Off", "On");
+
 // Use terminal arg as POST en GET arg, example: sudo -u www-data php -e /var/www/html/tasmotalog.php Watt=8 name=Keukenlamp status=1
 if (!isset($_SERVER["HTTP_HOST"])) {
   parse_str(implode('&', array_slice($argv, 1)), $_GET);
@@ -22,6 +24,10 @@ if (!isset($_SERVER["HTTP_HOST"])) {
 if (!isset($_GET["Watt"]) || !isset($_GET["name"]) || !isset($_GET["status"])) {
   exit();
 }
+
+$watt = htmlspecialchars($_GET["Watt"]);
+$name = htmlspecialchars($_GET["name"]);
+$status = htmlspecialchars($_GET["status"]);
 
 class WebsocketClient
 {
@@ -110,14 +116,9 @@ sleep(1);
   unset($WebSocketClient);
 }
 
-$status = array("Off", "On");
-$data = '{"time":' . time() . ',"Watt":"' . htmlspecialchars($_GET["Watt"]) . '","name":"' . htmlspecialchars($_GET["name"]) . '","status":"' . $status[htmlspecialchars($_GET["status"])] . "\"}\n";
-file_put_contents($GLOBALS['logfile'], $data, FILE_APPEND | LOCK_EX);
-if ($_GET["name"] == "Eekhoorn") {
-  if ($_GET["status"] == 1) { // On
-    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":"red"}');
-  } else { // Off
-    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":""}');
-  }
-} 
+$data = '{"time":' . time() . ',"Watt":"' . $watt . '","name":"' . $name . '","status":"' . $logstatus[$status] . "\"}\n";
+file_put_contents($logfile, $data, FILE_APPEND | LOCK_EX);
+
+$message = array("function"=>"tasmota", "name"=>$name, "state"=>$status);
+sendWebsocket(json_encode($message));
 ?>
