@@ -6,7 +6,6 @@ error_reporting(E_ALL);
  * @author Dany Pinoy https://github.com/pindanet/Raspberry/
  * @version 2025-12-04
  * ToDo
- * Tasmota WebSend
  */
 
 $logfile = __DIR__ . '/data/php.log';
@@ -120,9 +119,8 @@ if (!$this->_Socket) { // Start Websocket Server
 }
 function sendWebsocket($message) {
   $WebSocketClient = new WebsocketClient("localhost", "9090", bin2hex(random_bytes(7)));
-//  $WebSocketClient = new WebsocketClient($GLOBALS['conf']->websocket->server, $GLOBALS['conf']->websocket->port, bin2hex(random_bytes(7)));
   $WebSocketClient->sendData($message);
-sleep(1);
+  sleep(1); // Let the websocket server process the message
   unset($WebSocketClient);
 }
 
@@ -141,6 +139,7 @@ function tasmotaSwitch(&$switch, $cmd) {
   }
   if (! isset($switch->power)) { // Initialize Power Off
     $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel . "%20OFF");
+// Debug
 writeLog("Create power for " . $switch->Hostname . ": " . $switch->power);
   }
   if (! str_contains($switch->power, ':"OFF"}') && ! str_contains($switch->power, ':"ON"}')) { // Connection error
@@ -152,27 +151,11 @@ writeLog("Recreate power after persistent error for " . $switch->Hostname . ": "
     }
   }
   if (str_contains($switch->power, ':"OFF"}') && $cmd == "ON") {
-// Debug
-if ($switch->Hostname == "Eekhoorn-650") {
-  writeLog(sprintf("%s aan bij %f Celcius na %d seconden beweging", $switch->Hostname, $GLOBALS['conf']->rooms->Kitchen->thermostat->temp / 1000, time() - $GLOBALS['conf']->rooms->Kitchen->Motion->tempTime));
-} else {
-  writeLog(sprintf("%s aan", $switch->Hostname));
-}
-
+writeLog(sprintf("%s aan", $switch->Hostname));
     $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel . "%20ON");
-//    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":"red"}');
-//    exec("wget -q -O- http://pindadomo/wssend.php?message=" . urlencode('{"function":"activeHeaters", "id":"clockyear", "color":"red"}'));
   } elseif (str_contains($switch->power, ':"ON"}') && $cmd == "OFF") {
-// Debug
-if ($switch->Hostname == "Eekhoorn-650") {
-  writeLog(sprintf("%s uit bij %f Celcius na %d seconden beweging", $switch->Hostname, $GLOBALS['conf']->rooms->Kitchen->thermostat->temp / 1000, time() - $GLOBALS['conf']->rooms->Kitchen->Motion->tempTime));
-} else {
-  writeLog(sprintf("%s uit", $switch->Hostname));
-}
-//
+writeLog(sprintf("%s uit", $switch->Hostname));
     $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel . "%20OFF");
-//    sendWebsocket('{"function":"activeHeaters", "id":"clockyear", "color":""}');
-//    exec("wget -q -O- http://pindadomo/wssend.php?message=" . urlencode('{"function":"activeHeaters", "id":"clockyear", "color":""}'));
   }
 }
 
@@ -265,7 +248,7 @@ function thermostat($room) {
      hoger dan aux (15) > uit
 */
   $temp += $room->thermostat->tempCorrection * 1000;
-//  sendWebsocket('{"function":"temp", "value":' . $temp/1000 . '}');
+  sendWebsocket('{"function":"temp", "value":' . $temp/1000 . '}');
 //echo sprintf("%d: Temp after correction %f C.\n", __LINE__, $temp/1000);
   if ($temp < $room->thermostat->tempNight * 1000 - 100) {
     tasmotaSwitch($room->thermostat->heater[0], "ON");
@@ -293,14 +276,6 @@ function thermostat($room) {
       }
     } else {
       if ($temp > $room->thermostat->tempOff * 1000) { // Temp OK
-/*
-        if (isset($room->thermostat->heater[0]->power)) {
-          if (!str_contains($switch->power, ':"OFF"}')) {
-writeLog(sprintf("%s uit bij %f Celcius na %d seconden beweging", $room->thermostat->heater[0]->Hostname, $room->thermostat->temp / 1000, time() - $GLOBALS['conf']->rooms->Kitchen->Motion->tempTime));
-            exec("wget -O- http://pindadomo/wssend.php?message=" . urlencode('{"function":"activeHeaters", "id":"clockyear", "color":""}'));
-          }
-        }
-*/
         tasmotaSwitch($room->thermostat->heater[0], "OFF");
         return;
       }
@@ -345,6 +320,7 @@ while (true) { // Main loop
       tasmotaSwitch($room->tasmota->{$room->Motion->light}, "OFF");
       file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // LCD brightness
       unset($room->Motion->photo);
+      $luxTime= time() - 601; // Reset lux measurement
     }
   } else { // If no motion: Calculate lux and adjust temperature
     if (time() - $luxTime > 600) { // Calculate lux every 10 minutes
