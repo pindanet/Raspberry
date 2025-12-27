@@ -132,7 +132,7 @@ function getConf() { // Get configuration
 //        }
 //        lightOff();
 //        motionTimer = setInterval(startMotion, 60000) // check motion sensor every 0.25s (1 min)
-        setInterval(wgetTemp, 60000, "pindakeuken", conf.Kitchen);
+//        setInterval(wgetTemp, 60000, "pindakeuken", conf.Kitchen);
 //        startTemp();
         setBrightness(0);
         connect(); // Connect to Websocket server
@@ -263,7 +263,7 @@ function checkTime(i) {
   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
   return i;
 }
-
+/*
 function wgetTemp(host, room) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
@@ -281,6 +281,7 @@ function wgetTemp(host, room) {
   };
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + "/data/temp"));
 }
+*/
 
 //function startTemp() {
 //  var xhr = new XMLHttpRequest();
@@ -453,6 +454,9 @@ function connect() {
         }
       }
       switch (message.function) {
+        case "temp":
+          document.getElementById("kitchenRoomTemp").innerHTML = message.value.toFixed(1);
+          break;
         case "thermostatClockday":
           document.getElementById("day").style.color = message.value;
           break;
