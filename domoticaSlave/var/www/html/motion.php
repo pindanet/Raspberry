@@ -19,7 +19,7 @@ if (!isset($_SERVER["HTTP_HOST"])) {
   parse_str(implode('&', array_slice($argv, 1)), $_POST);
 }
 // Settings
-$luxTime= time() - 601; // Initialise lux measurement
+$luxTime = time() - 601; // Initialise lux measurement
 $conf = json_decode(file_get_contents(__DIR__ . "/data/conf.php.json"));
 date_default_timezone_set($conf->Timezone);
 $hostname = trim(file_get_contents("/etc/hostname"));
