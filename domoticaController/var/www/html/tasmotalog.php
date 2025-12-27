@@ -8,6 +8,7 @@ error_reporting(E_ALL);
  * @author Dany Pinoy https://github.com/pindanet/Raspberry/
  * @version 2025-12-27
  * ToDo
+ * Get variables from conf.php.json
  */
 $websocketServer = "pindadomo.home";
 $websocketPort = 8080;
