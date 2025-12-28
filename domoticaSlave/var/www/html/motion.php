@@ -295,17 +295,17 @@ while (true) { // Main loop
       }
       $room->Motion->timerTime = time();  // (Re)Activate timer
       if (!isset($room->Motion->photo)) { // Thermostat and take photo
-        if (date("H:i") > $room->thermostat->tempNightTime) { // Thermostat only add daytime
-          $room->Motion->tempTime = time();
-          thermostat($room);
-        }
         if (isset($lux) && isset($luxmax)) { //Calculate backlight
           $rellux = $lux / $luxmax;
           $backlight = (int)($room->minBacklight + $rellux * $room->maxBacklight);
           file_put_contents("/sys/class/backlight/10-0045/brightness", $backlight); // LCD brightness
         }
-        deleteOldFiles($motionDir);
         sendWebsocket('{"target":"pindakeuken", "message":"weather"}');
+        if (date("H:i") > $room->thermostat->tempNightTime) { // Thermostat only add daytime
+          $room->Motion->tempTime = time();
+          thermostat($room);
+        }
+        deleteOldFiles($motionDir);
         $room->Motion->photo = date('Y-m-d_H:i:s');
         exec('/usr/bin/rpicam-still -v 0 -o ' . $motionDir . $room->Motion->photo . '.jpg --rotation 180 --nopreview');
         exec('/usr/bin/convert ' . $motionDir . $room->Motion->photo . '.jpg -resize 1920 ' . $motionDir . $room->Motion->photo . '.jpg');
