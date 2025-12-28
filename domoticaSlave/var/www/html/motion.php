@@ -321,6 +321,7 @@ while (true) { // Main loop
       file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // LCD brightness
       unset($room->Motion->photo);
       $luxTime= time() - 601; // Reset lux measurement
+      $room->Motion->tempTime = time() - 61; // Reset thermostat timer
     }
   } else { // If no motion: Calculate lux and adjust temperature
     if (time() - $luxTime > 600) { // Calculate lux every 10 minutes
