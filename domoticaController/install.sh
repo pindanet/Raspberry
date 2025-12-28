@@ -344,6 +344,31 @@ sudo systemctl daemon-reload
 sudo systemctl enable PindaNetRadio.path
 sudo systemctl start PindaNetRadio.path
 
+# PHP Websocket
+sudo tee /etc/systemd/system/PindaWebsocket.service > /dev/null <<EOF
+[Unit]
+Description=PHP Websocket Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/php /var/www/html/websocket.php
+Restart=always
+RestartSec=5
+
+User=$USER
+Group=$(id -gn)
+
+ExecStop=/bin/kill \$MAINPID
+
+[Install]
+WantedBy=network-online.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable PindaWebsocket.service
+sudo systemctl start PindaWebsocket.service
+
 # Install Roc Network Audio
 sudo apt install g++ pkg-config scons ragel gengetopt libuv1-dev libunwind-dev libspeexdsp-dev libsox-dev libsndfile1-dev libssl-dev libpulse-dev git -y
 sudo apt install libtool intltool autoconf automake make cmake meson -y
