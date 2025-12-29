@@ -519,6 +519,7 @@ function connectWebsocket() {
   }
   http.send()
 }
+/*
 function startWebsocket() {
   if (window.location.hostname === 'localhost') {
     // Close Websocket server
@@ -549,11 +550,13 @@ function startWebsocket() {
     connect(); // Connect to Websocket server
   }
 }
-let domain;
+//let domain;
+*/
 function getVariable() { // Get Variables
   if (window.location.hostname === 'localhost') { // Hide cursor on touchscreen
     document.body.style.cursor = "none";
   }
+/*
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -565,7 +568,7 @@ console.log("getVariable: startWebsocket");
     }
   };
   xhr.send("cmd=cat&params="+stringToHex("/etc/resolv.conf | grep search | awk '{print $2}'"));
-
+*/
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function(e) {
     if (this.status == 200) {
@@ -577,6 +580,7 @@ console.log("getVariable: getConf");
   xhttp.open("POST", "data/variable.json");
   xhttp.send();
 console.log("getVariable");
+  connectWebsocket();
 }
 function variableToConf(obj, dest) {
   for (let key in obj) {
@@ -1199,15 +1203,13 @@ function toTop() {
 
 let socket;
 function connect() {
-  socket = new WebSocket("ws://pindadomo." + domain + ":8080");
-//  socket = new WebSocket("ws://192.168.129.2:8080");
+  socket = new WebSocket("ws://localhost:8080");
   socket.onopen = function(event) {
     console.log("Connected to server");
     if (window.location.hostname !== 'localhost') {
       const message = {};
       message.function = "heaterColors";
       sendToRoom("pindakeuken", JSON.stringify(message));
-//      sendMessage(JSON.stringify(message));
     }
   };
   socket.onmessage = function(event) {
@@ -1246,7 +1248,7 @@ function connect() {
   };
   socket.onclose = function(event) {
     console.log("WebSocket connection has been closed successfully.");
-    startWebsocket();
+//    startWebsocket();
   };
   socket.onerror = function(event) {
     console.log("WebSocket error: ", event);
