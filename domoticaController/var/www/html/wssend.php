@@ -90,14 +90,8 @@ class WebsocketClient
     return $randomString;
   }
 }
-//function sendWebsocket($message) {
-$WebSocketClient = new WebsocketClient('pindadomo.home', 8080, bin2hex(random_bytes(7)));
-//$WebSocketClient->sendData('{"function":"activeHeaters", "id":"clockyear", "color":"red"}');
-//sleep(1);
-//$WebSocketClient->sendData('{"function":"activeHeaters", "id":"clockyear", "color":""}');
+$WebSocketClient = new WebsocketClient('localhost', 8080, bin2hex(random_bytes(7)));
 $WebSocketClient->sendData($message);
 sleep(1);
 unset($WebSocketClient);
-//}
-
 ?>
