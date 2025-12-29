@@ -1289,7 +1289,14 @@ function remote(event) {
       toggleThermostat(event);
       break;
     case "clockyear":
-      toggleAvailable(event);
+      if (event.target.style.color == "red") {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "cli.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send("cmd=wget&params="+stringToHex("-qO- http://eekhoorn-650/cm?cmnd=Power%20Off"));
+      } else {
+        toggleAvailable(event);
+      }
       break;
     case "menuradio":
       radioVolume(event,conf.radio.volume);
