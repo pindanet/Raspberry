@@ -10,7 +10,7 @@ error_reporting(E_ALL);
  * ToDo
  * Get variables from conf.php.json
  */
-$websocketServer = "pindadomo.home";
+$websocketServer = "localhost";
 $websocketPort = 8080;
 
 $logfile = __DIR__ . '/data/tasmota.log';
