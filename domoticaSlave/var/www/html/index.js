@@ -427,8 +427,6 @@ function startTime() {
 }
 function connect() {
   socket = new WebSocket("ws://localhost:8080");
-//  socket = new WebSocket("ws://pindadomo.home:8080");
-//  socket = new WebSocket("ws://192.168.129.2:8080");
   socket.onopen = function(event) {
     console.log("Connected to server");
   };
