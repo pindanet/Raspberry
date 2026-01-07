@@ -31,6 +31,8 @@ foreach ($conf->rooms as $room) {
 }
 $motionCmd = sprintf("pinctrl get %s", implode(',', $room->Motion->GPIO));
 
+// print_r($room->thermostat->schedule);
+
 // Initialise
 $lux = 0;
 file_put_contents("/sys/class/backlight/10-0045/brightness", 0); // Initialise LCD brightness
@@ -236,51 +238,64 @@ function thermostat($room) {
     file_put_contents($GLOBALS['dataDir'] . "temp.log", implode(PHP_EOL, $room->thermostat->tempminmaxLog), LOCK_EX);
   }
 // Heaters
-/* lager dan night (10) > altijd aan
-   lager dan off (15)
-     later dan nighttime > altijd aan
-   motion
-     lager dan aux (17,5) > altijd aan
-     hoger of gelijk aan aux (17,5) > altijd uit
-   no motion
-     vroeger dan nighttime
-       hoger dan night (10) > uit
-     hoger dan aux (15) > uit
-*/
   $temp += $room->thermostat->tempCorrection * 1000;
   sendWebsocket('{"function":"temp", "value":' . $temp/1000 . '}');
 //echo sprintf("%d: Temp after correction %f C.\n", __LINE__, $temp/1000);
-  if ($temp < $room->thermostat->tempNight * 1000 - 100) {
-    tasmotaSwitch($room->thermostat->heater[0], "ON");
-    return;
-  } elseif ($temp < $room->thermostat->tempOff * 1000 - 100) {
-    if (date("H:i") > $room->thermostat->tempNightTime) {
-      tasmotaSwitch($room->thermostat->heater[0], "ON");
-      return;
+
+  if (isset($room->Motion->timerTime)) { // Motion
+    // Get Scheduled temp
+    $now = date("H:i");
+    foreach ($room->thermostat->schedule as $hour => $hourTemp) {
+      if($now >= $hour) {
+// echo "$now : $hour : $hourTemp\n";
+        $schedTemp = $hourTemp;
+      } else {
+        break;
+      }
     }
-  } elseif (isset($room->Motion->timerTime)) { // Motion
-    if ($temp < $room->thermostat->tempAux * 1000 - 100) {
+//echo "Scheduled temp: $schedTemp, Temp at $now: " . $temp/1000 . "\n";
+writeLog("Scheduled temp: $schedTemp, Temp at $now: " . $temp/1000);
+    if ($temp < $schedTemp * 1000 - 100) {
       tasmotaSwitch($room->thermostat->heater[0], "ON");
       return;
-    } else { // Motion
-      if ($temp > $room->thermostat->tempAux * 1000) { // Temp OK
+    } else {
+      if ($temp > $schedTemp * 1000) { // Temp OK
         tasmotaSwitch($room->thermostat->heater[0], "OFF");
         return;
       }
     }
   } else { // No motion
-    if (date("H:i") < $room->thermostat->tempNightTime) {
-      if ($temp > $room->thermostat->tempNight * 1000) { // Temp OK
+    if (date("H:i") < $room->thermostat->tempNightTime) { // Night temperature
+      if ($temp < $room->thermostat->tempNight * 1000 - 100) {
+        tasmotaSwitch($room->thermostat->heater[0], "ON");
+        return;
+      } else { // Temp OK
         tasmotaSwitch($room->thermostat->heater[0], "OFF");
         return;
       }
-    } else {
-      if ($temp > $room->thermostat->tempOff * 1000) { // Temp OK
+    } else { // Day temperature
+      if ($temp < $room->thermostat->tempOff * 1000 - 100) {
+        tasmotaSwitch($room->thermostat->heater[0], "ON");
+        return;
+      } else { // Temp OK
         tasmotaSwitch($room->thermostat->heater[0], "OFF");
         return;
       }
     }
   }
+/*
+  } elseif ($schedTemp == $room->thermostat->tempNight) { // No motion and Night temp
+    if ($temp < $schedTemp * 1000 - 100) {
+      tasmotaSwitch($room->thermostat->heater[0], "ON");
+      return;
+    } else { // Motion
+      if ($temp > $schedTemp * 1000) { // Temp OK
+        tasmotaSwitch($room->thermostat->heater[0], "OFF");
+        return;
+      }
+    }
+  }
+*/
 }
 
 while (true) { // Main loop
