@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>PindaDomo Apparaten</title>
+  <link rel="manifest" href="devices.json">
+  <link href='devices.css' rel='stylesheet'>
+  <script src='devices.js'></script>
+</head>
+<body>
+  <div class="room">
+    <h1><img src="emoji/living.svg"> Living <img src="emoji/refresh.svg" onclick="refresh(this);"></h1>
+    <p><button onclick="toggle('Livinglamp-24', 2);"><img src="emoji/light-bulb-off.svg"> Vooraan</button>
+    <button onclick="toggle('Schilderij-650', 1);"><img src="emoji/infrared-off.svg"> Schilderij</button>
+    <button onclick="toggle('Computertafel-300', 1);"><img src="emoji/infrared-off.svg"> Computertafel</button>
+    <button onclick="toggle('Livinglamp-24', 1);"><img src="emoji/light-bulb-off.svg"> Zijkant</button>
+    <button onclick="toggle('canyon-650', 1);"><img src="emoji/infrared-off.svg"> Canyon</button>
+    <button onclick="toggle('kerst-20', 1);"><img src="emoji/power-off.svg"> Kerst</button></p>
+  </div>
+  <div class="room">
+    <h1><img src="emoji/dining.svg"> Dining <img src="emoji/refresh.svg" onclick="refresh(this);"></h1>
+    <p><button onclick="toggle('zonsondergang-650', 1);"><img src="emoji/infrared-off.svg"> Zonsondergang</button>
+    <button onclick="toggle('eettafel-300', 1);"><img src="emoji/infrared-off.svg"> Eettafel</button>
+    <button onclick="toggle('tropen-650', 1);"><img src="emoji/infrared-off.svg"> Tropen</button>
+    <button onclick="toggle('apotheek-20', 1);"><img src="emoji/light-bulb-off.svg"> Apotheek</button>
+    <button onclick="toggle('tandenborstel-10', 1);"><img src="emoji/power-off.svg"> Tandenborstel</button></p>
+  </div>
+  <div class="room">
+    <h1><img src="emoji/kitchen.svg"> Keuken <img src="emoji/refresh.svg" onclick="refresh(this);"></h1>
+    <p><button onclick="toggle('Eekhoorn-650', 1);"><img src="emoji/infrared-off.svg"> Eekhoorn</button>
+    <button onclick="toggle('Keukenlamp-8', 1);"><img src="emoji/light-bulb-off.svg"> Licht</button><p>
+  </div>
+</body>
+</html>
