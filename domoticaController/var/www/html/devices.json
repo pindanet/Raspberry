@@ -1,0 +1,18 @@
+{
+  "short_name": "PindaDomo",
+  "name": "Pinda Domotica",
+  "start_url": "/devices.html",
+  "display": "fullscreen",
+  "icons": [
+    {
+      "src": "pindadomo192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "pindadomo512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
