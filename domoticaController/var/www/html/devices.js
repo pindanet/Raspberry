@@ -54,3 +54,11 @@ function refresh(event) {
     xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + hostname + "/cm?cmnd=Power" + channel));
   }
 }
+window.onload = function(){
+  var imgheadings = document.querySelectorAll("h1 img");
+  for(var i = 0; i < imgheadings.length; i++) {
+    if (imgheadings[i].src.includes("refresh")) {
+      imgheadings[i].click();
+    }
+  }
+};
