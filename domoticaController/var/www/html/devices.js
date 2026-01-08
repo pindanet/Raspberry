@@ -10,10 +10,35 @@ const stringToHex = (str) => {
   }
   return hex;
 };
-function toggle(hostname, channel = 1) {
+function setImgSrc(imgEl, response) {
+  if (response == "[]") {
+    document.getElementById("connerr").innerHTML += "Connection Error: " + imgEl.parentElement.innerText;
+    return;
+  }
+  if (imgEl.src.includes("light-bulb")) {
+    svg = "light-bulb";
+  } else if (imgEl.src.includes("infrared")) {
+    svg = "infrared";
+  } else if (imgEl.src.includes("power")) {
+    svg = "power";
+  }
+  const output = JSON.parse(response);
+  if (output[0].includes(':"OFF"}')) {
+    imgEl.src = "emoji/" + svg + "-off.svg";
+  } else if (output[0].includes(':"ON"}')) {
+    imgEl.src = "emoji/" + svg + "-on.svg";
+  }
+}
+function toggle(elem, hostname, channel = 1) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.elem = elem;
+  xhr.onload = function(e) {
+    if (this.status == 200) {
+     setImgSrc(elem.firstElementChild, this.responseText);
+    }
+  };
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + hostname + "/cm?cmnd=Power" + channel +"%20Toggle"));
 }
 function getLastNumericalGroup(str) {
@@ -36,19 +61,7 @@ function refresh(event) {
     xhr.onload = function(e) {
       if (this.status == 200) {
         var imgEl = this.button.getElementsByTagName('img')[0];
-        if (imgEl.src.includes("light-bulb")) {
-          svg = "light-bulb";
-        } else if (imgEl.src.includes("infrared")) {
-          svg = "infrared";
-        } else if (imgEl.src.includes("power")) {
-          svg = "power";
-        }
-        const output = JSON.parse(this.responseText);
-        if (output[0].includes(':"OFF"}')) {
-          imgEl.src = "emoji/" + svg + "-off.svg";
-        } else if (output[0].includes(':"ON"}')) {
-          imgEl.src = "emoji/" + svg + "-on.svg";
-        }
+        setImgSrc(imgEl, this.responseText);
       }
     };
     xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + hostname + "/cm?cmnd=Power" + channel));
