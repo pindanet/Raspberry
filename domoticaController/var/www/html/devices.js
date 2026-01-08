@@ -12,7 +12,7 @@ const stringToHex = (str) => {
 };
 function setImgSrc(imgEl, response) {
   if (response == "[]") {
-    document.getElementById("connerr").innerHTML += "Connection Error: " + imgEl.parentElement.innerText;
+    document.getElementById("connerr").innerHTML += "Connection Error: " + imgEl.parentElement.innerText + "<br>";
     return;
   }
   if (imgEl.src.includes("light-bulb")) {
