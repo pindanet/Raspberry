@@ -38,3 +38,6 @@ button {
   font-weight: bold;
   border-radius: 12px;
 }
+#connerr {
+  color: red;
+}
