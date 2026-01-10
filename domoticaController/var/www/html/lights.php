@@ -34,21 +34,21 @@ function lightSwitch(&$switch, $lux, $event) {
     $channel = "";
   }
   if (! isset($switch->power)) { // Initialize
-    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
+    $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel);
 writeLog("Create power for " . $switch->Hostname . ": " . $switch->power);
   } elseif (! str_contains($switch->power, ':"OFF"}') && ! str_contains($switch->power, ':"ON"}')) { // Connection error
-    $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel);
+    $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel);
 writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch->power);
   } else {
     if ($lux < $event->lowerThreshold) {
       if (str_contains($switch->power, ':"OFF"}')) {
         writeLog(sprintf("%s aan bij %s lux", $switch->Hostname, $lux));
-        $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20ON");
+        $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel . "%20ON");
       }
     } elseif ($lux > $event->upperThreshold) {
       if (str_contains($switch->power, ':"ON"}')) {
         writeLog(sprintf("%s uit bij %s lux", $switch->Hostname, $lux));
-        $switch->power = file_get_contents("http://" . $switch->IP . "/cm?cmnd=Power" . $channel . "%20OFF");
+        $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel . "%20OFF");
       }
     }
   }
@@ -69,6 +69,16 @@ while (true) {
           } else { // startTime and stopTime on same day
             if ($now > $event->startTime && $now < $event->stopTime) {
               lightSwitch($switch, $lux, $event);
+            } elseif (isset($switch->power)) { // add also to stopTime on next day
+              if (isset ($switch->Channel)) {
+                $channel = $switch->Channel;
+              } else {
+                $channel = "";
+              }
+              if ($now >= $event->stopTime && str_contains($switch->power, ':"ON"}')) {
+                writeLog(sprintf("%s uit bij %s lux", $switch->Hostname, $lux));
+                $switch->power = file_get_contents("http://" . $switch->Hostname . "/cm?cmnd=Power" . $channel . "%20OFF");
+              }
             }
           }
 //var_dump($event->switchingIlluminance);
