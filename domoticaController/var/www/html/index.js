@@ -25,7 +25,7 @@ const stringToHex = (str) => {
 //  xhr.send("cmd=echo&params="+stringToHex("'" + new Date().toString() + ": " + debugText + "' >> data/debug.log"));
 //}
 //debug("Debug active");
-
+/*
 function setTasmotaIP(confArray, tasmotaDev) {
         for (let dev in confArray) {
           if (confArray[dev].Hostname == tasmotaDev[1]) {
@@ -33,7 +33,9 @@ function setTasmotaIP(confArray, tasmotaDev) {
           }
         }
 }
+*/
 function calcConf() { // Calculated Configuration
+/*
 // Hoe lang duurt dit!!!
 const tasmotaScannerTimer = new Date();
   var hostname;
@@ -51,17 +53,10 @@ const tasmotaScannerTimer = new Date();
         setTasmotaIP(conf.switch, tasmotaDev);
       }
 console.log("TasmotaScanner in " + ((new Date().getTime() - tasmotaScannerTimer.getTime())/1000) + " seconds");
-/*
-        setTimeout(() => { // 60 seconds later
-          console.log("Delayed for 1 second.");
-          lightSwitch('LivingVoor','Toggle');
-          lightSwitch('LivingZij','Toggle');
-        }, 5000);
-*/
     }
   };
   xhr.send("cmd=bash&params="+stringToHex("/var/www/html/tasmotaNetScan.sh"));
-
+*/
   // Set Thermostat UI
   document.getElementById("livingaux").innerHTML = conf.tempAux.toFixed(1);
   document.getElementById("diningaux").innerHTML = conf.tempAux.toFixed(1);
@@ -800,17 +795,17 @@ console.log("Event: " + beginDate.toString() + " tot " + endDate.toString());
 // Heaters On/Off
   for (let i = 0; i < room.heater.length; i++) {
     if (room.heater[i].status != "off" && room.heater[i].status != "on") { // Initialise heater status
-      tasmotaHeater (room.heater[i].IP, "Power", room, i);
+      tasmotaHeater (room.heater[i].Hostname, "Power", room, i);
     } else {
       var tempOn = (tempWanted - conf.hysteresis - conf.hysteresis * (2 * i)).toFixed(2);
       var tempOff = (tempWanted + conf.hysteresis - conf.hysteresis * (2 * i)).toFixed(2);
       if (room.temp > tempOff) { // Heater Off
         if (room.heater[i].status != "off") {
-          tasmotaHeater (room.heater[i].IP, "Power%20Off", room, i);
+          tasmotaHeater (room.heater[i].Hostname, "Power%20Off", room, i);
         }
       } else if (room.temp < tempOn) { //Heater On
         if (room.heater[i].status != "on") {
-          tasmotaHeater (room.heater[i].IP, "Power%20On", room, i);
+          tasmotaHeater (room.heater[i].Hostname, "Power%20On", room, i);
         }
       }
     }
@@ -1004,9 +999,9 @@ function lightSwitch(name, cmd) {
       }
     };
     if (typeof tasmotaSwitch.Channel !== 'undefined') {
-      xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch.IP + "/cm?cmnd=Power"+ tasmotaSwitch.Channel + "%20" + cmd));
+      xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch.Hostname + "/cm?cmnd=Power"+ tasmotaSwitch.Channel + "%20" + cmd));
     } else {
-      xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch.IP + "/cm?cmnd=Power%20" + cmd));
+      xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaSwitch.Hostname + "/cm?cmnd=Power%20" + cmd));
     }
   } else {
     console.log('Remote lichtSwitch()');
@@ -1383,7 +1378,7 @@ function remote(event) {
                   }
                 }
               };
-              xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaHeater.IP + "/cm?cmnd=Power%20Toggle"));
+              xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + tasmotaHeater.Hostname + "/cm?cmnd=Power%20Toggle"));
             }
             break looproom;
           }
