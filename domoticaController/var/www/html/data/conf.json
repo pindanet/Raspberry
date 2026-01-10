@@ -61,13 +61,13 @@
         "end": "bedTime"
       },
       {
-        "disabled": false,
+        "disabled": true,
         "dev": "LivingVoor",
         "begin": "eveningLightsOn",
         "end": "bedTime"
       },
       {
-        "disabled": false,
+        "disabled": true,
         "dev": "LivingZij",
         "begin": "eveningLightsOn",
         "end": "bedTime"
@@ -78,6 +78,7 @@
         "end": "morningLightsOut"
       },
       {
+        "disabled": true,
         "dev": "Apotheek",
         "begin": "breakfast",
         "end": "morningLightsOut"
@@ -88,6 +89,7 @@
         "end": "22:15"
       },
       {
+        "disabled": true,
         "dev": "Apotheek",
         "begin": "22:24",
         "end": "bedTime"
@@ -116,42 +118,42 @@
   "switch": {
     "Kerst": {
       "IP": "192.168.129.44",
-      "Hostname": "Kerst_20",
+      "Hostname": "kerst-20",
       "Watt": "20"
     },
     "Haardlamp": {
       "IP": "192.168.129.18",
-      "Hostname": "Haardlamp_20",
+      "Hostname": "haardlamp-20",
       "Watt": "20"
     },
     "Tandenborstel": {
       "IP": "192.168.129.7",
-      "Hostname": "Tandenborstel_10",
+      "Hostname": "tandenborstel-10",
       "Watt": "10"
     },
     "Apotheek": {
       "IP": "192.168.129.19",
-      "Hostname": "Apotheek_20",
+      "Hostname": "apotheek-20",
       "Watt": "20"
     },
     "TVlamp": {
       "IP": "192.168.129.11",
-      "Hostname": "TVlamp_20",
+      "Hostname": "tvlamp-20",
       "Watt": "20"
     },
     "Keukenlamp": {
       "IP": "192.168.129.14",
-      "Hostname": "Keukenlamp_8",
+      "Hostname": "keukenlamp-8",
       "Watt": "8"
     },
     "LivingZij": {
       "IP": "192.168.129.41",
-      "Hostname": "Livinglamp_24",
+      "Hostname": "livinglamp-24",
       "Watt": "8"
     },
     "LivingVoor": {
       "IP": "192.168.129.41",
-      "Hostname": "Livinglamp_24",
+      "Hostname": "livinglamp-24",
       "Channel": "2",
       "Watt": "16"
     }
@@ -169,7 +171,7 @@
         "color": "Yellow",
         "status": "undefined",
         "IP": "192.168.129.0",
-        "Hostname": "Computertafel_300",
+        "Hostname": "computertafel-300",
         "Watt": "300"
       },
       {
@@ -177,7 +179,7 @@
         "color": "Orange",
         "status": "undefined",
         "IP": "192.168.129.12",
-        "Hostname": "Schilderij_650",
+        "Hostname": "schilderij-650",
         "Watt": "650"
       },
       {
@@ -185,7 +187,7 @@
         "color": "Red",
         "status": "undefined",
         "IP": "192.168.129.4",
-        "Hostname": "Canyon_650",
+        "Hostname": "canyon-650",
         "Watt": "650"
       }
     ],
@@ -227,7 +229,7 @@
         "color": "Yellow",
         "status": "undefined",
         "IP": "192.168.129.5",
-        "Hostname": "Eettafel_300",
+        "Hostname": "eettafel-300",
         "Watt": "300"
       },
       {
@@ -235,7 +237,7 @@
         "color": "Orange",
         "status": "undefined",
         "IP": "192.168.129.20",
-        "Hostname": "Zonsondergang_650",
+        "Hostname": "zonsondergang-650",
         "Watt": "650"
       },
       {
@@ -243,7 +245,7 @@
         "color": "Red",
         "status": "undefined",
         "IP": "192.168.129.3",
-        "Hostname": "Tropen_650",
+        "Hostname": "tropen-650",
         "Watt": "650"
       }
     ],
@@ -305,7 +307,7 @@
         "color": "Red",
         "status": "undefined",
         "IP": "192.168.129.8",
-        "Hostname": "Eekhoorn_650",
+        "Hostname": "eekhoorn-650",
         "Watt": "650"
       }
     ],
@@ -316,13 +318,13 @@
         "temp": "tempAux"
       },
       {
-        "begin": "12:20",
-        "end": "13:00",
+        "begin": "12:15",
+        "end": "12:55",
         "temp": "tempAux"
       },
       {
-        "begin": "16:55",
-        "end": "17:45",
+        "begin": "17:20",
+        "end": "17:30",
         "temp": "tempAux"
       },
       {
@@ -361,9 +363,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2025-04-21",
+      "begindate": "2025-12-29",
       "begin": "16:00",
-      "enddate": "2025-04-21",
+      "enddate": "2025-12-29",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -374,9 +376,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2025-11-07",
+      "begindate": "2026-01-02",
       "begin": "16:00",
-      "enddate": "2025-11-07",
+      "enddate": "2026-01-02",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -387,9 +389,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2025-11-07",
+      "begindate": "2026-01-16",
       "begin": "19:30",
-      "enddate": "2025-11-07",
+      "enddate": "2026-01-16",
       "end": "bedTime",
       "temp": {
         "living": "tempAux",
@@ -400,9 +402,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2025-11-12",
+      "begindate": "2026-01-21",
       "begin": "16:00",
-      "enddate": "2025-11-12",
+      "enddate": "2026-01-21",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -413,9 +415,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2025-11-12",
+      "begindate": "2026-01-21",
       "begin": "19:30",
-      "enddate": "2025-11-12",
+      "enddate": "2026-01-21",
       "end": "bedTime",
       "temp": {
         "living": "tempAux",
