@@ -441,13 +441,17 @@ function connect() {
             break;
           case "lightOn":
             weather();
+            document.getElementById("infraredoff").style.display = "none";
+            document.getElementById("infraredon").style.display = "none";
             document.getElementById("lightoff").style.display = "none";
             document.getElementById("lighton").style.display = "";
             break;
           case "lightOff":
             weather();
-            document.getElementById("lightoff").style.display = "";
+            document.getElementById("infraredoff").style.display = "none";
+            document.getElementById("infraredon").style.display = "none";
             document.getElementById("lighton").style.display = "none";
+            document.getElementById("lightoff").style.display = "";
             break;
         }
       }
@@ -464,6 +468,21 @@ function connect() {
           } else {
             var today = new Date();
             document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
+          }
+          break;
+        case "tasmota":
+          if (message.name == "Eekhoorn") {
+            if (message.state == "0") {
+              document.getElementById("infraredon").style.display = "none";
+              document.getElementById("lighton").style.display = "none";
+              document.getElementById("lightoff").style.display = "none";
+              document.getElementById("infraredoff").style.display = "";
+            } else {
+              document.getElementById("infraredoff").style.display = "none";
+              document.getElementById("lighton").style.display = "none";
+              document.getElementById("lightoff").style.display = "none";
+              document.getElementById("infraredon").style.display = "";
+            }
           }
           break;
       }
