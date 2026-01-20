@@ -631,6 +631,7 @@ function getConf() { // Get configuration
 }
 window.onload = getVariable;
 // Thermostat
+/*
 function activeHeaters(room) {
   var activeHeaters = -1;
   for (let i = 0; i < room.heater.length; i++) {
@@ -653,6 +654,7 @@ function activeHeaters(room) {
 //    sendMessage(JSON.stringify(message));
   }
 }
+*/
 function tasmotaHeater (dev, cmd, room, heater) {
   if (! Object.keys(room.heater[heater]).includes("manual")) {
     if (window.location.hostname === 'localhost') {
@@ -664,11 +666,11 @@ function tasmotaHeater (dev, cmd, room, heater) {
           const output = JSON.parse(this.responseText);
           if (output[0] == '{"POWER":"OFF"}') {
             room.heater[heater].status = "off";
-            activeHeaters(room);
+//            activeHeaters(room);
 //            powerLog(room.heater[heater], room.heater[heater].name);
           } else if (output[0] == '{"POWER":"ON"}') {
             room.heater[heater].status = "on";
-            activeHeaters(room);
+//            activeHeaters(room);
 //            powerLog(room.heater[heater], room.heater[heater].name);
           }
         }
@@ -1215,6 +1217,59 @@ function connect() {
       var message = JSON.parse(event.data);
       switch (message.function) {
         case "tasmota":
+
+          switch (message.name) {
+            case "Eekhoorn":
+              if (message.state == 1) {
+                document.getElementById("clockyear").style.color = "red";
+              } else {
+                document.getElementById("clockyear").style.color = "";
+              }
+              break;
+            case "Eettafel":
+              if (message.state == 1) {
+                document.getElementById("clockmonth").style.color = "yellow";
+              } else {
+                document.getElementById("clockmonth").style.color = "";
+              }
+              break;
+           case "Zonsondergang":
+              if (message.state == 1) {
+                document.getElementById("clockmonth").style.color = "orange";
+              } else {
+                document.getElementById("clockmonth").style.color = "yellow";
+              }
+              break;
+           case "Tropen":
+              if (message.state == 1) {
+                document.getElementById("clockmonth").style.color = "red";
+              } else {
+                document.getElementById("clockmonth").style.color = "orange";
+              }
+              break;
+            case "Computertafel":
+              if (message.state == 1) {
+                document.getElementById("clockmonthday").style.color = "yellow";
+              } else {
+                document.getElementById("clockmonthday").style.color = "";
+              }
+              break;
+            case "Schilderij":
+              if (message.state == 1) {
+                document.getElementById("clockmonthday").style.color = "orange";
+              } else {
+                document.getElementById("clockmonthday").style.color = "yellow";
+              }
+              break;
+            case "Canyon":
+              if (message.state == 1) {
+                document.getElementById("clockmonthday").style.color = "red";
+              } else {
+                document.getElementById("clockmonthday").style.color = "orange";
+              }
+              break;
+          }
+/*
           if (message.name == "Eekhoorn") {
              if (message.state == 1) {
                document.getElementById("clockyear").style.color = "red";
@@ -1223,6 +1278,7 @@ function connect() {
              }
           }
           break;
+*/
 /*
         case "activeHeaters":
           document.getElementById(message.id).style.color = message.color;
@@ -1376,7 +1432,7 @@ function remote(event) {
                     } else {
                       tasmotaHeater.manual = tasmotaHeater.status;
                     }
-                    activeHeaters(conf[conf.rooms[room]]);
+//                    activeHeaters(conf[conf.rooms[room]]);
                   }
                 }
               };
