@@ -46,11 +46,11 @@ $days = array(
 $powerLog = [];
 
 function processLine($powerline) {
-  $datetime = explode(" ", date("j W n Y G i s l F w", $powerline["time"] / 1000));
+  $datetime = explode(" ", date("j W n Y G i s l F w", $powerline["time"]));
   if(strtolower($powerline["status"]) == "off") {
     $GLOBALS[$powerline["name"]] = $powerline["time"];
   } else if (isset($GLOBALS[$powerline["name"]])) {
-    $minutes = round(($GLOBALS[$powerline["name"]] - $powerline["time"]) / 60000);
+    $minutes = round(($GLOBALS[$powerline["name"]] - $powerline["time"]) / 60);
     if ($minutes < 60 * 19) { // filter communication errors duration longer than  19 hours
       $kWh = ($powerline["Watt"] / 1000) * ($minutes / 60);
       if (!isset($GLOBALS['powerLog'][$datetime[3]])) {
@@ -116,14 +116,14 @@ function processLine($powerline) {
         if($datetime[4] < "7") {  // Highlight night time: 00h00 - 06h59
           echo "<b style='color: red;'>";
         }
-        printf("%s to %s %15s %4u Watt %4u min %6.3f kWh<br>", date("d/m/Y H:i:s", $powerline["time"] / 1000), date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000), $powerline["name"], $powerline["Watt"], $minutes, $kWh);
+        printf("%s to %s %15s %4u Watt %4u min %6.3f kWh<br>", date("d/m/Y H:i:s", $powerline["time"]), date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]]), $powerline["name"], $powerline["Watt"], $minutes, $kWh);
         if($datetime[4] < "7") {  // Highlight night time: 00h00 - 06h59
           echo "</b>";
         }
       }
     } else {
       echo "<b style='color: red;'>";
-      printf("%s to %s %15s %4u Watt %4u uur %u min genegeerd (regels: %s - %s).<br>", date("d/m/Y H:i:s", $powerline["time"] / 1000), date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]] / 1000), $powerline["name"], $powerline["Watt"], $minutes/60, $minutes % 60, $GLOBALS[$powerline["name"]], $powerline["time"]);
+      printf("%s to %s %15s %4u Watt %4u uur %u min genegeerd (regels: %s - %s).<br>", date("d/m/Y H:i:s", $powerline["time"]), date("d/m/Y H:i:s", $GLOBALS[$powerline["name"]]), $powerline["name"], $powerline["Watt"], $minutes/60, $minutes % 60, $GLOBALS[$powerline["name"]], $powerline["time"]);
       echo "</b>";
     }
     unset($GLOBALS[$powerline["name"]]);
@@ -131,7 +131,10 @@ function processLine($powerline) {
 }
 
 // Reverse sorted power.log
-exec("sort data/power.log | tac > data/power.rev ", $output, $return);
+//exec("sort data/power.log | tac > data/power.rev ", $output, $return);
+//exec("sort data/tasmota.log | tac > data/power.rev ", $output, $return);
+//exec("sort data/power.new.log | tac > data/power.rev ", $output, $return);
+exec("sort data/tasmota.log | tac > data/power.rev ", $output, $return);
 
 $file = fopen("data/power.rev", "r");
 // Iterator Number
