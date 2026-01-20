@@ -187,6 +187,7 @@ function cli(cmd, params) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.send("cmd=" + cmd + "&params="+stringToHex(params));
 }
+/*
 function powerLog(dev, name) {
   const d = new Date();
   const logLine = {time: d.getTime(),
@@ -198,6 +199,7 @@ function powerLog(dev, name) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.send("cmd=echo&params="+stringToHex("'" + JSON.stringify(logLine) + "' >> data/power.log"));
 }
+*/
 function radio(event) {
   radioVolume(event, 'getvol');
   radioStatus();
@@ -663,11 +665,11 @@ function tasmotaHeater (dev, cmd, room, heater) {
           if (output[0] == '{"POWER":"OFF"}') {
             room.heater[heater].status = "off";
             activeHeaters(room);
-            powerLog(room.heater[heater], room.heater[heater].name);
+//            powerLog(room.heater[heater], room.heater[heater].name);
           } else if (output[0] == '{"POWER":"ON"}') {
             room.heater[heater].status = "on";
             activeHeaters(room);
-            powerLog(room.heater[heater], room.heater[heater].name);
+//            powerLog(room.heater[heater], room.heater[heater].name);
           }
         }
       };
@@ -987,7 +989,7 @@ function lightSwitch(name, cmd) {
           } else if (output[0].includes(':"ON"}')) {
             tasmotaSwitch.status = "On";
           }
-          powerLog(tasmotaSwitch, name);
+//          powerLog(tasmotaSwitch, name);
           if (cmd == "Toggle") {
             if (Object.keys(tasmotaSwitch).includes("manual")) {
               delete tasmotaSwitch.manual;
@@ -1368,7 +1370,7 @@ function remote(event) {
                     } else if (output[0].includes(':"ON"}')) {
                       tasmotaHeater.status = "on";
                     }
-                    powerLog(tasmotaHeater, tasmotaHeater.name);
+//                    powerLog(tasmotaHeater, tasmotaHeater.name);
                     if (Object.keys(tasmotaHeater).includes("manual")) {
                       delete tasmotaHeater.manual;
                     } else {
