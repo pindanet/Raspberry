@@ -1200,6 +1200,12 @@ function toTop() {
   document.getElementById('minitemp').style.display = 'none';
 }
 
+const heaterColors = ["", "yellow", "orange", "red"];
+const heatersLiving = ["computertafel-300", "schilderij-650", "canyon-650"];
+const heatersDining = ["eettafel-300", "zonsondergang-650", "tropen-650"];
+var heaterCountLiving = 0;
+var heaterCountDining = 0;
+
 let socket;
 function connect() {
   socket = new WebSocket("ws://localhost:8080");
@@ -1210,6 +1216,35 @@ function connect() {
       message.function = "heaterColors";
       sendToRoom("pindakeuken", JSON.stringify(message));
     }
+// Init heaterColors
+    for(var i = 0; i < heatersLiving.length; i++) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "cli.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function(e) {
+        if (this.status == 200) {
+          const output = JSON.parse(this.responseText);
+          if (output[0].includes(':"ON"}')) {
+            document.getElementById("clockmonthday").style.color = heaterColors[++heaterCountLiving];
+          }
+        }
+      };
+      xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + heatersLiving[i] + "/cm?cmnd=Power"));
+    }
+    for(var i = 0; i < heatersDining.length; i++) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "cli.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function(e) {
+        if (this.status == 200) {
+          const output = JSON.parse(this.responseText);
+          if (output[0].includes(':"ON"}')) {
+            document.getElementById("clockmonth").style.color = heaterColors[++heaterCountDining];
+          }
+        }
+      };
+      xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + heatersDining[i] + "/cm?cmnd=Power"));
+    }
   };
   socket.onmessage = function(event) {
     console.log("Message received: " + event.data);
@@ -1217,7 +1252,6 @@ function connect() {
       var message = JSON.parse(event.data);
       switch (message.function) {
         case "tasmota":
-
           switch (message.name) {
             case "Eekhoorn":
               if (message.state == 1) {
@@ -1227,45 +1261,21 @@ function connect() {
               }
               break;
             case "Eettafel":
+            case "Zonsondergang":
+            case "Tropen":
               if (message.state == 1) {
-                document.getElementById("clockmonth").style.color = "yellow";
+                document.getElementById("clockmonth").style.color = heaterColors[++heaterCountDining];
               } else {
-                document.getElementById("clockmonth").style.color = "";
-              }
-              break;
-           case "Zonsondergang":
-              if (message.state == 1) {
-                document.getElementById("clockmonth").style.color = "orange";
-              } else {
-                document.getElementById("clockmonth").style.color = "yellow";
-              }
-              break;
-           case "Tropen":
-              if (message.state == 1) {
-                document.getElementById("clockmonth").style.color = "red";
-              } else {
-                document.getElementById("clockmonth").style.color = "orange";
+                document.getElementById("clockmonth").style.color = heaterColors[--heaterCountDining];
               }
               break;
             case "Computertafel":
-              if (message.state == 1) {
-                document.getElementById("clockmonthday").style.color = "yellow";
-              } else {
-                document.getElementById("clockmonthday").style.color = "";
-              }
-              break;
             case "Schilderij":
-              if (message.state == 1) {
-                document.getElementById("clockmonthday").style.color = "orange";
-              } else {
-                document.getElementById("clockmonthday").style.color = "yellow";
-              }
-              break;
             case "Canyon":
               if (message.state == 1) {
-                document.getElementById("clockmonthday").style.color = "red";
+                document.getElementById("clockmonthday").style.color = heaterColors[++heaterCountLiving];
               } else {
-                document.getElementById("clockmonthday").style.color = "orange";
+                document.getElementById("clockmonthday").style.color = heaterColors[--heaterCountLiving];
               }
               break;
           }
