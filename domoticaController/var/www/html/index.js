@@ -1225,7 +1225,11 @@ function connect() {
         if (this.status == 200) {
           const output = JSON.parse(this.responseText);
           if (output[0].includes(':"ON"}')) {
-            document.getElementById("clockmonthday").style.color = heaterColors[++heaterCountLiving];
+            if (heaterCountLiving < 3) {
+              document.getElementById("clockmonthday").style.color = heaterColors[++heaterCountLiving];
+            } else {
+console.log("heaterCountLiving overflow");
+            }
           }
         }
       };
@@ -1239,7 +1243,11 @@ function connect() {
         if (this.status == 200) {
           const output = JSON.parse(this.responseText);
           if (output[0].includes(':"ON"}')) {
-            document.getElementById("clockmonth").style.color = heaterColors[++heaterCountDining];
+            if (heaterCountDining < 3) {
+              document.getElementById("clockmonth").style.color = heaterColors[++heaterCountDining];
+            } else {
+console.log("heaterCountDining overflow");
+            }
           }
         }
       };
@@ -1264,18 +1272,34 @@ function connect() {
             case "Zonsondergang":
             case "Tropen":
               if (message.state == 1) {
-                document.getElementById("clockmonth").style.color = heaterColors[++heaterCountDining];
+                if (heaterCountDining < 3) {
+                  document.getElementById("clockmonth").style.color = heaterColors[++heaterCountDining];
+                } else {
+console.log("heaterCountDining overflow");
+                }
               } else {
-                document.getElementById("clockmonth").style.color = heaterColors[--heaterCountDining];
+                if (heaterCountDining > 0) {
+                  document.getElementById("clockmonth").style.color = heaterColors[--heaterCountDining];
+                } else {
+console.log("heaterCountDining underflow");
+                }
               }
               break;
             case "Computertafel":
             case "Schilderij":
             case "Canyon":
               if (message.state == 1) {
-                document.getElementById("clockmonthday").style.color = heaterColors[++heaterCountLiving];
+                if (heaterCountLiving < 3) {
+                  document.getElementById("clockmonthday").style.color = heaterColors[++heaterCountLiving];
+                } else {
+console.log("heaterCountLiving overflow");
+                }
               } else {
-                document.getElementById("clockmonthday").style.color = heaterColors[--heaterCountLiving];
+                if (heaterCountLiving > 0) {
+                  document.getElementById("clockmonthday").style.color = heaterColors[--heaterCountLiving];
+                } else {
+console.log("heaterCountLiving underflow");
+                }
               }
               break;
           }
