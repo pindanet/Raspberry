@@ -149,7 +149,17 @@ function performHandshake($clientSocket, $headers) {
         "Upgrade: websocket\r\n" .
         "Connection: Upgrade\r\n" .
         "Sec-WebSocket-Accept: $secAccept\r\n\r\n";
-    socket_write($clientSocket, $handshakeResponse, strlen($handshakeResponse));
+    $writeResult = socket_write($clientSocket, $handshakeResponse, strlen($handshakeResponse));
+    if ($writeResult === FALSE) {
+      $errorcode = socket_last_error();
+      $errormsg = socket_strerror($errorcode);
+      echo "$errorcode : $errormsg\n";
+      // Got  a broken pipe
+      $clientKey = array_search($clientSocket, $GLOBALS['clients']);
+      unset($GLOBALS['clients'][$clientKey]);
+      socket_close($clientSocket);
+      return false;
+    }
 }
 
 // Parse HTTP Headers
