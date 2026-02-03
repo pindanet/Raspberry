@@ -13,6 +13,30 @@ const stringToHex = (str) => {
 function setImgSrc(imgEl, response) {
   if (response == "[]") {
     document.getElementById("connerr").innerHTML += "Connection Error: " + imgEl.parentElement.innerText + "<br>";
+    // Write counter/device to connection error log
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.hostname = imgEl.parentElement.innerText;
+    xhr.onload = function(e) {
+      if (this.status == 200) {
+        if (this.responseText == "[]") {
+          var connerr = {};
+          connerr[this.hostname] = 1;
+          writeConnerrLog(connerr);
+        } else {
+          const output = JSON.parse(this.responseText);
+          var connerr = JSON.parse(output[0]);
+          if (typeof connerr[this.hostname] !== 'undefined') {
+            connerr[this.hostname] += 1;
+          } else {
+            connerr[this.hostname] = 1;
+          }
+          writeConnerrLog(connerr);
+        }
+      }
+    };
+    xhr.send("cmd=cat&params="+stringToHex("data/connerr.log"));
     return;
   }
   if (imgEl.src.includes("light-bulb")) {
@@ -67,6 +91,13 @@ function refresh(event) {
     xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + hostname + "/cm?cmnd=Power" + channel));
   }
 }
+function writeConnerrLog(connerr) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("cmd=echo&params="+stringToHex("'" + JSON.stringify(connerr)  + "' > data/connerr.log"));
+}
+
 window.onload = function(){
   var imgheadings = document.querySelectorAll("h1 img");
   for(var i = 0; i < imgheadings.length; i++) {
