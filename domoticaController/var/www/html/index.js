@@ -655,6 +655,13 @@ function activeHeaters(room) {
   }
 }
 */
+
+async function quickPause() {
+    console.log("Wait starts");
+    await new Promise(resolve => setTimeout(resolve, 1000));  // Sleep for 1 second
+    console.log("Wait ends");
+}
+
 function tasmotaHeater (dev, cmd, room, heater) {
   if (! Object.keys(room.heater[heater]).includes("manual")) {
     if (window.location.hostname === 'localhost') {
@@ -676,6 +683,7 @@ function tasmotaHeater (dev, cmd, room, heater) {
         }
       };
       xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
+      quickPause();
     } else {
       console.log('Remote tasmotaHeater()');
     }
@@ -1255,7 +1263,7 @@ console.log("heaterCountDining overflow");
     }
   };
   socket.onmessage = function(event) {
-    console.log("Message received: " + event.data);
+//    console.log("Message received: " + event.data);
     if (event.data[0] == "["  || event.data[0] == "{") {
       var message = JSON.parse(event.data);
       switch (message.function) {
