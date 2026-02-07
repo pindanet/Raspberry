@@ -18,6 +18,7 @@ case "$BASH_VERSION" in
       exit;;
 esac
 
+# Print RPI Model
 cat /sys/firmware/devicetree/base/model
 
 echo -e "\nFull Upgrade"
