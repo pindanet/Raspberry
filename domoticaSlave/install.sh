@@ -215,10 +215,6 @@ sudo mv checkWiFi.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now checkWiFi.timer
 
-echo "Adjusted up to here!"
-echo "===================="
-exit
-
 # PHP Motion
 sudo tee /etc/systemd/system/PindaPHPMotion.service > /dev/null <<EOF
 [Unit]
@@ -242,8 +238,11 @@ WantedBy=network-online.target
 EOF
 
 sudo systemctl daemon-reload
-sudo systemctl enable PindaPHPMotion.service
-sudo systemctl start PindaPHPMotion.service
+sudo systemctl enable --now PindaPHPMotion.service
+
+echo "Adjusted up to here!"
+echo "===================="
+exit
 
 # PHP Websocket
 sudo tee /etc/systemd/system/PindaWebsocket.service > /dev/null <<EOF
