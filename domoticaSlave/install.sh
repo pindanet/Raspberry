@@ -1,5 +1,5 @@
 #!/bin/bash
-# For Raspberry Pi OS Bookworm Lite
+# For Raspberry Pi OS Lite (64-bit) Trixie
 # wget https://github.com/pindanet/Raspberry/raw/master/domoticaSlave/install.sh
 # bash install.sh
 
