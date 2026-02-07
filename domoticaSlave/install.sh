@@ -124,6 +124,9 @@ echo "/usr/bin/bash ~/PindaNetAutostart.sh &" >> .config/labwc/autostart
 # sudo cp .ssh/id_rsa /var/www/html/data/
 # sudo chown www-data:www-data /var/www/html/data/id_rsa
 
+# Adjusted up to here
+exit
+
 echo "Activate daily update"
 echo "====================="
 
