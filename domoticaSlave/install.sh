@@ -219,33 +219,6 @@ echo "Adjusted up to here!"
 echo "===================="
 exit
 
-sudo chmod +x /var/www/html/motion.sh
-
-cat > PindaMotion.timer <<EOF
-[Unit]
-Description=Take picture
-[Timer]
-OnBootSec=5min
-OnUnitActiveSec=1min
-Unit=PindaMotion.service
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo mv PindaMotion.timer /etc/systemd/system/
-
-cat > PindaMotion.service <<EOF
-[Unit]
-Description=Take picture
-[Service]
-Type=simple
-ExecStart=/var/www/html/motion.sh
-EOF
-sudo mv PindaMotion.service /etc/systemd/system/
-
-sudo systemctl daemon-reload
-sudo systemctl enable PindaMotion.timer
-sudo systemctl start PindaMotion.timer
-
 # PHP Motion
 sudo tee /etc/systemd/system/PindaPHPMotion.service > /dev/null <<EOF
 [Unit]
