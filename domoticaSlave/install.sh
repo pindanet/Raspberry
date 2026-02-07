@@ -240,10 +240,6 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable --now PindaPHPMotion.service
 
-echo "Adjusted up to here!"
-echo "===================="
-exit
-
 # PHP Websocket
 sudo tee /etc/systemd/system/PindaWebsocket.service > /dev/null <<EOF
 [Unit]
@@ -266,8 +262,11 @@ WantedBy=network-online.target
 EOF
 
 sudo systemctl daemon-reload
-sudo systemctl enable PindaWebsocket.service
-sudo systemctl start PindaWebsocket.service
+sudo systemctl enable --now PindaWebsocket.service
+
+echo "Adjusted up to here!"
+echo "===================="
+exit
 
 #sudo chmod +x /var/www/html/ds18b20.sh
 #sudo tee /etc/systemd/system/ds18b20.timer > /dev/null <<EOF
