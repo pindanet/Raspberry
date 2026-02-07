@@ -124,10 +124,6 @@ echo "/usr/bin/bash ~/PindaNetAutostart.sh &" >> .config/labwc/autostart
 # sudo cp .ssh/id_rsa /var/www/html/data/
 # sudo chown www-data:www-data /var/www/html/data/id_rsa
 
-echo "Adjusted up to here!"
-echo "===================="
-exit
-
 echo "Activate daily update"
 echo "====================="
 
@@ -164,64 +160,64 @@ EOF
 sudo mv PindaNetUpdate.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
-sudo systemctl enable PindaNetUpdate.timer
-sudo systemctl start PindaNetUpdate.timer
+sudo systemctl enable --now PindaNetUpdate.timer
+
+# Disable Avahi, use router DNS
+sudo systemctl disable --now avahi-daemon.service
 
 # Disable NetworkManager mDNS (Avahi conflict)
 # https://feeding.cloud.geek.nz/posts/proper-multicast-dns-handling-network-manager-systemd-resolved/
-activeConnection=$(nmcli con show --active | grep -v loopback | tail -1 | awk '{print $1}')
-sudo nmcli connection modify $activeConnection connection.mdns 1
-nmcli connection show $activeConnection | grep "connection.mdns"
-# Should also work
-#sudo tee -a /etc/NetworkManager/NetworkManager.conf > /dev/null <<EOF
-#[connection]
-#connection.mdns=1
-#EOF
+#activeConnection=$(nmcli con show --active | grep -v loopback | tail -1 | awk '{print $1}')
+#sudo nmcli connection modify $activeConnection connection.mdns 1
+#nmcli connection show $activeConnection | grep "connection.mdns"
 
-# Check Avahi hostname
-sudo apt install avahi-utils -y
-cat > checkAvahi.sh <<EOF
+# Check WiFi connection
+#sudo apt install avahi-utils -y
+cat > checkWiFi.sh <<EOF
 #!/bin/bash
 # Check WiFi connection
 if ! ping -c 1 $router; then
   echo "\$(date) Restart Network" >> /var/www/html/data/debug.txt
 #  systemctl restart NetworkManager.service
-  /sbin/shutdown -r now
+  systemctl reboot
   sleep 10
 fi
 # Check Avahi conflict
-if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
-  echo Restart avahi
-  systemctl restart avahi-daemon.socket
-fi
+#if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
+#  echo Restart avahi
+#  systemctl restart avahi-daemon.socket
+#fi
 EOF
-sudo mv checkAvahi.sh /usr/sbin/
-sudo chmod +x /usr/sbin/checkAvahi.sh
+sudo mv checkWiFi.sh /usr/sbin/
+sudo chmod +x /usr/sbin/checkWiFi.sh
 
-cat > checkAvahi.timer <<EOF
+cat > checkWiFi.timer <<EOF
 [Unit]
-Description=Check Avahi hostname
+Description=Check WiFi connection
 [Timer]
 OnBootSec=1h
 OnUnitActiveSec=1h
-Unit=checkAvahi.service
+Unit=checkWiFi.service
 [Install]
 WantedBy=basic.target
 EOF
-sudo mv checkAvahi.timer /etc/systemd/system/
+sudo mv checkWiFi.timer /etc/systemd/system/
 
-cat > checkAvahi.service <<EOF
+cat > checkWiFi.service <<EOF
 [Unit]
-Description=Check Avahi hostname
+Description=Check WiFi connection
 [Service]
 Type=simple
-ExecStart=/usr/sbin/checkAvahi.sh
+ExecStart=/usr/sbin/checkWiFi.sh
 EOF
-sudo mv checkAvahi.service /etc/systemd/system/
+sudo mv checkWiFi.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
-sudo systemctl enable checkAvahi.timer
-sudo systemctl start checkAvahi.timer
+sudo systemctl enable --now checkWiFi.timer
+
+echo "Adjusted up to here!"
+echo "===================="
+exit
 
 sudo chmod +x /var/www/html/motion.sh
 
