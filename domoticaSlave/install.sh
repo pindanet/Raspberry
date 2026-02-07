@@ -20,6 +20,7 @@ esac
 
 # Print RPI Model
 cat /sys/firmware/devicetree/base/model
+echo
 
 echo -e "\nFull Upgrade"
 echo "============"
