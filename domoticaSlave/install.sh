@@ -264,11 +264,10 @@ sudo systemctl enable --now PindaWebsocket.service
 # systemctl list-timers
 
 cat <<"EOF"
-Update the following data files:
-conf.json
-conf.php.json
-luxmax
-temp.log
+Update the following data files from a backup:
+sudo mv conf.json conf.php.json luxmax temp.log /var/www/html/data/
+Restore the data files owner and group
+sudo chown -R www-data:www-data /var/www/html/data/*
 EOF
 
 echo "Ready, please restart"
