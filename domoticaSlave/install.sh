@@ -263,6 +263,14 @@ sudo systemctl enable --now PindaWebsocket.service
 
 # systemctl list-timers
 
+cat <<"EOF"
+Update the following data files:
+conf.json
+conf.php.json
+luxmax
+temp.log
+EOF
+
 echo "Ready, please restart"
 echo "====================="
 echo "sudo systemctl reboot"
