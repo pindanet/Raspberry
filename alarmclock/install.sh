@@ -61,11 +61,8 @@ echo 'else' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 # Rotate the Touch Display 180°
-mkdir -p .config/kanshi
-echo '{' > .config/kanshi/config
-echo '  output DSI-1 transform 180' >> .config/kanshi/config
-echo '}' >> .config/kanshi/config
-echo "kanshi &" >> .config/labwc/autostart
+# sudo apt install wlr-randr -y
+# echo "wlr-randr --output DSI-1 --transform 180" >> .config/labwc/autostart
 # Rotate Touch 180°
 sudo sed -i 's/^display_auto_detect=1/#&/' /boot/firmware/config.txt
 sudo sed -i '/display_auto_detect=1/adtoverlay=vc4-kms-dsi-7inch,invx,invy' /boot/firmware/config.txt
@@ -91,7 +88,7 @@ echo 'dtoverlay=gpio-shutdown' | sudo tee -a /boot/firmware/config.txt
 
 echo "Install webserver"
 echo "================="
-sudo apt install apache2 libapache2-mod-fcgid php-bcmath php-bz2 php-common php-curl php-xml php-gd php-php-gettext php-gmp php-ldap php-mbstring php-mysql php-odbc php-pgsql php-snmp php-soap php-sqlite3 php-tokenizer libapache2-mod-php -y
+sudo apt install apache2 libapache2-mod-fcgid php-bcmath php-bz2 php-common php-curl php-xml php-gd php-gmp php-ldap php-mbstring php-mysql php-odbc php-pgsql php-snmp php-soap php-sqlite3 php-tokenizer libapache2-mod-php -y
 sudo apt install mpg123 -y
 
 if test -f master.zip; then rm master.zip; fi
@@ -141,57 +138,63 @@ done
 EOF
 echo "/usr/bin/bash ~/PindaNetAutostart.sh &" >> .config/labwc/autostart
 
-echo "Configure SSH remote login"
-echo "=========================="
-ssh-keygen
+# echo "Configure SSH remote login"
+# echo "=========================="
+# ssh-keygen
 # ssh-copy-id -i $HOME/.ssh/id_rsa.pub $(ls /home)@localhost
 # sudo cp .ssh/id_rsa /var/www/html/data/
 # sudo chown www-data:www-data /var/www/html/data/id_rsa
 
-# Check Avahi hostname
-cat > checkAvahi.sh <<EOF
+# Disable Avahi, use router DNS
+sudo systemctl disable --now avahi-daemon.service
+
+# Check WiFi connection
+#sudo apt install avahi-utils -y
+cat > checkWiFi.sh <<EOF
 #!/bin/bash
 # Check WiFi connection
 if ! ping -c 1 $router; then
-  echo "Restart NetworkManager"
+  echo "\$(date) Restart Network" >> /var/www/html/data/debug.txt
 #  systemctl restart NetworkManager.service
-  /sbin/shutdown -r now
+  systemctl reboot
   sleep 10
 fi
 # Check Avahi conflict
-if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
-  echo Restart avahi
-  systemctl restart avahi-daemon.service
-fi
+#if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
+#  echo Restart avahi
+#  systemctl restart avahi-daemon.socket
+#fi
 EOF
-sudo mv checkAvahi.sh /usr/sbin/
-sudo chmod +x /usr/sbin/checkAvahi.sh
+sudo mv checkWiFi.sh /usr/sbin/
+sudo chmod +x /usr/sbin/checkWiFi.sh
 
-cat > checkAvahi.timer <<EOF
+cat > checkWiFi.timer <<EOF
 [Unit]
-Description=Check Avahi hostname
+Description=Check WiFi connection
 [Timer]
-#OnBootSec=5min
+OnBootSec=1h
 OnUnitActiveSec=1h
-Unit=checkAvahi.service
+Unit=checkWiFi.service
 [Install]
-WantedBy=multi-user.target
+WantedBy=basic.target
 EOF
-sudo mv checkAvahi.timer /etc/systemd/system/
+sudo mv checkWiFi.timer /etc/systemd/system/
 
-cat > checkAvahi.service <<EOF
+cat > checkWiFi.service <<EOF
 [Unit]
-Description=Check Avahi hostname
+Description=Check WiFi connection
 [Service]
 Type=simple
-ExecStart=/usr/sbin/checkAvahi.sh
+ExecStart=/usr/sbin/checkWiFi.sh
 EOF
-sudo mv checkAvahi.service /etc/systemd/system/
+sudo mv checkWiFi.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
-sudo systemctl enable checkAvahi.timer
-sudo systemctl start checkAvahi.timer
+sudo systemctl enable --now checkWiFi.timer
 # systemctl list-timers
+
+echo "Under development..."
+exit
 
 # Play Radio stream with ICY-META (stderr) output logging
 cat > PindaNetRadio.path <<EOF
