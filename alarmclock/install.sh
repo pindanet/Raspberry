@@ -1,5 +1,5 @@
 #!/bin/bash
-# For Raspberry Pi OS Bookworm Lite
+# For Raspberry Pi OS Lite Trixie
 # wget https://github.com/pindanet/Raspberry/raw/master/alarmclock/install.sh
 # bash install.sh
 
@@ -42,7 +42,9 @@ case "$BASH_VERSION" in
       exit;;
 esac
 
+# Print RPI Model
 cat /sys/firmware/devicetree/base/model
+echo
 
 echo -e "\nFull Upgrade"
 echo "============"
