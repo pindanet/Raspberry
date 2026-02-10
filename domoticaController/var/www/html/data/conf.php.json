@@ -54,7 +54,7 @@
         {
           "lowerThreshold": 20,
           "upperThreshold": 35,
-          "startTime": "07:40",
+          "startTime": "13:30",
           "stopTime": "02:00"
         }
       ]
@@ -69,7 +69,7 @@
         {
           "lowerThreshold": 20,
           "upperThreshold": 35,
-          "startTime": "07:40",
+          "startTime": "13:30",
           "stopTime": "02:00"
         }
       ]
