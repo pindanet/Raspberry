@@ -32,6 +32,7 @@
       "Watt": "8"
     },
     "Kerst": {
+      "disabled": true,
       "IP": "192.168.129.44",
       "Hostname": "Kerst-20",
       "Watt": "20",
