@@ -657,9 +657,7 @@ function activeHeaters(room) {
 */
 
 async function quickPause() {
-    console.log("Wait starts");
-    await new Promise(resolve => setTimeout(resolve, 1000));  // Sleep for 1 second
-    console.log("Wait ends");
+  await new Promise(resolve => setTimeout(resolve, 1000));  // Sleep for 1 second
 }
 
 function tasmotaHeater (dev, cmd, room, heater) {
@@ -1343,6 +1341,7 @@ console.log("heaterCountLiving underflow");
   };
   socket.onclose = function(event) {
     console.log("WebSocket connection has been closed successfully.");
+    setTimeout(connect, 1000);
 //    startWebsocket();
   };
   socket.onerror = function(event) {
