@@ -58,8 +58,11 @@ while (true) {
   $lux = intval(file_get_contents(__DIR__ . "/data/lux"));
   $now = date("H:i");
   foreach ($conf->switch as $switch) {
-  //echo sprintf("%d: Type switch: %s.\n", __LINE__, $switch->type);
-    if (isset($switch->type)) {
+    if (!isset($switch->disabled)) {
+      $switch->disabled = false;
+    }
+//echo sprintf("%d: Switch %s disabled: %d.\n", __LINE__, $switch->Hostname, $switch->disabled);
+    if (isset($switch->type) && $switch->disabled == false) {
       if ($switch->type == "light" && isset($switch->events)) {
         foreach ($switch->events as $event) {
           if ($event->startTime > $event->stopTime) { // stopTime on next day
