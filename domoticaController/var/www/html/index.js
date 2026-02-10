@@ -1223,6 +1223,7 @@ function connect() {
       sendToRoom("pindakeuken", JSON.stringify(message));
     }
 // Init heaterColors
+    heaterCountLiving = 0;
     for(var i = 0; i < heatersLiving.length; i++) {
       var xhr = new XMLHttpRequest();
       xhr.open('POST', "cli.php", true);
@@ -1241,6 +1242,7 @@ console.log("heaterCountLiving overflow");
       };
       xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + heatersLiving[i] + "/cm?cmnd=Power"));
     }
+    heaterCountDining = 0;
     for(var i = 0; i < heatersDining.length; i++) {
       var xhr = new XMLHttpRequest();
       xhr.open('POST', "cli.php", true);
@@ -1341,7 +1343,7 @@ console.log("heaterCountLiving underflow");
   };
   socket.onclose = function(event) {
     console.log("WebSocket connection has been closed successfully.");
-    setTimeout(connect, 1000);
+    setTimeout(connect, 6000);
 //    startWebsocket();
   };
   socket.onerror = function(event) {
