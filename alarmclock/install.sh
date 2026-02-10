@@ -193,9 +193,6 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now checkWiFi.timer
 # systemctl list-timers
 
-echo "Under development..."
-exit
-
 # Play Radio stream with ICY-META (stderr) output logging
 cat > PindaNetRadio.path <<EOF
 [Unit]
@@ -217,9 +214,15 @@ EOF
 sudo mv PindaNetRadio.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
-sudo systemctl enable PindaNetRadio.path
-sudo systemctl start PindaNetRadio.path
+sudo systemctl enable --now PindaNetRadio.path
+
+cat <<"EOF"
+Update the following data files from a backup:
+sudo mv conf.json temp.log /var/www/html/data/
+Restore the data files owner and group
+sudo chown -R www-data:www-data /var/www/html/data/*
+EOF
 
 echo "Ready, please restart"
 echo "====================="
-echo "sudo shutdown -r now"
+echo "sudo systemctl reboot"
