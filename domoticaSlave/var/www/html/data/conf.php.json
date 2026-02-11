@@ -31,6 +31,7 @@
         ]
       },
       "thermostat": {
+        "sensorPowerGPIO": 17,
         "tempComfort": 20,
         "tempAux": 17.5,
         "tempOff": 15,
