@@ -129,6 +129,8 @@ sudo mv /var/www/html/PindaNetUpdate.timer /etc/systemd/system/
 sudo mv /var/www/html/PindaNetUpdate.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now PindaNetUpdate.timer
+# Check Upgrade history
+# tail -3 /var/log/apt/history.log
 
 # Disable Avahi, use router DNS
 sudo systemctl disable --now avahi-daemon.service
