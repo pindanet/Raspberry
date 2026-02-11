@@ -161,27 +161,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now checkWiFi.timer
 
 # PHP Motion
-sudo tee /etc/systemd/system/PindaPHPMotion.service > /dev/null <<EOF
-[Unit]
-Description=PHP Motion Service
-After=network-online.target
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/php /var/www/html/motion.php
-Restart=always
-RestartSec=5
-
-User=www-data
-Group=www-data
-
-WorkingDirectory=/var/www/html/
-ExecStop=/bin/kill \$MAINPID
-
-[Install]
-WantedBy=network-online.target
-EOF
-
+sudo mv /var/www/html/PindaPHPMotion.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now PindaPHPMotion.service
 
