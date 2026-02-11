@@ -124,17 +124,7 @@ echo "/usr/bin/bash ~/PindaNetAutostart.sh &" >> .config/labwc/autostart
 echo "Activate daily update"
 echo "====================="
 
-cat > PindaNetUpdate.sh <<EOF
-#!/bin/bash
-sudo dpkg --configure -a
-apt-get clean
-apt autoremove -y
-apt-get update
-apt-get upgrade -y
-shutdown -r now
-EOF
-sudo mv PindaNetUpdate.sh /usr/sbin/
-sudo chmod +x /usr/sbin/PindaNetUpdate.sh
+sudo chmod +x /var/www/html/PindaNetUpdate.sh
 
 cat > PindaNetUpdate.timer <<EOF
 [Unit]
