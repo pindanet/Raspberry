@@ -127,7 +127,6 @@ echo "====================="
 sudo chmod +x /var/www/html/PindaNetUpdate.sh
 sudo mv /var/www/html/PindaNetUpdate.timer /etc/systemd/system/
 sudo mv /var/www/html/PindaNetUpdate.service /etc/systemd/system/
-
 sudo systemctl daemon-reload
 sudo systemctl enable --now PindaNetUpdate.timer
 
