@@ -1,0 +1,17 @@
+[Unit]
+Description=PHP Websocket Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/php /var/www/html/websocket.php
+Restart=always
+RestartSec=5
+
+User=dany
+Group=dany
+
+ExecStop=/bin/kill $MAINPID
+
+[Install]
+WantedBy=network-online.target
