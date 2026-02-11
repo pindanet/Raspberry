@@ -166,26 +166,9 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now PindaPHPMotion.service
 
 # PHP Websocket
-sudo tee /etc/systemd/system/PindaWebsocket.service > /dev/null <<EOF
-[Unit]
-Description=PHP Websocket Service
-After=network.target
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/php /var/www/html/websocket.php
-Restart=always
-RestartSec=5
-
-User=$USER
-Group=$(id -gn)
-
-ExecStop=/bin/kill \$MAINPID
-
-[Install]
-WantedBy=network-online.target
-EOF
-
+sudo mv /var/www/html/PindaWebsocket.service /etc/systemd/system/
+sed "s/User=dany/User=$USER/" /etc/systemd/system/PindaWebsocket.service
+sed "s/Group=dany/Group=$(id -gn)/" /etc/systemd/system/PindaWebsocket.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now PindaWebsocket.service
 
