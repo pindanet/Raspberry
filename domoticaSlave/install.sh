@@ -155,15 +155,7 @@ while [ "$prompt" != "OK" ]; do
 done
 sudo sed -i "s/mymodem.home/$router/" /var/www/html/checkWiFi.sh
 sudo mv /var/www/html/checkWiFi.timer /etc/systemd/system/
-
-cat > checkWiFi.service <<EOF
-[Unit]
-Description=Check WiFi connection
-[Service]
-Type=simple
-ExecStart=/usr/sbin/checkWiFi.sh
-EOF
-sudo mv checkWiFi.service /etc/systemd/system/
+sudo mv /var/www/html/checkWiFi.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
 sudo systemctl enable --now checkWiFi.timer
