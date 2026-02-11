@@ -159,6 +159,7 @@ sudo mv /var/www/html/checkWiFi.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
 sudo systemctl enable --now checkWiFi.timer
+# systemctl list-timers
 
 # PHP Motion
 sudo mv /var/www/html/PindaPHPMotion.service /etc/systemd/system/
@@ -171,8 +172,6 @@ sed "s/User=dany/User=$USER/" /etc/systemd/system/PindaWebsocket.service
 sed "s/Group=dany/Group=$(id -gn)/" /etc/systemd/system/PindaWebsocket.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now PindaWebsocket.service
-
-# systemctl list-timers
 
 cat <<"EOF"
 Update the following data files from a backup:
