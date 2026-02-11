@@ -125,17 +125,7 @@ echo "Activate daily update"
 echo "====================="
 
 sudo chmod +x /var/www/html/PindaNetUpdate.sh
-
-cat > PindaNetUpdate.timer <<EOF
-[Unit]
-Description=Update and Reset
-[Timer]
-OnCalendar=*-*-* 03:30:00
-Unit=PindaNetUpdate.service
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo mv PindaNetUpdate.timer /etc/systemd/system/
+sudo mv /var/www/html/PindaNetUpdate.timer /etc/systemd/system/
 
 cat > PindaNetUpdate.service <<EOF
 [Unit]
