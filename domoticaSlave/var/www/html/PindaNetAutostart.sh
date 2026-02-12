@@ -3,12 +3,6 @@
 echo 0 | sudo tee /sys/class/leds/PWR/brightness
 # Disable Activity led
 echo none | sudo tee /sys/class/leds/ACT/trigger
-# Activate DS18B20 temperature sensor power (Reset)
-/usr/bin/pinctrl set 17 op dh
-# PullUp 1-wire Data
-/usr/bin/pinctrl set 4 ip pu
-# PullDown PIR1 and PIR2
-/usr/bin/pinctrl set 14,24 ip pd
 # Autostart Chromium in Kiosk & Debug mode
 /bin/chromium --remote-debugging-port=9222 --kiosk --disable-extensions --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
 # Give Chromium time to start
