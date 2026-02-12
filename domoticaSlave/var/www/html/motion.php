@@ -31,6 +31,16 @@ foreach ($conf->rooms as $room) {
 }
 $motionCmd = sprintf("pinctrl get %s", implode(',', $room->Motion->GPIO));
 
+//echo sprintf("%d: Pir1GPIO %d, Pir2GPIO %d, PowerGPIO %d.\n", __LINE__, $room->Motion->GPIO[0], $room->Motion->GPIO[1], $room->thermostat->sensorPowerGPIO);
+// Activate DS18B20 temperature sensor power (Reset)
+exec("pinctrl set " . $room->thermostat->sensorPowerGPIO . " op dh", $output, $return);
+// PullUp 1-wire Data
+exec("pinctrl set 4 ip pu", $output, $return);
+// PullDown Input PIR1 and PIR2
+exec("pinctrl set " . $room->Motion->GPIO[0] . "," . $room->Motion->GPIO[1] . "ip pd", $output, $return);
+
+// PindaNetAutostart.sh
+
 // print_r($room->thermostat->schedule);
 
 // Initialise
@@ -301,7 +311,7 @@ writeLog("Scheduled temp: $schedTemp, Temp at $now: " . $temp/1000);
 while (true) { // Main loop
   unset($output);
   exec($motionCmd, $output, $return);
-
+//echo sprintf("%d: %s Motion Cmd: %s\n", __LINE__, date("Y-m-d_H:i:s"), $motionCmd);
   foreach($output as $line) {
     if (str_contains($line, ' hi ') === true) { // Motion detected
 //echo sprintf("%d: %s Motion High \n", __LINE__, date("Y-m-d_H:i:s"));
