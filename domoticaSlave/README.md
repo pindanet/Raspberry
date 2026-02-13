@@ -14,7 +14,7 @@ GPIO17 (11) > Vdd (Red)
 ### PIR1 AM312
 5v (4) > Vcc (Orange)<br>
 Gnd (6) > Gnd (Brown)<br>
-GPIO14 (8) > Output (Green)
+GPIO23 (16) > Output (Green)
 
 ### PIR2 AM312
 5v (4) > Vcc (Orange)<br>
