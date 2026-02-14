@@ -3,7 +3,53 @@
   "rooms": {
     "Living": {
       "Name": "Living",
-      "Hostname": "pindadomo"
+      "Hostname": "pindadomo",
+      "tasmota": {
+        "LivingZij": {
+          "IP": "192.168.129.41",
+          "Hostname": "Livinglamp-24",
+          "Watt": "8",
+          "type": "light",
+          "events": [
+            {
+              "lowerThreshold": 20,
+              "upperThreshold": 35,
+              "startTime": "13:30",
+              "stopTime": "02:00"
+            }
+          ]
+        },
+        "LivingVoor": {
+          "IP": "192.168.129.41",
+          "Hostname": "Livinglamp-24",
+          "Channel": "2",
+          "Watt": "16",
+          "type": "light",
+          "events": [
+            {
+              "lowerThreshold": 20,
+              "upperThreshold": 35,
+              "startTime": "13:30",
+              "stopTime": "02:00"
+            }
+          ]
+        },
+        "Kerst": {
+          "disabled": true,
+          "IP": "192.168.129.44",
+          "Hostname": "Kerst-20",
+          "Watt": "20",
+          "type": "light",
+          "events": [
+            {
+              "lowerThreshold": 20,
+              "upperThreshold": 35,
+              "startTime": "07:40",
+              "stopTime": "22:50"
+            }
+          ]
+        }
+      }
     },
     "Dining": {
       "Name": "Eetkamer",
@@ -70,11 +116,6 @@
     }
   },
   "switch": {
-    "Kerst": {
-      "IP": "192.168.129.44",
-      "Hostname": "Kerst-20",
-      "Watt": "20"
-    },
     "Haardlamp": {
       "IP": "192.168.129.18",
       "Hostname": "Haardlamp-20",
@@ -94,35 +135,6 @@
       "IP": "192.168.129.11",
       "Hostname": "TVlamp-20",
       "Watt": "20"
-    },
-    "LivingZij": {
-      "IP": "192.168.129.41",
-      "Hostname": "Livinglamp-24",
-      "Watt": "8",
-      "type": "light",
-      "events": [
-        {
-          "switchingIlluminance": 25,
-          "hysteresis": 2,
-          "startTime": "13:30",
-          "stopTime": "02:00"
-        }
-      ]
-    },
-    "LivingVoor": {
-      "IP": "192.168.129.41",
-      "Hostname": "Livinglamp-24",
-      "Channel": "2",
-      "Watt": "16",
-      "type": "light",
-      "events": [
-        {
-          "switchingIlluminance": 25,
-          "hysteresis": 2,
-          "startTime": "13:30",
-          "stopTime": "02:00"
-        }
-      ]
     }
   }
 }
