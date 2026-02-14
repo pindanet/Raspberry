@@ -19,6 +19,13 @@ if (!isset($_SERVER["HTTP_HOST"])) {
 // Settings
 $conf = json_decode(file_get_contents(__DIR__ . "/data/conf.php.json"));
 date_default_timezone_set($conf->Timezone);
+$hostname = trim(file_get_contents("/etc/hostname"));
+
+foreach ($conf->rooms as $room) {
+  if ($room->Hostname == $hostname) {
+    break;
+  }
+}
 
 function writeLog($text) {
   $handle = fopen($GLOBALS['logfile'], 'a');
@@ -57,7 +64,7 @@ writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch-
 while (true) {
   $lux = intval(file_get_contents(__DIR__ . "/data/lux"));
   $now = date("H:i");
-  foreach ($conf->switch as $switch) {
+  foreach ($room->tasmota as $switch) {
     if (!isset($switch->disabled)) {
       $switch->disabled = false;
     }
