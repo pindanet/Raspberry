@@ -1,11 +1,121 @@
 {
   "Timezone": "Europe/Brussels",
-  "switch": {
-    "Kerst": {
-      "IP": "192.168.129.44",
-      "Hostname": "Kerst-20",
-      "Watt": "20"
+  "rooms": {
+    "Living": {
+      "Name": "Living",
+      "Hostname": "pindadomo",
+      "tasmota": {
+        "LivingZij": {
+          "IP": "192.168.129.41",
+          "Hostname": "Livinglamp-24",
+          "Watt": "8",
+          "type": "light",
+          "events": [
+            {
+              "lowerThreshold": 20,
+              "upperThreshold": 35,
+              "startTime": "13:30",
+              "stopTime": "02:00"
+            }
+          ]
+        },
+        "LivingVoor": {
+          "IP": "192.168.129.41",
+          "Hostname": "Livinglamp-24",
+          "Channel": "2",
+          "Watt": "16",
+          "type": "light",
+          "events": [
+            {
+              "lowerThreshold": 20,
+              "upperThreshold": 35,
+              "startTime": "13:30",
+              "stopTime": "02:00"
+            }
+          ]
+        },
+        "Kerst": {
+          "disabled": true,
+          "IP": "192.168.129.44",
+          "Hostname": "Kerst-20",
+          "Watt": "20",
+          "type": "light",
+          "events": [
+            {
+              "lowerThreshold": 20,
+              "upperThreshold": 35,
+              "startTime": "07:40",
+              "stopTime": "22:50"
+            }
+          ]
+        }
+      }
     },
+    "Dining": {
+      "Name": "Eetkamer",
+      "Hostname": "pindadining"
+    },
+    "Kitchen": {
+      "Name": "Keuken",
+      "Hostname": "pindakeuken",
+      "tasmota": {
+        "Keukenlamp": {
+          "IP": "192.168.129.14",
+          "Hostname": "Keukenlamp-8",
+          "Watt": "8"
+        }
+      },
+      "minBacklight": 33,
+      "maxBacklight": 128,
+      "Motion": {
+        "lowerThreshold": 30,
+        "timer": 180,
+        "light": "Keukenlamp",
+        "GPIO": [
+          23,
+          24
+        ]
+      },
+      "thermostat": {
+        "sensorPowerGPIO": 17,
+        "tempComfort": 20,
+        "tempAux": 17.5,
+        "tempOff": 15,
+        "tempNight": 10,
+        "tempNightTime": "06:30",
+        "ds18b20": {
+          "powerGPIO": 17,
+          "dataGPIO": 4
+        },
+        "tempCorrection": 0.6,
+        "heater": [
+          {
+            "name": "Eekhoorn",
+            "color": "Red",
+            "status": "undefined",
+            "IP": "192.168.129.8",
+            "Hostname": "Eekhoorn-650",
+            "Watt": "650"
+          }
+        ],
+        "schedule": {
+          "00:00": 10,
+          "06:30": 15,
+          "07:40": 17.5,
+          "08:00": 15,
+          "09:15": 17.5,
+          "10:30": 15,
+          "12:15": 17.5,
+          "13:00": 15,
+          "17:15": 17.5,
+          "17:45": 15,
+          "22:20": 17.5,
+          "22:50": 15
+        }
+      }
+    }
+  },
+  "switch": {
     "Haardlamp": {
       "IP": "192.168.129.18",
       "Hostname": "Haardlamp-20",
@@ -25,55 +135,6 @@
       "IP": "192.168.129.11",
       "Hostname": "TVlamp-20",
       "Watt": "20"
-    },
-    "Keukenlamp": {
-      "IP": "192.168.129.14",
-      "Hostname": "Keukenlamp-8",
-      "Watt": "8"
-    },
-    "Kerst": {
-      "disabled": true,
-      "IP": "192.168.129.44",
-      "Hostname": "Kerst-20",
-      "Watt": "20",
-      "type": "light",
-      "events": [
-        {
-          "lowerThreshold": 20,
-          "upperThreshold": 35,
-          "startTime": "07:40",
-          "stopTime": "22:50"
-        }
-      ]
-    },
-    "LivingZij": {
-      "IP": "192.168.129.41",
-      "Hostname": "Livinglamp-24",
-      "Watt": "8",
-      "type": "light",
-      "events": [
-        {
-          "lowerThreshold": 20,
-          "upperThreshold": 35,
-          "startTime": "13:30",
-          "stopTime": "02:00"
-        }
-      ]
-    },
-    "LivingVoor": {
-      "IP": "192.168.129.41",
-      "Hostname": "Livinglamp-24",
-      "Channel": "2",
-      "Watt": "16",
-      "type": "light",
-      "events": [
-        {
-          "lowerThreshold": 20,
-          "upperThreshold": 35,
-          "startTime": "13:30",
-          "stopTime": "02:00"
-        }
-      ]
     }
   }
 }
