@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <!-- when using the mode "code", it's important to specify charset utf-8 -->
+  <meta charset="utf-8">
+  <link href="jsoneditor/jsoneditor.css" rel="stylesheet" type="text/css">
+  <link href="jsoneditor/darktheme.css" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    body {
+      background-color: black;
+    }
+  </style>
+  <script src="jsoneditor/jsoneditor.js"></script>
+  <script src="jsoneditor/FileSaver.js"></script>
+  <script src="jsoneditor/firereader.js"></script>
+  <script>const confFileName = "data/conf.php.json"</script>
+</head>
+<body>
+  <div id="jsoneditor" style="width: 450px; height: 800px"></div>
+  <div id="footer" style="text-align: right; color: white;">
+    <label for="loadDocument">Upload: </label><input type="file" style="margin-right: 1em;" id="loadDocument"></input>
+    <button style="margin-right: 1em;" id="saveDocument">Download</button>
+    <button style="margin-right: 1em;" id="sendDocument">OK</button>
+    <button onclick="window.location.href = '/';">Domotica controller</button>
+  </div>
+  <script src="conf.js"></script>
+</body>
+</html>
