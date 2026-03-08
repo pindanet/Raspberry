@@ -669,18 +669,24 @@ function tasmotaHeater (dev, cmd, room, heater) {
       xhr.onload = function(e) {
         if (this.status == 200) {
           const output = JSON.parse(this.responseText);
-          if (output[0] == '{"POWER":"OFF"}') {
+          if (output[0].includes(':"OFF"}')) {
             room.heater[heater].status = "off";
 //            activeHeaters(room);
 //            powerLog(room.heater[heater], room.heater[heater].name);
-          } else if (output[0] == '{"POWER":"ON"}') {
+//          } else if (output[0] == '{"POWER":"ON"}') {
+          } else if (output[0].includes(':"ON"}')) {
             room.heater[heater].status = "on";
 //            activeHeaters(room);
 //            powerLog(room.heater[heater], room.heater[heater].name);
           }
         }
       };
-      xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
+      if (typeof room.heater[heater].Channel !== 'undefined') {
+        var channelcmd = cmd.slice(0, 5) + room.heater[heater].Channel + cmd.slice(5);
+        xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + channelcmd));
+      } else {
+        xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
+      }
       quickPause();
     } else {
       console.log('Remote tasmotaHeater()');
@@ -1207,7 +1213,7 @@ function toTop() {
 }
 
 const heaterColors = ["", "yellow", "orange", "red"];
-const heatersLiving = ["computertafel-300", "schilderij-650", "canyon-650"];
+const heatersLiving = ["computertafel-300", "schilderij-650", "haard"];
 const heatersDining = ["eettafel-300", "zonsondergang-650", "tropen-650"];
 var heaterCountLiving = 0;
 var heaterCountDining = 0;
@@ -1240,7 +1246,11 @@ console.log("heaterCountLiving overflow");
           }
         }
       };
-      xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + heatersLiving[i] + "/cm?cmnd=Power"));
+      if (heatersLiving[i] == "haard") {
+        xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + heatersLiving[i] + "/cm?cmnd=Power2"));
+      } else {
+        xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + heatersLiving[i] + "/cm?cmnd=Power"));
+      }
     }
     heaterCountDining = 0;
     for(var i = 0; i < heatersDining.length; i++) {
