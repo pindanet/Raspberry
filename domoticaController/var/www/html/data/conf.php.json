@@ -118,7 +118,8 @@
   "switch": {
     "Haardlamp": {
       "IP": "192.168.129.18",
-      "Hostname": "Haardlamp-20",
+      "Hostname": "haard",
+      "Channel": "1",
       "Watt": "20"
     },
     "Tandenborstel": {
