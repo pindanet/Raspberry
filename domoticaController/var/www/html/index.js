@@ -809,6 +809,7 @@ console.log("Event: " + beginDate.toString() + " tot " + endDate.toString());
   }
   room.tempWanted = tempWanted;
 // Heaters On/Off
+/*
   for (let i = 0; i < room.heater.length; i++) {
     if (room.heater[i].status != "off" && room.heater[i].status != "on") { // Initialise heater status
       tasmotaHeater (room.heater[i].Hostname, "Power", room, i);
@@ -822,6 +823,25 @@ console.log("Event: " + beginDate.toString() + " tot " + endDate.toString());
       } else if (room.temp < tempOn) { //Heater On
         if (room.heater[i].status != "on") {
           tasmotaHeater (room.heater[i].Hostname, "Power%20On", room, i);
+        }
+      }
+    }
+  }
+*/
+// Heaters On/Off
+  for (let i = 0; i < room.heater.length; i++) {
+    if (room.heater[i].status != "off" && room.heater[i].status != "on") { // Initialise heater status
+      tasmotaHeater (room.heater[i].Hostname, "Power", room, i);
+    } else {
+      if (room.temp < tempWanted - i*0.1) { // Heater on
+        if (room.heater[i].status != "on") {
+console.log(room.heater[i].name, "On", room.temp, tempWanted - i*0.1);
+          tasmotaHeater (room.heater[i].Hostname, "Power%20On", room, i);
+        }
+      } else { // Heater off
+        if (room.heater[i].status != "off") {
+console.log(room.heater[i].name, "Off", room.temp, tempWanted - i*0.1);
+          tasmotaHeater (room.heater[i].Hostname, "Power%20Off", room, i);
         }
       }
     }
