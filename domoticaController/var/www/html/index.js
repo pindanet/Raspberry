@@ -833,14 +833,14 @@ console.log("Event: " + beginDate.toString() + " tot " + endDate.toString());
     if (room.heater[i].status != "off" && room.heater[i].status != "on") { // Initialise heater status
       tasmotaHeater (room.heater[i].Hostname, "Power", room, i);
     } else {
-      if (room.temp < tempWanted - i*0.1) { // Heater on
+      if (room.temp < tempWanted - i * conf.hysteresis) { // Heater on
         if (room.heater[i].status != "on") {
-console.log(room.heater[i].name, "On", room.temp, tempWanted - i*0.1);
+console.log(room.heater[i].name, "On", room.temp, tempWanted - i * conf.hysteresis);
           tasmotaHeater (room.heater[i].Hostname, "Power%20On", room, i);
         }
       } else { // Heater off
         if (room.heater[i].status != "off") {
-console.log(room.heater[i].name, "Off", room.temp, tempWanted - i*0.1);
+console.log(room.heater[i].name, "Off", room.temp, tempWanted - i * conf.hysteresis);
           tasmotaHeater (room.heater[i].Hostname, "Power%20Off", room, i);
         }
       }
