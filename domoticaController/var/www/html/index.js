@@ -835,12 +835,12 @@ console.log("Event: " + beginDate.toString() + " tot " + endDate.toString());
     } else {
       if (room.temp < tempWanted - i * conf.hysteresis) { // Heater on
         if (room.heater[i].status != "on") {
-console.log(room.heater[i].name, "On", room.temp, tempWanted - i * conf.hysteresis);
+//console.log(room.heater[i].name, "On", room.temp, tempWanted - i * conf.hysteresis);
           tasmotaHeater (room.heater[i].Hostname, "Power%20On", room, i);
         }
       } else { // Heater off
         if (room.heater[i].status != "off") {
-console.log(room.heater[i].name, "Off", room.temp, tempWanted - i * conf.hysteresis);
+//console.log(room.heater[i].name, "Off", room.temp, tempWanted - i * conf.hysteresis);
           tasmotaHeater (room.heater[i].Hostname, "Power%20Off", room, i);
         }
       }
