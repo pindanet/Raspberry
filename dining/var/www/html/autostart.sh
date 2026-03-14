@@ -22,7 +22,6 @@ fi
 #color="white"
 
 days=("maandag" "dinsdag" "woensdag" "donderdag" "vrijdag" "zaterdag" "zondag")
-
 months=("januari" "februari" "maart" "april" "mei" "juni" "juli" "augustus" "september" "october" "november" "december")
 
 while true; do
