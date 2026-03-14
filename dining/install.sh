@@ -160,14 +160,14 @@ Tot Hier
 # systemctl list-timers
 # journalctl -u ds18b20.service
 
-#sudo apt install wayout
-sudo apt install build-essential meson ninja-build scdoc git wayland-protocols libwayland-dev libcairo-dev libpango1.0-dev
-git clone https://git.sr.ht/~proycon/wayout
-cd wayout
-meson build
-ninja -C build
-sudo ninja -C build install
-cd
+sudo apt install wayout
+#sudo apt install build-essential meson ninja-build scdoc git wayland-protocols libwayland-dev libcairo-dev libpango1.0-dev
+#git clone https://git.sr.ht/~proycon/wayout
+#cd wayout
+#meson build
+#ninja -C build
+#sudo ninja -C build install
+#cd
 
 echo "Ready, please restart"
 echo "====================="
