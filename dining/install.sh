@@ -127,6 +127,11 @@ sudo apt install wayout
 #sudo ninja -C build install
 #cd
 
+cat <<"EOF"
+Update the following data files from a backup:
+sudo mv temp.log /var/www/html/data/
+EOF
+
 echo "Ready, please restart"
 echo "====================="
 echo "sudo shutdown -r now"
