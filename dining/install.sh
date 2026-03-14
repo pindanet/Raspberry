@@ -73,8 +73,8 @@ rm -r Raspberry-master/
 
 #sudo chown www-data:www-data /var/www/html/data
 
-sudo usermod -a -G gpio www-data
-sudo usermod -a -G video www-data
+#sudo usermod -a -G gpio www-data
+#sudo usermod -a -G video www-data
 
 echo "Autostart fullscreen video"
 echo "=========================="
