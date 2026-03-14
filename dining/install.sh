@@ -78,7 +78,8 @@ rm -r Raspberry-master/
 
 echo "Autostart fullscreen video"
 echo "=========================="
-sudo apt install mpv -y
+#sudo apt install mpv -y
+sudo apt install vlc -y
 echo "/usr/bin/bash /var/www/html/autostart.sh &" >> .config/labwc/autostart
 
 echo "Configure SSH remote login"
