@@ -71,21 +71,10 @@ sudo mkdir -p /var/www/html/data
 sudo cp -r Raspberry-master/dining/var/www/html/* /var/www/html/
 rm -r Raspberry-master/
 
-#sudo usermod -a -G gpio www-data
-#sudo usermod -a -G video www-data
-
 echo "Autostart fullscreen video"
 echo "=========================="
-#sudo apt install mpv -y
 sudo apt install vlc -y
 echo "/usr/bin/bash /var/www/html/autostart.sh &" >> .config/labwc/autostart
-
-#echo "Configure SSH remote login"
-#echo "=========================="
-#ssh-keygen
-# ssh-copy-id -i $HOME/.ssh/id_rsa.pub $(ls /home)@localhost
-# sudo cp .ssh/id_rsa /var/www/html/data/
-# sudo chown www-data:www-data /var/www/html/data/id_rsa
 
 echo "Activate daily update"
 echo "====================="
@@ -125,8 +114,6 @@ sudo mv /var/www/html/ds18b20.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
 sudo systemctl enable --now ds18b20.timer
-
-Tot Hier
 
 # systemctl list-timers
 # journalctl -u ds18b20.service
