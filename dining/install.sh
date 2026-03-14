@@ -128,6 +128,9 @@ sudo systemctl daemon-reload
 sudo systemctl enable PindaNetUpdate.timer
 sudo systemctl start PindaNetUpdate.timer
 
+# Disable Avahi, use router DNS
+sudo systemctl disable --now avahi-daemon.service
+
 # Check Avahi hostname
 sudo apt install avahi-utils -y
 cat > checkAvahi.sh <<EOF
