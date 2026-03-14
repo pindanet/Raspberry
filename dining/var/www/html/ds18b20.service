@@ -1,0 +1,5 @@
+[Unit]
+Description=Read DS18B20 Temperature sensor
+[Service]
+Type=simple
+ExecStart=/var/www/html/ds18b20.sh
