@@ -67,6 +67,7 @@ echo "======================================"
 wget https://github.com/pindanet/Raspberry/archive/refs/heads/master.zip
 unzip -q master.zip
 rm master.zip
+sudo mkdir -p /var/www/html
 sudo cp -r Raspberry-master/dining/var/www/html/* /var/www/html/
 rm -r Raspberry-master/
 
