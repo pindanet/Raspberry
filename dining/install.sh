@@ -57,9 +57,9 @@ echo "Shutdown/Boot button"
 echo "===================="
 echo 'dtoverlay=gpio-shutdown' | sudo tee -a /boot/firmware/config.txt
 
-#echo "Install webserver"
-#echo "================="
-#sudo apt install apache2 libapache2-mod-fcgid php-bcmath php-bz2 php-common php-curl php-xml php-gd php-php-gettext php-gmp php-ldap php-mbstring php-mysql php-odbc php-pgsql php-snmp php-soap php-sqlite3 php-tokenizer libapache2-mod-php -y
+echo "Install webserver"
+echo "================="
+sudo apt install apache2 libapache2-mod-fcgid php-bcmath php-bz2 php-common php-curl php-xml php-gd php-php-gettext php-gmp php-ldap php-mbstring php-mysql php-odbc php-pgsql php-snmp php-soap php-sqlite3 php-tokenizer libapache2-mod-php -y
 
 if test -f master.zip; then rm master.zip; fi
 echo "Download and extract Github Repository"
@@ -71,7 +71,7 @@ sudo mkdir -p /var/www/html
 sudo cp -r Raspberry-master/dining/var/www/html/* /var/www/html/
 rm -r Raspberry-master/
 
-#sudo chown www-data:www-data /var/www/html/data
+sudo chown www-data:www-data /var/www/html/data
 
 #sudo usermod -a -G gpio www-data
 #sudo usermod -a -G video www-data
@@ -156,6 +156,8 @@ sudo mv /var/www/html/ds18b20.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
 sudo systemctl enable --now ds18b20.timer
+
+Tot Hier
 
 # systemctl list-timers
 # journalctl -u ds18b20.service
