@@ -90,41 +90,12 @@ echo "/usr/bin/bash /var/www/html/autostart.sh &" >> .config/labwc/autostart
 echo "Activate daily update"
 echo "====================="
 
-cat > PindaNetUpdate.sh <<EOF
-#!/bin/bash
-sudo dpkg --configure -a
-apt-get clean
-apt autoremove -y
-apt-get update
-apt-get upgrade -y
-shutdown -r now
-EOF
-sudo mv PindaNetUpdate.sh /usr/sbin/
-sudo chmod +x /usr/sbin/PindaNetUpdate.sh
-
-cat > PindaNetUpdate.timer <<EOF
-[Unit]
-Description=Update and Reset
-[Timer]
-OnCalendar=*-*-* 03:30:00
-Unit=PindaNetUpdate.service
-[Install]
-WantedBy=multi-user.target
-EOF
-sudo mv PindaNetUpdate.timer /etc/systemd/system/
-
-cat > PindaNetUpdate.service <<EOF
-[Unit]
-Description=Update and Reset
-[Service]
-Type=simple
-ExecStart=/usr/sbin/PindaNetUpdate.sh
-EOF
-sudo mv PindaNetUpdate.service /etc/systemd/system/
+sudo chmod +x /var/www/html/PindaNetUpdate.sh
+sudo mv /var/www/html/PindaNetUpdate.timer /etc/systemd/system/
+sudo mv /var/www/html/PindaNetUpdate.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
-sudo systemctl enable PindaNetUpdate.timer
-sudo systemctl start PindaNetUpdate.timer
+sudo systemctl enable --now PindaNetUpdate.timer
 
 # Disable Avahi, use router DNS
 sudo systemctl disable --now avahi-daemon.service
