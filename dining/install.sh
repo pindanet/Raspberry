@@ -131,49 +131,25 @@ sudo systemctl start PindaNetUpdate.timer
 # Disable Avahi, use router DNS
 sudo systemctl disable --now avahi-daemon.service
 
-# Check Avahi hostname
-sudo apt install avahi-utils -y
-cat > checkAvahi.sh <<EOF
-#!/bin/bash
 # Check WiFi connection
-if ! ping -c 1 $router; then
-  echo "\$(date) Restart Network" >> /var/www/html/data/debug.txt
-  shutdown -r now
-  sleep 10
-fi
-# Check Avahi conflict
-if [ \$(avahi-resolve -a \$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}') | cut -f 2) != \${HOSTNAME}.local ]; then
-  echo Restart avahi
-  systemctl restart avahi-daemon.service
-fi
-EOF
-sudo mv checkAvahi.sh /usr/sbin/
-sudo chmod +x /usr/sbin/checkAvahi.sh
-
-cat > checkAvahi.timer <<EOF
-[Unit]
-Description=Check Avahi hostname
-[Timer]
-OnBootSec=1h
-OnUnitActiveSec=1h
-Unit=checkAvahi.service
-[Install]
-WantedBy=basic.target
-EOF
-sudo mv checkAvahi.timer /etc/systemd/system/
-
-cat > checkAvahi.service <<EOF
-[Unit]
-Description=Check Avahi hostname
-[Service]
-Type=simple
-ExecStart=/usr/sbin/checkAvahi.sh
-EOF
-sudo mv checkAvahi.service /etc/systemd/system/
+#sudo apt install avahi-utils -y
+sudo chmod +x /var/www/html/checkWiFi.sh
+prompt="Enter your router name (ex: mymodem.home):"
+while [ "$prompt" != "OK" ]; do
+  read -p "$prompt " router;
+  if ! ping -c 1 $router; then
+    prompt="Network name does not exist or is unreachable. Try again:"
+  else
+    prompt="OK"
+  fi
+done
+sudo sed -i "s/mymodem.home/$router/" /var/www/html/checkWiFi.sh
+sudo mv /var/www/html/checkWiFi.timer /etc/systemd/system/
+sudo mv /var/www/html/checkWiFi.service /etc/systemd/system/
 
 sudo systemctl daemon-reload
-sudo systemctl enable checkAvahi.timer
-sudo systemctl start checkAvahi.timer
+sudo systemctl enable --now checkWiFi.timer
+# systemctl list-timers
 
 sudo chmod +x /var/www/html/ds18b20.sh
 cat > ds18b20.timer <<EOF
