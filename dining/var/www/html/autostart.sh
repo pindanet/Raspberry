@@ -5,10 +5,6 @@ killall wayout
 # sudo apt install wlr-randr -y
 # Only for my EIZO monitor
 #wlr-randr --output HDMI-A-1 --mode 1920x1200@59.950001Hz
-# Disable Power led
-echo 0 | sudo tee /sys/class/leds/PWR/brightness
-# Disable Activity led
-echo none | sudo tee /sys/class/leds/ACT/trigger
 # Activate DS18B20 temperature sensor power (Reset)
 /usr/bin/pinctrl set 17 op dh
 /usr/bin/pinctrl set 27 op dh
@@ -26,6 +22,7 @@ fi
 #color="white"
 
 days=("maandag" "dinsdag" "woensdag" "donderdag" "vrijdag" "zaterdag" "zondag")
+
 months=("januari" "februari" "maart" "april" "mei" "juni" "juli" "augustus" "september" "october" "november" "december")
 
 while true; do
