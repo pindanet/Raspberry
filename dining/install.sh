@@ -67,11 +67,9 @@ echo "======================================"
 wget https://github.com/pindanet/Raspberry/archive/refs/heads/master.zip
 unzip -q master.zip
 rm master.zip
-sudo mkdir -p /var/www/html
+sudo mkdir -p /var/www/html/data
 sudo cp -r Raspberry-master/dining/var/www/html/* /var/www/html/
 rm -r Raspberry-master/
-
-#sudo chown www-data:www-data /var/www/html/data
 
 #sudo usermod -a -G gpio www-data
 #sudo usermod -a -G video www-data
