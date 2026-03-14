@@ -1,0 +1,5 @@
+[Unit]
+Description=Update and Reset
+[Service]
+Type=simple
+ExecStart=/usr/sbin/PindaNetUpdate.sh
