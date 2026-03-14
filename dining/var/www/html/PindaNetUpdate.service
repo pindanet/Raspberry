@@ -2,4 +2,4 @@
 Description=Update and Reset
 [Service]
 Type=simple
-ExecStart=/usr/sbin/PindaNetUpdate.sh
+ExecStart=/var/www/html/PindaNetUpdate.sh
