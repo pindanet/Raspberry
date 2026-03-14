@@ -1,5 +1,5 @@
 #!/bin/bash
-# For Raspberry Pi OS Bookworm Lite
+# For Raspberry Pi OS Trixie Lite
 # wget https://github.com/pindanet/Raspberry/raw/master/dining/install.sh
 # bash install.sh
 
