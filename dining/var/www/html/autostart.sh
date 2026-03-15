@@ -76,7 +76,7 @@ while true; do
 #      text="$(LANG=nl_BE.UTF-8 date '+%A, %e %B %Y %H:%M:%S')     $(printf ' %.1f   C' $((10**1 * $(($(cat /var/www/html/data/temp) + 700))/1000))e-1)"
       text="${locDate}   $(date '+ %H:%M:%S')   $(printf ' %.1f \u00B0C' $((10**1 * $(($(cat /var/www/html/data/temp) + 700))/1000))e-1)"
       echo "<b><span foreground=\"${color}\">${text}</span></b>"
-      sleep 60
+      sleep 1
     done | wayout --feed-line --width 1920 --height 80 --layer overlay --position bottom --center --font "Monospace 44"
     echo "Stop VLC"
     killall vlc
