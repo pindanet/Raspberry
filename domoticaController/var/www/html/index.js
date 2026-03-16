@@ -734,21 +734,14 @@ function thermostatColors(room) {
     if (this.status == 200 && this.readyState === 4) {
       var tasmotaDev = this.responseText.split("\n");
       var heaterColor = "";
-      for (var i = 0; i < tasmotaDev.length; i++) {
-        for (var heater = 0; heater < room.heater.length; heater++) {
-//console.log(tasmotaDev[i], room.heater[heater].name);
+      for (var heater = 0; heater < room.heater.length; heater++) {
+//console.log(room.htmlElementId, room.heater[heater].name);
+        for (var i = 0; i < tasmotaDev.length; i++) {
           if (room.heater[heater].name == tasmotaDev[i]) {
-//console.log(tasmotaDev[i], room.heater[heater].color);
             heaterColor = room.heater[heater].color;
-//          } else {
-//console.log(tasmotaDev[i]);
           }
         }
-//        if (heaterColor != "") {
-//          break;
-//        }
       }
-console.log(room.htmlElementId, heaterColor);
       document.getElementById(room.htmlElementId).style.color = heaterColor;
     }
   };
@@ -800,7 +793,7 @@ function tempAdjustment(room) {
       beginDate.setTime(begin);
       beginDate = timeDate(conf.event[i].begin, beginDate);
       begin = beginDate.getTime();
-console.log("Event: " + beginDate.toString() + " tot " + endDate.toString());
+//console.log("Event: " + beginDate.toString() + " tot " + endDate.toString());
       if (begin <= now && end > now) {
         tempWanted = conf[conf.event[i].temp[room.id]];
         conf.eventDots = true;
@@ -836,26 +829,6 @@ console.log("Event: " + beginDate.toString() + " tot " + endDate.toString());
     room.sleepTemp = tempWanted;
   }
   room.tempWanted = tempWanted;
-// Heaters On/Off
-/*
-  for (let i = 0; i < room.heater.length; i++) {
-    if (room.heater[i].status != "off" && room.heater[i].status != "on") { // Initialise heater status
-      tasmotaHeater (room.heater[i].Hostname, "Power", room, i);
-    } else {
-      var tempOn = (tempWanted - conf.hysteresis - conf.hysteresis * (2 * i)).toFixed(2);
-      var tempOff = (tempWanted + conf.hysteresis - conf.hysteresis * (2 * i)).toFixed(2);
-      if (room.temp > tempOff) { // Heater Off
-        if (room.heater[i].status != "off") {
-          tasmotaHeater (room.heater[i].Hostname, "Power%20Off", room, i);
-        }
-      } else if (room.temp < tempOn) { //Heater On
-        if (room.heater[i].status != "on") {
-          tasmotaHeater (room.heater[i].Hostname, "Power%20On", room, i);
-        }
-      }
-    }
-  }
-*/
 // Heaters On/Off
   for (let i = 0; i < room.heater.length; i++) {
     if (room.heater[i].status != "off" && room.heater[i].status != "on") { // Initialise heater status
@@ -970,21 +943,6 @@ function thermostat() {
   tempAdjustment(conf.Living);
   setTimeout(thermostatColors, 10000, conf.Living);
   wgetTemp("pindadomo", conf.Living);
-//  var xhr = new XMLHttpRequest();
-//  xhr.open('POST', "cli.php", true);
-//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//  xhr.onload = function(e) {
-//    if (this.status == 200 && this.readyState === 4) {
-//      const output = JSON.parse(this.responseText);
-//      if (isNaN(output[0])) {
-//        console.log(output[0]);
-//      } else {
-//        conf.Living.temp = parseFloat(output[0]) / 1000 + conf.Living.tempCorrection;
-//        fireAlarm(conf.Living);
-//      }
-//    }
-//  };
-//  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/ds18b20.sh"));
 
   tempAdjustment(conf.Dining);
   setTimeout(thermostatColors, 10000, conf.Dining);
