@@ -726,6 +726,34 @@ function timeDate (time, dateObject) {
   dateObject.setHours(hourMin[0], hourMin[1], 0, 0);
   return dateObject;
 }
+function thermostatColors(room) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "tmp.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      var tasmotaDev = this.responseText.split("\n");
+      var heaterColor = "";
+      for (var i = 0; i < tasmotaDev.length; i++) {
+        for (var heater = 0; heater < room.heater.length; heater++) {
+//console.log(tasmotaDev[i], room.heater[heater].name);
+          if (room.heater[heater].name == tasmotaDev[i]) {
+//console.log(tasmotaDev[i], room.heater[heater].color);
+            heaterColor = room.heater[heater].color;
+//          } else {
+//console.log(tasmotaDev[i]);
+          }
+        }
+//        if (heaterColor != "") {
+//          break;
+//        }
+      }
+console.log(room.htmlElementId, heaterColor);
+      document.getElementById(room.htmlElementId).style.color = heaterColor;
+    }
+  };
+  xhr.send();
+}
 function tempAdjustment(room) {
   if (isNaN(room.temp)) {
     return;
@@ -940,6 +968,7 @@ console.log(room + " sleep restore: " + conf[room].tempWanted + " to " + conf[ro
 }
 function thermostat() {
   tempAdjustment(conf.Living);
+  setTimeout(thermostatColors, 10000, conf.Living);
   wgetTemp("pindadomo", conf.Living);
 //  var xhr = new XMLHttpRequest();
 //  xhr.open('POST', "cli.php", true);
@@ -958,8 +987,10 @@ function thermostat() {
 //  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/ds18b20.sh"));
 
   tempAdjustment(conf.Dining);
+  setTimeout(thermostatColors, 10000, conf.Dining);
   wgetTemp("pindadining", conf.Dining);
 //  tempAdjustment(conf.Kitchen);
+  setTimeout(thermostatColors, 10000, conf.Kitchen);
   wgetTemp("pindakeuken", conf.Kitchen);
   if (!conf.hasOwnProperty('thermostatDisabled')) {
     if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort) && (document.getElementById("clockday").style.color !== "lime")) {
@@ -1249,6 +1280,7 @@ function connect() {
       sendToRoom("pindakeuken", JSON.stringify(message));
     }
 // Init heaterColors
+/*
     heaterCountLiving = 0;
     for(var i = 0; i < heatersLiving.length; i++) {
       var xhr = new XMLHttpRequest();
@@ -1291,12 +1323,14 @@ console.log("heaterCountDining overflow");
       };
       xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + heatersDining[i] + "/cm?cmnd=Power"));
     }
+*/
   };
   socket.onmessage = function(event) {
 //    console.log("Message received: " + event.data);
     if (event.data[0] == "["  || event.data[0] == "{") {
       var message = JSON.parse(event.data);
       switch (message.function) {
+/*
         case "tasmota":
           switch (message.name) {
             case "Eekhoorn":
@@ -1341,6 +1375,7 @@ console.log("heaterCountLiving underflow");
               }
               break;
           }
+*/
 /*
           if (message.name == "Eekhoorn") {
              if (message.state == 1) {
