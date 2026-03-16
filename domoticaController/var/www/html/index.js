@@ -500,6 +500,7 @@ function startTime() {
       setThermostatUI(event);
     }
   }
+  tmpCheck();
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
 function connectWebsocket() {
@@ -726,13 +727,30 @@ function timeDate (time, dateObject) {
   dateObject.setHours(hourMin[0], hourMin[1], 0, 0);
   return dateObject;
 }
-function thermostatColors(room) {
+function tmpCheck() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "tmp.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       var tasmotaDev = this.responseText.split("\n");
+      for (let roomName in conf.rooms) {
+        var room = conf[conf.rooms[roomName]];
+//console.log(room);
+        var heaterColor = "";
+        for (var heater = 0; heater < room.heater.length; heater++) {
+//console.log(room.htmlElementId, room.heater[heater].name);
+          for (var i = 0; i < tasmotaDev.length; i++) {
+            if (room.heater[heater].name == tasmotaDev[i]) {
+              heaterColor = room.heater[heater].color;
+            }
+          }
+        }
+        document.getElementById(room.htmlElementId).style.color = heaterColor;
+      }
+//console.log(tasmotaDev);
+//console.log(conf.Living.heater);
+/*
       var heaterColor = "";
       for (var heater = 0; heater < room.heater.length; heater++) {
 //console.log(room.htmlElementId, room.heater[heater].name);
@@ -743,6 +761,7 @@ function thermostatColors(room) {
         }
       }
       document.getElementById(room.htmlElementId).style.color = heaterColor;
+*/
     }
   };
   xhr.send();
@@ -941,14 +960,11 @@ console.log(room + " sleep restore: " + conf[room].tempWanted + " to " + conf[ro
 }
 function thermostat() {
   tempAdjustment(conf.Living);
-  setTimeout(thermostatColors, 10000, conf.Living);
   wgetTemp("pindadomo", conf.Living);
 
   tempAdjustment(conf.Dining);
-  setTimeout(thermostatColors, 10000, conf.Dining);
   wgetTemp("pindadining", conf.Dining);
 //  tempAdjustment(conf.Kitchen);
-  setTimeout(thermostatColors, 10000, conf.Kitchen);
   wgetTemp("pindakeuken", conf.Kitchen);
   if (!conf.hasOwnProperty('thermostatDisabled')) {
     if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort) && (document.getElementById("clockday").style.color !== "lime")) {
