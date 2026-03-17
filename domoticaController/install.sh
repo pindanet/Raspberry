@@ -143,7 +143,7 @@ do
   sleep 30
 done
 EOF
-echo "/usr/bin/bash ~/PindaNetAutostart.sh &" >> .config/labwc/autostart
+echo "/usr/bin/bash /var/www/html/PindaNetAutostart.sh &" >> .config/labwc/autostart
 
 echo "Configure SSH remote login"
 echo "=========================="
