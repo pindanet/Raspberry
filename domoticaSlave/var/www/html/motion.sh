@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# depends on jq
+# apt install jq
+
 # Eerst definiëren we enkele instellingen (constanten)
 motion=$(cat << EOF
 {
@@ -20,12 +24,20 @@ motion=$(cat << EOF
 EOF
 )
 echo $motion > /tmp/postProcess.json
-minBacklight=33
-maxBacklight=128
-timer=180
+
+# https://www.baeldung.com/linux/jq-command-json
+# https://www.baeldung.com/linux/jq-passing-bash-variables
+jsonConf=$(cat /var/www/html/data/conf.php.json)
+room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | select(.Hostname==$jq_hostname_var)')
+read -r minBacklight maxBacklight timer< <(echo $room | jq -r '[ .minBacklight, .maxBacklight, .Motion.timer] | join(" ")')
+backlight=$minBacklight
+
+echo $minBacklight $maxBacklight $timer $backlight
 
 # Initialise flags
-rm /tmp/timeTime
+if [ -f /tmp/timeTime ]; then
+  rm /tmp/timeTime
+fi
 # Initialise touchscreen brightness
 echo 0 > /sys/class/backlight/10-0045/brightness
 # Daarna definiëren we enkele functies
@@ -70,6 +82,8 @@ wait_for_motion () {
 while :
 do
   wait_for_motion
+  echo "Backlight: $backlight"
+  echo $backlight > /sys/class/backlight/10-0045/brightness
   # Stop de bewegingsdetectie om de camera te gebruiken om een foto te maken
   pkill rpicam-hello
   echo "Foto nemen."
@@ -88,8 +102,7 @@ do
     echo $lux > /var/www/html/data/luxmax
   fi
   let backlight=$lux*$maxBacklight/$luxmax+$minBacklight
-  echo "Backlight: $backlight"
-  echo $backlight > /sys/class/backlight/10-0045/brightness
+#  echo $backlight > /sys/class/backlight/10-0045/brightness
 
   find /var/www/html/motion -mmin +$((60*24)) -type f -delete
   /usr/bin/convert /tmp/$bestandsnaam".jpg" -resize 1920 /var/www/html/motion/$bestandsnaam".jpg"
