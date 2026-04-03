@@ -69,7 +69,7 @@
       "maxBacklight": 128,
       "Motion": {
         "lowerThreshold": 30,
-        "timer": 195,
+        "timer": 180,
         "light": "Keukenlamp",
         "GPIO": [
           23,
