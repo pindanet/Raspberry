@@ -37,7 +37,7 @@ echo 'else' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
 # Auto-hide mouse cursor
-cat > .config/labwc/rc.xml << 'EOL'
+cat > .config/labwc/rc.xml << 'EOF'
 <?xml version="1.0"?>
 <labwc_config>
   <keyboard>
@@ -46,7 +46,7 @@ cat > .config/labwc/rc.xml << 'EOL'
     </keybind>
   </keyboard>
 </labwc_config>
-EOL
+EOF
 
 # Rotate the Touch Display 270°
 sudo apt install wlr-randr -y
