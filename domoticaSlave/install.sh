@@ -28,7 +28,7 @@ sudo apt update && sudo apt -y full-upgrade
 
 echo "Install Wayland"
 echo "==============="
-sudo apt install labwc seatd xdg-user-dirs libgl1-mesa-dri -y
+sudo apt install labwc seatd xdg-user-dirs libgl1-mesa-dri wtype -y
 mkdir -p .config/labwc
 sudo raspi-config nonint do_boot_behaviour "B2"  # https://www.raspberrypi.com/documentation/computers/configuration.html
 echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
