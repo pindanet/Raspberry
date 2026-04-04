@@ -47,7 +47,6 @@ cat > .config/labwc/rc.xml << 'EOF'
   </keyboard>
 </labwc_config>
 EOF
-
 # Rotate the Touch Display 270°
 sudo apt install wlr-randr -y
 echo "wlr-randr --output DSI-1 --transform 270" >> .config/labwc/autostart
