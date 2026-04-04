@@ -148,63 +148,7 @@ function getConf() { // Get configuration
   xhttp.open("POST", "data/conf.json");
   xhttp.send();
 }
-window.onload = getConf;
 
-const stringToHex = (str) => {
-  let hex = '';
-  for (let i = 0; i < str.length; i++) {
-    const charCode = str.charCodeAt(i);
-    const hexValue = charCode.toString(16);
-
-    // Pad with zeros to ensure two-digit representation
-    hex += hexValue.padStart(2, '0');
-  }
-  return hex;
-};
-
-var yrCodes = {
-	"s01": "clear sky",
-	"s02": "fair",
-	"s03": "partly cloudy",
-	"s04": "cloudy",
-	"s40": "light rain showers",
-	"s05": "rain showers",
-	"s41": "heavy rain showers",
-	"s24": "light rain showers and thunder",
-	"s06": "rain showers and thunder",
-	"s25": "heavy rain showers and thunder",
-	"s42": "light sleet showers",
-	"s07": "sleet showers",
-	"s43": "heavy sleet showers",
-	"s26": "light sleet showers and thunder",
-	"s20": "sleet showers and thunder",
-	"s27": "heavy sleet showers and thunder",
-	"s44": "light snow showers",
-	"s08": "snow showers",
-	"s45": "heavy snow showers",
-	"s28": "light snow showers and thunder",
-	"s21": "snow showers and thunder",
-	"s29": "heavy snow showers and thunder",
-	"s46": "light rain",
-	"s09": "rain",
-	"s10": "heavy rain",
-	"s30": "light rain and thunder",
-	"s22": "rain and thunder",
-	"s11": "heavy rain and thunder",
-	"s47": "light sleet",
-	"s12": "sleet",
-	"s48": "heavy sleet",
-	"s31": "light sleet and thunder",
-	"s23": "sleet and thunder",
-	"s32": "heavy sleet and thunder",
-	"s49": "light snow",
-	"s13": "snow",
-	"s50": "heavy snow",
-	"s33": "light snow and thunder",
-	"s14": "snow and thunder",
-	"s34": "heavy snow and thunder",
-	"s15": "fog"
-}
 function weather(event) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "weather.php", true);
@@ -508,3 +452,81 @@ function sendMessage(message) {
 console.log("Websocket not ready yet!");
   }
 }
+
+
+var wtypeText="";
+function wtypeServer() {
+  if (event.key == "Enter") {
+    console.log("Received wtype text: " + wtypeText);
+    switch (wtypeText) {
+      case "weather":
+        weather();
+        break;
+    }
+    wtypeText="";
+  } else {
+    wtypeText += event.key;
+  }
+//  console.log(`Key pressed: ${event.key}`);
+//  console.log(`Key code: ${event.keyCode}`);
+}
+
+const stringToHex = (str) => {
+  let hex = '';
+  for (let i = 0; i < str.length; i++) {
+    const charCode = str.charCodeAt(i);
+    const hexValue = charCode.toString(16);
+
+    // Pad with zeros to ensure two-digit representation
+    hex += hexValue.padStart(2, '0');
+  }
+  return hex;
+};
+
+var yrCodes = {
+	"s01": "clear sky",
+	"s02": "fair",
+	"s03": "partly cloudy",
+	"s04": "cloudy",
+	"s40": "light rain showers",
+	"s05": "rain showers",
+	"s41": "heavy rain showers",
+	"s24": "light rain showers and thunder",
+	"s06": "rain showers and thunder",
+	"s25": "heavy rain showers and thunder",
+	"s42": "light sleet showers",
+	"s07": "sleet showers",
+	"s43": "heavy sleet showers",
+	"s26": "light sleet showers and thunder",
+	"s20": "sleet showers and thunder",
+	"s27": "heavy sleet showers and thunder",
+	"s44": "light snow showers",
+	"s08": "snow showers",
+	"s45": "heavy snow showers",
+	"s28": "light snow showers and thunder",
+	"s21": "snow showers and thunder",
+	"s29": "heavy snow showers and thunder",
+	"s46": "light rain",
+	"s09": "rain",
+	"s10": "heavy rain",
+	"s30": "light rain and thunder",
+	"s22": "rain and thunder",
+	"s11": "heavy rain and thunder",
+	"s47": "light sleet",
+	"s12": "sleet",
+	"s48": "heavy sleet",
+	"s31": "light sleet and thunder",
+	"s23": "sleet and thunder",
+	"s32": "heavy sleet and thunder",
+	"s49": "light snow",
+	"s13": "snow",
+	"s50": "heavy snow",
+	"s33": "light snow and thunder",
+	"s14": "snow and thunder",
+	"s34": "heavy snow and thunder",
+	"s15": "fog"
+}
+
+// communicate through key events
+document.addEventListener('keydown', wtypeServer)
+window.onload = getConf;
