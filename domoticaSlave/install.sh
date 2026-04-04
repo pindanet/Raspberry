@@ -36,6 +36,18 @@ echo '  tail /var/www/html/data/debug.txt' >> .bashrc
 echo 'else' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
+# Auto-hide mouse cursor
+cat > .config/labwc/rc.xml << 'EOL'
+<?xml version="1.0"?>
+<labwc_config>
+  <keyboard>
+    <keybind key="A-W-h">
+      <action name="HideCursor"/>
+    </keybind>
+  </keyboard>
+</labwc_config>
+EOL
+
 # Rotate the Touch Display 270°
 sudo apt install wlr-randr -y
 echo "wlr-randr --output DSI-1 --transform 270" >> .config/labwc/autostart
