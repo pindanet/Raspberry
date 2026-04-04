@@ -3,6 +3,8 @@
 echo 0 | sudo tee /sys/class/leds/PWR/brightness
 # Disable Activity led
 echo none | sudo tee /sys/class/leds/ACT/trigger
+# Hide cursor on startup (simulate Win+H hotkey)
+sleep 1 && wtype -M alt -M logo -P h &
 # Autostart Chromium in Kiosk & Debug mode
 /bin/chromium --remote-debugging-port=9222 --kiosk --disable-extensions --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
 # Give Chromium time to start
