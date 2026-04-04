@@ -79,6 +79,8 @@ do
   wait_for_motion
   # Temporary backlight
   echo $backlight > /sys/class/backlight/10-0045/brightness
+  # Update weather
+  XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype weather -k return
   # Stop de bewegingsdetectie om de camera te gebruiken om een foto te maken
   pkill rpicam-hello
 #  echo "Take photo."
@@ -86,7 +88,7 @@ do
   lux=$(sudo /usr/bin/rpicam-still -v 0 -o /tmp/$bestandsnaam".jpg" --rotation 180 --nopreview  --immediate --metadata - | grep '"Lux":')
   lux=${lux%.*} # until colon
   lux=${lux//[!0-9]/} # extract integer
-#  echo "Lux: $lux"
+  echo "Lux: $lux"
   if ! [ -f /var/www/html/data/luxmax ]; then
     luxmax=0
   else
