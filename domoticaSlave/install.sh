@@ -144,6 +144,12 @@ sudo mv /var/www/html/PindaPHPMotion.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now PindaPHPMotion.service
 
+# Bash Motion Testing
+sudo mv /var/www/html/PindaMotion.service /etc/systemd/system/
+sudo chmod +x /var/www/html/motion.sh
+sudo systemctl daemon-reload
+# sudo systemctl enable --now PindaMotion.service
+
 # PHP Websocket
 sudo mv /var/www/html/PindaWebsocket.service /etc/systemd/system/
 sed "s/User=dany/User=$USER/" /etc/systemd/system/PindaWebsocket.service
