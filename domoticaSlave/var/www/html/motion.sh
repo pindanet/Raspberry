@@ -31,17 +31,6 @@ jsonConf=$(cat /var/www/html/data/conf.php.json)
 room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | select(.Hostname==$jq_hostname_var)')
 read -r minBacklight maxBacklight timer< <(echo $room | jq -r '[ .minBacklight, .maxBacklight, .Motion.timer] | join(" ")')
 backlight=$minBacklight
-# Get thermostat schedule
-times=()
-temps=()
-while read -r json_record; do
-  IFS=' ' read -r -a array <<< "$json_record"
-  times+=(${array[0]})
-  temps+=(${array[1]})
-done < <(echo $room | jq -r '.thermostat.schedule | keys[] as $k | "\($k) \(.[$k])"')
-
-echo ${times[*]}
-echo ${temps[*]}
 
 # Initialise flags
 if [ -f /tmp/timeTime ]; then
