@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# depends on jq
-# apt install jq
+# depends on jq wtype
+# apt install jq wtype
 
 # https://www.raspberrypi.com/documentation/computers/camera_software.html#post-processing-with-rpicam-apps
 motion=$(cat << EOF
@@ -31,6 +31,17 @@ jsonConf=$(cat /var/www/html/data/conf.php.json)
 room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | select(.Hostname==$jq_hostname_var)')
 read -r minBacklight maxBacklight timer< <(echo $room | jq -r '[ .minBacklight, .maxBacklight, .Motion.timer] | join(" ")')
 backlight=$minBacklight
+# Get thermostat schedule
+times=()
+temps=()
+while read -r json_record; do
+  IFS=' ' read -r -a array <<< "$json_record"
+  times+=(${array[0]})
+  temps+=(${array[1]})
+done < <(echo $room | jq -r '.thermostat.schedule | keys[] as $k | "\($k) \(.[$k])"')
+
+echo ${times[*]}
+echo ${temps[*]}
 
 # Initialise flags
 if [ -f /tmp/timeTime ]; then
@@ -85,7 +96,7 @@ do
   pkill rpicam-hello
 #  echo "Take photo."
   bestandsnaam=$(date +"%Y-%m-%d_%H:%M:%S")
-  lux=$(sudo /usr/bin/rpicam-still -v 0 -o /tmp/$bestandsnaam".jpg" --rotation 180 --nopreview  --immediate --metadata - | grep '"Lux":')
+  lux=$(/usr/bin/rpicam-still -v 0 -o /tmp/$bestandsnaam".jpg" --rotation 180 --nopreview  --immediate --metadata - | grep '"Lux":')
   lux=${lux%.*} # until colon
   lux=${lux//[!0-9]/} # extract integer
   echo "Lux: $lux"
@@ -101,8 +112,10 @@ do
   let backlight=$lux*$maxBacklight/$luxmax+$minBacklight
   echo $backlight > /sys/class/backlight/10-0045/brightness
 
-  find /var/www/html/motion -mmin +$((60*24)) -type f -delete
-  /usr/bin/convert /tmp/$bestandsnaam".jpg" -resize 1920 /var/www/html/motion/$bestandsnaam".jpg"
+  if (($lux > 0)); then # only if not to dark to keep
+    find /var/www/html/motion -mmin +$((60*24)) -type f -delete
+    /usr/bin/convert /tmp/$bestandsnaam".jpg" -resize 1920 /var/www/html/motion/$bestandsnaam".jpg"
+  fi
 
   rm /tmp/$bestandsnaam".jpg"
 
