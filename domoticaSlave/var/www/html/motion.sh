@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# remove from conf.php.json
+#"lowerThreshold": 30,
+#"light": "Keukenlamp",
+#"GPIO": [
+#  23,
+#  24
+#]
+#"tasmota": {
+#  "Keukenlamp": {
+#    "IP": "192.168.129.14",
+#    "Hostname": "Keukenlamp-8",
+#    "Watt": "8"
+#  }
+#},
+
 # depends on jq wtype
 # apt install jq wtype
 
@@ -29,7 +44,7 @@ echo $motion > /tmp/postProcess.json
 # https://www.baeldung.com/linux/jq-passing-bash-variables
 jsonConf=$(cat /var/www/html/data/conf.php.json)
 room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | select(.Hostname==$jq_hostname_var)')
-read -r minBacklight maxBacklight timer< <(echo $room | jq -r '[ .minBacklight, .maxBacklight, .Motion.timer] | join(" ")')
+read -r luxPhotoThreshold minBacklight maxBacklight timer< <(echo $room | jq -r '[ .Motion.luxPhotoThreshold, .minBacklight, .maxBacklight, .Motion.timer] | join(" ")')
 backlight=$minBacklight
 
 # Initialise flags
@@ -101,7 +116,7 @@ do
   let backlight=$lux*$maxBacklight/$luxmax+$minBacklight
   echo $backlight > /sys/class/backlight/10-0045/brightness
 
-  if (($lux > 1)); then # only if not to dark to keep
+  if (($lux > $luxPhotoThreshold)); then # only if not to dark to keep
     find /var/www/html/motion -mmin +$((60*24)) -type f -delete
     /usr/bin/convert /tmp/$bestandsnaam".jpg" -resize 1920 /var/www/html/motion/$bestandsnaam".jpg"
     # Start timer
