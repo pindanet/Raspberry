@@ -1,69 +1,90 @@
 #!/bin/bash
 # Thermostat
 
+# Delete from conf.php.conf
+# "sensorPowerGPIO": 17,
+
 # Read configuration
 # https://www.baeldung.com/linux/jq-command-json
 # https://www.baeldung.com/linux/jq-passing-bash-variables
 jsonConf=$(cat /var/www/html/data/conf.php.json)
 room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | select(.Hostname==$jq_hostname_var)')
 thermostat=$(echo $room | jq -r '.thermostat')
+read -r dataGPIO powerGPIO tempNightTime < <(echo $thermostat | jq -r '[ .ds18b20.dataGPIO, .ds18b20.powerGPIO, .tempNightTime] | join(" ")')
 
 # Get thermostat schedule
 times=()
 temps=()
+hm=$(date +"%H:%M")
 while read -r json_record; do
   IFS=' ' read -r -a array <<< "$json_record"
-  times+=(${array[0]})
+  if [[ "$hm" > "${array[0]}" ]]; then # Tomorrow
+    times+=($(($(date -d"${array[0]}" +%s) + 86400)))
+  else # Today
+    times+=($(date -d"${array[0]}" +%s))
+  fi
+#  times+=(${array[0]})
   temps+=(${array[1]})
 done < <(echo $thermostat | jq -r '.schedule | keys[] as $k | "\($k) \(.[$k])"')
 
-echo ${times[*]}
-echo ${temps[*]}
+i=0
+for time in "${times[@]}"
+do
+  echo $(date -d @${time}) ${temps[$i]}
+  ((i++))
+done
 
-exit
+# Initialise
+if [ -f /tmp/PinDa.temp.count ]; then
+  rm /tmp/PinDa.temp.count
+fi
 
 while :
 do
   echo Thermostat uitvoeren
-
-#!/bin/bash
 # DS18B20
 # GPIO 17 (11) (switchable 3,3 V) naar Vdd (Rood)
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Orange)(GPIO27)
 # GND (9) naar GND (Zwart)
+  output=$(cat /sys/bus/w1/devices/28-*/w1_slave)
+  if [ $? -ne 0 ]; then # error
+    # Reset DS18B20
+    # Power off
+    pinctrl set $powerGPIO op dl # DS18B20 temperature sensor power off
+    pinctrl set $dataGPIO op dh # PullUp 1-wire Data
+    sleep 3
+    # Power on
+    pinctrl set $powerGPIO op dh # DS18B20 temperature sensor power on
+    sleep 5
+    echo "Reset Ds18b20"
+  else
+    if [[ $output != *"YES"* ]]; then
+      echo Ds18b20 CRC error
+    else
+      temp="${output#*t=}"
+      if [ ! -f /tmp/PinDa.temp.count ]; then
+        if [[ $temp == 0 ]]; then
+          echo "Ds18b20 rejected first 0"
+        else
+          echo "Ds18b20 rejected first measurement"
+          touch /tmp/PinDa.temp.count
+        fi
+      else
+        echo $temp
+        echo $temp > /tmp/temp
 
-powergpio=17
-pullupgpio=27
+      fi
+    fi
+  fi
 
-#if [ ! -d /var/www/html/data/temp.log ]; then
-#  mkdir -p /var/www/html/data/temp.log
-#fi
+  sleep 10 # every minute
+done
 
-#cat /sys/devices/w1_bus_master1/28-*/temperature
-#temp=$(cat /sys/bus/w1/devices/28-*/temperature)
-output=$(cat /sys/bus/w1/devices/28-*/w1_slave)
-if [ $? -ne 0 ]; then # error
-  # Reset DS18B20
-  # Power off
-  pinctrl set $powergpio op dl
-  pinctrl set $pullupgpio op dh
-  sleep 3
-  # Power on
-  pinctrl set $powergpio op dh
-  sleep 5
-  echo "Reset Ds18b20"
-  exit
-fi
+exit
+
 
 crc=$(echo "${output}" | head -1)
 if [[ $crc == *"YES" ]]; then
-  temp="${output#*t=}"
-  if [ ! -f /tmp/PinDa.temp.count ]; then
-    if [[ $temp == 0 ]]; then
-      echo "Ds18b20 rejected first 0"
-      exit
-    fi
-  fi
 else
   echo "Ds18b20 CRC error"
   exit
@@ -125,4 +146,3 @@ fi
 
 
   sleep 60
-done
