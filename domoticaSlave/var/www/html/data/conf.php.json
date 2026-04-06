@@ -68,6 +68,7 @@
       "minBacklight": 33,
       "maxBacklight": 128,
       "Motion": {
+        "luxPhotoThreshold": 1,
         "lowerThreshold": 30,
         "timer": 180,
         "light": "Keukenlamp",
