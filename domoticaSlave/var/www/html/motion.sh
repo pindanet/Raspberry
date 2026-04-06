@@ -101,12 +101,16 @@ do
   let backlight=$lux*$maxBacklight/$luxmax+$minBacklight
   echo $backlight > /sys/class/backlight/10-0045/brightness
 
-  if (($lux > 0)); then # only if not to dark to keep
+  if (($lux > 1)); then # only if not to dark to keep
     find /var/www/html/motion -mmin +$((60*24)) -type f -delete
     /usr/bin/convert /tmp/$bestandsnaam".jpg" -resize 1920 /var/www/html/motion/$bestandsnaam".jpg"
+    # Start timer
+    action &
+  else
+    # Remove timer
+    rm /tmp/timeTime
+    # Dark touchscreen
+    echo 0 > /sys/class/backlight/10-0045/brightness
   fi
-
   rm /tmp/$bestandsnaam".jpg"
-
-  action &
 done
