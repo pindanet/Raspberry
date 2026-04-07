@@ -458,12 +458,13 @@ var wtypeText="";
 function wtypeServer() {
   if (event.key == "Enter") {
     console.log("Received wtype text: " + wtypeText);
-    switch (wtypeText) {
-      case "weather":
-        weather();
-        break;
+    if (wtypeText == "weather") {
+      weather();
+    } else if (wtypeText.startsWith("t=")) {
+      if (!isNaN(wtypeText.substring(2))) {
+        document.getElementById("kitchenRoomTemp").innerHTML = wtypeText.substring(2);
+      }
     }
-    wtypeText="";
   } else {
     wtypeText += event.key;
   }
