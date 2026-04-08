@@ -118,7 +118,7 @@ sudo usermod -a -G gpio www-data
 
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
-sudo apt install chromium -y
+sudo apt install chromium wtype -y
 
 cat > PindaNetAutostart.sh <<EOF
 #!/bin/bash
