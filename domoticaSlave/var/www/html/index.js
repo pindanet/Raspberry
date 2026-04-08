@@ -465,6 +465,7 @@ function wtypeServer() {
         document.getElementById("kitchenRoomTemp").innerHTML = wtypeText.substring(2);
       }
     }
+    wtypeText = "";
   } else {
     wtypeText += event.key;
   }
