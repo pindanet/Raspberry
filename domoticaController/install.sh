@@ -118,7 +118,7 @@ sudo usermod -a -G gpio www-data
 
 echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/raspberry-pi-kiosk-mode-setup/
 echo "============================"
-sudo apt install chromium wtype -y
+sudo apt install chromium wtype acl -y
 
 cat > PindaNetAutostart.sh <<EOF
 #!/bin/bash
@@ -126,6 +126,8 @@ cat > PindaNetAutostart.sh <<EOF
 /usr/bin/pinctrl set $powergpio op dh
 # PullUp 1-wire Data
 /usr/bin/pinctrl set 4 ip pu
+# Give www-data access to Wayland
+setfacl -R -m u:www-data:wx /run/user/1000
 # Autostart Chromium in Kiosk & Debug mode
 # --kiosk can be replaced by --start-fullscreen
 # --disable-gpu: remove's dmesg errors, but much slower interface
