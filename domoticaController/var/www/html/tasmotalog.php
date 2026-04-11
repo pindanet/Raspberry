@@ -30,8 +30,8 @@ $data = '{"time":' . time() . ',"Watt":"' . $watt . '","name":"' . $name . '","s
 file_put_contents($logfile, $data, FILE_APPEND | LOCK_EX);
 
 if($status == 1) { // On
-  file_put_contents('/tmp/pindatasmotastatus-'.$name, '');
+  file_put_contents('/dev/shm/pindatasmotastatus-'.$name, '');
 } else { // Off
-  unlink('/tmp/pindatasmotastatus-'.$name);
+  unlink('/dev/shm/pindatasmotastatus-'.$name);
 }
 ?>
