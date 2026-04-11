@@ -1,6 +1,6 @@
 <?php
-foreach (glob("/tmp/pindatasmotastatus-*") as $filename) {
-  $pos = strrpos($filename, '-');
-  echo substr($filename, $pos + 1) . "\n";
+foreach (glob("/dev/shm/pindatasmotastatus-*") as $filename) {
+  $pieces = explode("pindatasmotastatus-", $filename);
+  echo $pieces[1] . "\n";
 }
 ?>
