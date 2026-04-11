@@ -34,4 +34,5 @@ if($status == 1) { // On
 } else { // Off
   unlink('/dev/shm/pindatasmotastatus-'.$name);
 }
+exec("XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype '{\"function\":\"tasmota\",\"name\":\"" . $name . "\"}' -k return", $output, $return);
 ?>
