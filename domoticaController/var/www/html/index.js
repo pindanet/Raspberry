@@ -630,7 +630,6 @@ function getConf() { // Get configuration
   xhttp.open("POST", "data/conf.json");
   xhttp.send();
 }
-window.onload = getVariable;
 // Thermostat
 /*
 function activeHeaters(room) {
@@ -736,10 +735,8 @@ function tmpCheck() {
       var tasmotaDev = this.responseText.split("\n");
       for (let roomName in conf.rooms) {
         var room = conf[conf.rooms[roomName]];
-//console.log(room);
         var heaterColor = "";
         for (var heater = 0; heater < room.heater.length; heater++) {
-//console.log(room.htmlElementId, room.heater[heater].name);
           for (var i = 0; i < tasmotaDev.length; i++) {
             if (room.heater[heater].name == tasmotaDev[i]) {
               heaterColor = room.heater[heater].color;
@@ -748,20 +745,6 @@ function tmpCheck() {
         }
         document.getElementById(room.htmlElementId).style.color = heaterColor;
       }
-//console.log(tasmotaDev);
-//console.log(conf.Living.heater);
-/*
-      var heaterColor = "";
-      for (var heater = 0; heater < room.heater.length; heater++) {
-//console.log(room.htmlElementId, room.heater[heater].name);
-        for (var i = 0; i < tasmotaDev.length; i++) {
-          if (room.heater[heater].name == tasmotaDev[i]) {
-            heaterColor = room.heater[heater].color;
-          }
-        }
-      }
-      document.getElementById(room.htmlElementId).style.color = heaterColor;
-*/
     }
   };
   xhr.send();
@@ -1533,3 +1516,44 @@ function remote(event) {
 //    sendMessage(event.target.id);
   }
 }
+var wtypeText="";
+function wtypeServer() {
+  if (event.key == "Enter") {
+console.log("Received wtype text: " + wtypeText);
+    var message = JSON.parse(wtypeText);
+console.log(message);
+      switch (message.function) {
+        case "tasmota":
+          switch (message.name) {
+            case "Eekhoorn":
+//console.log(message.state);
+              if (message.state == 1) {
+                document.getElementById("clockyear").style.color = "red";
+              } else {
+                document.getElementById("clockyear").style.color = "";
+              }
+              break;
+          }
+          break;
+      }
+
+//    if (wtypeText == "weather") {
+//      weather();
+//    } else if (wtypeText.startsWith("kitchenRoomTemp=")) {
+//      var pos=wtypeText.indexOf("=") + 1;
+//      if (!isNaN(wtypeText.substring(pos))) {
+//        document.getElementById("kitchenRoomTemp").innerHTML = wtypeText.substring(pos);
+//      }
+//    } else if (wtypeText.startsWith("tasmota=")) {
+//      var pos=wtypeText.indexOf("=") + 1;
+//    }
+    wtypeText = "";
+  } else {
+    wtypeText += event.key;
+  }
+//  console.log(`Key pressed: ${event.key}`);
+//  console.log(`Key code: ${event.keyCode}`);
+}
+// communicate through key events
+document.addEventListener('keydown', wtypeServer)
+window.onload = getVariable;
