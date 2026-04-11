@@ -500,7 +500,7 @@ function startTime() {
       setThermostatUI(event);
     }
   }
-  tmpCheck();
+//  tmpCheck();
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
 function connectWebsocket() {
@@ -608,6 +608,7 @@ function getConf() { // Get configuration
         calcConf();
         nextalarm();
         startTime();
+        tmpCheck();
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
 //        conf = JSON.parse(this.responseText);
 //        conf.lastModified = this.getResponseHeader('Last-Modified');
@@ -1524,16 +1525,17 @@ console.log("Received wtype text: " + wtypeText);
 console.log(message);
       switch (message.function) {
         case "tasmota":
-          switch (message.name) {
-            case "Eekhoorn":
+//          switch (message.name) {
+//            case "Eekhoorn":
 //console.log(message.state);
-              if (message.state == 1) {
-                document.getElementById("clockyear").style.color = "red";
-              } else {
-                document.getElementById("clockyear").style.color = "";
-              }
-              break;
-          }
+//              if (message.state == 1) {
+//                document.getElementById("clockyear").style.color = "red";
+//              } else {
+//                document.getElementById("clockyear").style.color = "";
+//              }
+//              break;
+//          }
+            tmpCheck();
           break;
       }
 
