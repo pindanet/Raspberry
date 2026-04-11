@@ -1521,36 +1521,22 @@ var wtypeText="";
 function wtypeServer() {
   if (event.key == "Enter") {
 console.log("Received wtype text: " + wtypeText);
-    var message = JSON.parse(wtypeText);
+    try {
+      var message = JSON.parse(wtypeText);
+    } catch {  // Reject the message and reinitialize
+      wtypeText = "";
+      console.log("Wtype communication error");
+    }
+    if (wtypeText != "") { // Message received without errors
 console.log(message);
       switch (message.function) {
         case "tasmota":
-//          switch (message.name) {
-//            case "Eekhoorn":
-//console.log(message.state);
-//              if (message.state == 1) {
-//                document.getElementById("clockyear").style.color = "red";
-//              } else {
-//                document.getElementById("clockyear").style.color = "";
-//              }
-//              break;
-//          }
-            tmpCheck();
-          break;
-      }
-
-//    if (wtypeText == "weather") {
-//      weather();
-//    } else if (wtypeText.startsWith("kitchenRoomTemp=")) {
-//      var pos=wtypeText.indexOf("=") + 1;
-//      if (!isNaN(wtypeText.substring(pos))) {
-//        document.getElementById("kitchenRoomTemp").innerHTML = wtypeText.substring(pos);
-//      }
-//    } else if (wtypeText.startsWith("tasmota=")) {
-//      var pos=wtypeText.indexOf("=") + 1;
-//    }
-    wtypeText = "";
-  } else {
+              tmpCheck();
+            break;
+        }
+    }
+    wtypeText = ""; // Delete processed message
+  } else { // Build receiving message
     wtypeText += event.key;
   }
 //  console.log(`Key pressed: ${event.key}`);
