@@ -657,9 +657,9 @@ function activeHeaters(room) {
 }
 */
 
-async function quickPause() {
-  await new Promise(resolve => setTimeout(resolve, 1000));  // Sleep for 1 second
-}
+//async function sleep(sec) {
+//  await new Promise(resolve => setTimeout(resolve, sec * 1000));  // Sleep
+//}
 
 function tasmotaHeater (dev, cmd, room, heater) {
   if (! Object.keys(room.heater[heater]).includes("manual")) {
@@ -688,7 +688,6 @@ function tasmotaHeater (dev, cmd, room, heater) {
       } else {
         xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + dev + "/cm?cmnd=" + cmd));
       }
-      quickPause();
     } else {
       console.log('Remote tasmotaHeater()');
     }
