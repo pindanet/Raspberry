@@ -34,5 +34,6 @@ if($status == 1) { // On
 } else { // Off
   unlink('/dev/shm/pindatasmotastatus-'.$name);
 }
+sleep(rand(0, 20)); // Avoiding browser input overflow
 exec("XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype '{\"function\":\"tasmota\",\"name\":\"" . $name . "\"}' -k return", $output, $return);
 ?>
