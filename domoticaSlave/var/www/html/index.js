@@ -286,16 +286,16 @@ function setBrightness(brightness) {
   xhr.send("brightness=" + brightness);
 }
 
-function toggleLight() {
-  sendMessage("Keukenlamp");
-  if (document.getElementById("lightoff").style.display == "none") { // if light is on > light off
-    document.getElementById("lightoff").style.display = "";
-    document.getElementById("lighton").style.display = "none";
-  } else {
-    document.getElementById("lightoff").style.display = "none";
-    document.getElementById("lighton").style.display = "";
-  }
-}
+//function toggleLight() {
+//  sendMessage("Keukenlamp");
+//  if (document.getElementById("lightoff").style.display == "none") { // if light is on > light off
+//    document.getElementById("lightoff").style.display = "";
+//    document.getElementById("lighton").style.display = "none";
+//  } else {
+//    document.getElementById("lightoff").style.display = "none";
+//    document.getElementById("lighton").style.display = "";
+//  }
+//}
 /*
 function lightOff() {
   document.getElementById("lightoff").style.display = "";
