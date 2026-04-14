@@ -44,8 +44,11 @@ tasmotaSwitch () { # switch $1 cmd $2
     fi
   fi
   if [[ ${heatersStatus[$1]} == *":\"OFF\"}"* ]] && [[ $2 == "ON" ]]; then
+    XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype heaterOn -k return
     heatersStatus[$1]=$(wget -qO- http://${heatersHostname[$1]}/cm?cmnd=Power%20ON)
+
   elif [[ ${heatersStatus[$1]} == *":\"ON\"}"* ]] && [[ $2 == "OFF" ]]; then
+    XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype heaterOff -k return
     heatersStatus[$1]=$(wget -qO- http://${heatersHostname[$1]}/cm?cmnd=Power%20OFF)
   fi
 }
