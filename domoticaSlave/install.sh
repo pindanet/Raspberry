@@ -150,6 +150,12 @@ sudo chmod +x /var/www/html/motion.sh
 sudo systemctl daemon-reload
 # sudo systemctl enable --now PindaMotion.service
 
+# Bash Thermostat Testing
+sudo mv /var/www/html/PindaThermostat.service /etc/systemd/system/
+sudo chmod +x /var/www/html/thermostat.sh
+sudo systemctl daemon-reload
+# sudo systemctl enable --now PindaThermostat.service
+
 # PHP Websocket
 sudo mv /var/www/html/PindaWebsocket.service /etc/systemd/system/
 sed "s/User=dany/User=$USER/" /etc/systemd/system/PindaWebsocket.service
