@@ -1,38 +1,70 @@
 #!/bin/bash
 # Thermostat
 
+#ToDo
+# tasmota Channel
+
+#tempStorage /dev/shm/PindaDomo/
+#/var/wwww/html/data/temp.log naar tempStorage
+#   schrijven naar beiden
+
 # Delete from conf.php.conf
 # "sensorPowerGPIO": 17,
+# "tasmota": {},
 
 # Read configuration
 # https://www.baeldung.com/linux/jq-command-json
 # https://www.baeldung.com/linux/jq-passing-bash-variables
 jsonConf=$(cat /var/www/html/data/conf.php.json)
+read -r controller < <(echo $jsonConf | jq -r '[ .Controller] | join(" ")')
 room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | select(.Hostname==$jq_hostname_var)')
 thermostat=$(echo $room | jq -r '.thermostat')
-read -r dataGPIO powerGPIO tempNightTime < <(echo $thermostat | jq -r '[ .ds18b20.dataGPIO, .ds18b20.powerGPIO, .tempNightTime] | join(" ")')
+read -r tempCorrection dataGPIO powerGPIO tempOff tempNight tempNightTime < <(echo $thermostat | jq -r '[ .tempCorrection, .ds18b20.dataGPIO, .ds18b20.powerGPIO, .tempOff, .tempNight, .tempNightTime] | join(" ")')
+# Get thermostat heaters
+heatersStatus=()
+while read -r json_record; do
+  heatersStatus+=($json_record)
+done < <(echo $thermostat | jq -r '.heater.[].status')
+
+heatersHostname=()
+while read -r json_record; do
+  heatersHostname+=($json_record)
+done < <(echo $thermostat | jq -r '.heater.[].Hostname')
+
+writeLog () { # log message $1
+  echo $(date): $1
+}
+
+tasmotaSwitch () { # switch $1 cmd $2
+  if [[ ${heatersStatus[$1]} != *":\"OFF\"}"* ]] && [[ ${heatersStatus[$1]} != *":\"ON\"}"* ]]; then
+    heatersStatus[$1]=$(wget -qO- http://${heatersHostname[$1]}/cm?cmnd=Power%20OFF)
+    if [[ ${heatersStatus[$1]} != *":\"OFF\"}"* ]]; then  # Persistent Connection error
+      heatersStatus[$1]='{"POWER":"OFF"}'
+      writeLog "Recreate power after persistent error for ${heatersHostname[$1]}"
+    fi
+  fi
+  if [[ ${heatersStatus[$1]} == *":\"OFF\"}"* ]] && [[ $2 == "ON" ]]; then
+    heatersStatus[$1]=$(wget -qO- http://${heatersHostname[$1]}/cm?cmnd=Power%20ON)
+  elif [[ ${heatersStatus[$1]} == *":\"ON\"}"* ]] && [[ $2 == "OFF" ]]; then
+    heatersStatus[$1]=$(wget -qO- http://${heatersHostname[$1]}/cm?cmnd=Power%20OFF)
+  fi
+}
 
 # Get thermostat schedule
 times=()
 temps=()
-hm=$(date +"%H:%M")
 while read -r json_record; do
   IFS=' ' read -r -a array <<< "$json_record"
-  if [[ "$hm" > "${array[0]}" ]]; then # Tomorrow
-    times+=($(($(date -d"${array[0]}" +%s) + 86400)))
-  else # Today
-    times+=($(date -d"${array[0]}" +%s))
-  fi
-#  times+=(${array[0]})
+  times+=(${array[0]})
   temps+=(${array[1]})
 done < <(echo $thermostat | jq -r '.schedule | keys[] as $k | "\($k) \(.[$k])"')
 
-i=0
-for time in "${times[@]}"
-do
-  echo $(date -d @${time}) ${temps[$i]}
-  ((i++))
-done
+#i=0
+#for time in "${times[@]}"
+#do
+#  echo $time ${temps[$i]}
+#  ((i++))
+#done
 
 # Initialise
 if [ -f /tmp/PinDa.temp.count ]; then
@@ -41,7 +73,6 @@ fi
 
 while :
 do
-  echo Thermostat uitvoeren
 # DS18B20
 # GPIO 17 (11) (switchable 3,3 V) naar Vdd (Rood)
 # GPIO4 (7) naar Data (Geel) naar 4k7 naar 3,3 V (Orange)(GPIO27)
@@ -56,21 +87,20 @@ do
     # Power on
     pinctrl set $powerGPIO op dh # DS18B20 temperature sensor power on
     sleep 5
-    echo "Reset Ds18b20"
+    writeLog "Reset Ds18b20"
   else
     if [[ $output != *"YES"* ]]; then
-      echo Ds18b20 CRC error
+      writeLog Ds18b20 CRC error
     else
       temp="${output#*t=}"
       if [ ! -f /tmp/PinDa.temp.count ]; then
         if [[ $temp == 0 ]]; then
-          echo "Ds18b20 rejected first 0"
+          writeLog "Ds18b20 rejected first 0"
         else
-          echo "Ds18b20 rejected first measurement"
+          writeLog "Ds18b20 rejected first measurement"
           touch /tmp/PinDa.temp.count
         fi
       else
-        echo $temp
         echo $temp > /tmp/temp
 
         # minimum maximum temp
@@ -98,6 +128,43 @@ do
           fi
         else # Initialise log file
           echo "${timestamp},${temp},${temp}" >> $logfile
+        fi
+        temp=$(awk "BEGIN { printf(\"%.1f\", $temp / 1000 + $tempCorrection) }")
+
+        XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype t=$temp -k return
+
+        now=$(date +"%H:%M")
+        if (($(cat /sys/class/backlight/10-0045/brightness) > 0)); then
+          # Get Scheduled temp
+          i=0
+          for time in "${times[@]}"
+          do
+            if [[ ! $now < ${time} ]]; then # >=
+              schedTemp=${temps[$i]}
+            else
+              break
+            fi
+            ((i++))
+          done
+          if [[ $temp < $schedTemp ]]; then # To cold, heater on
+            tasmotaSwitch 0 "ON"
+          else
+            tasmotaSwitch 0 "OFF"
+          fi
+        else # No motion
+          if [[ $now < ${tempNightTime} ]]; then # Night temperature
+            if [[ $temp < $tempNight ]]; then
+              tasmotaSwitch 0 "ON"
+            else
+              tasmotaSwitch 0 "OFF"
+            fi
+          else # Day Off temperature
+            if [[ $temp < $tempOff ]]; then
+              tasmotaSwitch 0 "ON"
+            else
+              tasmotaSwitch 0 "OFF"
+            fi
+          fi
         fi
       fi
     fi
