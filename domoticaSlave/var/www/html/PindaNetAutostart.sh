@@ -5,6 +5,8 @@ echo 0 | sudo tee /sys/class/leds/PWR/brightness
 echo none | sudo tee /sys/class/leds/ACT/trigger
 # Hide cursor on startup (simulate Win+H hotkey)
 sleep 1 && wtype -M alt -M logo -P h &
+# Give www-data access to Wayland
+setfacl -R -m u:www-data:wx /run/user/1000
 # Autostart Chromium in Kiosk & Debug mode
 /bin/chromium --remote-debugging-port=9222 --kiosk --disable-extensions --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
 # Give Chromium time to start
