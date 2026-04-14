@@ -70,6 +70,8 @@ done < <(echo $thermostat | jq -r '.schedule | keys[] as $k | "\($k) \(.[$k])"')
 if [ -f /tmp/PinDa.temp.count ]; then
   rm /tmp/PinDa.temp.count
 fi
+# PullUp 1-wire Data
+pinctrl set 4 ip pu
 
 while :
 do
