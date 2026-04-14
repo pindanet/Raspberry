@@ -442,16 +442,16 @@ function connect() {
     console.log("WebSocket error: ", event);
   };
 }
-function sendMessage(message) {
-  if (typeof socket !== 'undefined') {
-    if (socket.readyState) {
-      socket.send(message);
-      console.log("Message sent: " + message);
-    }
-  } else {
-console.log("Websocket not ready yet!");
-  }
-}
+//function sendMessage(message) {
+//  if (typeof socket !== 'undefined') {
+//    if (socket.readyState) {
+//      socket.send(message);
+//      console.log("Message sent: " + message);
+//    }
+//  } else {
+//console.log("Websocket not ready yet!");
+//  }
+//}
 
 
 var wtypeText="";
