@@ -135,7 +135,7 @@ function getConf() { // Get configuration
 //        setInterval(wgetTemp, 60000, "pindakeuken", conf.Kitchen);
 //        startTemp();
         setBrightness(0);
-        connect(); // Connect to Websocket server
+//        connect(); // Connect to Websocket server
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
 //        conf = JSON.parse(this.responseText);
 //        conf.lastModified = this.getResponseHeader('Last-Modified');
@@ -369,79 +369,79 @@ function startTime() {
 
   setTimeout(startTime, 1000); // elke seconde
 }
-function connect() {
-  socket = new WebSocket("ws://localhost:8080");
-  socket.onopen = function(event) {
-    console.log("Connected to server");
-  };
-  socket.onmessage = function(event) {
-    console.log("Message received: " + event.data);
-    if (event.data[0] == "["  || event.data[0] == "{") {
-      var message = JSON.parse(event.data);
-      if(message.target == "pindakeuken") {
-        switch (message.message) {
-          case "weather":
-            weather();
-            break;
-          case "lightOn":
-            weather();
-            document.getElementById("infraredoff").style.display = "none";
-            document.getElementById("infraredon").style.display = "none";
-            document.getElementById("lightoff").style.display = "none";
-            document.getElementById("lighton").style.display = "";
-            break;
-          case "lightOff":
-            weather();
-            document.getElementById("infraredoff").style.display = "none";
-            document.getElementById("infraredon").style.display = "none";
-            document.getElementById("lighton").style.display = "none";
-            document.getElementById("lightoff").style.display = "";
-            break;
-        }
-      }
-      switch (message.function) {
-        case "temp":
-          document.getElementById("kitchenRoomTemp").innerHTML = message.value.toFixed(1);
-          break;
-        case "thermostatClockday":
-          document.getElementById("day").style.color = message.value;
-          break;
-        case "available":
-          if (message.value == conf.available[0].sleep || message.value == conf.available[0].absent) {
-            document.getElementById("clockdate").innerHTML = message.value;
-          } else {
-            var today = new Date();
-            document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
-          }
-          break;
-        case "tasmota":
-          if (message.name == "Eekhoorn") {
-            if (message.state == "0") {
-              document.getElementById("infraredon").style.display = "none";
-              document.getElementById("lighton").style.display = "none";
-              document.getElementById("lightoff").style.display = "none";
-              document.getElementById("infraredoff").style.display = "";
-            } else {
-              document.getElementById("infraredoff").style.display = "none";
-              document.getElementById("lighton").style.display = "none";
-              document.getElementById("lightoff").style.display = "none";
-              document.getElementById("infraredon").style.display = "";
-            }
-          }
-          break;
-      }
-//    } else {
-//       document.getElementById(event.data).click();
-    }
-  };
-  socket.onclose = function(event) {
-    console.log("WebSocket connection has been closed successfully.");
-    setTimeout(connect, 1000);
-  };
-  socket.onerror = function(event) {
-    console.log("WebSocket error: ", event);
-  };
-}
+//function connect() {
+//  socket = new WebSocket("ws://localhost:8080");
+//  socket.onopen = function(event) {
+//    console.log("Connected to server");
+//  };
+//  socket.onmessage = function(event) {
+//    console.log("Message received: " + event.data);
+//    if (event.data[0] == "["  || event.data[0] == "{") {
+//      var message = JSON.parse(event.data);
+//      if(message.target == "pindakeuken") {
+//        switch (message.message) {
+//          case "weather":
+//            weather();
+//            break;
+//          case "lightOn":
+//            weather();
+//            document.getElementById("infraredoff").style.display = "none";
+//            document.getElementById("infraredon").style.display = "none";
+//            document.getElementById("lightoff").style.display = "none";
+//            document.getElementById("lighton").style.display = "";
+//            break;
+//          case "lightOff":
+//            weather();
+//            document.getElementById("infraredoff").style.display = "none";
+//            document.getElementById("infraredon").style.display = "none";
+//            document.getElementById("lighton").style.display = "none";
+//            document.getElementById("lightoff").style.display = "";
+//            break;
+//        }
+//      }
+//      switch (message.function) {
+//        case "temp":
+//          document.getElementById("kitchenRoomTemp").innerHTML = message.value.toFixed(1);
+//          break;
+//        case "thermostatClockday":
+//          document.getElementById("day").style.color = message.value;
+//          break;
+//        case "available":
+//          if (message.value == conf.available[0].sleep || message.value == conf.available[0].absent) {
+//            document.getElementById("clockdate").innerHTML = message.value;
+//          } else {
+//            var today = new Date();
+//            document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
+//          }
+//          break;
+//        case "tasmota":
+//          if (message.name == "Eekhoorn") {
+//            if (message.state == "0") {
+//              document.getElementById("infraredon").style.display = "none";
+//              document.getElementById("lighton").style.display = "none";
+//              document.getElementById("lightoff").style.display = "none";
+//              document.getElementById("infraredoff").style.display = "";
+//            } else {
+//              document.getElementById("infraredoff").style.display = "none";
+//              document.getElementById("lighton").style.display = "none";
+//              document.getElementById("lightoff").style.display = "none";
+//              document.getElementById("infraredon").style.display = "";
+//            }
+//          }
+//          break;
+//      }
+////    } else {
+////       document.getElementById(event.data).click();
+//    }
+//  };
+//  socket.onclose = function(event) {
+//    console.log("WebSocket connection has been closed successfully.");
+//    setTimeout(connect, 1000);
+//  };
+//  socket.onerror = function(event) {
+//    console.log("WebSocket error: ", event);
+//  };
+//}
 //function sendMessage(message) {
 //  if (typeof socket !== 'undefined') {
 //    if (socket.readyState) {
@@ -457,13 +457,34 @@ function connect() {
 var wtypeText="";
 function wtypeServer() {
   if (event.key == "Enter") {
-    console.log("Received wtype text: " + wtypeText);
-    if (wtypeText == "weather") {
-      weather();
-    } else if (wtypeText.startsWith("t=")) {
-      if (!isNaN(wtypeText.substring(2))) {
-        document.getElementById("kitchenRoomTemp").innerHTML = wtypeText.substring(2);
-      }
+    eqPos = wtypeText.indexOf("=");
+    if (eqPos == -1) { // simple message
+      switch (wtypeText) {
+         case "weather":
+           weather();
+           break;
+         case "heaterOn":
+           document.getElementById("infraredoff").style.display = "none";
+           document.getElementById("infraredon").style.display = "";
+           break;
+         case "heaterOff":
+           document.getElementById("infraredon").style.display = "none";
+           document.getElementById("infraredoff").style.display = "";
+           break;
+         default:
+           console.log("Received wtype text: " + wtypeText);
+       }
+    } else { // message with variable
+      const varValue = wtypeText.split("=");
+      switch (varValue[0]) {
+         case "t":
+           if (!isNaN(wtypeText.substring(2))) {
+             document.getElementById("kitchenRoomTemp").innerHTML = wtypeText.substring(2);
+           }
+           break;
+         default:
+           console.log("Received wtype text: " + wtypeText);
+       }
     }
     wtypeText = "";
   } else {
