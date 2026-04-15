@@ -1518,22 +1518,45 @@ function remote(event) {
 }
 var wtypeText="";
 function wtypeServer() {
+//  if (event.key == "Enter") {
+//console.log("Received wtype text: " + wtypeText);
+//    try {
+//      var message = JSON.parse(wtypeText);
+//    } catch {  // Reject the message and reinitialize
+//      wtypeText = "";
+//      console.log("Wtype communication error");
+//    }
+//    if (wtypeText != "") { // Message received without errors
+//console.log(message);
+//      switch (message.function) {
+//        case "tasmota":
+//              tmpCheck();
+//            break;
+//        }
+//    }
   if (event.key == "Enter") {
-console.log("Received wtype text: " + wtypeText);
-    try {
-      var message = JSON.parse(wtypeText);
-    } catch {  // Reject the message and reinitialize
-      wtypeText = "";
-      console.log("Wtype communication error");
+    eqPos = wtypeText.indexOf("=");
+    if (eqPos == -1) { // simple message
+      switch (wtypeText) {
+         case "tmpCheck":
+           tmpCheck();
+           break;
+         default:
+           console.log("Received wtype text: " + wtypeText);
+       }
+    } else { // message with variable
+      const varValue = wtypeText.split("=");
+      switch (varValue[0]) {
+         case "t":
+           if (!isNaN(wtypeText.substring(2))) {
+             document.getElementById("kitchenRoomTemp").innerHTML = wtypeText.substring(2);
+           }
+           break;
+         default:
+           console.log("Received wtype text: " + wtypeText);
+       }
     }
-    if (wtypeText != "") { // Message received without errors
-console.log(message);
-      switch (message.function) {
-        case "tasmota":
-              tmpCheck();
-            break;
-        }
-    }
+
     wtypeText = ""; // Delete processed message
   } else { // Build receiving message
     wtypeText += event.key;
