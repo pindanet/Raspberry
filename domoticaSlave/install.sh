@@ -140,28 +140,28 @@ sudo systemctl enable --now checkWiFi.timer
 # systemctl list-timers
 
 # PHP Motion
-sudo mv /var/www/html/PindaPHPMotion.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable --now PindaPHPMotion.service
+#sudo mv /var/www/html/PindaPHPMotion.service /etc/systemd/system/
+#sudo systemctl daemon-reload
+#sudo systemctl enable --now PindaPHPMotion.service
 
-# Bash Motion Testing
+# Bash Motion
 sudo mv /var/www/html/PindaMotion.service /etc/systemd/system/
 sudo chmod +x /var/www/html/motion.sh
 sudo systemctl daemon-reload
-# sudo systemctl enable --now PindaMotion.service
+sudo systemctl enable --now PindaMotion.service
 
-# Bash Thermostat Testing
+# Bash Thermostat
 sudo mv /var/www/html/PindaThermostat.service /etc/systemd/system/
 sudo chmod +x /var/www/html/thermostat.sh
 sudo systemctl daemon-reload
-# sudo systemctl enable --now PindaThermostat.service
+sudo systemctl enable --now PindaThermostat.service
 
 # PHP Websocket
-sudo mv /var/www/html/PindaWebsocket.service /etc/systemd/system/
-sed "s/User=dany/User=$USER/" /etc/systemd/system/PindaWebsocket.service
-sed "s/Group=dany/Group=$(id -gn)/" /etc/systemd/system/PindaWebsocket.service
-sudo systemctl daemon-reload
-sudo systemctl enable --now PindaWebsocket.service
+#sudo mv /var/www/html/PindaWebsocket.service /etc/systemd/system/
+#sed "s/User=dany/User=$USER/" /etc/systemd/system/PindaWebsocket.service
+#sed "s/Group=dany/Group=$(id -gn)/" /etc/systemd/system/PindaWebsocket.service
+#sudo systemctl daemon-reload
+#sudo systemctl enable --now PindaWebsocket.service
 
 cat <<"EOF"
 Update the following data files from a backup:
