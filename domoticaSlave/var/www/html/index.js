@@ -3,8 +3,8 @@
 
 // Variables
 var room = "Kitchen";
-var pir1 = 14;
-var pir2 = 24
+//var pir1 = 14;
+//var pir2 = 24
 
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
@@ -134,7 +134,7 @@ function getConf() { // Get configuration
 //        motionTimer = setInterval(startMotion, 60000) // check motion sensor every 0.25s (1 min)
 //        setInterval(wgetTemp, 60000, "pindakeuken", conf.Kitchen);
 //        startTemp();
-        setBrightness(0);
+//        setBrightness(0);
 //        connect(); // Connect to Websocket server
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
 //        conf = JSON.parse(this.responseText);
@@ -260,31 +260,31 @@ function powerLog(dev, name) {
   xhr.send("cmd=wget&params="+stringToHex(wgetcmd));
 }
 
-function tasmotaSwitch (switchName, cmd) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200) {
-      const output = JSON.parse(this.responseText);
-      if (output[0] == '{"POWER":"OFF"}') {
-        conf.switch[switchName].status = "off";
-        powerLog(conf.switch[switchName], switchName);
-      } else if (output[0] == '{"POWER":"ON"}') {
-        conf.switch[switchName].status = "on";
-        powerLog(conf.switch[switchName], switchName);
-      }
-    }
-  };
-  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.switch[switchName].IP + "/cm?cmnd=" + cmd));
-}
+//function tasmotaSwitch (switchName, cmd) {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "cli.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function(e) {
+//    if (this.status == 200) {
+//      const output = JSON.parse(this.responseText);
+//      if (output[0] == '{"POWER":"OFF"}') {
+//        conf.switch[switchName].status = "off";
+//        powerLog(conf.switch[switchName], switchName);
+//      } else if (output[0] == '{"POWER":"ON"}') {
+//        conf.switch[switchName].status = "on";
+//        powerLog(conf.switch[switchName], switchName);
+//      }
+//    }
+//  };
+//  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.switch[switchName].IP + "/cm?cmnd=" + cmd));
+//}
 
-function setBrightness(brightness) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "brightness.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("brightness=" + brightness);
-}
+//function setBrightness(brightness) {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "brightness.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.send("brightness=" + brightness);
+//}
 
 //function toggleLight() {
 //  sendMessage("Keukenlamp");
