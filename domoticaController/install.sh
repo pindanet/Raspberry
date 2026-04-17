@@ -89,7 +89,7 @@ echo 'dtoverlay=gpio-shutdown,gpio_pin=10,active_low=1,gpio_pull=up' | sudo tee 
 echo "Install webserver"
 echo "================="
 sudo apt install apache2 libapache2-mod-fcgid php-bcmath php-bz2 php-common php-curl php-xml php-gd php-gmp php-ldap php-mbstring php-mysql php-odbc php-pgsql php-snmp php-soap php-sqlite3 php-tokenizer libapache2-mod-php -y
-sudo apt install mpg123 -y
+sudo apt install mpg123 imagemagick jq -y
 
 if test -f master.zip; then rm master.zip; fi
 echo "Download and extract Github Repository"
@@ -119,32 +119,9 @@ echo "Autostart fullscreen browser" # https://core-electronics.com.au/guides/ras
 echo "============================"
 sudo apt install chromium -y
 
-cat > PindaNetAutostart.sh <<EOF
-#!/bin/bash
-# Activate DS18B20 temperature sensor power (Reset)
-/usr/bin/pinctrl set $powergpio op dh
-# PullUp 1-wire Data
-/usr/bin/pinctrl set 4 ip pu
-# Give www-data access to Wayland
-setfacl -R -m u:www-data:wx /run/user/1000
-# Autostart Chromium in Kiosk & Debug mode
-# --kiosk can be replaced by --start-fullscreen
-# --disable-gpu: remove's dmesg errors, but much slower interface
-# --start-maximized seems not neccessary
-/bin/chromium --remote-debugging-port=9222 --kiosk --disable-extensions --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar http://localhost/ &
-# Give Chromium time to start
-sleep 30
-# Check if Chromium is running
-until ps -ax | grep kiosk | grep -v grep
-do
-  # After a hostname change, chromium refuses to start, correct this
-  rm -rf $HOME/.config/chromium/Singleton*
-  # Restart chromium
-  /bin/chromium --remote-debugging-port=9222 --kiosk --disable-extensions --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar http://localhost/ &
-  sleep 30
-done
-EOF
-echo "/usr/bin/bash ~/PindaNetAutostart.sh &" >> .config/labwc/autostart
+echo "/usr/bin/bash /var/www/html/PindaNetAutostart.sh &" >> .config/labwc/autostart
+
+exit # Tot Hier
 
 echo "Configure SSH remote login"
 echo "=========================="
