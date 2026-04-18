@@ -123,12 +123,12 @@ echo "/usr/bin/bash /var/www/html/PindaNetAutostart.sh &" >> .config/labwc/autos
 
 exit # Tot Hier
 
-echo "Configure SSH remote login"
-echo "=========================="
-ssh-keygen
+# echo "Configure SSH remote login"
+# echo "=========================="
+# ssh-keygen
 # ssh-copy-id -i $HOME/.ssh/id_rsa.pub $(ls /home)@pindadomo
 # sudo cp .ssh/id_rsa /var/www/html/data/
-#sudo chown www-data:www-data /var/www/html/data/id_rsa
+# sudo chown www-data:www-data /var/www/html/data/id_rsa
 
 echo "Activate daily update"
 echo "====================="
