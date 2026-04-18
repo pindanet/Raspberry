@@ -140,39 +140,6 @@ sudo systemctl enable --now PindaNetUpdate.timer
 # Check Upgrade history
 # tail -3 /var/log/apt/history.log
 
-sudo tee /usr/sbin/PindaNetUpdate.sh > /dev/null <<EOF
-#!/bin/bash
-sudo dpkg --configure -a
-apt-get clean
-apt autoremove -y
-apt-get update
-apt-get upgrade -y
-shutdown -r now
-EOF
-sudo chmod +x /usr/sbin/PindaNetUpdate.sh
-
-sudo tee /etc/systemd/system/PindaNetUpdate.timer > /dev/null <<EOF
-[Unit]
-Description=Update and Reset
-[Timer]
-OnCalendar=*-*-* 03:30:00
-Unit=PindaNetUpdate.service
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo tee /etc/systemd/system/PindaNetUpdate.service > /dev/null <<EOF
-[Unit]
-Description=Update and Reset
-[Service]
-Type=simple
-ExecStart=/usr/sbin/PindaNetUpdate.sh
-EOF
-
-sudo systemctl daemon-reload
-sudo systemctl enable PindaNetUpdate.timer
-sudo systemctl start PindaNetUpdate.timer
-
 # Check Avahi hostname
 sudo apt install avahi-utils -y
 sudo tee /usr/sbin/checkAvahi.sh > /dev/null <<EOF
