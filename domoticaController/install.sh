@@ -143,6 +143,28 @@ sudo systemctl disable --now avahi-daemon.service
 
 exit # Tot Hier
 
+# Check WiFi connection
+#sudo apt install avahi-utils -y
+sudo chmod +x /var/www/html/checkWiFi.sh
+prompt="Enter your router name (ex: mymodem.home):"
+while [ "$prompt" != "OK" ]; do
+  read -p "$prompt " router;
+  if ! ping -c 1 $router; then
+    prompt="Network name does not exist or is unreachable. Try again:"
+  else
+    prompt="OK"
+  fi
+done
+sudo sed -i "s/mymodem.home/$router/" /var/www/html/checkWiFi.sh
+sudo mv /var/www/html/checkWiFi.timer /etc/systemd/system/
+sudo mv /var/www/html/checkWiFi.service /etc/systemd/system/
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now checkWiFi.timer
+# systemctl list-timers
+
+
+
 # Check Avahi hostname
 sudo apt install avahi-utils -y
 sudo tee /usr/sbin/checkAvahi.sh > /dev/null <<EOF
