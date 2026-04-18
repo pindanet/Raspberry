@@ -303,6 +303,7 @@ sudo systemctl start PindaWebsocket.service
 exit # Tot Hier
 
 # Install Roc Network Audio
+#sudo apt install pipewire-audio
 #mkdir -p ~/.config/pipewire/pipewire.conf.d
 #nano .config/pipewire/pipewire.conf.d/roc-source.conf
 #context.modules = [
