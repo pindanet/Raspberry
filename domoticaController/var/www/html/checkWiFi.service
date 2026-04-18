@@ -1,0 +1,5 @@
+[Unit]
+Description=Check WiFi connection
+[Service]
+Type=simple
+ExecStart=/var/www/html/checkWiFi.sh
