@@ -161,8 +161,6 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now checkWiFi.timer
 # systemctl list-timers
 
-exit # Tot Hier
-
 sudo chmod +x /var/www/html/ds18b20.sh
 sudo tee /etc/systemd/system/ds18b20.timer > /dev/null <<EOF
 [Unit]
@@ -302,7 +300,29 @@ sudo systemctl daemon-reload
 sudo systemctl enable PindaWebsocket.service
 sudo systemctl start PindaWebsocket.service
 
+exit # Tot Hier
+
 # Install Roc Network Audio
+#mkdir -p ~/.config/pipewire/pipewire.conf.d
+#nano .config/pipewire/pipewire.conf.d/roc-source.conf
+#context.modules = [
+#  {   name = libpipewire-module-roc-source
+#      args = {
+#          local.ip = 0.0.0.0
+#          resampler.profile = medium
+#          fec.code = rs8m
+#          sess.latency.msec = 100
+#          local.source.port = 10001
+#          local.repair.port = 10002
+#          source.name = "Roc Source"
+#          source.props = {
+#             node.name = "roc-source"
+#          }
+#      }
+#  }
+#]
+#systemctl restart --user pipewire.service
+
 sudo apt install g++ pkg-config scons ragel gengetopt libuv1-dev libunwind-dev libspeexdsp-dev libsox-dev libsndfile1-dev libssl-dev libpulse-dev git -y
 sudo apt install libtool intltool autoconf automake make cmake meson -y
 git clone https://github.com/roc-streaming/roc-toolkit.git
