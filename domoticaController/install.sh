@@ -121,8 +121,6 @@ sudo apt install chromium -y
 
 echo "/usr/bin/bash /var/www/html/PindaNetAutostart.sh &" >> .config/labwc/autostart
 
-exit # Tot Hier
-
 # echo "Configure SSH remote login"
 # echo "=========================="
 # ssh-keygen
@@ -139,6 +137,11 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now PindaNetUpdate.timer
 # Check Upgrade history
 # tail -3 /var/log/apt/history.log
+
+# Disable Avahi, use router DNS
+sudo systemctl disable --now avahi-daemon.service
+
+exit # Tot Hier
 
 # Check Avahi hostname
 sudo apt install avahi-utils -y
