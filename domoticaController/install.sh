@@ -53,9 +53,9 @@ echo 'if [[ "$(who am i)" == *\(*\) ]]; then' >> .bashrc
 echo '  tail /var/www/html/data/debug.txt' >> .bashrc
 echo 'else' >> .bashrc
 echo '  # Disable Power led' >> .bashrc
-echo '  echo 0 | sudo tee /sys/class/leds/PWR/brightness' >> .bashrc
+echo '  #echo 0 | sudo tee /sys/class/leds/PWR/brightness' >> .bashrc
 echo '  # Disable Activity led' >> .bashrc
-echo '  echo none | sudo tee /sys/class/leds/ACT/trigger' >> .bashrc
+echo '  #echo none | sudo tee /sys/class/leds/ACT/trigger' >> .bashrc
 echo '  while [ "$(hostname -I)" = "" ]; do' >> .bashrc
 echo '    echo "Waiting for the network..."' >> .bashrc
 echo '    sleep 1' >> .bashrc
