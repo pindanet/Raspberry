@@ -1,0 +1,8 @@
+[Unit]
+Description=Check WiFi connection
+[Timer]
+OnBootSec=1h
+OnUnitActiveSec=1h
+Unit=checkWiFi.service
+[Install]
+WantedBy=basic.target
