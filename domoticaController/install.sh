@@ -303,6 +303,7 @@ sudo systemctl start PindaWebsocket.service
 exit # Tot Hier
 
 # Install Roc Network Audio
+# https://gavv.net/articles/roc-0.4/#configure-pulseaudio-sink-input-roc-receiver
 #sudo apt install pipewire-audio
 #mkdir -p ~/.config/pipewire/pipewire.conf.d
 #nano .config/pipewire/pipewire.conf.d/roc-source.conf
@@ -330,6 +331,9 @@ exit # Tot Hier
 #pactl move-sink-input 37 alsa_output.platform-soc_sound.stereo-fallback
 #paplay /usr/share/sounds/alsa/Front_Center.wav
 #curl -H "Icy-MetaData:1" --silent -L "http://icecast.vrtcdn.be/stubru-high.mp3" 2>&1 | mpg123 --icy-interval 8192 -f -12000 -
+#pactl get-sink-volume 64
+#pactl set-sink-volume 64 75%
+
 
 sudo apt install g++ pkg-config scons ragel gengetopt libuv1-dev libunwind-dev libspeexdsp-dev libsox-dev libsndfile1-dev libssl-dev libpulse-dev git -y
 sudo apt install libtool intltool autoconf automake make cmake meson -y
