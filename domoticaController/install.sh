@@ -310,6 +310,18 @@ sudo mv /var/www/html/roc-source.conf ~/.config/pipewire/pipewire.conf.d/
 sudo chown -R $(id -un):$(id -gn) .config/pipewire/pipewire.conf.d/roc-source.conf
 systemctl restart --user pipewire.service
 sudo apt install pulseaudio-utils -y
+
+#sudo apt install g++ pkg-config scons ragel gengetopt libuv1-dev libunwind-dev libspeexdsp-dev libsox-dev libsndfile1-dev libssl-dev libpulse-dev git -y
+#sudo apt install libtool intltool autoconf automake make cmake meson -y
+#git clone https://github.com/roc-streaming/roc-toolkit.git
+#cd roc-toolkit
+#scons -Q --build-3rdparty=openfec
+#sudo scons -Q --build-3rdparty=openfec install
+#cd
+
+# Restart Raspberry Pi
+sudo systemctl reboot
+
 #pactl info
 #pactl list sink-inputs
 #pactl list sinks short
@@ -318,15 +330,3 @@ sudo apt install pulseaudio-utils -y
 #curl -H "Icy-MetaData:1" --silent -L "http://icecast.vrtcdn.be/stubru-high.mp3" 2>&1 | mpg123 --icy-interval 8192 -f -12000 -
 #pactl get-sink-volume 64
 #pactl set-sink-volume 64 75%
-
-
-sudo apt install g++ pkg-config scons ragel gengetopt libuv1-dev libunwind-dev libspeexdsp-dev libsox-dev libsndfile1-dev libssl-dev libpulse-dev git -y
-sudo apt install libtool intltool autoconf automake make cmake meson -y
-git clone https://github.com/roc-streaming/roc-toolkit.git
-cd roc-toolkit
-scons -Q --build-3rdparty=openfec
-sudo scons -Q --build-3rdparty=openfec install
-cd
-
-# Restart Raspberry Pi
-sudo systemctl reboot
