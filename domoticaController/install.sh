@@ -325,8 +325,7 @@ sudo systemctl reboot
 #pactl info
 #pactl list sink-inputs
 #pactl list sinks short
-#pactl move-sink-input 37 alsa_output.platform-soc_sound.stereo-fallback
 #paplay /usr/share/sounds/alsa/Front_Center.wav
 #curl -H "Icy-MetaData:1" --silent -L "http://icecast.vrtcdn.be/stubru-high.mp3" 2>&1 | mpg123 --icy-interval 8192 -f -12000 -
-#pactl get-sink-volume 64
-#pactl set-sink-volume 64 75%
+#pactl get-sink-volume alsa_output.platform-soc_sound.stereo-fallback
+#pactl set-sink-volume alsa_output.platform-soc_sound.stereo-fallback 75%
