@@ -304,27 +304,12 @@ exit # Tot Hier
 
 # Install Roc Network Audio
 # https://gavv.net/articles/roc-0.4/#configure-pulseaudio-sink-input-roc-receiver
-#sudo apt install pipewire-audio
-#mkdir -p ~/.config/pipewire/pipewire.conf.d
-#nano .config/pipewire/pipewire.conf.d/roc-source.conf
-#context.modules = [
-#  {   name = libpipewire-module-roc-source
-#      args = {
-#          local.ip = 0.0.0.0
-#          resampler.profile = medium
-#          fec.code = rs8m
-#          sess.latency.msec = 50
-#          local.source.port = 10001
-#          local.repair.port = 10002
-#          source.name = "Roc Source"
-#          source.props = {
-#             node.name = "roc-source"
-#          }
-#      }
-#  }
-#]
-#systemctl restart --user pipewire.service
-#sudo apt install pulseaudio-utils
+sudo apt install pipewire-audio -y
+mkdir -p ~/.config/pipewire/pipewire.conf.d
+sudo mv /var/www/html/roc-source.conf ~/.config/pipewire/pipewire.conf.d/
+sudo chown -R $(id -un):$(id -gn) .config/pipewire/pipewire.conf.d/roc-source.conf
+systemctl restart --user pipewire.service
+sudo apt install pulseaudio-utils -y
 #pactl info
 #pactl list sink-inputs
 #pactl list sinks short
@@ -344,4 +329,4 @@ sudo scons -Q --build-3rdparty=openfec install
 cd
 
 # Restart Raspberry Pi
-sudo shutdown -r now
+sudo systemctl reboot
