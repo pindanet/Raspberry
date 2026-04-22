@@ -201,33 +201,38 @@ function powerLog(dev, name) {
 }
 */
 function radio(event) {
-  radioVolume(event, 'getvol');
+  radioPlay(event, 'getvol'); 
+//  radioVolume(event, 'getvol');
   radioStatus();
 }
-function radioStop() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("cmd=touch&params="+stringToHex("/var/www/html/data/radio.stop"));
-  toTop();
-  radioVolume(event, conf.tvvolume);
-}
+//function radioStop() {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "cli.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.send("cmd=touch&params="+stringToHex("/var/www/html/data/radio.stop"));
+//  toTop();
+//  radioVolume(event, conf.tvvolume);
+//}
 function radioVolume(event, command) {
   if (typeof event !== 'undefined') {
     event.stopPropagation();
   }
+  radioElem = document.getElementById("radioPlayer");
   switch(command) {
     case "getvol":
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', "cli.php", true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.onload = function(e) {
-        if (this.status == 200) {
-          const output = JSON.parse(this.responseText);
-          document.getElementById("volumeinfo").innerHTML = parseInt(output[0]);
-        }
-      };
-      xhr.send("cmd=amixer&params="+stringToHex("get 'Digital' | awk -F'[][]' '/Left:/ { print $2 }'"));
+console.log(document.getElementById("radioPlayer").volume * 100);
+      document.getElementById("volumeinfo").innerHTML = radioElem.volume * 100;
+
+//      var xhr = new XMLHttpRequest();
+//      xhr.open('POST', "cli.php", true);
+//      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//      xhr.onload = function(e) {
+//        if (this.status == 200) {
+//          const output = JSON.parse(this.responseText);
+//          document.getElementById("volumeinfo").innerHTML = parseInt(output[0]);
+//        }
+//      };
+//      xhr.send("cmd=amixer&params="+stringToHex("get 'Digital' | awk -F'[][]' '/Left:/ { print $2 }'"));
       break;
     case "volup":
       if ( parseInt(document.getElementById("volumeinfo").innerHTML) == 100 ) { // Maximun Volume
@@ -245,18 +250,24 @@ function radioVolume(event, command) {
       xhr.send("cmd=amixer&params="+stringToHex("set 'Digital' 5%+ | awk -F'[][]' '/Left:/ { print $2 }'"));
       break;
     case "voldown":
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', "cli.php", true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.onload = function(e) { 
-        if (this.status == 200) {
-          const output = JSON.parse(this.responseText);
-          document.getElementById("volumeinfo").innerHTML = parseInt(output[0]);
-        }
-      };
-      xhr.send("cmd=amixer&params="+stringToHex("set 'Digital' 5%- | awk -F'[][]' '/Left:/ { print $2 }'"));
+      if ( parseInt(document.getElementById("volumeinfo").innerHTML) == 0 ) { // Minimum Volume
+        return;
+      }
+      radioElem.volume = document.getElementById("volumeinfo").innerHTML / 100 - 0.05;
+      document.getElementById("volumeinfo").innerHTML = radioElem.volume * 100;
+//      var xhr = new XMLHttpRequest();
+//      xhr.open('POST', "cli.php", true);
+//      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//      xhr.onload = function(e) {
+//        if (this.status == 200) {
+//          const output = JSON.parse(this.responseText);
+//          document.getElementById("volumeinfo").innerHTML = parseInt(output[0]);
+//        }
+//      };
+//      xhr.send("cmd=amixer&params="+stringToHex("set 'Digital' 5%- | awk -F'[][]' '/Left:/ { print $2 }'"));
       break;
     default:
+console.log(command);
       var xhr = new XMLHttpRequest();
       xhr.open('POST', "cli.php", true);
       xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -291,18 +302,57 @@ function playRadio(event, cmd, channel) {
   xhr.send("cmd=echo&params="+stringToHex("'" + cmd + ", 12000, " + conf.radio.channel[channel].interval + ", " + conf.radio.channel[channel].URL + "' > /var/www/html/data/radio.cmd"));
   setTimeout(function () { radioStatus(); }, 10000);
 }
-function radioPlay(event, cmd, channel) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200) {
-      setTimeout(playRadio, 1000, event, cmd, channel);
-    }
-  };
-  xhr.send("cmd=touch&params="+stringToHex("/var/www/html/data/radio.stop"));
-  document.getElementById("radioinfo").innerHTML = "Even geduld, de zenderinformatie wordt opgehaald...";
+function radioPlay(event, cmd, channel = "none") {
+  radioElem = document.getElementById("radioPlayer");
+  volumeElem = document.getElementById("volumeinfo");
+  switch(cmd) {
+    case "play":
+      radioElem.src = conf.radio.channel[channel].URL;
+      radioElem.play();
+      break;
+    case "stop":
+      radioElem.pause();
+      toTop();
+      break;
+    case "getvol":
+      volumeElem.innerHTML = radioElem.volume * 100;
+      break;
+    case "volume":
+      radioElem.volume = channel / 100;
+      volumeElem.innerHTML = channel;
+      break;
+    case "voldown":
+      volume = parseInt(volumeElem.innerHTML);
+      if ( volume == 0 ) { // Minimum Volume
+        return;
+      }
+      volume -= 5;
+      radioElem.volume = volume / 100;
+      volumeElem.innerHTML = volume;
+      break;
+    case "volup":
+      volume = parseInt(volumeElem.innerHTML);
+      if ( volume == 100 ) { // Maximum Volume
+        return;
+      }
+      volume += 5;
+      radioElem.volume = volume / 100;
+      volumeElem.innerHTML = volume;
+      break;
+  }
 }
+//function radioPlay(event, cmd, channel) {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "cli.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function(e) {
+//    if (this.status == 200) {
+//      setTimeout(playRadio, 1000, event, cmd, channel);
+//    }
+//  };
+//  xhr.send("cmd=touch&params="+stringToHex("/var/www/html/data/radio.stop"));
+//  document.getElementById("radioinfo").innerHTML = "Even geduld, de zenderinformatie wordt opgehaald...";
+//}
 var startTimer;
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
@@ -344,7 +394,8 @@ function gotoSleep() {
       thermostatUI(event, 'Auto', 'livingtemp');
       thermostatUI(event, 'Auto', 'diningtemp');
       thermostatUI(event, 'Auto', 'kitchentemp');
-      radioStop(event);
+      radioPlay(event, 'stop');
+//      radioStop(event);
       // network leds out
     }
   };
@@ -1419,7 +1470,8 @@ function remote(event) {
       }
       break;
     case "menuradio":
-      radioVolume(event,conf.radio.volume);
+      radioPlay(event, 'volume', conf.radio.volume);
+//      radioVolume(event,conf.radio.volume);
       location.href = "#radio";
       break;
     case "menuweather":
@@ -1442,20 +1494,20 @@ function remote(event) {
         radioStop(event);
       }
       break;
-    case "radioVolumeDown":
-      if (window.location.hostname !== 'localhost') {
-        setTimeout(function () { radioVolume(event, "getvol"); }, 1000);
-      } else {
-        radioVolume(event, "voldown");
-      }
-      break;
-    case "radioVolumeUp":
-      if (window.location.hostname !== 'localhost') {
-        setTimeout(function () { radioVolume(event, "getvol"); }, 1000);
-      } else {
-        radioVolume(event, "volup");
-      }
-      break;
+//    case "radioVolumeDown":
+//      if (window.location.hostname !== 'localhost') {
+//        setTimeout(function () { radioVolume(event, "getvol"); }, 1000);
+//      } else {
+//        radioVolume(event, "voldown");
+//      }
+//      break;
+//    case "radioVolumeUp":
+//      if (window.location.hostname !== 'localhost') {
+//        setTimeout(function () { radioVolume(event, "getvol"); }, 1000);
+//      } else {
+//        radioVolume(event, "volup");
+//      }
+//      break;
     case "Haardlamp":
     case "TVlamp":
     case "Keukenlamp":
