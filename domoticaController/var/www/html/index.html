@@ -26,6 +26,7 @@
 </div>
 <div id="radio">
   <h1><img src="emoji/radio.svg">His Master's Voice</h1>
+  <audio id="radioPlayer"></audio> 
   <img onclick="radioPlay(event, 'play', 'radio1');" src="radiologos/radio1.svg">
   <img onclick="radioPlay(event, 'play', 'radio2');" src="radiologos/radio2.svg">
   <img onclick="radioPlay(event, 'play', 'klara');" src="radiologos/klara.svg">
@@ -42,10 +43,11 @@
   <img onclick="radioPlay(event, 'play', 'willy');" src="radiologos/willy.svg">
   <br>
   <div>
-  <img id="radioStop" class="imgbutton" onclick="remote(event);" src="emoji/stop.svg">
-  <img id="radioVolumeDown" class="imgbutton" onclick="remote(event);" src="emoji/voldown.svg">
+  <img id="radioStop" class="imgbutton" onclick="radioPlay(event, 'stop')" src="emoji/stop.svg">
+  <!--img id="radioStop" class="imgbutton" onclick="remote(event);" src="emoji/stop.svg"-->
+  <img id="radioVolumeDown" class="imgbutton" onclick="radioPlay(event, 'voldown')" src="emoji/voldown.svg">
   <span class="terminalbox" id="volumeinfo"></span>
-  <img id="radioVolumeUp" class="imgbutton" onclick="remote(event);" src="emoji/volup.svg">
+  <img id="radioVolumeUp" class="imgbutton" onclick="radioPlay(event, 'volup')" src="emoji/volup.svg">
   </div>
   <br>
   <p class="terminalbox" style="text-align: center; display: inline-block; max-width: 736px;" id="radioinfo"></p>
