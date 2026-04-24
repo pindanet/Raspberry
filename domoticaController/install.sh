@@ -300,8 +300,6 @@ sudo systemctl daemon-reload
 sudo systemctl enable PindaWebsocket.service
 sudo systemctl start PindaWebsocket.service
 
-exit # Tot Hier
-
 # Install Roc Network Audio
 # https://gavv.net/articles/roc-0.4/#configure-pulseaudio-sink-input-roc-receiver
 sudo apt install pipewire-audio pulseaudio-utils -y
