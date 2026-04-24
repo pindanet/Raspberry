@@ -318,6 +318,13 @@ systemctl restart --user pipewire.service
 #sudo scons -Q --build-3rdparty=openfec install
 #cd
 
+cat <<"EOF"
+Update the following data files from a backup:
+sudo mv conf.json conf.php.json luxmax tasmota.log temp.log /var/www/html/data/
+Restore the data files owner and group
+sudo chown -R www-data:www-data /var/www/html/data/*
+EOF
+
 # Restart Raspberry Pi
 sudo systemctl reboot
 
