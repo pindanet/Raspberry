@@ -62,7 +62,17 @@ echo '    sleep 1' >> .bashrc
 echo '  done' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
-
+# Auto-hide mouse cursor
+cat > .config/labwc/rc.xml << 'EOF'
+<?xml version="1.0"?>
+<labwc_config>
+  <keyboard>
+    <keybind key="A-W-h">
+      <action name="HideCursor"/>
+    </keybind>
+  </keyboard>
+</labwc_config>
+EOF
 grep ^dtoverlay=w1-gpio /boot/firmware/config.txt
 if [ $? == 1 ]; then
   echo "Activate 1-Wire and DS18B20 Temperature Sensor"
