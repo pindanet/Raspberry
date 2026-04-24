@@ -304,12 +304,11 @@ exit # Tot Hier
 
 # Install Roc Network Audio
 # https://gavv.net/articles/roc-0.4/#configure-pulseaudio-sink-input-roc-receiver
-sudo apt install pipewire-audio -y
+sudo apt install pipewire-audio pulseaudio-utils -y
 mkdir -p ~/.config/pipewire/pipewire.conf.d
 sudo mv /var/www/html/roc-source.conf ~/.config/pipewire/pipewire.conf.d/
 sudo chown -R $(id -un):$(id -gn) .config/pipewire/pipewire.conf.d/roc-source.conf
 systemctl restart --user pipewire.service
-sudo apt install pulseaudio-utils -y
 
 #sudo apt install g++ pkg-config scons ragel gengetopt libuv1-dev libunwind-dev libspeexdsp-dev libsox-dev libsndfile1-dev libssl-dev libpulse-dev git -y
 #sudo apt install libtool intltool autoconf automake make cmake meson -y
