@@ -133,6 +133,8 @@ echo none | sudo tee /sys/class/leds/ACT/trigger
 /usr/bin/pinctrl set 4 ip pu
 # PullUp Input Radio Button
 /usr/bin/pinctrl set $radiogpio ip pu
+# Hide cursor on startup (simulate Win+H hotkey)
+sleep 1 && wtype -M alt -M logo -P h &
 # Autostart Chromium in Kiosk & Debug mode
 /bin/chromium --remote-debugging-port=9222 --kiosk --disable-extensions --ozone-platform=wayland --start-maximized --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar  http://localhost/ &
 # Give Chromium time to start
