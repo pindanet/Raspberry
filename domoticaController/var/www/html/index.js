@@ -488,10 +488,10 @@ function toggleAvailable(event) {
   }
   event.stopPropagation();
   event.preventDefault();
-  const message = {};
-  message.function = "available";
-  message.value = elem.innerHTML;
-  sendToRoom("pindakeuken", JSON.stringify(message));
+//  const message = {};
+//  message.function = "available";
+//  message.value = elem.innerHTML;
+//  sendToRoom("pindakeuken", JSON.stringify(message));
 //  sendMessage(JSON.stringify(message));
 }
 function startTime() {
@@ -554,20 +554,20 @@ function startTime() {
 //  tmpCheck();
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
-function connectWebsocket() {
-  var http = new XMLHttpRequest()
-  http.open('HEAD', "data/websocket.log", true)
-  http.onload = function(e) {
-    if (this.status == 200) {
-// console.log("websocket.log exist!");
-      connect(); // Activate Webconnect
-    } else {
-// console.log("websocket.log does not exist!");
-      setTimeout(connectWebsocket, 1000);
-    }
-  }
-  http.send()
-}
+//function connectWebsocket() {
+//  var http = new XMLHttpRequest()
+//  http.open('HEAD', "data/websocket.log", true)
+//  http.onload = function(e) {
+//    if (this.status == 200) {
+//// console.log("websocket.log exist!");
+//      connect(); // Activate Webconnect
+//    } else {
+//// console.log("websocket.log does not exist!");
+//      setTimeout(connectWebsocket, 1000);
+//    }
+//  }
+//  http.send()
+//}
 /*
 function startWebsocket() {
   if (window.location.hostname === 'localhost') {
@@ -629,7 +629,7 @@ console.log("getVariable: getConf");
   xhttp.open("POST", "data/variable.json");
   xhttp.send();
 console.log("getVariable");
-  connectWebsocket();
+//  connectWebsocket();
 }
 function variableToConf(obj, dest) {
   for (let key in obj) {
@@ -958,10 +958,10 @@ function toggleThermostat(event) {
   }
   saveVariable();
 
-  const message = {};
-  message.function = "thermostatClockday";
-  message.value = document.getElementById("clockday").style.color;
-  sendToRoom("pindakeuken", JSON.stringify(message));
+//  const message = {};
+//  message.function = "thermostatClockday";
+//  message.value = document.getElementById("clockday").style.color;
+//  sendToRoom("pindakeuken", JSON.stringify(message));
 //  sendMessage(JSON.stringify(message));
 
   event.stopPropagation();
@@ -1004,20 +1004,20 @@ function thermostat() {
     if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort) && (document.getElementById("clockday").style.color !== "lime")) {
       document.getElementById("clockday").style.color="lime";
 
-      const message = {};
-      message.function = "thermostatClockday";
-      message.value = document.getElementById("clockday").style.color;
-      sendToRoom("pindakeuken", JSON.stringify(message));
+//      const message = {};
+//      message.function = "thermostatClockday";
+//      message.value = document.getElementById("clockday").style.color;
+//      sendToRoom("pindakeuken", JSON.stringify(message));
 //      sendMessage(JSON.stringify(message));
 //    } else if (document.getElementById("clockday").style.color == "lime") {
     } else if (((conf.Living.temp < conf.tempComfort) || (conf.Dining.temp < conf.tempComfort) || (conf.Kitchen.temp < conf.tempComfort)) && (document.getElementById("clockday").style.color == "lime")) {
 
       document.getElementById("clockday").style.color="";
 
-      const message = {};
-      message.function = "thermostatClockday";
-      message.value = document.getElementById("clockday").style.color;
-      sendToRoom("pindakeuken", JSON.stringify(message));
+//      const message = {};
+//      message.function = "thermostatClockday";
+//      message.value = document.getElementById("clockday").style.color;
+//      sendToRoom("pindakeuken", JSON.stringify(message));
 //      sendMessage(JSON.stringify(message));
     }
   }
@@ -1031,10 +1031,10 @@ function thermostat() {
         activateSleep("Dining");
         activateSleep("Kitchen");
 
-        const message = {};
-        message.function = "available";
-        message.value = elem.innerHTML;
-        sendToRoom("pindakeuken", JSON.stringify(message));
+//        const message = {};
+//        message.function = "available";
+//        message.value = elem.innerHTML;
+//        sendToRoom("pindakeuken", JSON.stringify(message));
 //        sendMessage(JSON.stringify(message));
       }
     }
@@ -1424,12 +1424,12 @@ console.log("heaterCountLiving underflow");
   };
 }
 
-function sendToRoom(room, message) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + room + "/wssend.php?message=" + encodeURI(message)));
-}
+//function sendToRoom(room, message) {
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "cli.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + room + "/wssend.php?message=" + encodeURI(message)));
+//}
 
 /*
 function sendMessage(message) {
@@ -1563,10 +1563,10 @@ function remote(event) {
     default:
       console.log(event.target.id);
   }
-  if (window.location.hostname !== 'localhost') {
-    sendToRoom("localhost", event.target.id);
-//    sendMessage(event.target.id);
-  }
+//  if (window.location.hostname !== 'localhost') {
+//    sendToRoom("localhost", event.target.id);
+////    sendMessage(event.target.id);
+//  }
 }
 var wtypeText="";
 function wtypeServer() {
