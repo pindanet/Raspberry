@@ -3,6 +3,8 @@
 /usr/bin/pinctrl set 17 op dh
 # PullUp 1-wire Data
 /usr/bin/pinctrl set 4 ip pu
+# Hide cursor on startup (simulate Win+H hotkey)
+sleep 1 && wtype -M alt -M logo -P h &
 # Give www-data access to Wayland
 setfacl -R -m u:www-data:wx /run/user/1000
 # Autostart Chromium in Kiosk & Debug mode
