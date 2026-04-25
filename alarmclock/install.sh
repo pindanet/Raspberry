@@ -60,6 +60,17 @@ echo '  echo "SSH"' >> .bashrc
 echo 'else' >> .bashrc
 echo '  labwc' >> .bashrc
 echo 'fi' >> .bashrc
+# Auto-hide mouse cursor
+cat > .config/labwc/rc.xml << 'EOF'
+<?xml version="1.0"?>
+<labwc_config>
+  <keyboard>
+    <keybind key="A-W-h">
+      <action name="HideCursor"/>
+    </keybind>
+  </keyboard>
+</labwc_config>
+EOF
 # Rotate the Touch Display 180°
 # sudo apt install wlr-randr -y
 # echo "wlr-randr --output DSI-1 --transform 180" >> .config/labwc/autostart
