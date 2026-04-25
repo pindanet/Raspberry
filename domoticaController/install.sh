@@ -307,8 +307,8 @@ WantedBy=network-online.target
 EOF
 
 sudo systemctl daemon-reload
-sudo systemctl enable PindaWebsocket.service
-sudo systemctl start PindaWebsocket.service
+# sudo systemctl enable PindaWebsocket.service
+# sudo systemctl start PindaWebsocket.service
 
 # Install Roc Network Audio
 # https://gavv.net/articles/roc-0.4/#configure-pulseaudio-sink-input-roc-receiver
