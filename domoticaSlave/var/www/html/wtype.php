@@ -9,10 +9,17 @@ if (!isset($_SERVER["HTTP_HOST"])) {
 
 $message = htmlspecialchars($_POST["message"]);
 
-//file_put_contents("data/debug.txt", $cmd . " " . $params);
+//file_put_contents("/dev/shm/debug.txt", print_r($_POST, true) . "\n", FILE_APPEND);
 
 // Filter op toegelaten messages
 
-//echo $message;
+$varValue = explode("=",$message);
+
+switch ($varValue[0]) {
+  case 'available':
+    file_put_contents("/dev/shm/pindaavailable", $varValue[1]);
+    break;
+}
+
 exec("XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype " . $message . " -k return", $output, $return);
 ?>
