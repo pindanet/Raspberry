@@ -478,8 +478,16 @@ function wtypeServer() {
       const varValue = wtypeText.split("=");
       switch (varValue[0]) {
          case "t":
-           if (!isNaN(wtypeText.substring(2))) {
-             document.getElementById("kitchenRoomTemp").innerHTML = wtypeText.substring(2);
+           if (!isNaN(varValue[1])) {
+             document.getElementById("kitchenRoomTemp").innerHTML = varValue[1];
+           }
+           break;
+         case "available":
+           if (varValue[1] == conf.available[0].sleep || varValue[1] == conf.available[0].absent) {
+             document.getElementById("clockdate").innerHTML = varValue[1];
+           } else {
+             var today = new Date();
+             document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
            }
            break;
          default:
