@@ -473,7 +473,7 @@ function toggleAvailable(event) {
         elem.style.fontSize = "";
         deactivateAbsent("Living");
         deactivateAbsent("Dining");
-        deactivateAbsent("Kitchen");
+//        deactivateAbsent("Kitchen");
 //        thermostatUI(event, 'Auto', 'livingtemp');
 //        thermostatUI(event, 'Auto', 'diningtemp');
 //        thermostatUI(event, 'Auto', 'kitchentemp');
@@ -491,7 +491,7 @@ function toggleAvailable(event) {
 //  const message = {};
 //  message.function = "available";
 //  message.value = elem.innerHTML;
-//  sendToRoom("pindakeuken", JSON.stringify(message));
+  sendToRoom("pindakeuken", "available=" + elem.innerHTML);
 //  sendMessage(JSON.stringify(message));
 }
 function startTime() {
@@ -1422,6 +1422,20 @@ console.log("heaterCountLiving underflow");
   socket.onerror = function(event) {
     console.log("WebSocket error: ", event);
   };
+}
+
+function sendToRoom(room, message) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+console.log(this.responseText);
+    }
+  };
+//wget -qO- --post-data 'message=available%3Dtest' http://localhost/wtype.php
+console.log("wget -qO- --post-data 'message=" + encodeURI(message) + "' http://" + room + "/wtype.php");
+  xhr.send("cmd=wget&params="+stringToHex("-qO- --post-data 'message=" + encodeURI(message) + "' http://" + room + "/wtype.php"));
 }
 
 //function sendToRoom(room, message) {
