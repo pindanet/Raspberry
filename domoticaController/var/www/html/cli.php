@@ -9,10 +9,12 @@ if (!isset($_SERVER["HTTP_HOST"])) {
 $params = hex2bin(htmlspecialchars($_POST["params"]));
 $cmd = htmlspecialchars($_POST["cmd"]);
 
-//file_put_contents("data/debug.txt", $cmd . " " . $params);
+//file_put_contents("/dev/shm/debug.txt", $cmd . " " . $params . "\n", FILE_APPEND);
 
 // Filter op toegelaten opdrachten
 
 //echo $cmd." ".$params;
 exec($cmd." ".$params, $output, $return);
 echo json_encode($output);
+
+//file_put_contents("/dev/shm/debug.txt", print_r($output, true) . "\n", FILE_APPEND);
