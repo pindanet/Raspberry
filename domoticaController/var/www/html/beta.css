@@ -1,0 +1,44 @@
+body {
+  cursor: none;
+  margin: 0;
+  padding: 0;
+  background-color: black;
+  color: white;
+  font-family: sans-serif;
+}
+#clockdaytemp {
+  padding-top: 1vw;
+  font-size: 10vw;
+  text-align: center;
+}
+#clock {
+  font-size: 35vw;   
+  text-align: center;
+  line-height: 100%;
+}
+#clockdate {
+  font-size: 10vw;   
+  text-align: center;
+  padding-bottom: 1vw;
+}
+#miniclock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  font-size: 7vw;
+}
+#minitemp {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-size: 7vw;
+}
+.menubutton {
+  height: 23vw; /* 100px; */
+}
+.panel {
+  text-align: center;
+  vertical-align: middle;
+  height: 100vh;;
+  margin: 0;
+}
