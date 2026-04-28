@@ -13,7 +13,11 @@
   <script src="jsoneditor/jsoneditor.js"></script>
   <script src="jsoneditor/FileSaver.js"></script>
   <script src="jsoneditor/firereader.js"></script>
-  <script>const confFileName = "data/conf.php.json"</script>
+  <script>
+    const confDir = "data/";
+    const confName = "conf.php.json";
+    const phpName = "sendConf.php.php";
+  </script>
 </head>
 <body>
   <div id="jsoneditor" style="width: 450px; height: 800px"></div>
@@ -56,13 +60,13 @@
         const updatedJson = editor.get()
       }
     }
-    xhttp.open("POST", "data/conf.php.json");
+    xhttp.open("POST", confDir + confName);
     xhttp.send();
 
     // Download JSON configuration
     document.getElementById('saveDocument').onclick = function () {
       // Save Dialog
-      let fname = window.prompt("Save as...", "conf.php.json")
+      let fname = window.prompt("Save as...", confName)
 
       // Check json extension in file name
       if (fname.indexOf(".") === -1) {
@@ -93,12 +97,12 @@
     document.getElementById('sendDocument').onclick = function () {
       // Send JSON configuration to Pindadomo, Pindakeuken, PindaAlarmclock
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', "sendConf.php.php", true);
+      xhr.open('POST', phpName, true);
       xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
       xhr.onload = function(e) {
         if (this.status == 200) {
           console.log(this.responseText);
-/*
+
           // Send to pindakeuken.local
           var xhr = new XMLHttpRequest();
           xhr.open('POST', "cli.php", true);
@@ -106,7 +110,7 @@
           xhr.onload = function(e) {
             if (this.status == 200) {
               console.log("PindaKeuken: ", this.responseText);
-
+/*
               // Send to pindaalarmclock.local
               var xhr = new XMLHttpRequest();
               xhr.open('POST', "cli.php", true);
@@ -114,15 +118,15 @@
               xhr.onload = function(e) {
                 if (this.status == 200) {
                   console.log("PindaAlarmclock: ", this.responseText);
-//                  window.location.href = "/";
                   alert("Configuratie verzonden naar alle apparaten.");
                 }
               };
-              xhr.send("cmd=wget&params="+stringToHex("-q -O- --post-file data/conf.json -H 'http://pindaalarmclock.local/sendconf.php' --header 'content-type: application/json'"));
+              xhr.send("cmd=wget&params="+stringToHex("-q -O- --post-file " + confDir + confName + " -H 'http://pindaalarmclock/" + phpName + "' --header 'content-type: application/json'"));
+*/
             }
           };
-          xhr.send("cmd=wget&params="+stringToHex("-q -O- --post-file data/conf.json -H 'http://pindakeuken.local/sendconf.php' --header 'content-type: application/json'"));
-*/
+          xhr.send("cmd=wget&params="+stringToHex("-q -O- --post-file " + confDir + confName " -H 'http://pindakeuken/" + phpName + "' --header 'content-type: application/json'"));
+
         }
       };
       xhr.send(JSON.stringify(editor.get(), null, 2));
