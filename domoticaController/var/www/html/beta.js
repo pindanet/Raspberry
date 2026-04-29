@@ -1,3 +1,5 @@
+const confName = "data/conf.php.json";
+
 const tempCorrection = 0;
 const Controller = "pindadomo";
 const tmpDir = "/data/";
@@ -80,12 +82,34 @@ function checkTime(i) {
   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
   return i;
 }
-function startTime() {
+async function startTime() {
   var today = new Date();
   var h = today.getHours();
   var m = today.getMinutes();
   m = checkTime(m);
   if ( m != document.getElementById('clockminutes').innerHTML) { // every minute
+
+//const start = Date.now();
+    let response = await fetch(confName);
+    if (typeof conf === 'undefined') { // Get configuration
+      conf = await response.json();
+      conf.lastModified = response.headers.get('Last-Modified');
+
+//for (var room in conf.rooms) {
+//  if (conf.rooms[room].Hostname == conf.Controller) {
+//    conf.ControllerRoom = conf.rooms[room].Name;
+//    break;
+//  }
+//  console.log(room); // do stuff here!
+//}
+//console.log(conf.ControllerRoom);
+
+    } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
+      location.reload(true);
+    }
+//const ms = Date.now() - start;
+//console.log('miliseconds elapsed: ' +  ms);
+
     document.getElementById("clockmonthday").innerHTML = today.getDate();
     document.getElementById("clockmonth").innerHTML = monthNames[today.getMonth()];
 
@@ -94,7 +118,7 @@ function startTime() {
     document.getElementById('clockminutes').innerHTML = m;
     document.getElementById('miniclock').innerHTML = h + ":" + m;
 
-    getTemp(Controller);
+    getTemp(conf.Controller);
   }
   startTimer = setTimeout(startTime, 1000); // every second
 }
