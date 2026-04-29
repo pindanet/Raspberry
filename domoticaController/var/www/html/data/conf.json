@@ -78,7 +78,7 @@
         "end": "morningLightsOut"
       },
       {
-        "disabled": true,
+        "disabled": false,
         "dev": "Apotheek",
         "begin": "breakfast",
         "end": "morningLightsOut"
@@ -86,10 +86,10 @@
       {
         "dev": "Tandenborstel",
         "begin": "16:00",
-        "end": "22:15"
+        "end": "22:40"
       },
       {
-        "disabled": true,
+        "disabled": false,
         "dev": "Apotheek",
         "begin": "22:24",
         "end": "bedTime"
@@ -116,14 +116,10 @@
   },
   "breakfastOffset": "11",
   "switch": {
-    "Kerst": {
-      "IP": "192.168.129.44",
-      "Hostname": "kerst-20",
-      "Watt": "20"
-    },
     "Haardlamp": {
       "IP": "192.168.129.18",
-      "Hostname": "haardlamp-20",
+      "Hostname": "haard",
+      "Channel": 1,
       "Watt": "20"
     },
     "Tandenborstel": {
@@ -145,17 +141,6 @@
       "IP": "192.168.129.14",
       "Hostname": "keukenlamp-8",
       "Watt": "8"
-    },
-    "LivingZij": {
-      "IP": "192.168.129.41",
-      "Hostname": "livinglamp-24",
-      "Watt": "8"
-    },
-    "LivingVoor": {
-      "IP": "192.168.129.41",
-      "Hostname": "livinglamp-24",
-      "Channel": "2",
-      "Watt": "16"
     }
   },
   "Living": {
@@ -187,7 +172,8 @@
         "color": "Red",
         "status": "undefined",
         "IP": "192.168.129.4",
-        "Hostname": "canyon-650",
+        "Hostname": "haard",
+        "Channel": 2,
         "Watt": "650"
       }
     ],
@@ -376,9 +362,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2026-01-02",
+      "begindate": "2026-04-10",
       "begin": "16:00",
-      "enddate": "2026-01-02",
+      "enddate": "2026-04-10",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -389,9 +375,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2026-01-16",
+      "begindate": "2026-03-13",
       "begin": "19:30",
-      "enddate": "2026-01-16",
+      "enddate": "2026-03-13",
       "end": "bedTime",
       "temp": {
         "living": "tempAux",
@@ -402,9 +388,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2026-01-21",
+      "begindate": "2026-04-29",
       "begin": "16:00",
-      "enddate": "2026-01-21",
+      "enddate": "2026-04-29",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -415,9 +401,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2026-01-21",
+      "begindate": "2026-04-29",
       "begin": "19:30",
-      "enddate": "2026-01-21",
+      "enddate": "2026-04-29",
       "end": "bedTime",
       "temp": {
         "living": "tempAux",
@@ -457,7 +443,7 @@
   ],
   "tvvolume": 70,
   "radio": {
-    "volume": 70,
+    "volume": 25,
     "channel": {
       "radio1": {
         "URL": "http://icecast.vrtcdn.be/radio1-high.mp3",
