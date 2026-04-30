@@ -79,30 +79,30 @@ console.log("TasmotaScanner in " + ((new Date().getTime() - tasmotaScannerTimer.
   // Set weather URL
   document.getElementById('weather').contentDocument.location.href = "meteogram/meteogram.html?lat=" + conf.location.Latitude + "&lon=" + conf.location.Longitude + "&alt=" + conf.location.Altitude;
 }
-function saveVariable() {
-console.log(variable);
-  for (i in conf.rooms) {
-    variable[conf.rooms[i]].mode = conf[conf.rooms[i]].mode;
-    variable[conf.rooms[i]].tempManual = conf[conf.rooms[i]].tempManual;
-  }
-
-  if (typeof conf.thermostatDisabled !== 'undefined') {
-    variable.thermostatDisabled = conf.thermostatDisabled;
-  }
-  variable.clockyear = document.getElementById("clockyear").innerHTML;
-
-console.log(variable);
-
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "sendVariable.php", true);
-  xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
-  xhr.onload = function(e) {
-    if (this.status == 200) {
-      console.log(this.responseText);
-    }
-  };
-  xhr.send(JSON.stringify(variable, null, 2));
-}
+//function saveVariable() {
+//console.log(variable);
+//  for (i in conf.rooms) {
+//    variable[conf.rooms[i]].mode = conf[conf.rooms[i]].mode;
+//    variable[conf.rooms[i]].tempManual = conf[conf.rooms[i]].tempManual;
+//  }
+//
+//  if (typeof conf.thermostatDisabled !== 'undefined') {
+//    variable.thermostatDisabled = conf.thermostatDisabled;
+//  }
+//  variable.clockyear = document.getElementById("clockyear").innerHTML;
+//
+//console.log(variable);
+//
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "sendVariable.php", true);
+//  xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
+//  xhr.onload = function(e) {
+//    if (this.status == 200) {
+//      console.log(this.responseText);
+//    }
+//  };
+//  xhr.send(JSON.stringify(variable, null, 2));
+//}
 function thermostatUI (event, command, id) {
   switch (command) {
     case "Incr":
@@ -136,11 +136,11 @@ function thermostatUI (event, command, id) {
         conf[room].sleepTemp = conf[room].tempManual;
       }
       setThermostatUI(event);
-      variable[room].mode = conf[room].mode;
-//      variable[room].sleepTemp = conf[room].sleepTemp;
-      variable[room].tempManual = conf[room].tempManual;
-      conf[room].tempWanted = conf[room].tempManual;
-      saveVariable();
+//      variable[room].mode = conf[room].mode;
+////      variable[room].sleepTemp = conf[room].sleepTemp;
+//      variable[room].tempManual = conf[room].tempManual;
+//      conf[room].tempWanted = conf[room].tempManual;
+//      saveVariable();
       break;
   }
 }
@@ -601,54 +601,54 @@ function startWebsocket() {
 }
 //let domain;
 */
-function getVariable() { // Get Variables
-  if (window.location.hostname === 'localhost') { // Hide cursor on touchscreen
-    document.body.style.cursor = "none";
-  }
-/*
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "cli.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200 && this.readyState === 4) {
-      domain = JSON.parse(this.responseText)[0];
-console.log("getVariable: startWebsocket");
-      startWebsocket();
-    }
-  };
-  xhr.send("cmd=cat&params="+stringToHex("/etc/resolv.conf | grep search | awk '{print $2}'"));
-*/
-  const xhttp = new XMLHttpRequest();
-  xhttp.onload = function(e) {
-    if (this.status == 200) {
-      variable = JSON.parse(this.responseText);
-console.log("getVariable: getConf");
-      getConf();
-    }
-  }
-  xhttp.open("POST", "data/variable.json");
-  xhttp.send();
-console.log("getVariable");
-//  connectWebsocket();
-}
-function variableToConf(obj, dest) {
-  for (let key in obj) {
-    if (typeof obj[key] === 'object') {
-      if (Array.isArray(obj[key])) {
-        // loop through array
-        for (let i = 0; i < obj[key].length; i++) {
-          variableToConf(obj[key][i], dest[key]);
-        }
-      } else {
-        // call function recursively for object
-        variableToConf(obj[key], dest[key]);
-      }
-    } else {
-      // do something with value
-      dest[key] = obj[key];
-    }
-  }
-}
+//function getVariable() { // Get Variables
+//  if (window.location.hostname === 'localhost') { // Hide cursor on touchscreen
+//    document.body.style.cursor = "none";
+//  }
+///*
+//  var xhr = new XMLHttpRequest();
+//  xhr.open('POST', "cli.php", true);
+//  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//  xhr.onload = function(e) {
+//    if (this.status == 200 && this.readyState === 4) {
+//      domain = JSON.parse(this.responseText)[0];
+//console.log("getVariable: startWebsocket");
+//      startWebsocket();
+//    }
+//  };
+//  xhr.send("cmd=cat&params="+stringToHex("/etc/resolv.conf | grep search | awk '{print $2}'"));
+//*/
+//  const xhttp = new XMLHttpRequest();
+//  xhttp.onload = function(e) {
+//    if (this.status == 200) {
+//      variable = JSON.parse(this.responseText);
+//console.log("getVariable: getConf");
+//      getConf();
+//    }
+//  }
+//  xhttp.open("POST", "data/variable.json");
+//  xhttp.send();
+//console.log("getVariable");
+////  connectWebsocket();
+//}
+//function variableToConf(obj, dest) {
+//  for (let key in obj) {
+//    if (typeof obj[key] === 'object') {
+//      if (Array.isArray(obj[key])) {
+//        // loop through array
+//        for (let i = 0; i < obj[key].length; i++) {
+//          variableToConf(obj[key][i], dest[key]);
+//        }
+//      } else {
+//        // call function recursively for object
+//        variableToConf(obj[key], dest[key]);
+//      }
+//    } else {
+//      // do something with value
+//      dest[key] = obj[key];
+//    }
+//  }
+//}
 function getConf() { // Get configuration
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function(e) {
@@ -666,7 +666,7 @@ function getConf() { // Get configuration
 //        calcConf();
         location.reload(true);
       }
-      variableToConf(variable, conf);
+//      variableToConf(variable, conf);
       if (conf.hasOwnProperty('thermostatDisabled')) {
         document.getElementById("clockday").style.color = "deepskyblue";
       }
@@ -949,14 +949,14 @@ function wgetTemp(host, room) {
 function toggleThermostat(event) {
   if (document.getElementById("clockday").style.color != "deepskyblue") {
     document.getElementById("clockday").style.color="deepskyblue";
-    variable.thermostatDisabled = true;
+//    variable.thermostatDisabled = true;
     conf.thermostatDisabled = true;
   } else {
     document.getElementById("clockday").style.color="";
-    delete variable.thermostatDisabled;
+//    delete variable.thermostatDisabled;
     delete conf.thermostatDisabled;
   }
-  saveVariable();
+//  saveVariable();
 
 //  const message = {};
 //  message.function = "thermostatClockday";
@@ -1457,6 +1457,45 @@ console.log("Websocket not ready yet!");
   }
 }
 */
+
+//function elclick(event) {
+//  var id = event.target.id;
+//  switch(id) {
+//    case "Kitchen_Auto":
+////console.log(room, variable[room].mode, variable[room].tempManual);
+////      if (room == "Kitchen") {
+////        sendToRoom("pindakeuken", "schedTemp=" + variable[room].mode + ":" + variable[room].tempManual);
+////      }
+//      const idSplit = id.split("_");
+//      var room = idSplit[0];
+////      var room;
+////      if (id.indexOf("temp") > -1) {
+////        room = id.charAt(0).toUpperCase() + id.slice(1).substr(0, id.indexOf("temp") - 1);
+////      } else {
+////        room = id.charAt(0).toUpperCase() + id.slice(1).substr(0, id.indexOf("aux") - 1);
+////      }
+//console.log(room); //, id.slice(room.length));
+////      conf[room].mode = command;
+////      conf[room].tempManual = parseFloat(document.getElementById(id).innerHTML);
+////      if (command == "Off") {
+////        conf[room].tempManual = conf.tempOff;
+////        conf[room].mode = "Manual";
+////      }
+////      if (document.getElementById("clockyear").innerHTML == conf.available[0].sleep) { //overrule sleep temp
+////        conf[room].sleepTemp = conf[room].tempManual;
+////      }
+////      setThermostatUI(event);
+////      variable[room].mode = conf[room].mode;
+////      variable[room].tempManual = conf[room].tempManual;
+////      conf[room].tempWanted = conf[room].tempManual;
+////      saveVariable();
+//
+//      break;
+//    default:
+//      console.log(event);
+//  }
+//}
+
 function remote(event) {
   switch(event.target.id) {
     case "clock":
@@ -1632,4 +1671,5 @@ function wtypeServer() {
 }
 // communicate through key events
 document.addEventListener('keydown', wtypeServer)
-window.onload = getVariable;
+//window.onload = getVariable;
+window.onload = getConf;
