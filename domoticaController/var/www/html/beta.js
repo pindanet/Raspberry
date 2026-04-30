@@ -1,9 +1,10 @@
+// ToDo
+// getTemp Room onafhankelijk
+
+
 const confName = "data/conf.php.json";
 
-const tempCorrection = 0;
-const Controller = "pindadomo";
-const tmpDir = "/data/";
-var activePanel = "content";
+var activePanel = "dashboard";
 
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
@@ -16,7 +17,7 @@ function activatePanel(panel) {
   document.getElementById(activePanel).style.display = "none";
   activePanel = panel;
   document.getElementById(activePanel).style.display = "";
-  if (panel != "content") {
+  if (panel != "dashboard") {
     miniPanel("");
   } else {
     miniPanel("none");
@@ -29,9 +30,12 @@ function elclick(event) {
     case "clockhours":
       activatePanel("menu");
       break;
+    case "menuradio":
+      activatePanel("radio");
+      break;
     case "miniclock":
     case "minitemp":
-      activatePanel("content");
+      activatePanel("dashboard");
       break;
 //    case "Kitchen_Auto":
 //      const idSplit = id.split("_");
@@ -65,7 +69,7 @@ function getTemp(host) {
       const clocktempEl = document.getElementById("clocktemp");
       const minitempEl = document.getElementById("minitemp");
       if (!isNaN(output[0])) {
-        var roomTemp = (parseFloat(output[0]) / 1000 + tempCorrection).toFixed(1);
+        var roomTemp = (parseFloat(output[0]) / 1000 + conf.rooms[conf.ControllerRoom].thermostat.tempCorrection).toFixed(1);
         clocktempEl.style.opacity="";
         clocktempEl.innerHTML = roomTemp;
         minitempEl.style.opacity="";
@@ -76,7 +80,7 @@ function getTemp(host) {
       }
     }
   };
-  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + tmpDir + "temp"));
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + conf.rooms[conf.ControllerRoom].thermostat.tempPath));
 }
 function checkTime(i) {
   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
@@ -95,14 +99,21 @@ async function startTime() {
       conf = await response.json();
       conf.lastModified = response.headers.get('Last-Modified');
 
-//for (var room in conf.rooms) {
-//  if (conf.rooms[room].Hostname == conf.Controller) {
-//    conf.ControllerRoom = conf.rooms[room].Name;
-//    break;
-//  }
-//  console.log(room); // do stuff here!
-//}
-//console.log(conf.ControllerRoom);
+      for (var room in conf.rooms) { // search Controller Room Name
+        if (conf.rooms[room].Hostname == conf.Controller) {
+          conf.ControllerRoom = conf.rooms[room].Name;
+          break;
+        }
+      }
+console.log(conf.rooms[conf.ControllerRoom].thermostat.tempPath);
+
+//console.log(Object.keys(conf.radio.channel));
+//      var channelCnt = Object.keys(conf.radio.channel).length;
+//      while (--channelCnt > 0) { // Scan Radio Channels
+//        console.log(channelCnt, conf.radio.channel[channelCnt]);
+//      }
+
+
 
     } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
       location.reload(true);
