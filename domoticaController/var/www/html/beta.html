@@ -10,7 +10,7 @@
   <script src='beta.js'></script>
 </head>
 <body>
-<div id="content">
+<div id="dashboard">
   <div id="clockdaytemp" onclick="elclick(event);"><span id="clockday">Zaterdag</span> <span id="clocktemp">19.4</span> °C</div>
   <div id="clock" onclick="elclick(event);"><span id="clockhours">20</span><span id="dots">:</span><span id="clockminutes">23</span></div>
   <div id="clockdate"><span id="clockmonthday">3</span> <span id="clockmonth">april</span> <span id="clockyear" onclick="elclick(event);">2021</span></div>
@@ -25,34 +25,34 @@
   <img id="config" class="menubutton" onclick="elclick();" src="emoji/config.svg">
   <img class="menubutton" onclick="location.href='index.html'" src="emoji/touchscreen.svg">
 </div>
-<!--
-<div id="radio">
-  <h1><img src="emoji/radio.svg">His Master's Voice</h1>
+<div id="radio" class="panel">
+  <h1><img class="menubutton" src="emoji/radio.svg">His Master's Voice</h1>
   <audio id="radioPlayer"></audio> 
-  <img onclick="radioPlay(event, 'play', 'radio1');" src="radiologos/radio1.svg">
-  <img onclick="radioPlay(event, 'play', 'radio2');" src="radiologos/radio2.svg">
-  <img onclick="radioPlay(event, 'play', 'klara');" src="radiologos/klara.svg">
-  <img onclick="radioPlay(event, 'play', 'klaracontinuo');" src="radiologos/klaracontinuo.png">
-  <img onclick="radioPlay(event, 'play', 'stubru');" src="radiologos/stubru.svg">
-  <img onclick="radioPlay(event, 'play', 'mnm');" src="radiologos/mnm.svg">
-  <img onclick="radioPlay(event, 'play', 'mnmhits');" src="radiologos/mnmhits.svg">
-  <img onclick="radioPlay(event, 'play', 'vrtnws');" src="radiologos/vrtnws.svg">
-  <img onclick="radioPlay(event, 'play', 'ketnet');" src="radiologos/ketnet.svg">
-  <img onclick="radioPlay(event, 'play', 'swissjazz');" src="radiologos/swissjazz.png">
-  <img onclick="radioPlay(event, 'play', 'vbro');" src="radiologos/vbro.png">
-  <img onclick="radioPlay(event, 'play', 'joe');" src="radiologos/joe.svg">
-  <img onclick="radioPlay(event, 'play', 'qmusic');" src="radiologos/qmusic.svg">
-  <img onclick="radioPlay(event, 'play', 'willy');" src="radiologos/willy.svg">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'radio1');" src="radiologos/radio1.svg">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'radio2');" src="radiologos/radio2.svg">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'klara');" src="radiologos/klara.svg">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'klaracontinuo');" src="radiologos/klaracontinuo.png">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'stubru');" src="radiologos/stubru.svg">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'mnm');" src="radiologos/mnm.svg">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'mnmhits');" src="radiologos/mnmhits.svg">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'vrtnws');" src="radiologos/vrtnws.svg">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'ketnet');" src="radiologos/ketnet.svg">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'swissjazz');" src="radiologos/swissjazz.png">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'vbro');" src="radiologos/vbro.png">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'joe');" src="radiologos/joe.svg">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'qmusic');" src="radiologos/qmusic.svg">
+  <img class="menubutton" onclick="radioPlay(event, 'play', 'willy');" src="radiologos/willy.svg">
   <br>
   <div>
-  <img id="radioStop" class="imgbutton" onclick="radioPlay(event, 'stop')" src="emoji/stop.svg">
-  <img id="radioVolumeDown" class="imgbutton" onclick="radioPlay(event, 'voldown')" src="emoji/voldown.svg">
+  <img id="radioStop" class="menubutton" onclick="radioPlay(event, 'stop')" src="emoji/stop.svg">
+  <img id="radioVolumeDown" class="menubutton" onclick="radioPlay(event, 'voldown')" src="emoji/voldown.svg">
   <span class="terminalbox" id="volumeinfo"></span>
-  <img id="radioVolumeUp" class="imgbutton" onclick="radioPlay(event, 'volup')" src="emoji/volup.svg">
+  <img id="radioVolumeUp" class="menubutton" onclick="radioPlay(event, 'volup')" src="emoji/volup.svg">
   </div>
   <br>
   <p class="terminalbox" style="text-align: center; display: inline-block; max-width: 736px;" id="radioinfo"></p>
 </div>
+<!--
 <div id="thermostatUI">
   <div class="room">
     <h1><img src="emoji/thermostat.svg"> Living <span id="livingRoomTemp">--.- °C</span></h1>
