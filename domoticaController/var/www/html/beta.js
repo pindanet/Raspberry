@@ -1,6 +1,5 @@
 // ToDo
-// getTemp Room onafhankelijk
-
+// Radio init Volume
 
 const confName = "data/conf.php.json";
 
@@ -46,7 +45,45 @@ function elclick(event) {
       console.log(id, event);
   }
 }
-
+function radioPlay(event, cmd, channel = "none") {
+  radioElem = document.getElementById("radioPlayer");
+  volumeElem = document.getElementById("volumeinfo");
+  switch(cmd) {
+    case "play":
+      radioElem.src = conf.radio.channel[channel].URL;
+      radioElem.play();
+      break;
+    case "stop":
+      radioElem.pause();
+      activatePanel("dashboard");
+      break;
+    case "getvol":
+      volumeElem.innerHTML = radioElem.volume * 100;
+      break;
+    case "volume":
+      radioElem.volume = channel / 100;
+      volumeElem.innerHTML = channel;
+      break;
+    case "voldown":
+      volume = parseInt(volumeElem.innerHTML);
+      if ( volume == 0 ) { // Minimum Volume
+        return;
+      }
+      volume -= 5;
+      radioElem.volume = volume / 100;
+      volumeElem.innerHTML = volume;
+      break;
+    case "volup":
+      volume = parseInt(volumeElem.innerHTML);
+      if ( volume == 100 ) { // Maximum Volume
+        return;
+      }
+      volume += 5;
+      radioElem.volume = volume / 100;
+      volumeElem.innerHTML = volume;
+      break;
+  }
+}
 // define a function that converts a string to hex
 const stringToHex = (str) => {
   let hex = '';
@@ -59,28 +96,22 @@ const stringToHex = (str) => {
   }
   return hex;
 };
-function getTemp(host) {
+function getTemp(room) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
-      const clocktempEl = document.getElementById("clocktemp");
-      const minitempEl = document.getElementById("minitemp");
       if (!isNaN(output[0])) {
-        var roomTemp = (parseFloat(output[0]) / 1000 + conf.rooms[conf.ControllerRoom].thermostat.tempCorrection).toFixed(1);
-        clocktempEl.style.opacity="";
-        clocktempEl.innerHTML = roomTemp;
-        minitempEl.style.opacity="";
-        minitempEl.innerHTML = roomTemp + " °C";
+        conf.rooms[room].thermostat.temp = (parseFloat(output[0]) / 1000 + conf.rooms[room].thermostat.tempCorrection).toFixed(1);
+        document.getElementById(conf.rooms[room].thermostat.sensorStatus).style.opacity="";
       } else { // Fetching temp error
-        clocktempEl.style.opacity=".5";
-        minitempEl.style.opacity="";
+        document.getElementById(conf.rooms[room].thermostat.sensorStatus).style.opacity=".5";
       }
     }
   };
-  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + conf.rooms[conf.ControllerRoom].thermostat.tempPath));
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + conf.rooms[room].thermostat.tempPath));
 }
 function checkTime(i) {
   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
@@ -105,15 +136,13 @@ async function startTime() {
           break;
         }
       }
-console.log(conf.rooms[conf.ControllerRoom].thermostat.tempPath);
-
-//console.log(Object.keys(conf.radio.channel));
-//      var channelCnt = Object.keys(conf.radio.channel).length;
-//      while (--channelCnt > 0) { // Scan Radio Channels
-//        console.log(channelCnt, conf.radio.channel[channelCnt]);
-//      }
-
-
+      // Fill Radio panel with channels
+      const radioPlayerEl = document.getElementById("radioPlayer");
+      var HTMLCode = "";
+      for (var channel in conf.radio.channel) {
+        HTMLCode += "<img class=\"menubutton\" onclick=\"radioPlay(event, 'play', '" + channel + "');\" src=\"" + conf.radio.channel[channel].logo  + "\">";
+      }
+      radioPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
 
     } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
       location.reload(true);
@@ -129,7 +158,12 @@ console.log(conf.rooms[conf.ControllerRoom].thermostat.tempPath);
     document.getElementById('clockminutes').innerHTML = m;
     document.getElementById('miniclock').innerHTML = h + ":" + m;
 
-    getTemp(conf.Controller);
+    getTemp(conf.ControllerRoom);
+
+    if (typeof conf.rooms[conf.ControllerRoom].thermostat.temp !== 'undefined') { // Temp received
+      document.getElementById("clocktemp").innerHTML = conf.rooms[conf.ControllerRoom].thermostat.temp;
+      document.getElementById("minitemp").innerHTML = conf.rooms[conf.ControllerRoom].thermostat.temp;
+    }
   }
   startTimer = setTimeout(startTime, 1000); // every second
 }
