@@ -31,11 +31,19 @@ function elclick(event) {
       break;
     case "menuradio":
       activatePanel("radio");
+      radioPlay("getvol");
       break;
     case "miniclock":
     case "minitemp":
       activatePanel("dashboard");
       break;
+    case "menuweather": 
+      activatePanel("weather");
+      // Set weather URL
+      document.getElementById('weather').contentDocument.location.href = "meteogram/meteogram.html?lat=" + conf.location.Latitude + "&lon=" + conf.location.Longitude + "&alt=" + conf.location.Altitude;
+//      document.getElementById('weather').contentDocument.location.reload(true);
+      break;
+
 //    case "Kitchen_Auto":
 //      const idSplit = id.split("_");
 //      var room = idSplit[0];
@@ -45,12 +53,14 @@ function elclick(event) {
       console.log(id, event);
   }
 }
-function radioPlay(event, cmd, channel = "none") {
+function radioPlay(cmd, channel = "none") {
   radioElem = document.getElementById("radioPlayer");
   volumeElem = document.getElementById("volumeinfo");
   switch(cmd) {
     case "play":
       radioElem.src = conf.radio.channel[channel].URL;
+      volumeElem.innerHTML = conf.radio.channel[channel].volume;
+      radioElem.volume = conf.radio.channel[channel].volume / 100;
       radioElem.play();
       break;
     case "stop":
@@ -140,7 +150,7 @@ async function startTime() {
       const radioPlayerEl = document.getElementById("radioPlayer");
       var HTMLCode = "";
       for (var channel in conf.radio.channel) {
-        HTMLCode += "<img class=\"menubutton\" onclick=\"radioPlay(event, 'play', '" + channel + "');\" src=\"" + conf.radio.channel[channel].logo  + "\">";
+        HTMLCode += "<img class=\"menubutton\" onclick=\"radioPlay('play', '" + channel + "');\" src=\"" + conf.radio.channel[channel].logo  + "\">";
       }
       radioPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
 
