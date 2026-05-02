@@ -25,19 +25,18 @@
   <img id="config" class="menubutton" onclick="elclick();" src="emoji/config.svg">
   <img class="menubutton" onclick="location.href='index.html'" src="emoji/touchscreen.svg">
 </div>
-<div id="radio" class="panel">
+<div id="radio" class="panel" style="display:none;">
   <h1><img class="menubutton" src="emoji/radio.svg">His Master's Voice</h1>
   <audio id="radioPlayer"></audio> 
   <br>
   <div>
-  <img id="radioStop" class="menubutton" onclick="radioPlay(event, 'stop')" src="emoji/stop.svg">
-  <img id="radioVolumeDown" class="menubutton" onclick="radioPlay(event, 'voldown')" src="emoji/voldown.svg">
-  <span class="terminalbox" id="volumeinfo"></span>
-  <img id="radioVolumeUp" class="menubutton" onclick="radioPlay(event, 'volup')" src="emoji/volup.svg">
+  <img id="radioStop" class="menubutton" onclick="radioPlay('stop')" src="emoji/stop.svg">
+  <img id="radioVolumeDown" class="menubutton" onclick="radioPlay('voldown')" src="emoji/voldown.svg">
+  <span id="volumeinfo"></span>
+  <img id="radioVolumeUp" class="menubutton" onclick="radioPlay('volup')" src="emoji/volup.svg">
   </div>
-  <br>
-  <p class="terminalbox" style="text-align: center; display: inline-block; max-width: 736px;" id="radioinfo"></p>
 </div>
+<iframe id="weather" src="meteogram/meteogram.html" style="height:99vh; width:100vw; display:none; border:none; padding: 0; margin: 0;"></iframe>
 <!--
 <div id="thermostatUI">
   <div class="room">
@@ -80,7 +79,6 @@
     <img id="Eekhoorn" class="portret" onclick="remote(event);" src="images/eekhoorn.png">
   </div>
 </div>
-<iframe id="weather" src="meteogram/meteogram.html" height="480" width="800" style="border:none; padding: 0; margin: 0;"></iframe>
 <div id="lights">
   <h1><img src="emoji/light_bulb.svg">Verlichting</h1>
   <figure>
