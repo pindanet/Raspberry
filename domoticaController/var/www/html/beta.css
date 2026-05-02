@@ -50,3 +50,10 @@ body {
 .panel h1 img {
   vertical-align: middle;
 }
+#volumeinfo {
+  font-size: 13vw;
+  display: inline-block;
+  width: 2em;
+  position: relative;
+  bottom: 3vh;
+}
