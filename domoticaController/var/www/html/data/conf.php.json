@@ -1,23 +1,29 @@
 {
   "Controller": "pindadomo",
   "Timezone": "Europe/Brussels",
+  "location": {
+    "Latitude": 51.1853335,
+    "Longitude": 3.2401705,
+    "Altitude": 5
+  },
   "rooms": {
     "Living": {
       "Name": "Living",
       "Hostname": "pindadomo",
       "thermostat": {
         "tempPath": "/data/temp",
-        "sensorPowerGPIO": 17,
         "tempComfort": 20,
         "tempAux": 17.5,
         "tempOff": 15,
         "tempNight": 10,
         "tempNightTime": "06:30",
+        "tempCorrection": 0,
+        "sensorStatus": "clockmonthday",
+        "sensorPowerGPIO": 17,
         "ds18b20": {
           "powerGPIO": 17,
           "dataGPIO": 4
         },
-        "tempCorrection": 0,
         "heater": [
           {
             "name": "Eekhoorn",
@@ -179,77 +185,76 @@
     }
   },
   "radio": {
-    "volume": 25,
     "channel": {
       "radio1": {
         "URL": "http://icecast.vrtcdn.be/radio1-high.mp3",
         "logo": "radiologos/radio1.svg",
-        "interval": 8192
+        "volume": 20
       },
       "radio2": {
         "URL": "http://icecast.vrtcdn.be/ra2wvl-high.mp3",
         "logo": "radiologos/radio2.svg",
-        "interval": 8192
+        "volume": 20
       },
       "klara": {
         "URL": "http://icecast.vrtcdn.be/klara-high.mp3",
         "logo": "radiologos/klara.svg",
-        "interval": 8192
+        "volume": 20
       },
       "klaracontinuo": {
         "URL": "http://icecast.vrtcdn.be/klaracontinuo-high.mp3",
         "logo": "radiologos/klaracontinuo.png",
-        "interval": 8192
+        "volume": 20
       },
       "stubru": {
         "URL": "http://icecast.vrtcdn.be/stubru-high.mp3",
         "logo": "radiologos/stubru.svg",
-        "interval": 8192
+        "volume": 20
       },
       "mnm": {
         "URL": "http://icecast.vrtcdn.be/mnm-high.mp3",
         "logo": "radiologos/mnm.svg",
-        "interval": 8192
+        "volume": 20
       },
       "mnmhits": {
         "URL": "http://icecast.vrtcdn.be/mnm_hits-high.mp3",
         "logo": "radiologos/mnmhits.svg",
-        "interval": 8192
+        "volume": 20
       },
       "vrtnws": {
         "URL": "http://progressive-audio.vrtcdn.be/content/fixed/11_11niws-snip_hi.mp3",
         "logo": "radiologos/vrtnws.svg",
-        "interval": 0
+        "volume": 20
       },
       "ketnet": {
         "URL": "http://icecast.vrtcdn.be/ketnetradio-high.mp3",
         "logo": "radiologos/ketnet.svg",
-        "interval": 8192
+        "volume": 20
       },
       "swissjazz": {
         "URL": "http://stream.srg-ssr.ch/m/rsj/mp3_128",
         "logo": "radiologos/swissjazz.png",
-        "interval": 16384
+        "volume": 30
       },
       "vbro": {
         "URL": "http://stream.vbro.be:9100/vbro",
         "logo": "radiologos/vbro.png",
-        "interval": 16384
+        "volume": 20
       },
       "joe": {
         "URL": "https://streams.radio.dpgmedia.cloud/redirect/joe_fm/mp3",
         "logo": "radiologos/joe.svg",
-        "interval": 1024
+        "volume": 20
       },
       "qmusic": {
         "URL": "https://streams.radio.dpgmedia.cloud/redirect/qmusic_be/mp3",
         "logo": "radiologos/qmusic.svg",
-        "interval": 1024
+        "volume": 20
       },
       "willy": {
         "URL": "https://streams.radio.dpgmedia.cloud/redirect/willy_be/mp3",
         "logo": "radiologos/willy.svg",
-        "interval": 1024
+        "volume": 20
       }
     }
   }
