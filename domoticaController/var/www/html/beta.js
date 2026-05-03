@@ -1,5 +1,5 @@
 // ToDo
-// Radio init Volume
+// Fill Room panels
 
 const confName = "data/conf.php.json";
 
@@ -27,6 +27,10 @@ function elclick(event) {
   switch(id) {
     case "clock":
     case "clockhours":
+    case "dots":
+    case "clockminutes":
+    case "clockdaytemp":
+    case "clockdate":
       activatePanel("menu");
       break;
     case "menuradio":
@@ -37,7 +41,7 @@ function elclick(event) {
     case "minitemp":
       activatePanel("dashboard");
       break;
-    case "menuweather": 
+    case "menuweather":
       activatePanel("weather");
       // Set weather URL
       document.getElementById('weather').contentDocument.location.href = "meteogram/meteogram.html?lat=" + conf.location.Latitude + "&lon=" + conf.location.Longitude + "&alt=" + conf.location.Altitude;
@@ -50,7 +54,11 @@ function elclick(event) {
 //console.log(room); //, id.slice(room.length));
 //      break;
     default:
-      console.log(id, event);
+      if (id.startsWith("menu")) {
+        activatePanel(id.slice(4));
+      } else {
+        console.log(id, event);
+      }
   }
 }
 function radioPlay(cmd, channel = "none") {
@@ -140,19 +148,31 @@ async function startTime() {
       conf = await response.json();
       conf.lastModified = response.headers.get('Last-Modified');
 
+      var HTMLCode = "";
+      const weatherMenuEl = document.getElementById("menuweather");
       for (var room in conf.rooms) { // search Controller Room Name
         if (conf.rooms[room].Hostname == conf.Controller) {
           conf.ControllerRoom = conf.rooms[room].Name;
-          break;
         }
+        HTMLCode += "<img id=\"menu" + conf.rooms[room].Name  + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\""+ conf.rooms[room].Icon + "\">";
       }
+      weatherMenuEl.insertAdjacentHTML("afterend", HTMLCode);
+
       // Fill Radio panel with channels
       const radioPlayerEl = document.getElementById("radioPlayer");
-      var HTMLCode = "";
+      HTMLCode = "";
       for (var channel in conf.radio.channel) {
         HTMLCode += "<img class=\"menubutton\" onclick=\"radioPlay('play', '" + channel + "');\" src=\"" + conf.radio.channel[channel].logo  + "\">";
       }
       radioPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
+
+      const weatherPlayerEl = document.getElementById("weather");
+      for (var room in conf.rooms) { // Fill Room panels
+        HTMLCode = "<div id=\"" + conf.rooms[room].Name + "\" class=\"panel\" style=\"display:none;\">";
+        HTMLCode += "  <h1><img class=\"menubutton\" src=\"" + conf.rooms[room].Icon + "\"> " + conf.rooms[room].Name + " <span id=\"" + conf.rooms[room].Name + "_temp\">--.- °C</span></h1>";
+        HTMLCode += "</div>";
+        weatherPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
+      }
 
     } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
       location.reload(true);
