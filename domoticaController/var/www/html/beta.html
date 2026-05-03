@@ -13,14 +13,11 @@
 <div id="dashboard">
   <div id="clockdaytemp" onclick="elclick(event);"><span id="clockday">Zaterdag</span> <span id="clocktemp">19.4</span> °C</div>
   <div id="clock" onclick="elclick(event);"><span id="clockhours">20</span><span id="dots">:</span><span id="clockminutes">23</span></div>
-  <div id="clockdate"><span id="clockmonthday">3</span> <span id="clockmonth">april</span> <span id="clockyear" onclick="elclick(event);">2021</span></div>
+  <div id="clockdate" onclick="elclick(event);"><span id="clockmonthday">3</span> <span id="clockmonth">april</span> <span id="clockyear" onclick="elclick(event);">2021</span></div>
 </div>
 <div id="menu" class="panel" style="display:none;">
   <img id="menuradio" class="menubutton" onclick="elclick(event);" src="emoji/radio.svg">
   <img id="menuweather" class="menubutton" onclick="elclick(event);" src="emoji/weather.svg">
-  <img id="menuthermostatUI" class="menubutton" onclick="elclick(event);" src="emoji/thermostat.svg">
-  <img id="menuheaters" class="menubutton" onclick="elclick(event);" src="images/stars_in_heaven.png">
-  <img id="menulights" class="menubutton" onclick="elclick(event);" src="emoji/light_bulb.svg">
   <img id="gotosleep" class="menubutton" onclick="elclick();" src="emoji/sleep.svg">
   <img id="config" class="menubutton" onclick="elclick();" src="emoji/config.svg">
   <img class="menubutton" onclick="location.href='index.html'" src="emoji/touchscreen.svg">
@@ -37,74 +34,6 @@
   </div>
 </div>
 <iframe id="weather" src="meteogram/meteogram.html" style="height:99vh; width:100vw; display:none; border:none; padding: 0; margin: 0;"></iframe>
-<!--
-<div id="thermostatUI">
-  <div class="room">
-    <h1><img src="emoji/thermostat.svg"> Living <span id="livingRoomTemp">--.- °C</span></h1>
-    <button id="livingAuto" onclick="remote(event); thermostatUI(event, 'Auto', 'livingtemp');">Auto</button>
-    <button id="livingOff" onclick="remote(event); thermostatUI(event, 'Off', 'livingtemp');">Uit</button>
-    <button id="livingManualAux" onclick="remote(event); thermostatUI(event, 'Manual', 'livingaux');"><span id="livingaux">17.5</span> °C</button>
-    <button id="livingManual" onclick="remote(event); thermostatUI(event, 'Manual', 'livingtemp');"><span id="livingtemp">20.0</span> °C</button>
-    <button id="livingIncr" onclick="remote(event); thermostatUI(event, 'Incr', 'livingtemp');">+</button>
-    <button id="livingDecr" onclick="remote(event); thermostatUI(event, 'Decr', 'livingtemp');">-</button>
-  </div>
-  <div class="room">
-    <h1><img src="emoji/thermostat.svg"> Dining <span id="diningRoomTemp">--.- °C</span></h1>
-    <button id="diningAuto" onclick="remote(event); thermostatUI(event, 'Auto', 'diningtemp');">Auto</button>
-    <button id="diningOff" onclick="remote(event); thermostatUI(event, 'Off', 'diningtemp');">Uit</button>
-    <button id="diningManualAux" onclick="remote(event); thermostatUI(event, 'Manual', 'diningaux');"><span id="diningaux">17.0</span> °C</button>
-    <button id="diningManual" onclick="remote(event); thermostatUI(event, 'Manual', 'diningtemp');"><span id="diningtemp">20.0</span> °C</button>
-    <button id="diningIncr" onclick="remote(event); thermostatUI(event, 'Incr', 'diningtemp');">+</button>
-    <button id="diningDecr" onclick="remote(event); thermostatUI(event, 'Decr', 'diningtemp');">-</button>
-  </div>
-  <div class="room">
-    <h1><img src="emoji/thermostat.svg"> Keuken <span id="kitchenRoomTemp">--.- °C</span></h1>
-    <button id="kitchenAuto" onclick="elclick(event);">Auto</button>
-    <button id="kitchenOff" onclick="elclick(event);">Uit</button>
-    <button id="kitchenManual" onclick="elclick(event);"><span id="kitchentemp">17.5</span> °C</button>
-    <button id="kitchenIncr" onclick="elclick(event);">+</button>
-    <button id="kitchenDecr" onclick="elclick(event);">-</button>
-  </div>
-</div>
-<div id="heaters">
-  <div class="room">
-    <img id="Schilderij" class="landscape" onclick="remote(event);" src="images/schaatsen.png">
-    <img id="Computertafel" class="square" onclick="remote(event);" src="images/computertafel.png">
-    <img id="Canyon" class="landscape" onclick="remote(event);" src="images/colorado.png">
-  </div>
-  <div class="room">
-    <img id="Zonsondergang" class="portret" onclick="remote(event);" src="images/stars_in_heaven.png">
-    <img id="Eettafel" class="square" onclick="remote(event);" src="images/eettafel.png">
-    <img id="Tropen" class="landscape" onclick="remote(event);" src="images/tropical_sunset.png">
-    <img id="Eekhoorn" class="portret" onclick="remote(event);" src="images/eekhoorn.png">
-  </div>
-</div>
-<div id="lights">
-  <h1><img src="emoji/light_bulb.svg">Verlichting</h1>
-  <figure>
-    <img id="Haardlamp" onclick="remote(event);" src="emoji/fireplace.svg">
-    <figcaption>Haard</figcaption>
-  </figure>
-  <figure>
-    <img id="TVlamp" onclick="remote(event);" src="emoji/lcdmonitor.svg">
-    <figcaption>TV</figcaption>
-  </figure>
-  <figure>
-    <img id="Keukenlamp" onclick="remote(event);" src="emoji/kitchen.svg">
-     <figcaption>Keuken</figcaption>
-  </figure>
-  </figure>
-  <figure>
-    <img id="Apotheek" onclick="remote(event);" src="emoji/medicinecabinet.png">
-     <figcaption>Apotheek</figcaption>
-  </figure>
-</div>
-<div id="configUI">
-  <h1><img src="emoji/config.svg"> Instellingen</h1>
-  <a href="javascript:location.reload(true);scroll(0,0)"><img class="menubutton" src="emoji/refresh.svg"></a>
-  <p style="font-size: x-large;">Voor de Domotica instellingen surf je best vanaf een ander apparaat in dit netwerk naar <a href="http://pindadomo.local/conf.html">http://pindadomo.local/conf.html</a></p>
-</div>
--->
 <div id="miniclock" onclick="elclick(event);" style="display:none">20:00</div>
 <div id="minitemp" onclick="elclick(event);" style="display:none">20.0 °C</div>
 </body>
