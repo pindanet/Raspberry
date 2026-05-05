@@ -6,6 +6,20 @@ body {
   color: white;
   font-family: sans-serif;
 }
+button {
+  background-color: rgba(128,128,128,0.5);
+  border: 1px solid rgb(128,128,128);
+  color: white;
+  padding: 0.5vw 1vw; /* 15px; */
+  margin-bottom: 0.5vw;
+  margin-top: 0.5vw;
+  margin-right: 1vw;
+  text-align: center;
+  text-decoration: none;
+  font-size: 4vw; /* 30px; */
+  font-weight: bold;
+  border-radius: 12px;
+}
 #clockdaytemp {
   padding-top: 1vw;
   font-size: 10vw;
