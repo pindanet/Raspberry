@@ -169,9 +169,38 @@ async function startTime() {
       const weatherPlayerEl = document.getElementById("weather");
       for (var room in conf.rooms) { // Fill Room panels
         HTMLCode = "<div id=\"" + conf.rooms[room].Name + "\" class=\"panel\" style=\"display:none;\">";
-        HTMLCode += "  <h1><img class=\"menubutton\" src=\"" + conf.rooms[room].Icon + "\"> " + conf.rooms[room].Name + " <span id=\"" + conf.rooms[room].Name + "_temp\">--.- °C</span></h1>";
+        HTMLCode += "  <h1><img class=\"menubutton\" src=\"" + conf.rooms[room].Icon + "\"> " + conf.rooms[room].Name + " <span id=\"temp_" + conf.rooms[room].Name + "\">--.- °C</span></h1>";
+        HTMLCode += "<br>";
+        for (var heater in conf.rooms[room].thermostat.heater) { // Fill Room Heater panel
+console.log(conf.rooms[room].thermostat.heater[heater]);
+          HTMLCode += "<img id=\"heater_" + conf.rooms[room].thermostat.heater[heater].Hostname + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\"emoji/infrared-off.svg\">";
+        }
+        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"Living_Incr\" onclick=\"elclick(event);\">+</button>";
+        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\"><span id=\"Lining_manual\">20.0</span> °C</button>";
+        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"Living_Decr\" onclick=\"elclick(event);\">&ndash;</button>";
+        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"Living_AM\" onclick=\"elclick(event);\">A</button>";
+        HTMLCode += "<br>";
+
         HTMLCode += "</div>";
         weatherPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
+
+//<div id="Kamer" class="panel">
+//<h1><img class="menubutton" src="emoji/kitchen.svg"> Kamer <span id="Kamer_temp">--.- °C</span></h1>
+//<br>
+//<img id="heater_Computertafel" class="menubutton" onclick="elclick(event);" src="emoji/infrared-off.svg">
+//<img id="heater_Computertafel" class="menubutton" onclick="elclick(event);" src="emoji/infrared-off.svg">
+//<img id="heater_Computertafel" class="menubutton" onclick="elclick(event);" src="emoji/infrared-off.svg">
+
+//<button style="position: relative; bottom: 5vh;" id="Living_Incr" onclick="elclick(event);">+</button>
+//<button style="position: relative; bottom: 5vh;"><span id="Lining_manual">20.0</span> °C</button>  
+//<button style="position: relative; bottom: 5vh;" id="Living_Decr" onclick="elclick(event);">&ndash;</button>
+//<button style="position: relative; bottom: 5vh;" id="Living_AM" onclick="elclick(event);">A</button>
+//<br>
+//<img id="light_LivingZij" class="menubutton" onclick="elclick(event);" src="emoji/light-bulb-off.svg">
+//<br>
+//<img id="switch_Tandenborstel" class="menubutton" onclick="elclick(event);" src="emoji/power-off.svg">
+//</div>
+
       }
 
     } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
