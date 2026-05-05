@@ -9,6 +9,7 @@
   "rooms": {
     "Living": {
       "Name": "Living",
+      "Icon": "emoji/living.svg",
       "Hostname": "pindadomo",
       "thermostat": {
         "tempPath": "/data/temp",
@@ -26,11 +27,25 @@
         },
         "heater": [
           {
-            "name": "Eekhoorn",
+            "name": "Computertafel",
+            "color": "Yellow",
+            "status": "undefined",
+            "Hostname": "computertafel-300",
+            "Watt": "300"
+          },
+          {
+            "name": "Schilderij",
+            "color": "Orange",
+            "status": "undefined",
+            "Hostname": "schilderij-650",
+            "Watt": "650"
+          },
+          {
+            "name": "Canyon",
             "color": "Red",
             "status": "undefined",
-            "IP": "192.168.129.8",
-            "Hostname": "Eekhoorn-650",
+            "Hostname": "haard",
+            "Channel": 2,
             "Watt": "650"
           }
         ],
@@ -98,10 +113,64 @@
     },
     "Dining": {
       "Name": "Eetkamer",
-      "Hostname": "pindadining"
+      "Icon": "emoji/dining.svg",
+      "Hostname": "pindadining",
+      "thermostat": {
+        "tempPath": "/data/temp",
+        "tempComfort": 20,
+        "tempAux": 17.5,
+        "tempOff": 15,
+        "tempNight": 10,
+        "tempNightTime": "06:30",
+        "tempCorrection": 0,
+        "sensorStatus": "clockmonthday",
+        "sensorPowerGPIO": 17,
+        "ds18b20": {
+          "powerGPIO": 17,
+          "dataGPIO": 4
+        },
+        "heater": [
+          {
+            "name": "Eettafel",
+            "color": "Yellow",
+            "status": "undefined",
+            "Hostname": "eettafel-300",
+            "Watt": "300"
+          },
+          {
+            "name": "Zonsondergang",
+            "color": "Orange",
+            "status": "undefined",
+            "Hostname": "zonsondergang-650",
+            "Watt": "650"
+          },
+          {
+            "name": "Tropen",
+            "color": "Red",
+            "status": "undefined",
+            "Hostname": "tropen-650",
+            "Watt": "650"
+          }
+        ],
+        "schedule": {
+          "00:00": 10,
+          "06:30": 15,
+          "07:40": 17.5,
+          "08:00": 15,
+          "09:15": 17.5,
+          "10:30": 15,
+          "12:15": 17.5,
+          "13:00": 15,
+          "17:15": 17.5,
+          "17:45": 15,
+          "22:20": 17.5,
+          "22:50": 15
+        }
+      }
     },
     "Kitchen": {
       "Name": "Keuken",
+      "Icon": "emoji/kitchen.svg",
       "Hostname": "pindakeuken",
       "tasmota": {
         "Keukenlamp": {
