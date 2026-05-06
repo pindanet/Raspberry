@@ -144,6 +144,7 @@ async function startTime() {
 
 //const start = Date.now();
     let response = await fetch(confName);
+    var disabled = false;
     if (typeof conf === 'undefined') { // Get configuration
       conf = await response.json();
       conf.lastModified = response.headers.get('Last-Modified');
@@ -171,16 +172,34 @@ async function startTime() {
         HTMLCode = "<div id=\"" + conf.rooms[room].Name + "\" class=\"panel\" style=\"display:none;\">";
         HTMLCode += "  <h1><img class=\"menubutton\" src=\"" + conf.rooms[room].Icon + "\"> " + conf.rooms[room].Name + " <span id=\"temp_" + conf.rooms[room].Name + "\">--.- °C</span></h1>";
         HTMLCode += "<br>";
-        for (var heater in conf.rooms[room].thermostat.heater) { // Fill Room Heater panel
-console.log(conf.rooms[room].thermostat.heater[heater]);
-          HTMLCode += "<img id=\"heater_" + conf.rooms[room].thermostat.heater[heater].Hostname + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\"emoji/infrared-off.svg\">";
+        if (typeof conf.rooms[room].thermostat.heater !== 'undefined') {
+          for (var heater in conf.rooms[room].thermostat.heater) { // Fill Room Heater panel
+            HTMLCode += "<img id=\"heater_" + conf.rooms[room].thermostat.heater[heater].Hostname + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\"emoji/infrared-off.svg\">";
+          }
+          HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_Incr\" onclick=\"elclick(event);\">+</button>";
+          HTMLCode += "<button style=\"position: relative; bottom: 5vh;\"><span id=\"" + room + "_manual\">20.0</span> °C</button>";
+          HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_Decr\" onclick=\"elclick(event);\">&ndash;</button>";
+          HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_AM\" onclick=\"elclick(event);\">A</button>";
+          HTMLCode += "<br>";
         }
-        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"Living_Incr\" onclick=\"elclick(event);\">+</button>";
-        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\"><span id=\"Lining_manual\">20.0</span> °C</button>";
-        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"Living_Decr\" onclick=\"elclick(event);\">&ndash;</button>";
-        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"Living_AM\" onclick=\"elclick(event);\">A</button>";
-        HTMLCode += "<br>";
-
+        if (typeof conf.rooms[room].lights !== 'undefined') {
+          for (var light in conf.rooms[room].lights) { // Fill Room Lights panel
+            if (typeof conf.rooms[room].lights[light].disabled === 'undefined') {
+              disabled = false;
+            } else {
+              disabled = conf.rooms[room].lights[light].disabled;
+            }
+console.log(disabled, conf.rooms[room].lights[light]);
+            if (disabled == false) {
+              HTMLCode += "<img id=\"light_" + conf.rooms[room].lights[light].Hostname;
+              if (typeof conf.rooms[room].lights[light].Channel !== 'undefined') {
+                HTMLCode += "_" + conf.rooms[room].lights[light].Channel;
+              }
+              HTMLCode += "\" class=\"menubutton boxed\" style=\"background-color: dimgray;\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].lights[light].Icon + "\">";
+            }
+          }
+          HTMLCode += "<br>";
+        }
         HTMLCode += "</div>";
         weatherPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
 
@@ -190,12 +209,12 @@ console.log(conf.rooms[room].thermostat.heater[heater]);
 //<img id="heater_Computertafel" class="menubutton" onclick="elclick(event);" src="emoji/infrared-off.svg">
 //<img id="heater_Computertafel" class="menubutton" onclick="elclick(event);" src="emoji/infrared-off.svg">
 //<img id="heater_Computertafel" class="menubutton" onclick="elclick(event);" src="emoji/infrared-off.svg">
-
 //<button style="position: relative; bottom: 5vh;" id="Living_Incr" onclick="elclick(event);">+</button>
 //<button style="position: relative; bottom: 5vh;"><span id="Lining_manual">20.0</span> °C</button>  
 //<button style="position: relative; bottom: 5vh;" id="Living_Decr" onclick="elclick(event);">&ndash;</button>
 //<button style="position: relative; bottom: 5vh;" id="Living_AM" onclick="elclick(event);">A</button>
 //<br>
+
 //<img id="light_LivingZij" class="menubutton" onclick="elclick(event);" src="emoji/light-bulb-off.svg">
 //<br>
 //<img id="switch_Tandenborstel" class="menubutton" onclick="elclick(event);" src="emoji/power-off.svg">
