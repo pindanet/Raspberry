@@ -50,6 +50,10 @@ button {
 .menubutton {
   height: 13vw;
 }
+.boxed {
+  border-style: none;
+  border-radius: 12px;
+}
 .panel {
   text-align: center;
   vertical-align: middle;
