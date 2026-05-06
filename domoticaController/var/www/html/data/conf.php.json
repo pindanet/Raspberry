@@ -64,12 +64,12 @@
           "22:50": 15
         }
       },
-      "tasmota": {
-        "LivingZij": {
-          "IP": "192.168.129.41",
+      "lights": {
+        "LivingVoor": {
+          "Icon": "emoji/ledlamp.svg",
           "Hostname": "Livinglamp-24",
-          "Watt": "8",
-          "type": "light",
+          "Channel": "2",
+          "Watt": "16",
           "events": [
             {
               "lowerThreshold": 20,
@@ -79,12 +79,10 @@
             }
           ]
         },
-        "LivingVoor": {
-          "IP": "192.168.129.41",
+        "LivingZij": {
+          "Icon": "emoji/ledlampzij.svg",
           "Hostname": "Livinglamp-24",
-          "Channel": "2",
-          "Watt": "16",
-          "type": "light",
+          "Watt": "8",
           "events": [
             {
               "lowerThreshold": 20,
@@ -96,10 +94,9 @@
         },
         "Kerst": {
           "disabled": true,
-          "IP": "192.168.129.44",
+          "Icon": "emoji/christmassspheres.svg",
           "Hostname": "Kerst-20",
           "Watt": "20",
-          "type": "light",
           "events": [
             {
               "lowerThreshold": 20,
@@ -165,6 +162,21 @@
           "17:45": 15,
           "22:20": 17.5,
           "22:50": 15
+        }
+      },
+      "lights": {
+        "Haardlamp": {
+          "disabled": false,
+          "Icon": "emoji/fireplace.svg",
+          "Hostname": "haard",
+          "Channel": 1,
+          "Watt": "20",
+          "events": [
+            {
+              "startTime": "sunset",
+              "stopTime": "sleep"
+            }
+          ]
         }
       }
     },
@@ -237,6 +249,11 @@
       "Channel": "1",
       "Watt": "20"
     },
+    "TVlamp": {
+      "IP": "192.168.129.11",
+      "Hostname": "TVlamp-20",
+      "Watt": "20"
+    },
     "Tandenborstel": {
       "IP": "192.168.129.7",
       "Hostname": "Tandenborstel-10",
@@ -245,11 +262,6 @@
     "Apotheek": {
       "IP": "192.168.129.19",
       "Hostname": "Apotheek-20",
-      "Watt": "20"
-    },
-    "TVlamp": {
-      "IP": "192.168.129.11",
-      "Hostname": "TVlamp-20",
       "Watt": "20"
     }
   },
