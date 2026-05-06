@@ -64,13 +64,13 @@ writeLog("Recreate power after error for " . $switch->Hostname . ": " . $switch-
 while (true) {
   $lux = intval(file_get_contents(__DIR__ . "/data/lux"));
   $now = date("H:i");
-  foreach ($room->tasmota as $switch) {
+  foreach ($room->lights as $switch) {
     if (!isset($switch->disabled)) {
       $switch->disabled = false;
     }
 //echo sprintf("%d: Switch %s disabled: %d.\n", __LINE__, $switch->Hostname, $switch->disabled);
-    if (isset($switch->type) && $switch->disabled == false) {
-      if ($switch->type == "light" && isset($switch->events)) {
+    if ($switch->disabled == false) {
+      if (isset($switch->events)) {
         foreach ($switch->events as $event) {
           if ($event->startTime > $event->stopTime) { // stopTime on next day
             if (($now > $event->startTime && $now > $event->stopTime) || ($now < $event->startTime && $now < $event->stopTime)) {
