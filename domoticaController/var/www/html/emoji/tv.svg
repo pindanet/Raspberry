@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="svg2"
+   viewBox="0 0 773.99998 540.31096"
+   version="1.1"
+   width="774"
+   height="540.31097"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title5594">LCD, LED, Plasma TV. TV de plasma, LED, LCD.</title>
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3007"
+       x1="45.290001"
+       gradientUnits="userSpaceOnUse"
+       y1="829.14001"
+       gradientTransform="translate(-7.6355,5.758)"
+       x2="792.45001"
+       y2="829.14001">
+      <stop
+         id="stop3021"
+         offset="0" />
+      <stop
+         id="stop3023"
+         stop-color="#808080"
+         offset=".16836" />
+      <stop
+         id="stop3025"
+         stop-color="#1a1a1a"
+         offset=".37623" />
+      <stop
+         id="stop3027"
+         stop-color="#808080"
+         offset=".56544" />
+      <stop
+         id="stop3029"
+         stop-color="#333"
+         offset=".77198" />
+      <stop
+         id="stop3031"
+         stop-color="#fff"
+         stop-opacity="0"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3017"
+       x1="387.67001"
+       gradientUnits="userSpaceOnUse"
+       y1="813.52002"
+       gradientTransform="translate(-7.0488)"
+       x2="387.67001"
+       y2="389.76001">
+      <stop
+         id="stop3003"
+         stop-color="#333"
+         offset="0" />
+      <stop
+         id="stop3015"
+         stop-color="#999"
+         stop-opacity="0"
+         offset=".13283" />
+      <stop
+         id="stop3013"
+         stop-color="#1a1a1a"
+         offset=".37623" />
+      <stop
+         id="stop3011"
+         stop-color="#333"
+         offset=".62541" />
+      <stop
+         id="stop3009"
+         stop-color="#666"
+         offset=".77198" />
+      <stop
+         id="stop3005"
+         stop-color="#fff"
+         stop-opacity="0"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3039"
+       x1="44.183998"
+       gradientUnits="userSpaceOnUse"
+       y1="861.39001"
+       gradientTransform="translate(-7.0489)"
+       x2="42.007"
+       y2="357.44">
+      <stop
+         id="stop3035"
+         offset="0" />
+      <stop
+         id="stop3839"
+         stop-color="#333"
+         offset=".2762" />
+      <stop
+         id="stop3837"
+         offset=".5524" />
+      <stop
+         id="stop3833"
+         stop-color="#666"
+         offset=".81964" />
+      <stop
+         id="stop3037"
+         offset="1" />
+    </linearGradient>
+    <filter
+       id="filter5448"
+       y="-1.08"
+       width="3.16"
+       x="-1.08"
+       height="3.16">
+      <feGaussianBlur
+         id="feGaussianBlur5450"
+         stdDeviation="36" />
+    </filter>
+    <linearGradient
+       id="linearGradient5460"
+       x1="366.26999"
+       gradientUnits="userSpaceOnUse"
+       y1="882.10999"
+       gradientTransform="translate(-7.0489)"
+       x2="468.20001"
+       y2="882.10999">
+      <stop
+         id="stop5456"
+         stop-color="#333"
+         offset="0" />
+      <stop
+         id="stop5462"
+         stop-color="#999"
+         offset=".19099" />
+      <stop
+         id="stop5464"
+         stop-color="#333"
+         offset=".31457" />
+      <stop
+         id="stop5466"
+         stop-color="#ccc"
+         offset=".47172" />
+      <stop
+         id="stop5468"
+         stop-color="#666"
+         offset=".61803" />
+      <stop
+         id="stop5470"
+         stop-color="#4d4d4d"
+         offset=".76395" />
+      <stop
+         id="stop5472"
+         stop-color="#b3b3b3"
+         offset=".91012" />
+      <stop
+         id="stop5458"
+         stop-color="#4d4d4d"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient5482"
+       x1="20.188"
+       gradientUnits="userSpaceOnUse"
+       y1="910.91998"
+       gradientTransform="matrix(0.62577,0,0,1.2255,148.73,-204.88)"
+       x2="818.79999"
+       y2="910.91998">
+      <stop
+         id="stop5478"
+         stop-color="#afe"
+         offset="0" />
+      <stop
+         id="stop5484"
+         stop-color="#5fd"
+         offset=".16795" />
+      <stop
+         id="stop5486"
+         stop-color="#afe"
+         offset=".27033" />
+      <stop
+         id="stop5488"
+         stop-color="#00d4aa"
+         offset=".41309" />
+      <stop
+         id="stop5490"
+         stop-color="#5fd"
+         offset=".59767" />
+      <stop
+         id="stop5492"
+         stop-color="#afe"
+         offset=".7188" />
+      <stop
+         id="stop5494"
+         stop-color="#00d4aa"
+         offset=".83992" />
+      <stop
+         id="stop5480"
+         stop-color="#afe"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient5517"
+       y2="475.54999"
+       gradientUnits="userSpaceOnUse"
+       x2="561.90002"
+       y1="475.54999"
+       x1="308.19">
+      <stop
+         id="stop5513"
+         stop-color="#999"
+         offset="0" />
+      <stop
+         id="stop5525"
+         stop-color="#fff"
+         offset=".2838" />
+      <stop
+         id="stop5523"
+         stop-color="#4d4d4d"
+         offset=".50592" />
+      <stop
+         id="stop5521"
+         stop-color="#fff"
+         offset=".75284" />
+      <stop
+         id="stop5515"
+         stop-color="#ccc"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient5566"
+       y2="334.41"
+       gradientUnits="userSpaceOnUse"
+       y1="785.87"
+       x2="195.95"
+       x1="464.01001">
+      <stop
+         id="stop5570"
+         stop-color="#fff"
+         offset="0" />
+      <stop
+         id="stop5572"
+         stop-opacity="0"
+         offset="1" />
+    </linearGradient>
+    <filter
+       id="filter5574"
+       x="-0.0079058708"
+       y="-0.024888656"
+       width="1.0158117"
+       height="1.0497773">
+      <feGaussianBlur
+         id="feGaussianBlur5576"
+         stdDeviation="1.3897203" />
+    </filter>
+    <linearGradient
+       xlink:href="#linearGradient5517"
+       id="linearGradient1"
+       gradientUnits="userSpaceOnUse"
+       x1="308.19"
+       y1="475.54999"
+       x2="561.90002"
+       y2="475.54999" />
+    <linearGradient
+       xlink:href="#linearGradient5517"
+       id="linearGradient2"
+       gradientUnits="userSpaceOnUse"
+       x1="308.19"
+       y1="475.54999"
+       x2="561.90002"
+       y2="475.54999" />
+    <linearGradient
+       xlink:href="#linearGradient5517"
+       id="linearGradient3"
+       gradientUnits="userSpaceOnUse"
+       x1="308.19"
+       y1="475.54999"
+       x2="561.90002"
+       y2="475.54999" />
+    <linearGradient
+       xlink:href="#linearGradient5517"
+       id="linearGradient4"
+       gradientUnits="userSpaceOnUse"
+       x1="308.19"
+       y1="475.54999"
+       x2="561.90002"
+       y2="475.54999" />
+    <linearGradient
+       xlink:href="#linearGradient5517"
+       id="linearGradient5"
+       gradientUnits="userSpaceOnUse"
+       x1="308.19"
+       y1="475.54999"
+       x2="561.90002"
+       y2="475.54999" />
+    <linearGradient
+       xlink:href="#linearGradient5517"
+       id="linearGradient6"
+       gradientUnits="userSpaceOnUse"
+       x1="308.19"
+       y1="475.54999"
+       x2="561.90002"
+       y2="475.54999" />
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(-23.237,-374.07999)">
+    <g
+       id="g5578">
+      <rect
+         id="rect5474"
+         height="6.9327002"
+         width="499.12"
+         stroke="#d5fff6"
+         y="908.02002"
+         x="161.67"
+         stroke-width="0.87573"
+         fill="url(#linearGradient5482)"
+         style="fill:url(#linearGradient5482)" />
+      <rect
+         id="rect2987"
+         height="478.03"
+         width="768"
+         y="378.07999"
+         x="27.237"
+         fill="url(#linearGradient3039)"
+         style="fill:url(#linearGradient3039)" />
+      <rect
+         id="rect2985"
+         height="417"
+         width="741.34003"
+         stroke="#000000"
+         y="385.57999"
+         x="40.568001"
+         stroke-width="0.6757"
+         fill="url(#linearGradient3017)"
+         style="fill:url(#linearGradient3017)" />
+      <rect
+         id="rect2989"
+         y="391.64999"
+         width="719.75"
+         x="51.360001"
+         height="404.85999" />
+      <rect
+         id="rect2991"
+         height="24.733"
+         width="746.53003"
+         stroke="#000002"
+         y="822.53003"
+         x="37.972"
+         stroke-width="0.63553"
+         fill="url(#linearGradient3007)"
+         style="fill:url(#linearGradient3007)" />
+      <path
+         id="path3890"
+         opacity="0.47737"
+         d="m 654,312.09 a 40,40 0 1 1 -80,0 40,40 0 1 1 80,0 z"
+         transform="translate(12,332.27)"
+         filter="url(#filter5448)"
+         fill="#999999" />
+      <rect
+         id="rect5452"
+         height="51.790001"
+         width="90.983002"
+         stroke="#000000"
+         y="856.10999"
+         x="365.75"
+         stroke-width="0.48315"
+         fill="url(#linearGradient5460)"
+         style="fill:url(#linearGradient5460)" />
+      <g
+         id="text5496"
+         transform="matrix(0.25048,0,0,0.25048,302.27,693.54)"
+         fill="url(#linearGradient5517)"
+         style="fill:url(#linearGradient6)">
+        <path
+           id="path5501"
+           d="m 342.54,499.95 h -23.401 v -48.817 h 24.337 c 4.56,5e-5 8.3042,0.98442 11.232,2.9531 3.3588,2.2559 5.0383,5.5437 5.0383,9.8635 -4e-5,4.6553 -2.6397,8.1116 -7.9189,10.369 6.3354,1.8238 9.5031,5.8316 9.5032,12.023 -4e-5,4.8003 -2.0398,8.376 -6.1194,10.727 -3.312,1.9204 -7.5359,2.8806 -12.672,2.8806 z m 0.79102,-45.433 h -20.52 v 18.36 h 20.448 c 3.5522,3e-5 6.4804,-0.69577 8.7847,-2.0874 2.688,-1.6318 4.0319,-4.032 4.032,-7.2004 -4e-5,-3.1684 -1.3916,-5.5444 -4.1748,-7.1279 -2.2574,-1.2963 -5.1138,-1.9445 -8.5693,-1.9446 z m -0.21533,21.744 h -20.305 v 20.305 h 20.593 c 3.9843,1e-5 7.248,-0.7683 9.791,-2.3049 3.0249,-1.7754 4.5373,-4.3909 4.5374,-7.8464 -4e-5,-3.6972 -1.6084,-6.4094 -4.8252,-8.1365 -2.4961,-1.3447 -5.7598,-2.0171 -9.791,-2.0171 z"
+           style="fill:url(#linearGradient1)" />
+        <path
+           id="path5503"
+           d="m 398.38,476.12 c 5.039,1.9673 7.5586,5.7832 7.5586,11.448 v 12.384 h -3.6716 v -12.241 c -4e-5,-6.3838 -4.4642,-9.5757 -13.392,-9.5757 h -19.224 v 21.817 h -3.6716 v -48.817 h 23.544 c 11.424,5e-5 17.136,4.2723 17.136,12.817 -4e-5,5.9517 -2.7598,10.008 -8.2793,12.168 z m -8.7122,-21.601 h -20.017 v 20.09 h 18.866 c 4.1279,3e-5 7.4399,-0.76828 9.936,-2.3049 3.0234,-1.8237 4.5351,-4.5359 4.5352,-8.1365 -4e-5,-6.4321 -4.44,-9.6481 -13.32,-9.6482 z"
+           style="fill:url(#linearGradient2)" />
+        <path
+           id="path5505"
+           d="m 452.28,499.95 -6.9829,-15.337 h -26.064 l -7.1279,15.337 h -4.177 l 22.896,-48.817 h 3.3838 l 22.104,48.817 z m -19.727,-43.488 -11.736,24.697 h 22.968 z"
+           style="fill:url(#linearGradient3)" />
+        <path
+           id="path5507"
+           d="m 497.19,499.95 -35.424,-43.343 v 43.343 h -3.6716 v -48.817 h 3.8166 c 4.1279,5.2325 10.032,12.456 17.712,21.672 8.3042,9.8892 14.208,17.041 17.712,21.456 v -43.128 h 3.6716 v 48.817 z"
+           style="fill:url(#linearGradient4)" />
+        <path
+           id="path5509"
+           d="m 523.95,499.95 h -16.921 v -48.817 h 19.657 c 8.0156,5e-5 14.112,2.1841 18.288,6.5522 3.9843,4.2246 5.9765,10.2 5.9766,17.927 -5e-5,7.9688 -2.5445,14.089 -7.6333,18.36 -4.752,3.9844 -11.208,5.9766 -19.367,5.9766 z m 18.36,-39.817 c -3.5039,-3.7441 -8.7364,-5.6162 -15.697,-5.6162 H 510.7 v 42.049 h 13.465 c 7.2964,10e-6 12.973,-1.7761 17.029,-5.3284 4.0561,-3.5522 6.0842,-8.7605 6.0842,-15.625 -4e-5,-6.8159 -1.656,-11.976 -4.968,-15.48 z"
+           style="fill:url(#linearGradient5)" />
+      </g>
+      <path
+         id="path5555"
+         opacity="0.54733"
+         filter="url(#filter5574)"
+         fill="url(#linearGradient5566)"
+         d="m 52.943,393.21 v 114.83 c 40.855,12.232 87.719,19.18 137.53,19.18 144.05,0 263.34,-58.145 284.34,-134.01 H 52.933 Z"
+         style="fill:url(#linearGradient5566)" />
+    </g>
+  </g>
+  <metadata
+     id="metadata1">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title>LCD, LED, Plasma TV. TV de plasma, LED, LCD.</dc:title>
+        <dc:date>2012-05-24T13:04:38</dc:date>
+        <dc:description>LCD, LED, Plasma TV with glass base. TV de plasma, LED, LCD con base de vidrio.</dc:description>
+        <dc:source>http://openclipart.org/detail/170186/lcd-led-plasma-tv.-tv-de-plasma-led-lcd.-by-ehecatl1138</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Ehecatl1138</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>Full-HD base</rdf:li>
+            <rdf:li>HD</rdf:li>
+            <rdf:li>Hi-Definition</rdf:li>
+            <rdf:li>alta-definicion</rdf:li>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>glass</rdf:li>
+            <rdf:li>lcd</rdf:li>
+            <rdf:li>led</rdf:li>
+            <rdf:li>monitor</rdf:li>
+            <rdf:li>set</rdf:li>
+            <rdf:li>television</rdf:li>
+            <rdf:li>tv</rdf:li>
+            <rdf:li>vidrio</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/publicdomain/zero/1.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>
