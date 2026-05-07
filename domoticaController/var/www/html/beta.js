@@ -1,6 +1,7 @@
 // ToDo
-// Fill Initialise Room panels 
+// Fill Initialise Room panels
 // lights, switches with icon-colors, background-color of tranparanty level
+// See line starting with Test  initialize icons
 
 const confName = "data/conf.php.json";
 
@@ -213,7 +214,7 @@ async function startTime() {
                 HTMLCode += "_" + conf.rooms[room].switchew[powerswitch].Channel;
               }
               HTMLCode += "\" class=\"menubutton boxed\" style=\"background-color: dimgray;\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].switches[powerswitch].Icon + "\">";
-
+// Test  initialize icons
             }
           }
           HTMLCode += "<br>";
