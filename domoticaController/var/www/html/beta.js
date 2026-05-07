@@ -1,5 +1,6 @@
 // ToDo
-// Fill Room panels
+// Fill Initialise Room panels 
+// lights, switches with icon-colors, background-color of tranparanty level
 
 const confName = "data/conf.php.json";
 
