@@ -65,6 +65,18 @@
         }
       },
       "lights": {
+        "TVlamp": {
+          "disabled": false,
+          "Icon": "emoji/tv.svg",
+          "Hostname": "tvlamp-20",
+          "Watt": "20",
+          "events": [
+            {
+              "startTime": "eveningLightsOn",
+              "stopTime": "bedTime"
+            }
+          ]
+        },
         "LivingVoor": {
           "Icon": "emoji/ledlamp.svg",
           "Hostname": "Livinglamp-24",
@@ -173,7 +185,37 @@
           "Watt": "20",
           "events": [
             {
-              "startTime": "sunset",
+              "startTime": "eveningLightsOn",
+              "stopTime": "bedTime"
+            }
+          ]
+        },
+        "Apotheek": {
+          "disabled": false,
+          "Icon": "emoji/medicinecabinet.png",
+          "Hostname": "apotheek-20",
+          "Watt": "20",
+          "events": [
+            {
+              "startTime": "breakfast",
+              "stopTime": "morningLightsOut"
+            },
+            {
+              "startTime": "22:24",
+              "stopTime": "bedTime"
+            }
+          ]
+        }
+      },
+      "switches": {
+        "Tandenborstel": {
+          "disabled": false,
+          "Icon": "emoji/toothbrush.svg",
+          "Hostname": "tandenborstel-10",
+          "Watt": "10",
+          "events": [
+            {
+              "startTime": "16:00",
               "stopTime": "sleep"
             }
           ]
