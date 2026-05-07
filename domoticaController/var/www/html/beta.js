@@ -189,7 +189,6 @@ async function startTime() {
             } else {
               disabled = conf.rooms[room].lights[light].disabled;
             }
-console.log(disabled, conf.rooms[room].lights[light]);
             if (disabled == false) {
               HTMLCode += "<img id=\"light_" + conf.rooms[room].lights[light].Hostname;
               if (typeof conf.rooms[room].lights[light].Channel !== 'undefined') {
@@ -200,26 +199,26 @@ console.log(disabled, conf.rooms[room].lights[light]);
           }
           HTMLCode += "<br>";
         }
+        if (typeof conf.rooms[room].switches !== 'undefined') {
+          for (var powerswitch in conf.rooms[room].switches) { // Fill Room switches panel
+            if (typeof conf.rooms[room].switches[powerswitch].disabled === 'undefined') {
+              disabled = false;
+            } else {
+              disabled = conf.rooms[room].switches[powerswitch].disabled;
+            }
+            if (disabled == false) {
+              HTMLCode += "<img id=\"switch_" + conf.rooms[room].switches[powerswitch].Hostname;
+              if (typeof conf.rooms[room].switches[powerswitch].Channel !== 'undefined') {
+                HTMLCode += "_" + conf.rooms[room].switchew[powerswitch].Channel;
+              }
+              HTMLCode += "\" class=\"menubutton boxed\" style=\"background-color: dimgray;\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].switches[powerswitch].Icon + "\">";
+
+            }
+          }
+          HTMLCode += "<br>";
+        }
         HTMLCode += "</div>";
         weatherPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
-
-//<div id="Kamer" class="panel">
-//<h1><img class="menubutton" src="emoji/kitchen.svg"> Kamer <span id="Kamer_temp">--.- °C</span></h1>
-//<br>
-//<img id="heater_Computertafel" class="menubutton" onclick="elclick(event);" src="emoji/infrared-off.svg">
-//<img id="heater_Computertafel" class="menubutton" onclick="elclick(event);" src="emoji/infrared-off.svg">
-//<img id="heater_Computertafel" class="menubutton" onclick="elclick(event);" src="emoji/infrared-off.svg">
-//<button style="position: relative; bottom: 5vh;" id="Living_Incr" onclick="elclick(event);">+</button>
-//<button style="position: relative; bottom: 5vh;"><span id="Lining_manual">20.0</span> °C</button>  
-//<button style="position: relative; bottom: 5vh;" id="Living_Decr" onclick="elclick(event);">&ndash;</button>
-//<button style="position: relative; bottom: 5vh;" id="Living_AM" onclick="elclick(event);">A</button>
-//<br>
-
-//<img id="light_LivingZij" class="menubutton" onclick="elclick(event);" src="emoji/light-bulb-off.svg">
-//<br>
-//<img id="switch_Tandenborstel" class="menubutton" onclick="elclick(event);" src="emoji/power-off.svg">
-//</div>
-
       }
 
     } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
