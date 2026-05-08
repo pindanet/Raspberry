@@ -137,6 +137,7 @@ do
         temp=$(awk "BEGIN { printf(\"%.1f\", $temp / 1000 + $tempCorrection) }")
 
         XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype t=$temp -k return
+        wget -qO- --post-data 'message=ktemp='$temp http://pindadomo/wtype.php
 
         now=$(date +"%H:%M")
         if (($(cat /sys/class/backlight/10-0045/brightness) > 0)); then
