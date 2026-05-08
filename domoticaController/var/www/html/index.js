@@ -1653,7 +1653,6 @@ function wtypeServer() {
       const varValue = wtypeText.split("=");
       switch (varValue[0]) {
          case "ktemp":
-console.log(varValue);
 //           if (isNaN(varValue[1])) {
              document.getElementById("kitchenRoomTemp").innerHTML = varValue[1] + " °C";
 //           }
