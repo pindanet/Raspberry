@@ -999,7 +999,7 @@ function thermostat() {
   tempAdjustment(conf.Dining);
   wgetTemp("pindadining", conf.Dining);
 //  tempAdjustment(conf.Kitchen);
-  wgetTemp("pindakeuken", conf.Kitchen);
+//  wgetTemp("pindakeuken", conf.Kitchen);
   if (!conf.hasOwnProperty('thermostatDisabled')) {
     if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort) && (document.getElementById("clockday").style.color !== "lime")) {
       document.getElementById("clockday").style.color="lime";
@@ -1652,10 +1652,11 @@ function wtypeServer() {
     } else { // message with variable
       const varValue = wtypeText.split("=");
       switch (varValue[0]) {
-         case "t":
-           if (!isNaN(wtypeText.substring(2))) {
-             document.getElementById("kitchenRoomTemp").innerHTML = wtypeText.substring(2);
-           }
+         case "ktemp":
+console.log(varValue);
+//           if (isNaN(varValue[1])) {
+             document.getElementById("kitchenRoomTemp").innerHTML = varValue[1] + " °C";
+//           }
            break;
          default:
            console.log("Received wtype text: " + wtypeText);
