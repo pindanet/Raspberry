@@ -8,7 +8,7 @@
 <?php
 // ToDo
 
-$price = 32; // per kWh in centimen
+$price = 35; // per kWh in centimen
 $datetime = explode(" ", date("j W n Y"));
 $processDay = $datetime[0];
 $processMonth = $datetime[2];
