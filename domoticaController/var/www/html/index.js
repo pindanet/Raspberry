@@ -1655,6 +1655,7 @@ function wtypeServer() {
          case "ktemp":
 //           if (isNaN(varValue[1])) {
              document.getElementById("kitchenRoomTemp").innerHTML = varValue[1] + " °C";
+             conf.Kitchen.temp = parseFloat(varValue[1]);
 //           }
            break;
          default:
