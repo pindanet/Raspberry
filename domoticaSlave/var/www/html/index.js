@@ -361,11 +361,10 @@ function startTime() {
   s = checkTime(s);
 
   document.getElementById('day').innerHTML = dayNames[today.getDay()];
-  document.getElementById('clock').innerHTML = h + ":" + m;
   var elem = document.getElementById("clock");
   if(elem.innerHTML.substring(0, elem.innerHTML.indexOf(":")) != h) { // every hour
     // get Touchscreen brightness
-    var xhr = new XMLHttpRequest();   
+    var xhr = new XMLHttpRequest();
     xhr.open('POST', "cli.php", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.onload = function(e) {
@@ -375,6 +374,7 @@ function startTime() {
     };
     xhr.send("cmd=cat&params="+stringToHex("/sys/class/backlight/10-0045/brightness"));
   }
+  document.getElementById('clock').innerHTML = h + ":" + m;
   elem = document.getElementById("clockdate");
   if (elem.innerHTML !== conf.available[0].sleep && elem.innerHTML !== conf.available[0].absent) {
     document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
