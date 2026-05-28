@@ -1,46 +1,114 @@
 {
   "Controller": "pindadomo",
   "Timezone": "Europe/Brussels",
+  "location": {
+    "Latitude": 51.1853335,
+    "Longitude": 3.2401705,
+    "Altitude": 5
+  },
   "rooms": {
     "Living": {
       "Name": "Living",
+      "Icon": "emoji/living.svg",
       "Hostname": "pindadomo",
-      "tasmota": {
-        "LivingZij": {
-          "IP": "192.168.129.41",
-          "Hostname": "Livinglamp-24",
-          "Watt": "8",
-          "type": "light",
+      "thermostat": {
+        "tempPath": "/data/temp",
+        "tempComfort": 20,
+        "tempAux": 17.5,
+        "tempOff": 15,
+        "tempNight": 10,
+        "tempNightTime": "06:30",
+        "tempCorrection": 0,
+        "sensorStatus": "clockmonthday",
+        "sensorPowerGPIO": 17,
+        "ds18b20": {
+          "powerGPIO": 17,
+          "dataGPIO": 4
+        },
+        "heater": [
+          {
+            "name": "Computertafel",
+            "color": "Yellow",
+            "status": "undefined",
+            "Hostname": "computertafel-300",
+            "Watt": "300"
+          },
+          {
+            "name": "Schilderij",
+            "color": "Orange",
+            "status": "undefined",
+            "Hostname": "schilderij-650",
+            "Watt": "650"
+          },
+          {
+            "name": "Canyon",
+            "color": "Red",
+            "status": "undefined",
+            "Hostname": "haard",
+            "Channel": 2,
+            "Watt": "650"
+          }
+        ],
+        "schedule": {
+          "00:00": 10,
+          "06:30": 15,
+          "07:40": 17.5,
+          "08:00": 15,
+          "09:15": 17.5,
+          "10:30": 15,
+          "12:15": 17.5,
+          "13:00": 15,
+          "17:15": 17.5,
+          "17:45": 15,
+          "22:20": 17.5,
+          "22:50": 15
+        }
+      },
+      "lights": {
+        "TVlamp": {
+          "disabled": false,
+          "Icon": "emoji/tv.svg",
+          "Hostname": "tvlamp-20",
+          "Watt": "20",
           "events": [
             {
-              "lowerThreshold": 20,
-              "upperThreshold": 35,
-              "startTime": "13:30",
-              "stopTime": "02:00"
+              "startTime": "eveningLightsOn",
+              "stopTime": "bedTime"
             }
           ]
         },
         "LivingVoor": {
-          "IP": "192.168.129.41",
+          "Icon": "emoji/ledlamp.svg",
           "Hostname": "Livinglamp-24",
           "Channel": "2",
           "Watt": "16",
-          "type": "light",
           "events": [
             {
               "lowerThreshold": 20,
               "upperThreshold": 35,
               "startTime": "13:30",
-              "stopTime": "02:00"
+              "stopTime": "20:00"
+            }
+          ]
+        },
+        "LivingZij": {
+          "Icon": "emoji/ledlampzij.svg",
+          "Hostname": "Livinglamp-24",
+          "Watt": "8",
+          "events": [
+            {
+              "lowerThreshold": 20,
+              "upperThreshold": 35,
+              "startTime": "13:30",
+              "stopTime": "20:00"
             }
           ]
         },
         "Kerst": {
           "disabled": true,
-          "IP": "192.168.129.44",
+          "Icon": "emoji/christmassspheres.svg",
           "Hostname": "Kerst-20",
           "Watt": "20",
-          "type": "light",
           "events": [
             {
               "lowerThreshold": 20,
@@ -54,10 +122,109 @@
     },
     "Dining": {
       "Name": "Eetkamer",
-      "Hostname": "pindadining"
+      "Icon": "emoji/dining.svg",
+      "Hostname": "pindadining",
+      "thermostat": {
+        "tempPath": "/data/temp",
+        "tempComfort": 20,
+        "tempAux": 17.5,
+        "tempOff": 15,
+        "tempNight": 10,
+        "tempNightTime": "06:30",
+        "tempCorrection": 0,
+        "sensorStatus": "clockmonthday",
+        "sensorPowerGPIO": 17,
+        "ds18b20": {
+          "powerGPIO": 17,
+          "dataGPIO": 4
+        },
+        "heater": [
+          {
+            "name": "Eettafel",
+            "color": "Yellow",
+            "status": "undefined",
+            "Hostname": "eettafel-300",
+            "Watt": "300"
+          },
+          {
+            "name": "Zonsondergang",
+            "color": "Orange",
+            "status": "undefined",
+            "Hostname": "zonsondergang-650",
+            "Watt": "650"
+          },
+          {
+            "name": "Tropen",
+            "color": "Red",
+            "status": "undefined",
+            "Hostname": "tropen-650",
+            "Watt": "650"
+          }
+        ],
+        "schedule": {
+          "00:00": 10,
+          "06:30": 15,
+          "07:40": 17.5,
+          "08:00": 15,
+          "09:15": 17.5,
+          "10:30": 15,
+          "12:15": 17.5,
+          "13:00": 15,
+          "17:15": 17.5,
+          "17:45": 15,
+          "22:20": 17.5,
+          "22:50": 15
+        }
+      },
+      "lights": {
+        "Haardlamp": {
+          "disabled": false,
+          "Icon": "emoji/fireplace.svg",
+          "Hostname": "haard",
+          "Channel": 1,
+          "Watt": "20",
+          "events": [
+            {
+              "startTime": "eveningLightsOn",
+              "stopTime": "bedTime"
+            }
+          ]
+        },
+        "Apotheek": {
+          "disabled": false,
+          "Icon": "emoji/medicinecabinet.png",
+          "Hostname": "apotheek-20",
+          "Watt": "20",
+          "events": [
+            {
+              "startTime": "breakfast",
+              "stopTime": "morningLightsOut"
+            },
+            {
+              "startTime": "22:24",
+              "stopTime": "bedTime"
+            }
+          ]
+        }
+      },
+      "switches": {
+        "Tandenborstel": {
+          "disabled": false,
+          "Icon": "emoji/toothbrush.svg",
+          "Hostname": "tandenborstel-10",
+          "Watt": "10",
+          "events": [
+            {
+              "startTime": "16:00",
+              "stopTime": "sleep"
+            }
+          ]
+        }
+      }
     },
     "Kitchen": {
       "Name": "Keuken",
+      "Icon": "emoji/kitchen.svg",
       "Hostname": "pindakeuken",
       "tasmota": {
         "Keukenlamp": {
@@ -124,6 +291,11 @@
       "Channel": "1",
       "Watt": "20"
     },
+    "TVlamp": {
+      "IP": "192.168.129.11",
+      "Hostname": "TVlamp-20",
+      "Watt": "20"
+    },
     "Tandenborstel": {
       "IP": "192.168.129.7",
       "Hostname": "Tandenborstel-10",
@@ -133,11 +305,80 @@
       "IP": "192.168.129.19",
       "Hostname": "Apotheek-20",
       "Watt": "20"
-    },
-    "TVlamp": {
-      "IP": "192.168.129.11",
-      "Hostname": "TVlamp-20",
-      "Watt": "20"
+    }
+  },
+  "radio": {
+    "channel": {
+      "radio1": {
+        "URL": "http://icecast.vrtcdn.be/radio1-high.mp3",
+        "logo": "radiologos/radio1.svg",
+        "volume": 20
+      },
+      "radio2": {
+        "URL": "http://icecast.vrtcdn.be/ra2wvl-high.mp3",
+        "logo": "radiologos/radio2.svg",
+        "volume": 20
+      },
+      "klara": {
+        "URL": "http://icecast.vrtcdn.be/klara-high.mp3",
+        "logo": "radiologos/klara.svg",
+        "volume": 20
+      },
+      "klaracontinuo": {
+        "URL": "http://icecast.vrtcdn.be/klaracontinuo-high.mp3",
+        "logo": "radiologos/klaracontinuo.png",
+        "volume": 20
+      },
+      "stubru": {
+        "URL": "http://icecast.vrtcdn.be/stubru-high.mp3",
+        "logo": "radiologos/stubru.svg",
+        "volume": 20
+      },
+      "mnm": {
+        "URL": "http://icecast.vrtcdn.be/mnm-high.mp3",
+        "logo": "radiologos/mnm.svg",
+        "volume": 20
+      },
+      "mnmhits": {
+        "URL": "http://icecast.vrtcdn.be/mnm_hits-high.mp3",
+        "logo": "radiologos/mnmhits.svg",
+        "volume": 20
+      },
+      "vrtnws": {
+        "URL": "http://progressive-audio.vrtcdn.be/content/fixed/11_11niws-snip_hi.mp3",
+        "logo": "radiologos/vrtnws.svg",
+        "volume": 20
+      },
+      "ketnet": {
+        "URL": "http://icecast.vrtcdn.be/ketnetradio-high.mp3",
+        "logo": "radiologos/ketnet.svg",
+        "volume": 20
+      },
+      "swissjazz": {
+        "URL": "http://stream.srg-ssr.ch/m/rsj/mp3_128",
+        "logo": "radiologos/swissjazz.png",
+        "volume": 30
+      },
+      "vbro": {
+        "URL": "http://stream.vbro.be:9100/vbro",
+        "logo": "radiologos/vbro.png",
+        "volume": 20
+      },
+      "joe": {
+        "URL": "https://streams.radio.dpgmedia.cloud/redirect/joe_fm/mp3",
+        "logo": "radiologos/joe.svg",
+        "volume": 20
+      },
+      "qmusic": {
+        "URL": "https://streams.radio.dpgmedia.cloud/redirect/qmusic_be/mp3",
+        "logo": "radiologos/qmusic.svg",
+        "volume": 20
+      },
+      "willy": {
+        "URL": "https://streams.radio.dpgmedia.cloud/redirect/willy_be/mp3",
+        "logo": "radiologos/willy.svg",
+        "volume": 20
+      }
     }
   }
 }
