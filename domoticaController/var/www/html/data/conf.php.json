@@ -87,7 +87,7 @@
               "lowerThreshold": 20,
               "upperThreshold": 35,
               "startTime": "13:30",
-              "stopTime": "02:00"
+              "stopTime": "20:00"
             }
           ]
         },
@@ -100,7 +100,7 @@
               "lowerThreshold": 20,
               "upperThreshold": 35,
               "startTime": "13:30",
-              "stopTime": "02:00"
+              "stopTime": "20:00"
             }
           ]
         },
