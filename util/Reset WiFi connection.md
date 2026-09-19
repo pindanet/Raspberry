@@ -1,3 +1,6 @@
+## More stability with Power Save Off and 2.4 GHz force
+   
 ## Reset WiFi connection
-    sudo su
-    echo 32 > /sys/class/backlight/rpi_backlight/brightness
+    nmcli connection show
+    sudo nmcli connection delete "connection name"
+    sudo nmcli device wifi connect "SSID" password "P@ssword"
