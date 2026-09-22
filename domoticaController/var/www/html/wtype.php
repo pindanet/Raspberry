@@ -1,5 +1,4 @@
 <?php
-
 // Use terminal arg as POST en GET arg, example: php /var/www/html/wtype.php message=t%3D20.0
 // wget -qO- --post-data 'message=t%3D20.0' http://localhost/wtype.php
 if (!isset($_SERVER["HTTP_HOST"])) {
@@ -18,6 +17,9 @@ $varValue = explode("=",$message);
 switch ($varValue[0]) {
   case 'available':
     file_put_contents("/dev/shm/pindaavailable", $varValue[1]);
+    break;
+ case 'ktemp': // aanpassen naar temp_Living
+    file_put_contents("/dev/shm/temp_Living", $varValue[1]);
     break;
 }
 
