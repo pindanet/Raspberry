@@ -134,6 +134,8 @@ do
         else # Initialise log file
           echo "${timestamp},${temp},${temp}" >> $logfile
         fi
+# old save file
+        echo $temp > /var/www/html/data/temp
         temp=$(awk "BEGIN { printf(\"%.1f\", $temp / 1000 + $tempCorrection) }")
 
         XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype t=$temp -k return
