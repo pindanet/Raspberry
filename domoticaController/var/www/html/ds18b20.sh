@@ -44,6 +44,7 @@ fi
 
 echo $temp
 echo $temp > /var/www/html/data/temp
+echo $temp > /dev/shm/temp_Living
 
 # minimum maximum temp
 logfile="/var/www/html/data/temp.log"
