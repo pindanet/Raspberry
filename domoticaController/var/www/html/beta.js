@@ -131,7 +131,7 @@ function getTemp(room) {
       }
     }
   };
-  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + conf.rooms[room].thermostat.tempPath));
+  xhr.send("cmd=wget&params="+stringToHex("-qO- --post-data 'message=temp' http://" + conf.rooms[room].Hostname + "/wread.php"));
 }
 function checkTime(i) {
   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
