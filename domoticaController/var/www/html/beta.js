@@ -58,6 +58,26 @@ function elclick(event) {
     default:
       if (id.startsWith("menu")) {
         activatePanel(id.slice(4));
+      } else if (id.startsWith("light_")) {
+        const idSplit = id.split("_");
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "cli.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            const output = JSON.parse(this.responseText);
+            if (output[0].includes(':"OFF"}')) {
+              document.getElementById(id).style.backgroundColor = "black";
+            } else if (output[0].includes(':"ON"}')) {
+              document.getElementById(id).style.backgroundColor = conf.rooms[idSplit[1]].lights[idSplit[2]].BackgroundColorOn;
+            }
+          }
+        };
+        if (typeof conf.rooms[idSplit[1]].lights[idSplit[2]].Channel !== 'undefined') {
+          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[idSplit[1]].lights[idSplit[2]].Hostname + "/cm?cmnd=Power" + conf.rooms[idSplit[1]].lights[idSplit[2]].Channel  + "%20Toggle"));
+        } else {
+          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[idSplit[1]].lights[idSplit[2]].Hostname + "/cm?cmnd=Power%20Toggle"));
+        }
       } else {
         console.log(id, event);
       }
@@ -192,10 +212,7 @@ async function startTime() {
               disabled = conf.rooms[room].lights[light].disabled;
             }
             if (disabled == false) {
-              HTMLCode += "<img id=\"light_" + conf.rooms[room].lights[light].Hostname;
-              if (typeof conf.rooms[room].lights[light].Channel !== 'undefined') {
-                HTMLCode += "_" + conf.rooms[room].lights[light].Channel;
-              }
+              HTMLCode += "<img id=\"light_" + room + "_" + light;
               HTMLCode += "\" class=\"menubutton boxed\" style=\"background-color: dimgray;\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].lights[light].Icon + "\">";
             }
           }
@@ -243,6 +260,15 @@ async function startTime() {
       document.getElementById("clocktemp").innerHTML = conf.rooms[conf.ControllerRoom].thermostat.temp;
       document.getElementById("minitemp").innerHTML = conf.rooms[conf.ControllerRoom].thermostat.temp;
     }
+    for (var room in conf.rooms) { // Update Room panels
+      if (conf.rooms[room].Hostname != conf.Controller) {
+        getTemp(room);
+      }
+      if (typeof conf.rooms[room].thermostat.temp !== 'undefined') { // Temp received
+        document.getElementById("temp_"+conf.rooms[room].Name).innerHTML = conf.rooms[room].thermostat.temp + " °C";
+      }
+    }
+
   }
   startTimer = setTimeout(startTime, 1000); // every second
 }
