@@ -213,7 +213,7 @@ async function startTime() {
             }
             if (disabled == false) {
               HTMLCode += "<img id=\"light_" + room + "_" + light;
-              HTMLCode += "\" class=\"menubutton boxed\" style=\"background-color: dimgray;\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].lights[light].Icon + "\">";
+              HTMLCode += "\" class=\"menubutton boxed\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].lights[light].Icon + "\">";
             }
           }
           HTMLCode += "<br>";
@@ -230,7 +230,7 @@ async function startTime() {
               if (typeof conf.rooms[room].switches[powerswitch].Channel !== 'undefined') {
                 HTMLCode += "_" + conf.rooms[room].switchew[powerswitch].Channel;
               }
-              HTMLCode += "\" class=\"menubutton boxed\" style=\"background-color: dimgray;\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].switches[powerswitch].Icon + "\">";
+              HTMLCode += "\" class=\"menubutton boxed\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].switches[powerswitch].Icon + "\">";
 // Test  initialize icons
             }
           }
