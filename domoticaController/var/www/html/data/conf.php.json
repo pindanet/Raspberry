@@ -69,6 +69,7 @@
           "disabled": false,
           "Icon": "emoji/tv.svg",
           "Hostname": "tvlamp-20",
+          "BackgroundColorOn": "SandyBrown",
           "Watt": "20",
           "events": [
             {
@@ -81,26 +82,28 @@
           "Icon": "emoji/ledlamp.svg",
           "Hostname": "Livinglamp-24",
           "Channel": "2",
+          "BackgroundColorOn": "AntiqueWhite",
           "Watt": "16",
           "events": [
             {
               "lowerThreshold": 20,
-              "upperThreshold": 35,
+              "upperThreshold": 40,
               "startTime": "13:30",
-              "stopTime": "20:00"
+              "stopTime": "21:00"
             }
           ]
         },
         "LivingZij": {
           "Icon": "emoji/ledlampzij.svg",
           "Hostname": "Livinglamp-24",
+          "BackgroundColorOn": "AntiqueWhite",
           "Watt": "8",
           "events": [
             {
               "lowerThreshold": 20,
-              "upperThreshold": 35,
+              "upperThreshold": 40,
               "startTime": "13:30",
-              "stopTime": "20:00"
+              "stopTime": "21:00"
             }
           ]
         },
@@ -108,6 +111,7 @@
           "disabled": true,
           "Icon": "emoji/christmassspheres.svg",
           "Hostname": "Kerst-20",
+          "BackgroundColorOn": "LightSalmon",
           "Watt": "20",
           "events": [
             {
@@ -132,7 +136,7 @@
         "tempNight": 10,
         "tempNightTime": "06:30",
         "tempCorrection": 0,
-        "sensorStatus": "clockmonthday",
+        "sensorStatus": "clockmonth",
         "sensorPowerGPIO": 17,
         "ds18b20": {
           "powerGPIO": 17,
@@ -199,10 +203,6 @@
             {
               "startTime": "breakfast",
               "stopTime": "morningLightsOut"
-            },
-            {
-              "startTime": "22:24",
-              "stopTime": "bedTime"
             }
           ]
         }
@@ -246,6 +246,7 @@
         ]
       },
       "thermostat": {
+        "tempPath": "/data/temp",
         "sensorPowerGPIO": 17,
         "tempComfort": 20,
         "tempAux": 17.5,
@@ -257,6 +258,7 @@
           "dataGPIO": 4
         },
         "tempCorrection": 0.6,
+        "sensorStatus": "clockyear",
         "heater": [
           {
             "name": "Eekhoorn",
