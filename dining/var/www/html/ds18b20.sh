@@ -49,6 +49,7 @@ fi
 
 echo $temp
 echo $temp > /var/www/html/data/temp
+echo $temp > /dev/shm/temp
 
 # minimum maximum temp
 #timestamp=$(date +"%m-%d_")
