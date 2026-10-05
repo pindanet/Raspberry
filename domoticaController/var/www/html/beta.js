@@ -260,6 +260,7 @@ async function startTime() {
       document.getElementById("clocktemp").innerHTML = conf.rooms[conf.ControllerRoom].thermostat.temp;
       document.getElementById("minitemp").innerHTML = conf.rooms[conf.ControllerRoom].thermostat.temp;
     }
+    var tempColor = "lime";
     for (var room in conf.rooms) { // Update Room panels
       if (conf.rooms[room].Hostname != conf.Controller) {
         getTemp(room);
@@ -267,8 +268,11 @@ async function startTime() {
       if (typeof conf.rooms[room].thermostat.temp !== 'undefined') { // Temp received
         document.getElementById("temp_"+conf.rooms[room].Name).innerHTML = conf.rooms[room].thermostat.temp + " °C";
       }
+   	  if (conf.rooms[room].thermostat.temp < 20) {
+	    tempColor = "";
+	  }
     }
-
+    document.getElementById("clockdaytemp").style.color = tempColor;
   }
   startTimer = setTimeout(startTime, 1000); // every second
 }
