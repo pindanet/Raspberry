@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo dpkg --configure -a
+apt --fix-broken install
 apt-get clean
 apt autoremove -y
 apt-get update
