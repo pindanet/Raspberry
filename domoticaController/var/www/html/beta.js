@@ -78,6 +78,26 @@ function elclick(event) {
         } else {
           xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[idSplit[1]].lights[idSplit[2]].Hostname + "/cm?cmnd=Power%20Toggle"));
         }
+      } else if (id.startsWith("heater_")) {
+        const idSplit = id.split("_");
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "cli.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = function(e) {
+          if (this.status == 200) {
+            const output = JSON.parse(this.responseText);
+            if (output[0].includes(':"OFF"}')) {
+              document.getElementById(id).src = "emoji/infrared-off.svg";
+            } else if (output[0].includes(':"ON"}')) {
+              document.getElementById(id).src = "emoji/infrared-on.svg";
+            }
+          }
+        };
+        if (idSplit[3] !== 'undefined') {
+          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power" + idSplit[3] + "%20Toggle"));
+        } else {
+          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power%20Toggle"));
+        }
       } else {
         console.log(id, event);
       }
@@ -196,7 +216,7 @@ async function startTime() {
         HTMLCode += "<br>";
         if (typeof conf.rooms[room].thermostat.heater !== 'undefined') {
           for (var heater in conf.rooms[room].thermostat.heater) { // Fill Room Heater panel
-            HTMLCode += "<img id=\"heater_" + conf.rooms[room].thermostat.heater[heater].Hostname + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\"emoji/infrared-off.svg\">";
+            HTMLCode += "<img id=\"heater_" + room + "_" + conf.rooms[room].thermostat.heater[heater].Hostname + "_" + conf.rooms[room].thermostat.heater[heater].Channel + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\"emoji/infrared-off.svg\">";
           }
           HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_Incr\" onclick=\"elclick(event);\">+</button>";
           HTMLCode += "<button style=\"position: relative; bottom: 5vh;\"><span id=\"" + room + "_manual\">20.0</span> °C</button>";
