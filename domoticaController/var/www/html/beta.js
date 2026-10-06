@@ -268,9 +268,9 @@ async function startTime() {
       if (typeof conf.rooms[room].thermostat.temp !== 'undefined') { // Temp received
         document.getElementById("temp_"+conf.rooms[room].Name).innerHTML = conf.rooms[room].thermostat.temp + " °C";
       }
-   	  if (conf.rooms[room].thermostat.temp < 20) {
-	    tempColor = "";
-	  }
+   	  if (typeof conf.rooms[room].thermostat.temp === 'undefined' || conf.rooms[room].thermostat.temp < 20) {
+	      tempColor = "";
+	    }
     }
     document.getElementById("clockdaytemp").style.color = tempColor;
   }
