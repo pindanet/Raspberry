@@ -16,21 +16,40 @@ function miniPanel(display) {
 }
 function checkStatus(el) {
   const idSplit = el.id.split("_");
-  if (idSplit[0] == "light") { // Update light statussen
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', "cli.php", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onload = function(e) {
-      if (this.status == 200 && this.readyState === 4) {
-        const output = JSON.parse(this.responseText);
-        if (output[0] == "exist") {
-          document.getElementById(el.id).style.backgroundColor = idSplit[4];
-        } else {
-          document.getElementById(el.id).style.backgroundColor = "black";
+  switch(idSplit[0]) {
+//  if (idSplit[0] == "light") { // Update light statussen
+    case "heater":
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "cli.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function(e) {
+        if (this.status == 200 && this.readyState === 4) {
+          const output = JSON.parse(this.responseText);
+          if (output[0] == "exist") {
+            document.getElementById(el.id).src = "emoji/infrared-on.svg";
+          } else {
+            document.getElementById(el.id).src = "emoji/infrared-off.svg";
+          }
         }
-      }
-    };
-    xhr.send("cmd=wget&params="+stringToHex("-qO- --post-data 'var=pindatasmotastatus-" + idSplit[5] + "' http://localhost/var.php"));
+      };
+      xhr.send("cmd=wget&params="+stringToHex("-qO- --post-data 'var=pindatasmotastatus-" + idSplit[4] + "' http://localhost/var.php"));
+      break;
+    case "light":
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "cli.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function(e) {
+        if (this.status == 200 && this.readyState === 4) {
+          const output = JSON.parse(this.responseText);
+          if (output[0] == "exist") {
+            document.getElementById(el.id).style.backgroundColor = idSplit[4];
+          } else {
+            document.getElementById(el.id).style.backgroundColor = "black";
+          }
+        }
+      };
+      xhr.send("cmd=wget&params="+stringToHex("-qO- --post-data 'var=pindatasmotastatus-" + idSplit[5] + "' http://localhost/var.php"));
+      break;
   }
 }
 function updatePanel() {
@@ -252,7 +271,7 @@ async function startTime() {
         HTMLCode += "<br>";
         if (typeof conf.rooms[room].thermostat.heater !== 'undefined') {
           for (var heater in conf.rooms[room].thermostat.heater) { // Fill Room Heater panel
-            HTMLCode += "<img id=\"heater_" + room + "_" + conf.rooms[room].thermostat.heater[heater].Hostname + "_" + conf.rooms[room].thermostat.heater[heater].Channel + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\"emoji/infrared-off.svg\">";
+            HTMLCode += "<img id=\"heater_" + room + "_" + conf.rooms[room].thermostat.heater[heater].Hostname + "_" + conf.rooms[room].thermostat.heater[heater].Channel + "_" + conf.rooms[room].thermostat.heater[heater].name + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\"emoji/infrared-off.svg\">";
           }
           HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_Incr\" onclick=\"elclick(event);\">+</button>";
           HTMLCode += "<button style=\"position: relative; bottom: 5vh;\"><span id=\"" + room + "_manual\">20.0</span> °C</button>";
