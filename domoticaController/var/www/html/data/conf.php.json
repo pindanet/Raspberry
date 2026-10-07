@@ -12,7 +12,6 @@
       "Icon": "emoji/living.svg",
       "Hostname": "pindadomo",
       "thermostat": {
-        "tempPath": "/data/temp",
         "tempComfort": 20,
         "tempAux": 17.5,
         "tempOff": 15,
@@ -65,7 +64,7 @@
         }
       },
       "lights": {
-        "TVlamp": {
+        "TVLamp": {
           "disabled": false,
           "Icon": "emoji/tv.svg",
           "Hostname": "tvlamp-20",
@@ -129,7 +128,6 @@
       "Icon": "emoji/dining.svg",
       "Hostname": "pindadining",
       "thermostat": {
-        "tempPath": "/data/temp",
         "tempComfort": 20,
         "tempAux": 17.5,
         "tempOff": 15,
@@ -246,7 +244,6 @@
         ]
       },
       "thermostat": {
-        "tempPath": "/data/temp",
         "sensorPowerGPIO": 17,
         "tempComfort": 20,
         "tempAux": 17.5,
