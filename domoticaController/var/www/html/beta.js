@@ -14,12 +14,42 @@ function miniPanel(display) {
   document.getElementById("miniclock").style.display = display;
   document.getElementById("minitemp").style.display = display;
 }
+function checkStatus(el) {
+  const idSplit = el.id.split("_");
+  if (idSplit[0] == "light") { // Update light statussen
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function(e) {
+      if (this.status == 200 && this.readyState === 4) {
+        const output = JSON.parse(this.responseText);
+        if (output[0] == "exist") {
+          document.getElementById(el.id).style.backgroundColor = idSplit[4];
+        } else {
+          document.getElementById(el.id).style.backgroundColor = "black";
+        }
+      }
+    };
+    xhr.send("cmd=wget&params="+stringToHex("-qO- --post-data 'var=pindatasmotastatus-" + idSplit[5] + "' http://localhost/var.php"));
+  }
+}
+function updatePanel() {
+  for (var room in conf.rooms) {
+    if (conf.rooms[room].Name == activePanel) { // Update room panel
+      var imgs = document.getElementById(conf.rooms[room].Name).getElementsByTagName("img");
+      for (var i = 0; i < imgs.length; i++) {
+        checkStatus(imgs[i]);
+      }
+    }
+  }
+}
 function activatePanel(panel) {
   document.getElementById(activePanel).style.display = "none";
   activePanel = panel;
   document.getElementById(activePanel).style.display = "";
   if (panel != "dashboard") {
     miniPanel("");
+    updatePanel();
   } else {
     miniPanel("none");
   }
@@ -69,15 +99,21 @@ function elclick(event) {
             if (output[0].includes(':"OFF"}')) {
               document.getElementById(id).style.backgroundColor = "black";
             } else if (output[0].includes(':"ON"}')) {
-              document.getElementById(id).style.backgroundColor = conf.rooms[idSplit[1]].lights[idSplit[2]].BackgroundColorOn;
+              document.getElementById(id).style.backgroundColor = idSplit[4];
             }
           }
         };
-        if (typeof conf.rooms[idSplit[1]].lights[idSplit[2]].Channel !== 'undefined') {
-          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[idSplit[1]].lights[idSplit[2]].Hostname + "/cm?cmnd=Power" + conf.rooms[idSplit[1]].lights[idSplit[2]].Channel  + "%20Toggle"));
+        if (idSplit[3] !== 'undefined') {
+          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power" + idSplit[3] + "%20Toggle"));
         } else {
-          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[idSplit[1]].lights[idSplit[2]].Hostname + "/cm?cmnd=Power%20Toggle"));
+          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power%20Toggle"));
         }
+console.log(idSplit);
+        // if (typeof conf.rooms[idSplit[1]].lights[idSplit[2]].Channel !== 'undefined') {
+        //   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[idSplit[1]].lights[idSplit[2]].Hostname + "/cm?cmnd=Power" + conf.rooms[idSplit[1]].lights[idSplit[2]].Channel  + "%20Toggle"));
+        // } else {
+        //   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[idSplit[1]].lights[idSplit[2]].Hostname + "/cm?cmnd=Power%20Toggle"));
+        // }
       } else if (id.startsWith("heater_")) {
         const idSplit = id.split("_");
         var xhr = new XMLHttpRequest();
@@ -232,7 +268,7 @@ async function startTime() {
               disabled = conf.rooms[room].lights[light].disabled;
             }
             if (disabled == false) {
-              HTMLCode += "<img id=\"light_" + room + "_" + light;
+              HTMLCode += "<img id=\"light_" + room + "_" + conf.rooms[room].lights[light].Hostname + "_" + conf.rooms[room].lights[light].Channel + "_" + conf.rooms[room].lights[light].BackgroundColorOn + "_" + light;
               HTMLCode += "\" class=\"menubutton boxed\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].lights[light].Icon + "\">";
             }
           }
@@ -293,6 +329,7 @@ async function startTime() {
 	    }
     }
     document.getElementById("clockdaytemp").style.color = tempColor;
+console.log(activePanel);
   }
   startTimer = setTimeout(startTime, 1000); // every second
 }
