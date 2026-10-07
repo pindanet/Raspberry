@@ -327,9 +327,11 @@ async function startTime() {
    	  if (typeof conf.rooms[room].thermostat.temp === 'undefined' || conf.rooms[room].thermostat.temp < 20) {
 	      tempColor = "";
 	    }
+	    if (conf.rooms[room].Name == activePanel){
+        updatePanel();
+	    }
     }
     document.getElementById("clockdaytemp").style.color = tempColor;
-console.log(activePanel);
   }
   startTimer = setTimeout(startTime, 1000); // every second
 }
