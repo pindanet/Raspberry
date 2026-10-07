@@ -138,13 +138,18 @@ echo "/usr/bin/bash /var/www/html/PindaNetAutostart.sh &" >> .config/labwc/autos
 # sudo cp .ssh/id_rsa /var/www/html/data/
 # sudo chown www-data:www-data /var/www/html/data/id_rsa
 
-echo "Activate daily update"
-echo "====================="
-sudo chmod +x /var/www/html/PindaNetUpdate.sh
-sudo mv /var/www/html/PindaNetUpdate.timer /etc/systemd/system/
-sudo mv /var/www/html/PindaNetUpdate.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable --now PindaNetUpdate.timer
+echo "Activate unattended update"
+# https://benheater.com/configuring-unattended-upgrades-on-debian/
+sudo apt install -y unattended-upgrades apt-listchanges
+
+#echo "Activate daily update"
+#echo "====================="
+#sudo chmod +x /var/www/html/PindaNetUpdate.sh
+#sudo mv /var/www/html/PindaNetUpdate.timer /etc/systemd/system/
+#sudo mv /var/www/html/PindaNetUpdate.service /etc/systemd/system/
+#sudo systemctl daemon-reload
+#sudo systemctl enable --now PindaNetUpdate.timer
+
 # Check Upgrade history
 # tail -3 /var/log/apt/history.log
 
