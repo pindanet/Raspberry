@@ -17,38 +17,35 @@ function miniPanel(display) {
 function checkStatus(el) {
   const idSplit = el.id.split("_");
   switch(idSplit[0]) {
-//  if (idSplit[0] == "light") { // Update light statussen
-    case "heater":
+    case "heater": // Update heater statussen
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', "cli.php", true);
+      xhr.open('POST', "var.php", true);
       xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
       xhr.onload = function(e) {
         if (this.status == 200 && this.readyState === 4) {
-          const output = JSON.parse(this.responseText);
-          if (output[0] == "exist") {
+          if (this.responseText == "exist") {
             document.getElementById(el.id).src = "emoji/infrared-on.svg";
           } else {
             document.getElementById(el.id).src = "emoji/infrared-off.svg";
           }
         }
       };
-      xhr.send("cmd=wget&params="+stringToHex("-qO- --post-data 'var=pindatasmotastatus-" + idSplit[4] + "' http://localhost/var.php"));
+      xhr.send("var=pindatasmotastatus-" + idSplit[4]);
       break;
-    case "light":
+    case "light": // update light statusssen
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', "cli.php", true);
+      xhr.open('POST', "var.php", true);
       xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
       xhr.onload = function(e) {
         if (this.status == 200 && this.readyState === 4) {
-          const output = JSON.parse(this.responseText);
-          if (output[0] == "exist") {
+          if (this.responseText == "exist") {
             document.getElementById(el.id).style.backgroundColor = idSplit[4];
           } else {
             document.getElementById(el.id).style.backgroundColor = "black";
           }
         }
       };
-      xhr.send("cmd=wget&params="+stringToHex("-qO- --post-data 'var=pindatasmotastatus-" + idSplit[5] + "' http://localhost/var.php"));
+      xhr.send("var=pindatasmotastatus-" + idSplit[5]);
       break;
   }
 }
@@ -348,6 +345,12 @@ async function startTime() {
 	    }
 	    if (conf.rooms[room].Name == activePanel){
         updatePanel();
+	    } else if (activePanel == "dashboard") {
+        var heaters = [];
+        for (var i in conf.rooms[room].thermostat.heater) {
+          heaters[i] = conf.rooms[room].thermostat.heater[i].name;
+        }
+console.log(JSON.stringify(heaters));
 	    }
     }
     document.getElementById("clockdaytemp").style.color = tempColor;
