@@ -230,13 +230,13 @@ function checkTime(i) {
   return i;
 }
 async function startTime() {
+const start = performance.now();
   var today = new Date();
   var h = today.getHours();
   var m = today.getMinutes();
   m = checkTime(m);
   if ( m != document.getElementById('clockminutes').innerHTML) { // every minute
 
-//const start = Date.now();
     let response = await fetch(confName);
     var disabled = false;
     if (typeof conf === 'undefined') { // Get configuration
@@ -315,8 +315,6 @@ async function startTime() {
     } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
       location.reload(true);
     }
-//const ms = Date.now() - start;
-//console.log('miliseconds elapsed: ' +  ms);
 
     document.getElementById("clockmonthday").innerHTML = today.getDate();
     document.getElementById("clockmonth").innerHTML = monthNames[today.getMonth()];
@@ -343,18 +341,36 @@ async function startTime() {
    	  if (typeof conf.rooms[room].thermostat.temp === 'undefined' || conf.rooms[room].thermostat.temp < 20) {
 	      tempColor = "";
 	    }
-	    if (conf.rooms[room].Name == activePanel){
+	    if (conf.rooms[room].Name == activePanel) {
         updatePanel();
-	    } else if (activePanel == "dashboard") {
-        var heaters = [];
-        for (var i in conf.rooms[room].thermostat.heater) {
-          heaters[i] = conf.rooms[room].thermostat.heater[i].name;
-        }
-console.log(JSON.stringify(heaters));
-	    }
+      }
     }
     document.getElementById("clockdaytemp").style.color = tempColor;
+  } else if (today.getSeconds() % 2 == 0) { // every 2 seconds
+    for (var room in conf.rooms) { // Update Room panels
+    // Count active heaters
+      var heaters = [];
+      for (var i in conf.rooms[room].thermostat.heater) {
+        heaters[i] = conf.rooms[room].thermostat.heater[i].name;
+      }
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "countstatus.php", true);
+      xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+      xhr.xhrroom = room;
+      xhr.onload = function(e) {
+        if (this.status == 200 && this.readyState === 4) {
+          if (this.responseText > 0) {
+            document.getElementById(conf.rooms[this.xhrroom].thermostat.sensorStatus).style.color = conf.rooms[this.xhrroom].thermostat.heater[this.responseText - 1].color;
+          } else {
+            document.getElementById(conf.rooms[this.xhrroom].thermostat.sensorStatus).style.color = "";
+          }
+        }
+      };
+      xhr.send(JSON.stringify(heaters));
+    }
   }
+// const ms = performance.now() - start;
+// console.log('miliseconds elapsed: ' +  ms);
   startTimer = setTimeout(startTime, 1000); // every second
 }
 window.onload = startTime;
