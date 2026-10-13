@@ -551,7 +551,7 @@ function startTime() {
       setThermostatUI(event);
     }
   }
-//  tmpCheck();
+  tmpCheck();
   startTimer = setTimeout(startTime, 1000); // elke seconde
 }
 //function connectWebsocket() {
@@ -659,7 +659,7 @@ function getConf() { // Get configuration
         calcConf();
         nextalarm();
         startTime();
-        tmpCheck();
+//        tmpCheck();
       } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
 //        conf = JSON.parse(this.responseText);
 //        conf.lastModified = this.getResponseHeader('Last-Modified');
@@ -778,27 +778,51 @@ function timeDate (time, dateObject) {
   return dateObject;
 }
 function tmpCheck() {
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "tmp.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200 && this.readyState === 4) {
-      var tasmotaDev = this.responseText.split("\n");
-      for (let roomName in conf.rooms) {
-        var room = conf[conf.rooms[roomName]];
-        var heaterColor = "";
-        for (var heater = 0; heater < room.heater.length; heater++) {
-          for (var i = 0; i < tasmotaDev.length; i++) {
-            if (room.heater[heater].name == tasmotaDev[i]) {
-              heaterColor = room.heater[heater].color;
-            }
-          }
-        }
-        document.getElementById(room.htmlElementId).style.color = heaterColor;
-      }
+  for (let roomName in conf.rooms) {
+    var room = conf[conf.rooms[roomName]];
+    var heaterColor = "";
+    var heaters = [];
+    for (var i = 0; i < room.heater.length; i++) {
+      heaters[i] = room.heater[i].name;
     }
-  };
-  xhr.send();
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "countstatus.php", true);
+    xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+    xhr.xhrroom = room;
+    xhr.onload = function(e) {
+      if (this.status == 200 && this.readyState === 4) {
+        if (this.responseText > 0) {
+          document.getElementById(this.xhrroom.htmlElementId).style.color = this.xhrroom.heater[this.responseText - 1].color;
+        } else {
+          document.getElementById(this.xhrroom.htmlElementId).style.color = "";
+        }
+      }
+    };
+    xhr.send(JSON.stringify(heaters));
+// console.log(heaters);
+  }
+  
+  // var xhr = new XMLHttpRequest();
+  // xhr.open('POST', "tmp.php", true);
+  // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  // xhr.onload = function(e) {
+  //   if (this.status == 200 && this.readyState === 4) {
+  //     var tasmotaDev = this.responseText.split("\n");
+  //     for (let roomName in conf.rooms) {
+  //       var room = conf[conf.rooms[roomName]];
+  //       var heaterColor = "";
+  //       for (var heater = 0; heater < room.heater.length; heater++) {
+  //         for (var i = 0; i < tasmotaDev.length; i++) {
+  //           if (room.heater[heater].name == tasmotaDev[i]) {
+  //             heaterColor = room.heater[heater].color;
+  //           }
+  //         }
+  //       }
+  //       document.getElementById(room.htmlElementId).style.color = heaterColor;
+  //     }
+  //   }
+  // };
+  // xhr.send();
 }
 function tempAdjustment(room) {
   if (isNaN(room.temp)) {
@@ -1640,16 +1664,16 @@ function wtypeServer() {
 //        }
 //    }
   if (event.key == "Enter") {
-    eqPos = wtypeText.indexOf("=");
-    if (eqPos == -1) { // simple message
-      switch (wtypeText) {
-         case "tmpCheck":
-           tmpCheck();
-           break;
-         default:
-           console.log("Received wtype text: " + wtypeText);
-       }
-    } else { // message with variable
+    // eqPos = wtypeText.indexOf("=");
+    // if (eqPos == -1) { // simple message
+    //   switch (wtypeText) {
+    //      case "tmpCheck":
+    //        tmpCheck();
+    //        break;
+    //      default:
+    //        console.log("Received wtype text: " + wtypeText);
+    //    }
+    // } else { // message with variable
       const varValue = wtypeText.split("=");
       switch (varValue[0]) {
          case "ktemp":
@@ -1661,7 +1685,7 @@ function wtypeServer() {
          default:
            console.log("Received wtype text: " + wtypeText);
        }
-    }
+    // }
 
     wtypeText = ""; // Delete processed message
   } else { // Build receiving message
