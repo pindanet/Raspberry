@@ -71,6 +71,8 @@ sudo mkdir -p /var/www/html/data
 sudo cp -r Raspberry-master/dining/var/www/html/* /var/www/html/
 rm -r Raspberry-master/
 
+sudo chown -R www-data:www-data /var/www/html/data
+
 echo "Autostart fullscreen video"
 echo "=========================="
 sudo apt install vlc -y
