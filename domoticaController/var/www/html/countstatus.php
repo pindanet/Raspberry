@@ -5,6 +5,7 @@ if ($json === null){
   exit("Illegal input");
 }
 $count = 0;
+clearstatcache();
 foreach ($json as $check) {
   if (file_exists("/dev/shm/pindatasmotastatus-" . $check)) {
     $count += 1;
