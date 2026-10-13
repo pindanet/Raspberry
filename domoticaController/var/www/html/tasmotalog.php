@@ -35,5 +35,5 @@ if($status == 1) { // On
   unlink('/dev/shm/pindatasmotastatus-'.$name);
 }
 //exec("XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype tmpCheck -k return", $output, $return);
-exec("while pidof -s wtype >/dev/null; do sleep 1; done; XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype tmpCheck -k return", $output, $return);
+//exec("while pidof -s wtype >/dev/null; do sleep 1; done; XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype tmpCheck -k return", $output, $return);
 ?>
