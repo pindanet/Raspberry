@@ -44,6 +44,20 @@ echo "============"
 sudo apt update && sudo apt -y full-upgrade
 sudo rpi-eeprom-update
 
+echo "Install micro (nano alternative)"
+sudo apt install micro
+mkdir .config/micro
+tee .config/micro/settings.json > /dev/null <<EOF
+{
+  "tabstospaces": true,
+  "tabsize": 4,
+  "clipboard": "terminal",
+  "savecursor": true
+}
+EOF
+sudo mkdir -p /root/.config/micro
+sudo cp .config/micro/settings.json /root/.config/micro/
+
 echo "Install Wayland"
 echo "==============="
 sudo apt install labwc seatd xdg-user-dirs libgl1-mesa-dri wtype acl -y
