@@ -11,6 +11,7 @@
 # Delete from conf.php.conf
 # "sensorPowerGPIO": 17,
 # "tasmota": {},
+# heater[].status
 
 # Read configuration
 # https://www.baeldung.com/linux/jq-command-json
@@ -22,13 +23,14 @@ thermostat=$(echo $room | jq -r '.thermostat')
 read -r tempCorrection dataGPIO powerGPIO tempOff tempNight tempNightTime < <(echo $thermostat | jq -r '[ .tempCorrection, .ds18b20.dataGPIO, .ds18b20.powerGPIO, .tempOff, .tempNight, .tempNightTime] | join(" ")')
 # Get thermostat heaters
 heatersStatus=()
-while read -r json_record; do
-  heatersStatus+=($json_record)
-done < <(echo $thermostat | jq -r '.heater.[].status')
+# while read -r json_record; do
+#   heatersStatus+=($json_record)
+# done < <(echo $thermostat | jq -r '.heater.[].status')
 
 heatersHostname=()
 while read -r json_record; do
   heatersHostname+=($json_record)
+  heatersStatus+=("undefined")
 done < <(echo $thermostat | jq -r '.heater.[].Hostname')
 
 writeLog () { # log message $1
