@@ -32,7 +32,7 @@ mkdir .config/micro
 tee .config/micro/settings.json > /dev/null <<EOF
 {
   "tabstospaces": true,
-  "tabsize": 4,
+  "tabsize": 2,
   "clipboard": "terminal",
   "savecursor": true
 }
