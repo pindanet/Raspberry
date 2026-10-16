@@ -28,23 +28,23 @@ while read -r json_record; do
   done < <(echo $(echo $lights | jq -r ".$json_record.events | keys[]"))
 done < <(echo $lights | jq -r '. | keys[]')
 
-echo "${switchesEvents[@]}"
-echo "${eventsStartTimes[@]}"
-echo "${eventsStopTimes[@]}"
+timeZone=$(date +%-z)
+trim=${timeZone%0}
+while [[ ${timeZone} != ${trim} ]]
+do
+  timeZone=${trim}
+  trim=${timeZone%0}
+done
 
-exit
-
-# Get schedule
-times=()
-while read -r json_record; do
-  IFS=' ' read -r -a array <<< "$json_record"
-  times+=(${array[0]})
-done < <(echo $lights | jq -r '.schedule | keys[] as $k | "\($k) \(.[$k])"')
+sunriseSet=$(hdate --sun --latitude 51.1853335 --longitude 3.2401705 --timezone $timeZone)
+sunrise=$(echo "$sunriseSet" | grep "sunrise")
+sunrise=${sunrise#* }
+sunset=$(echo "$sunriseSet" | grep "sunset")
+sunset=${sunset#* }
 
 writeLog () { # log message $1
   echo $(date): $1
 }
-
 
 tasmotaChannelSwitch () { # switch $1 cmd $2
   if [[ ${switchesChannel[$1]} == "null" ]]; then
@@ -53,6 +53,7 @@ tasmotaChannelSwitch () { # switch $1 cmd $2
     switchesStatus[$1]=$(wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power${switchesChannel[$1]}%20OFF)
   fi
 }
+
 tasmotaSwitch () { # switch $1 cmd $2
   if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]] && [[ ${switchesStatus[$1]} != *":\"ON\"}"* ]]; then
     tasmotaChannelSwitch $1 $2
@@ -67,6 +68,11 @@ tasmotaSwitch () { # switch $1 cmd $2
     tasmotaChannelSwitch $1 $2
   fi
 }
+
+echo "${switchesEvents[@]}"
+echo "${eventsStartTimes[@]}"
+echo "${eventsStopTimes[@]}"
+echo $sunrise $sunset
 
 tasmotaSwitch 0 "OFF"
 tasmotaSwitch 1 "OFF"
