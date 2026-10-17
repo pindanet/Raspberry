@@ -187,7 +187,11 @@
           "Watt": "20",
           "events": [
             {
-              "startTime": "eveningLightsOn",
+              "startTime": "wakeup",
+              "stopTime": "awake"
+            },
+            {
+              "startTime": "sunset",
               "stopTime": "bedTime"
             }
           ]
@@ -199,8 +203,8 @@
           "Watt": "20",
           "events": [
             {
-              "startTime": "breakfast",
-              "stopTime": "morningLightsOut"
+              "startTime": "wakeup",
+              "stopTime": "awake"
             }
           ]
         }
@@ -281,6 +285,12 @@
           "22:50": 15
         }
       }
+    },
+    "Bedroom": {
+      "Name": "Slaapkamer",
+      "Icon": "emoji/sleep.svg",
+      "Hostname": "pindaalarmclock",
+      "Alarmtime": "07:30"
     }
   },
   "switch": {
