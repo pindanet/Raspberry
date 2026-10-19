@@ -25,22 +25,37 @@ while read -r json_record; do
     eventsStartTimes+=($(echo $lights | jq -r ".$json_record.events[$json_event].startTime"))
     eventsStopTimes+=($(echo $lights | jq -r ".$json_record.events[$json_event].stopTime"))
     ((eventIndex++))
-  done < <(echo $(echo $lights | jq -r ".$json_record.events | keys[]"))
+  done < <(echo $lights | jq -r ".$json_record.events | keys[]")
 done < <(echo $lights | jq -r '. | keys[]')
 
-timeZone=$(date +%-z)
-trim=${timeZone%0}
-while [[ ${timeZone} != ${trim} ]]
-do
-  timeZone=${trim}
+function timeVariables () {
+  timeZone=$(date +%-z)
   trim=${timeZone%0}
-done
+  while [[ ${timeZone} != ${trim} ]]
+  do
+    timeZone=${trim}
+    trim=${timeZone%0}
+  done
 
-sunriseSet=$(hdate --sun --latitude 51.1853335 --longitude 3.2401705 --timezone $timeZone)
-sunrise=$(echo "$sunriseSet" | grep "sunrise")
-sunrise=${sunrise#* }
-sunset=$(echo "$sunriseSet" | grep "sunset")
-sunset=${sunset#* }
+  sunriseSet=$(hdate --sun --latitude 51.1853335 --longitude 3.2401705 --timezone $timeZone --not-sunset-aware)
+  sunrise=$(echo "$sunriseSet" | grep "sunrise")
+  sunrise=${sunrise#* }
+  sunset=$(echo "$sunriseSet" | grep "sunset")
+  sunset=${sunset#* }
+
+  read -r Alarmtime < <(echo $jsonConf | jq -r '[ .Alarmtime] | join(" ")')
+  read -r wakeupTime < <(echo $jsonConf | jq -r '[ .wakeupTime] | join(" ")')
+  read -r awakeTime < <(echo $jsonConf | jq -r '[ .awakeTime] | join(" ")')
+
+  dateToday=$(date +'%F')
+  wakeup=$(date -d "$Alarmtime $dateToday +$wakeupTime minutes" +'%H:%M')
+  awake=$(date -d "$wakeup $dateToday +$awakeTime minutes" +'%H:%M')
+  if [[ $awake < ${sunrise} ]]; then
+    awake=${sunrise}
+  fi
+}
+
+timeVariables
 
 writeLog () { # log message $1
   echo $(date): $1
@@ -80,3 +95,7 @@ tasmotaSwitch 1 "OFF"
 echo "${switchesHostname[@]}"
 echo "${switchesStatus[@]}"
 echo "${switchesChannel[@]}"
+
+# Waarde van Variabele met tekenreeks naam
+time="sunset"
+echo ${!time}
