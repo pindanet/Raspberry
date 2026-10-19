@@ -1,32 +1,43 @@
 #!/bin/bash
 # Lights
 
-# https://www.baeldung.com/linux/jq-command-json
-# https://www.baeldung.com/linux/jq-passing-bash-variables
-jsonConf=$(cat /var/www/html/data/conf.php.json)
-room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | select(.Hostname==$jq_hostname_var)')
-lights=$(echo $room | jq -r '.lights')
+function writeLog () { # log message $1
+  echo $(date): $1
+}
 
-switchesStatus=()
-switchesHostname=()
-switchesChannel=()
-switchesEvents=()
-eventsStartTimes=()
-eventsStopTimes=()
-eventIndex=0
+function tasmotaChannelSwitch () { # switch $1 cmd $2
+echo "Tasmota $1 $2"
+  if [[ ${switchesChannel[$1]} == "null" ]]; then
+    switchesStatus[$1]=$(wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power%20${2})
+  else
+    switchesStatus[$1]=$(wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power${switchesChannel[$1]}%20${2})
+  fi
+}
 
-while read -r json_record; do
-  channel=$(echo $lights | jq -r ".$json_record.Channel")
-  switchesChannel+=("$channel")
-  switchesHostname+=($(echo $lights | jq -r ".$json_record.Hostname"))
-  switchesStatus+=("undefined")
-  switchesEvents+=("$eventIndex")
-  while read -r json_event; do
-    eventsStartTimes+=($(echo $lights | jq -r ".$json_record.events[$json_event].startTime"))
-    eventsStopTimes+=($(echo $lights | jq -r ".$json_record.events[$json_event].stopTime"))
-    ((eventIndex++))
-  done < <(echo $lights | jq -r ".$json_record.events | keys[]")
-done < <(echo $lights | jq -r '. | keys[]')
+function tasmotaSwitch () { # switch $1 cmd $2
+  if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]] && [[ ${switchesStatus[$1]} != *":\"ON\"}"* ]]; then
+    tasmotaChannelSwitch $1 "OFF"
+    if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]]; then  # Persistent Connection error
+      switchesStatus[$1]='{"POWER":"OFF"}'
+      writeLog "Recreate power after persistent error for ${switchesHostname[$1]}"
+    fi
+  fi
+  if [[ ${switchesStatus[$1]} == *":\"OFF\"}"* ]] && [[ $2 == "ON" ]]; then
+    tasmotaChannelSwitch $1 $2
+  elif [[ ${switchesStatus[$1]} == *":\"ON\"}"* ]] && [[ $2 == "OFF" ]]; then
+    tasmotaChannelSwitch $1 $2
+  fi
+}
+
+function timeVar() {
+  if [[ "$1" == "bedTime" ]]; then
+    echo "22:50"
+  elif [[ "${1:2:1}" != ":" ]]; then
+    echo ${!1}
+  else
+    echo $1
+  fi
+}
 
 function timeVariables () {
   timeZone=$(date +%-z)
@@ -55,47 +66,55 @@ function timeVariables () {
   fi
 }
 
+# https://www.baeldung.com/linux/jq-command-json
+# https://www.baeldung.com/linux/jq-passing-bash-variables
+jsonConf=$(cat /var/www/html/data/conf.php.json)
+room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | select(.Hostname==$jq_hostname_var)')
+lights=$(echo $room | jq -r '.lights')
+
+declare -A switchesStatus
+declare -A switchesHostname
+declare -A switchesChannel
+
+while read -r json_record; do
+  channel=$(echo $lights | jq -r ".$json_record.Channel")
+  switchesChannel["$json_record"]="$channel"
+  switchesHostname["$json_record"]=$(echo $lights | jq -r ".$json_record.Hostname")
+  tasmotaSwitch $json_record "OFF" # Initialise
+done < <(echo $lights | jq -r '. | keys[]')
+
 timeVariables
 
-writeLog () { # log message $1
-  echo $(date): $1
-}
+while :; do
+  now=$(date +"%H:%M")
+  while read -r json_record; do
 
-tasmotaChannelSwitch () { # switch $1 cmd $2
-  if [[ ${switchesChannel[$1]} == "null" ]]; then
-    switchesStatus[$1]=$(wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power%20OFF)
-  else
-    switchesStatus[$1]=$(wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power${switchesChannel[$1]}%20OFF)
-  fi
-}
+# echo ${switchesStatus[$json_record]} 
 
-tasmotaSwitch () { # switch $1 cmd $2
-  if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]] && [[ ${switchesStatus[$1]} != *":\"ON\"}"* ]]; then
-    tasmotaChannelSwitch $1 $2
-    if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]]; then  # Persistent Connection error
-      switchesStatus[$1]='{"POWER":"OFF"}'
-      writeLog "Recreate power after persistent error for ${switchesHostname[$1]}"
-    fi
-  fi
-  if [[ ${switchesStatus[$1]} == *":\"OFF\"}"* ]] && [[ $2 == "ON" ]]; then
-    tasmotaChannelSwitch $1 $2
-  elif [[ ${switchesStatus[$1]} == *":\"ON\"}"* ]] && [[ $2 == "OFF" ]]; then
-    tasmotaChannelSwitch $1 $2
-  fi
-}
-
-echo "${switchesEvents[@]}"
-echo "${eventsStartTimes[@]}"
-echo "${eventsStopTimes[@]}"
-echo $sunrise $sunset
-
-tasmotaSwitch 0 "OFF"
-tasmotaSwitch 1 "OFF"
-
-echo "${switchesHostname[@]}"
-echo "${switchesStatus[@]}"
-echo "${switchesChannel[@]}"
-
-# Waarde van Variabele met tekenreeks naam
-time="sunset"
-echo ${!time}
+# echo $now $json_record
+    while read -r json_event; do
+      startTime=($(echo $lights | jq -r ".$json_record.events[$json_event].startTime"))
+      startTime=$(timeVar $startTime)
+# now="18:40"
+      if [[ "$startTime" < "$now" || "$startTime" == "$now" ]]; then
+        stopTime=($(echo $lights | jq -r ".$json_record.events[$json_event].stopTime"))
+        stopTime=$(timeVar $stopTime)
+        if [[ "$stopTime" > "$now" ]]; then
+          switchCmd="ON"
+        else
+          switchCmd="OFF"
+        fi
+      else
+        switchCmd="OFF"
+      fi
+    done < <(echo $lights | jq -r ".$json_record.events | keys[]")
+echo "$json_record $switchCmd"
+    tasmotaSwitch $json_record $switchCmd
+  done < <(echo $lights | jq -r '. | keys[]')
+  sleep 60 # every minute
+done
+# echo $sunrise $sunset
+# 
+# echo "${switchesHostname[@]}"
+# echo "${switchesStatus[@]}"
+# echo "${switchesChannel[@]}"
