@@ -6,6 +6,9 @@
     "Longitude": 3.2401705,
     "Altitude": 5
   },
+  "Alarmtime": "07:30",
+  "wakeupTime": 11,
+  "awakeTime": 65,
   "rooms": {
     "Living": {
       "Name": "Living",
@@ -185,14 +188,14 @@
           "Hostname": "haard",
           "Channel": 1,
           "Watt": "20",
-          "events": [
+          "schedule": [
             {
               "startTime": "wakeup",
               "stopTime": "awake"
             },
             {
               "startTime": "sunset",
-              "stopTime": "bedTime"
+              "stopTime": "bedtime"
             }
           ]
         },
@@ -201,7 +204,7 @@
           "Icon": "emoji/medicinecabinet.png",
           "Hostname": "apotheek-20",
           "Watt": "20",
-          "events": [
+          "schedule": [
             {
               "startTime": "wakeup",
               "stopTime": "awake"
@@ -215,10 +218,10 @@
           "Icon": "emoji/toothbrush.svg",
           "Hostname": "tandenborstel-10",
           "Watt": "10",
-          "events": [
+          "schedule": [
             {
               "startTime": "16:00",
-              "stopTime": "sleep"
+              "stopTime": "bedtime"
             }
           ]
         }
@@ -289,8 +292,7 @@
     "Bedroom": {
       "Name": "Slaapkamer",
       "Icon": "emoji/sleep.svg",
-      "Hostname": "pindaalarmclock",
-      "Alarmtime": "07:30"
+      "Hostname": "pindaalarmclock"
     }
   },
   "switch": {
