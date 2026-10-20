@@ -10,6 +10,40 @@ var activePanel = "dashboard";
 var dayNames = new Array("Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag");
 var monthNames = new Array("januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december");
 
+function gotoSleep() {
+  if (typeof conf.awake != 'undefined') {
+    if (conf.awake == true) {
+console.log("gotoSleep");
+      delete conf.awake;
+      // Set sleep flag in all the rooms
+      for (var room in conf.rooms) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "cli.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        subCmd = stringToHex("'/dev/shm/sleep'");
+        // subCmd=$(echo -n '/dev/shm/sleep' | xxd -p -c 256)
+        // wget -qO- http://pindadomo/cli.php --post-data 'cmd=touch&params='${subCmd}
+        xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=touch&params=" + subCmd + "'"));
+      }
+    }
+  }
+}
+function wakeup() {
+  if (typeof conf.awake == 'undefined') {
+    conf.awake = true;
+  } else if (conf.awake == true) {
+    return;
+  }
+console.log("wakeUp");
+  // Remove sleep flag in all the rooms
+  for (var room in conf.rooms) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    subCmd = stringToHex("'/dev/shm/sleep'");
+    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=rm&params=" + subCmd + "'"));
+  }
+}
 function miniPanel(display) {
   document.getElementById("miniclock").style.display = display;
   document.getElementById("minitemp").style.display = display;
@@ -79,6 +113,7 @@ function elclick(event) {
     case "clockminutes":
     case "clockdaytemp":
     case "clockdate":
+      wakeup();
       activatePanel("menu");
       break;
     case "menuradio":
@@ -95,7 +130,9 @@ function elclick(event) {
       document.getElementById('weather').contentDocument.location.href = "meteogram/meteogram.html?lat=" + conf.location.Latitude + "&lon=" + conf.location.Longitude + "&alt=" + conf.location.Altitude;
 //      document.getElementById('weather').contentDocument.location.reload(true);
       break;
-
+    case "gotosleep":
+      gotoSleep();
+      break;
 //    case "Kitchen_Auto":
 //      const idSplit = id.split("_");
 //      var room = idSplit[0];
