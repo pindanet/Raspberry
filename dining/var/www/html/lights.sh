@@ -2,7 +2,6 @@
 # Lights
 
 # ToDo
-# disabled
 
 function writeLog () { # log message $1
   echo $(date): $1
@@ -90,6 +89,10 @@ timeVariables
 while :; do
   now=$(date +"%H:%M")
   while read -r json_record; do
+    disabled=$(echo $lights | jq -r ".$json_record.disabled")
+    if [[ "$disabled" == "true" || "$disabled" == "null" ]]; then
+      continue
+    fi
     while read -r json_timeslot; do
       startTime=($(echo $lights | jq -r ".$json_record.schedule[$json_timeslot].startTime"))
       startTime=$(timeVar $startTime)
