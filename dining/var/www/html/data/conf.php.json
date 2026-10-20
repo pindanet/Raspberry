@@ -188,7 +188,7 @@
           "Hostname": "haard",
           "Channel": 1,
           "Watt": "20",
-          "events": [
+          "schedule": [
             {
               "startTime": "wakeup",
               "stopTime": "awake"
@@ -204,7 +204,7 @@
           "Icon": "emoji/medicinecabinet.png",
           "Hostname": "apotheek-20",
           "Watt": "20",
-          "events": [
+          "schedule": [
             {
               "startTime": "wakeup",
               "stopTime": "awake"
