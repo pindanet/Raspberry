@@ -195,7 +195,7 @@
             },
             {
               "startTime": "sunset",
-              "stopTime": "bedTime"
+              "stopTime": "bedtime"
             }
           ]
         },
@@ -218,10 +218,10 @@
           "Icon": "emoji/toothbrush.svg",
           "Hostname": "tandenborstel-10",
           "Watt": "10",
-          "events": [
+          "schedule": [
             {
               "startTime": "16:00",
-              "stopTime": "sleep"
+              "stopTime": "bedtime"
             }
           ]
         }
