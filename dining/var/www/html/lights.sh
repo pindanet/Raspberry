@@ -31,8 +31,12 @@ function tasmotaSwitch () { # switch $1 cmd $2
 }
 
 function timeVar() {
-  if [[ "$1" == "bedTime" ]]; then
-    echo "22:50"
+  if [[ "$1" == "bedtime" ]]; then
+    if [ -f /dev/shm/sleep ]; then
+      data +"%H:%M"
+    else
+      echo "23:59"
+    fi
   elif [[ "${1:2:1}" != ":" ]]; then
     echo ${!1}
   else
@@ -96,7 +100,7 @@ while :; do
     while read -r json_timeslot; do
       startTime=($(echo $lights | jq -r ".$json_record.schedule[$json_timeslot].startTime"))
       startTime=$(timeVar $startTime)
-# now="20:30"
+# now="22:30"
       if [[ "$startTime" < "$now" || "$startTime" == "$now" ]]; then
         stopTime=($(echo $lights | jq -r ".$json_record.schedule[$json_timeslot].stopTime"))
         stopTime=$(timeVar $stopTime)
