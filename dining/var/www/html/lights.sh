@@ -2,7 +2,6 @@
 # Lights
 
 # ToDo
-# Shedule
 # disabled
 
 function writeLog () { # log message $1
@@ -10,7 +9,6 @@ function writeLog () { # log message $1
 }
 
 function tasmotaChannelSwitch () { # switch $1 cmd $2
-echo "Tasmota $1 $2"
   if [[ ${switchesChannel[$1]} == "null" ]]; then
     switchesStatus[$1]=$(wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power%20${2})
   else
@@ -92,15 +90,13 @@ timeVariables
 while :; do
   now=$(date +"%H:%M")
   while read -r json_record; do
-    while read -r json_event; do
-      startTime=($(echo $lights | jq -r ".$json_record.events[$json_event].startTime"))
+    while read -r json_timeslot; do
+      startTime=($(echo $lights | jq -r ".$json_record.schedule[$json_timeslot].startTime"))
       startTime=$(timeVar $startTime)
 # now="20:30"
-# echo "$now $startTime"
       if [[ "$startTime" < "$now" || "$startTime" == "$now" ]]; then
-        stopTime=($(echo $lights | jq -r ".$json_record.events[$json_event].stopTime"))
+        stopTime=($(echo $lights | jq -r ".$json_record.schedule[$json_timeslot].stopTime"))
         stopTime=$(timeVar $stopTime)
-# echo "$now $startTime $stopTime"
         if [[ "$stopTime" > "$now" ]]; then
           switchCmd="ON"
           break
@@ -110,7 +106,7 @@ while :; do
       else
         switchCmd="OFF"
       fi
-    done < <(echo $lights | jq -r ".$json_record.events | keys[]")
+    done < <(echo $lights | jq -r ".$json_record.schedule | keys[]")
 # echo $json_record $switchCmd
     tasmotaSwitch $json_record $switchCmd
   done < <(echo $lights | jq -r '. | keys[]')
