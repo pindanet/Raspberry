@@ -1,6 +1,10 @@
 #!/bin/bash
 # Lights
 
+# ToDo
+# Shedule
+# disabled
+
 function writeLog () { # log message $1
   echo $(date): $1
 }
@@ -88,19 +92,18 @@ timeVariables
 while :; do
   now=$(date +"%H:%M")
   while read -r json_record; do
-
-# echo ${switchesStatus[$json_record]} 
-
-# echo $now $json_record
     while read -r json_event; do
       startTime=($(echo $lights | jq -r ".$json_record.events[$json_event].startTime"))
       startTime=$(timeVar $startTime)
-# now="18:40"
+# now="20:30"
+# echo "$now $startTime"
       if [[ "$startTime" < "$now" || "$startTime" == "$now" ]]; then
         stopTime=($(echo $lights | jq -r ".$json_record.events[$json_event].stopTime"))
         stopTime=$(timeVar $stopTime)
+# echo "$now $startTime $stopTime"
         if [[ "$stopTime" > "$now" ]]; then
           switchCmd="ON"
+          break
         else
           switchCmd="OFF"
         fi
@@ -108,13 +111,9 @@ while :; do
         switchCmd="OFF"
       fi
     done < <(echo $lights | jq -r ".$json_record.events | keys[]")
-echo "$json_record $switchCmd"
+# echo $json_record $switchCmd
     tasmotaSwitch $json_record $switchCmd
   done < <(echo $lights | jq -r '. | keys[]')
   sleep 60 # every minute
 done
-# echo $sunrise $sunset
-# 
-# echo "${switchesHostname[@]}"
-# echo "${switchesStatus[@]}"
 # echo "${switchesChannel[@]}"
