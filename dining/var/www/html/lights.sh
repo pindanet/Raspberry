@@ -9,16 +9,20 @@ function writeLog () { # log message $1
 
 function tasmotaChannelSwitch () { # switch $1 cmd $2
   if [[ ${switchesChannel[$1]} == "null" ]]; then
-    switchesStatus[$1]=$(wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power%20${2})
+    wgetCmd="wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power"
   else
-    switchesStatus[$1]=$(wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power${switchesChannel[$1]}%20${2})
+    wgetCmd="wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power${switchesChannel[$1]}"
   fi
+  if [[ $# == 2 ]]; then
+    wgetCmd+="%20${2}"
+  fi
+  switchesStatus[$1]=$($wgetCmd)
 }
 
 function tasmotaSwitch () { # switch $1 cmd $2
   if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]] && [[ ${switchesStatus[$1]} != *":\"ON\"}"* ]]; then
-    tasmotaChannelSwitch $1 "OFF"
-    if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]]; then  # Persistent Connection error
+    tasmotaChannelSwitch $1
+    if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]] && [[ ${switchesStatus[$1]} != *":\"ON\"}"* ]]; then  # Persistent Connection error
       switchesStatus[$1]='{"POWER":"OFF"}'
       writeLog "Recreate power after persistent error for ${switchesHostname[$1]}"
     fi
@@ -71,14 +75,41 @@ function timeVariables () {
   fi
 }
 
+function processSwitches () { # $1 JSON switches
+  local JSONSwitches=("$@")
+  while read -r json_record; do  # lights
+    disabled=$(echo $JSONSwitches | jq -r ".$json_record.disabled")
+    if [[ "$disabled" == "true" || "$disabled" == "null" ]]; then
+      continue
+    fi
+    while read -r json_timeslot; do
+      startTime=($(echo $JSONSwitches | jq -r ".$json_record.schedule[$json_timeslot].startTime"))
+      startTime=$(timeVar $startTime)
+# now="17:30"
+      if [[ "$startTime" < "$now" || "$startTime" == "$now" ]]; then
+        stopTime=($(echo $JSONSwitches | jq -r ".$json_record.schedule[$json_timeslot].stopTime"))
+        stopTime=$(timeVar $stopTime)
+        if [[ "$stopTime" > "$now" ]]; then
+          switchCmd="ON"
+          break
+        else
+          switchCmd="OFF"
+        fi
+      else
+        switchCmd="OFF"
+      fi
+    done < <(echo $JSONSwitches | jq -r ".$json_record.schedule | keys[]")
+# echo ${LINENO} $json_record $switchCmd
+    tasmotaSwitch $json_record $switchCmd
+  done < <(echo $JSONSwitches | jq -r '. | keys[]')
+}
+
 # https://www.baeldung.com/linux/jq-command-json
 # https://www.baeldung.com/linux/jq-passing-bash-variables
 jsonConf=$(cat /var/www/html/data/conf.php.json)
 room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | select(.Hostname==$jq_hostname_var)')
 lights=$(echo $room | jq -r '.lights')
 switches=$(echo $room | jq -r '.switches')
-
-# echo "${switches[@]}"
 
 declare -A switchesStatus
 declare -A switchesHostname
@@ -88,70 +119,19 @@ while read -r json_record; do # lights
   channel=$(echo $lights | jq -r ".$json_record.Channel")
   switchesChannel["$json_record"]="$channel"
   switchesHostname["$json_record"]=$(echo $lights | jq -r ".$json_record.Hostname")
-  tasmotaSwitch $json_record "OFF" # Initialise
 done < <(echo $lights | jq -r '. | keys[]')
 
 while read -r json_record; do # switches
   channel=$(echo $switches | jq -r ".$json_record.Channel")
   switchesChannel["$json_record"]="$channel"
   switchesHostname["$json_record"]=$(echo $switches | jq -r ".$json_record.Hostname")
-  tasmotaSwitch $json_record "OFF" # Initialise
 done < <(echo $switches | jq -r '. | keys[]')
 
 timeVariables
 
 while :; do
   now=$(date +"%H:%M")
-  while read -r json_record; do  # lights
-    disabled=$(echo $lights | jq -r ".$json_record.disabled")
-    if [[ "$disabled" == "true" || "$disabled" == "null" ]]; then
-      continue
-    fi
-    while read -r json_timeslot; do
-      startTime=($(echo $lights | jq -r ".$json_record.schedule[$json_timeslot].startTime"))
-      startTime=$(timeVar $startTime)
-# now="22:30"
-      if [[ "$startTime" < "$now" || "$startTime" == "$now" ]]; then
-        stopTime=($(echo $lights | jq -r ".$json_record.schedule[$json_timeslot].stopTime"))
-        stopTime=$(timeVar $stopTime)
-        if [[ "$stopTime" > "$now" ]]; then
-          switchCmd="ON"
-          break
-        else
-          switchCmd="OFF"
-        fi
-      else
-        switchCmd="OFF"
-      fi
-    done < <(echo $lights | jq -r ".$json_record.schedule | keys[]")
-# echo $json_record $switchCmd
-    tasmotaSwitch $json_record $switchCmd
-  done < <(echo $lights | jq -r '. | keys[]')
-
-  while read -r json_record; do  # switches
-    disabled=$(echo $switches | jq -r ".$json_record.disabled")
-    if [[ "$disabled" == "true" || "$disabled" == "null" ]]; then
-      continue
-    fi
-    while read -r json_timeslot; do
-      startTime=($(echo $switches | jq -r ".$json_record.schedule[$json_timeslot].startTime"))
-      startTime=$(timeVar $startTime)
-# now="16:45"
-      if [[ "$startTime" < "$now" || "$startTime" == "$now" ]]; then
-        stopTime=($(echo $switches | jq -r ".$json_record.schedule[$json_timeslot].stopTime"))
-        stopTime=$(timeVar $stopTime)
-        if [[ "$stopTime" > "$now" ]]; then
-          switchCmd="ON"
-          break
-        else
-          switchCmd="OFF"
-        fi
-      else
-        switchCmd="OFF"
-      fi
-    done < <(echo $switches | jq -r ".$json_record.schedule | keys[]")
-# echo $json_record $switchCmd
-    tasmotaSwitch $json_record $switchCmd
-  done < <(echo $switches | jq -r '. | keys[]')
+  processSwitches "${lights[@]}"
+  processSwitches "${switches[@]}"
   sleep 60 # every minute
 done
