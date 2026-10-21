@@ -21,8 +21,9 @@
   <img id="menuthermostatUI" class="menubutton" onclick="remote(event);" src="emoji/thermostat.svg">
   <img id="menuheaters" class="menubutton" onclick="remote(event);" src="images/stars_in_heaven.png">
   <img id="menulights" class="menubutton" onclick="remote(event);" src="emoji/light_bulb.svg">
-  <img class="menubutton" onclick="gotoSleep();" src="emoji/sleep.svg">
+  <img class="menubutton" onclick="gotoSleep();gotoSleepNew();" src="emoji/sleep.svg">
   <img class="menubutton" onclick="location.href='#configUI'" src="emoji/config.svg">
+  <img class="menubutton" onclick="location.href='beta.html'" src="emoji/beta.svg">
 </div>
 <div id="radio">
   <h1><img src="emoji/radio.svg">His Master's Voice</h1>
@@ -73,6 +74,11 @@
   </div>
   <div class="room">
     <h1><img src="emoji/thermostat.svg"> Keuken <span id="kitchenRoomTemp">--.- °C</span></h1>
+    <!--button id="kitchenAuto" onclick="elclick(event);">Auto</button>
+    <button id="kitchenOff" onclick="elclick(event);">Uit</button>
+    <button id="kitchenManual" onclick="elclick(event);"><span id="kitchentemp">17.5</span> °C</button>
+    <button id="kitchenIncr" onclick="elclick(event);">+</button>
+    <button id="kitchenDecr" onclick="elclick(event);">-</button-->
     <button id="kitchenAuto" onclick="remote(event); thermostatUI(event, 'Auto', 'kitchentemp');">Auto</button>
     <button id="kitchenOff" onclick="remote(event); thermostatUI(event, 'Off', 'kitchentemp');">Uit</button>
     <button id="kitchenManual" onclick="remote(event); thermostatUI(event, 'Manual', 'kitchentemp');"><span id="kitchentemp">17.5</span> °C</button>
