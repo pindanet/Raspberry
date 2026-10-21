@@ -73,12 +73,13 @@
         "end": "bedTime"
       },
       {
+        "disabled": true,
         "dev": "Haardlamp",
         "begin": "breakfast",
         "end": "morningLightsOut"
       },
       {
-        "disabled": false,
+        "disabled": true,
         "dev": "Apotheek",
         "begin": "breakfast",
         "end": "morningLightsOut"
@@ -89,12 +90,13 @@
         "end": "22:40"
       },
       {
-        "disabled": false,
+        "disabled": true,
         "dev": "Apotheek",
         "begin": "22:24",
         "end": "bedTime"
       },
       {
+        "disabled": true,
         "dev": "Haardlamp",
         "begin": "eveningLightsOn",
         "end": "bedTime"
@@ -323,14 +325,14 @@
   "event": [
     {
       "repeat": 0,
-      "begindate": "2024-12-29",
-      "begin": "13:30",
-      "enddate": "2024-12-29",
-      "end": "19:45",
+      "begindate": "2026-05-10",
+      "begin": "11:00",
+      "enddate": "2026-05-10",
+      "end": "13:30",
       "temp": {
-        "living": "tempComfort",
-        "dining": "tempComfort",
-        "kitchen": "tempAux"
+        "living": "tempAux",
+        "dining": "tempAux",
+        "kitchen": "tempOff"
       },
       "comment": "Luc"
     },
@@ -362,9 +364,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2026-04-10",
+      "begindate": "2026-07-17",
       "begin": "16:00",
-      "enddate": "2026-04-10",
+      "enddate": "2026-07-17",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -375,9 +377,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2026-03-13",
+      "begindate": "2026-07-17",
       "begin": "19:30",
-      "enddate": "2026-03-13",
+      "enddate": "2026-07-17",
       "end": "bedTime",
       "temp": {
         "living": "tempAux",
@@ -388,9 +390,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2026-04-29",
+      "begindate": "2026-07-08",
       "begin": "16:00",
-      "enddate": "2026-04-29",
+      "enddate": "2026-07-08",
       "end": "17:00",
       "temp": {
         "living": "tempAux",
@@ -401,9 +403,9 @@
     },
     {
       "repeat": 14,
-      "begindate": "2026-04-29",
+      "begindate": "2026-09-02",
       "begin": "19:30",
-      "enddate": "2026-04-29",
+      "enddate": "2026-09-02",
       "end": "bedTime",
       "temp": {
         "living": "tempAux",
