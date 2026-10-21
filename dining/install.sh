@@ -98,12 +98,13 @@ echo "====================="
 sudo chmod +x /var/www/html/PindaNetUpdate.sh
 sudo mv /var/www/html/PindaNetUpdate.timer /etc/systemd/system/
 sudo mv /var/www/html/PindaNetUpdate.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now PindaNetUpdate.timer
 
 echo "Activate lights service"
 echo "======================="
 sudo chmod +x /var/www/html/lights.sh
 sudo mv /var/www/html/PindaNetLights.service /etc/systemd/system/
-
 sudo systemctl daemon-reload
 sudo systemctl enable --now PindaNetLights.service
 
