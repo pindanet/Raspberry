@@ -220,7 +220,7 @@
           "Watt": "10",
           "schedule": [
             {
-              "startTime": "16:00",
+              "startTime": "16:30",
               "stopTime": "bedtime"
             }
           ]
