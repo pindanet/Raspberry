@@ -383,6 +383,18 @@ function getApp(id) {
   }
 }
 waitMinute=0;
+function gotoSleepNew() {
+  const hostnames = ["pindadomo", "pindadining", "pindakeuken", "pindaalarmclock"];
+  for (var hostname in hostnames) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    subCmd = stringToHex("'/dev/shm/sleep'");
+    // subCmd=$(echo -n '/dev/shm/sleep' | xxd -p -c 256)
+    // wget -qO- http://pindadomo/cli.php --post-data 'cmd=touch&params='${subCmd}
+    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + hostnames[hostname] + "/cli.php --post-data 'cmd=touch&params=" + subCmd + "'"));
+  }
+}
 function gotoSleep() {
   // Backlight uitschakelen
   var xhr = new XMLHttpRequest();
@@ -454,6 +466,7 @@ function toggleAvailable(event) {
 //        var timeoutTime = Math.max(30000, sleepdate.getTime() - new Date().getTime() + 30000);
 //console.log(new Date(new Date().getTime() + timeoutTime));
         setTimeout(gotoSleep, timeoutTime);
+        gotoSleepNew();
 /*
         setTimeout(() => { // 60 seconds later
           lightSwitch('LivingVoor','Toggle');
