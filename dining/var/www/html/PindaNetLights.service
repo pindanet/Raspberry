@@ -8,7 +8,5 @@ ExecStart=/var/www/html/lights.sh
 Restart=always
 RestartSec=60
 
-ExecStop=/bin/kill "$MAINPID"
-
 [Install]
 WantedBy=multi-user.target
