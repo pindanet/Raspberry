@@ -3,6 +3,8 @@
 
 # ToDo
 
+readonly confFile="/var/www/html/data/conf.php.json"
+
 function writeLog () { # log message $1
   echo $(date): $1
 }
@@ -104,9 +106,10 @@ function processSwitches () { # $1 JSON switches
   done < <(echo $JSONSwitches | jq -r '. | keys[]')
 }
 
+confDate=$(stat $confFile | grep Modify)
 # https://www.baeldung.com/linux/jq-command-json
 # https://www.baeldung.com/linux/jq-passing-bash-variables
-jsonConf=$(cat /var/www/html/data/conf.php.json)
+jsonConf=$(cat $confFile)
 room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | select(.Hostname==$jq_hostname_var)')
 lights=$(echo $room | jq -r '.lights')
 switches=$(echo $room | jq -r '.switches')
@@ -134,4 +137,7 @@ while :; do
   processSwitches "${lights[@]}"
   processSwitches "${switches[@]}"
   sleep 60 # every minute
+  if [[ "$(stat $confFile | grep Modify)" != "$confDate" ]]; then
+    exit
+  fi
 done
