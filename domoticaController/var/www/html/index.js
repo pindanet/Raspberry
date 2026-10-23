@@ -1206,9 +1206,9 @@ function nextalarm() {
 }
 function lights() {
   var now = new Date().getTime();
-  for (const [key, value] of Object.entries(conf.switch)) { // reset switch commands
-   conf.switch[key].cmd = "Off";
-  }
+  // for (const [key, value] of Object.entries(conf.switch)) { // reset switch commands
+  //  conf.switch[key].cmd = "Off";
+  // }
   for (let i = 0; i < conf.lights.timer.length; i++) {
     var beginDate = timeDate(conf.lights.timer[i].begin, new Date());
     var begin = beginDate.getTime();
