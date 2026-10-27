@@ -13,7 +13,7 @@ var monthNames = new Array("januari","februari","maart","april","mei","juni","ju
 function gotoSleep() {
   if (typeof conf.awake != 'undefined') {
     if (conf.awake == true) {
-console.log("gotoSleep");
+console.log("gotoSleep touchFile");
       delete conf.awake;
       // Set sleep flag in all the rooms
       for (var room in conf.rooms) {
@@ -34,7 +34,7 @@ function wakeup() {
   } else if (conf.awake == true) {
     return;
   }
-console.log("wakeUp");
+console.log("wakeUp rmFile");
   // Remove sleep flag in all the rooms
   for (var room in conf.rooms) {
     var xhr = new XMLHttpRequest();
@@ -105,9 +105,19 @@ function activatePanel(panel) {
   }
 }
 function echoFile(room, file, text) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  subCmd = stringToHex("'" + text + "' > '/dev/shm/" + file + "'");
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=echo&params=" + subCmd + "'"));
   console.log(room, file, text);
 }
 function rmFile(room, file) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  subCmd = stringToHex("'/dev/shm/" + file + "'");
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=rm&params=" + subCmd + "'"));
   console.log(room, file);
 }
 function touchFile(room, file) {
