@@ -1,6 +1,15 @@
 {
   "Controller": "pindadomo",
   "Timezone": "Europe/Brussels",
+  "thermostat": {
+    "tempIncrDecr": 0.5,
+    "tempComfort": 20,
+    "tempAux": 17.5,
+    "tempOff": 15,
+    "tempNight": 10,
+    "tempNightTime": "06:30",
+    "hysteresis": 0.1
+  },
   "location": {
     "Latitude": 51.1853335,
     "Longitude": 3.2401705,
@@ -8,7 +17,7 @@
   },
   "Alarmtime": "07:30",
   "wakeupTime": 11,
-  "awakeTime": 65,
+  "awakeTime": 70,
   "rooms": {
     "Living": {
       "Name": "Living",
@@ -67,19 +76,6 @@
         }
       },
       "lights": {
-        "TVLamp": {
-          "disabled": false,
-          "Icon": "emoji/tv.svg",
-          "Hostname": "tvlamp-20",
-          "BackgroundColorOn": "SandyBrown",
-          "Watt": "20",
-          "events": [
-            {
-              "startTime": "eveningLightsOn",
-              "stopTime": "bedTime"
-            }
-          ]
-        },
         "LivingVoor": {
           "Icon": "emoji/ledlamp.svg",
           "Hostname": "Livinglamp-24",
@@ -182,6 +178,19 @@
         }
       },
       "lights": {
+        "TVLamp": {
+          "disabled": false,
+          "Icon": "emoji/tv.svg",
+          "Hostname": "tvlamp-20",
+          "BackgroundColorOn": "SandyBrown",
+          "Watt": "20",
+          "schedule": [
+            {
+              "startTime": "sunset",
+              "stopTime": "bedtime"
+            }
+          ]
+        },
         "Haardlamp": {
           "disabled": false,
           "Icon": "emoji/fireplace.svg",
