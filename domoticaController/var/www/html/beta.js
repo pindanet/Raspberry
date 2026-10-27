@@ -141,64 +141,68 @@ function elclick(event) {
     default:
       if (id.startsWith("menu")) {
         activatePanel(id.slice(4));
-      } else if (id.startsWith("light_")) {
-        const idSplit = id.split("_");
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', "cli.php", true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.onload = function(e) {
-          if (this.status == 200) {
-            const output = JSON.parse(this.responseText);
-            if (output[0].includes(':"OFF"}')) {
-              document.getElementById(id).style.backgroundColor = "black";
-            } else if (output[0].includes(':"ON"}')) {
-              document.getElementById(id).style.backgroundColor = idSplit[4];
-            }
-          }
-        };
-        if (idSplit[3] !== 'undefined') {
-          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power" + idSplit[3] + "%20Toggle"));
-        } else {
-          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power%20Toggle"));
-        }
-console.log(idSplit);
-        // if (typeof conf.rooms[idSplit[1]].lights[idSplit[2]].Channel !== 'undefined') {
-        //   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[idSplit[1]].lights[idSplit[2]].Hostname + "/cm?cmnd=Power" + conf.rooms[idSplit[1]].lights[idSplit[2]].Channel  + "%20Toggle"));
-        // } else {
-        //   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[idSplit[1]].lights[idSplit[2]].Hostname + "/cm?cmnd=Power%20Toggle"));
-        // }
-      } else if (id.startsWith("heater_")) {
-        const idSplit = id.split("_");
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', "cli.php", true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.onload = function(e) {
-          if (this.status == 200) {
-            const output = JSON.parse(this.responseText);
-            if (output[0].includes(':"OFF"}')) {
-              document.getElementById(id).src = "emoji/infrared-off.svg";
-            } else if (output[0].includes(':"ON"}')) {
-              document.getElementById(id).src = "emoji/infrared-on.svg";
-            }
-          }
-        };
-        if (idSplit[3] !== 'undefined') {
-          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power" + idSplit[3] + "%20Toggle"));
-        } else {
-          xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power%20Toggle"));
-        }
-      } else if (id.endsWith("_Incr")) {
-        const idSplit = id.split("_");
-        var temp = parseFloat(document.getElementById(idSplit[0] + "_manual").innerHTML);
-        temp += conf.thermostat.tempIncrDecr;
-        temp = temp.toFixed(1);
-        document.getElementById(idSplit[0] + "_manual").innerHTML = temp;
-
-console.log(temp);
       } else {
-        console.log(id, event);
+        const idSplit = id.split("_");
+        switch (idSplit[0]) {
+          case "light":
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', "cli.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = function(e) {
+              if (this.status == 200) {
+                const output = JSON.parse(this.responseText);
+                if (output[0].includes(':"OFF"}')) {
+                  document.getElementById(id).style.backgroundColor = "black";
+                } else if (output[0].includes(':"ON"}')) {
+                  document.getElementById(id).style.backgroundColor = idSplit[4];
+                }
+              }
+            };
+            if (idSplit[3] !== 'undefined') {
+              xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power" + idSplit[3] + "%20Toggle"));
+            } else {
+              xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power%20Toggle"));
+            }
+            break;
+          case "heater":
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', "cli.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onload = function(e) {
+              if (this.status == 200) {
+                const output = JSON.parse(this.responseText);
+                if (output[0].includes(':"OFF"}')) {
+                  document.getElementById(id).src = "emoji/infrared-off.svg";
+                } else if (output[0].includes(':"ON"}')) {
+                  document.getElementById(id).src = "emoji/infrared-on.svg";
+                }
+              }
+            };
+            if (idSplit[3] !== 'undefined') {
+              xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power" + idSplit[3] + "%20Toggle"));
+            } else {
+              xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power%20Toggle"));
+            }
+            break;
+          default:
+          switch (idSplit[idSplit.length - 1]) {
+            case "Incr":
+              var temp = parseFloat(document.getElementById(idSplit[0] + "_manual").innerHTML);
+              temp += conf.thermostat.tempIncrDecr;
+              temp = temp.toFixed(1);
+              document.getElementById(idSplit[0] + "_manual").innerHTML = temp;
+              break;
+            case "Decr":
+              var temp = parseFloat(document.getElementById(idSplit[0] + "_manual").innerHTML);
+              temp -= conf.thermostat.tempIncrDecr;
+              temp = temp.toFixed(1);
+              document.getElementById(idSplit[0] + "_manual").innerHTML = temp;
+              break;
+          }
+        }
       }
   }
+console.log(id, event);
 }
 function radioPlay(cmd, channel = "none") {
   radioElem = document.getElementById("radioPlayer");
