@@ -187,6 +187,14 @@ console.log(idSplit);
         } else {
           xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + idSplit[2] + "/cm?cmnd=Power%20Toggle"));
         }
+      } else if (id.endsWith("_Incr")) {
+        const idSplit = id.split("_");
+        var temp = parseFloat(document.getElementById(idSplit[0] + "_manual").innerHTML);
+        temp += conf.thermostat.tempIncrDecr;
+        temp = temp.toFixed(1);
+        document.getElementById(idSplit[0] + "_manual").innerHTML = temp;
+
+console.log(temp);
       } else {
         console.log(id, event);
       }
@@ -272,94 +280,94 @@ function checkTime(i) {
 }
 async function startTime() {
 // const start = performance.now();
+// Check configuration
+  let response = await fetch(confName);
+  var disabled = false;
+  if (typeof conf === 'undefined') { // Get configuration
+    conf = await response.json();
+    conf.lastModified = response.headers.get('Last-Modified');
+
+    var HTMLCode = "";
+    const weatherMenuEl = document.getElementById("menuweather");
+    for (var room in conf.rooms) { // search Controller Room Name
+      if (typeof conf.rooms[room].thermostat == 'undefined') { // Create dummy thermostat
+        conf.rooms[room].thermostat = {};
+      }
+      if (conf.rooms[room].Hostname == conf.Controller) {
+        conf.ControllerRoom = conf.rooms[room].Name;
+      }
+      HTMLCode += "<img id=\"menu" + conf.rooms[room].Name  + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\""+ conf.rooms[room].Icon + "\">";
+    }
+    weatherMenuEl.insertAdjacentHTML("afterend", HTMLCode);
+
+    // Fill Radio panel with channels
+    const radioPlayerEl = document.getElementById("radioPlayer");
+    HTMLCode = "";
+    for (var channel in conf.radio.channel) {
+      HTMLCode += "<img class=\"menubutton\" onclick=\"radioPlay('play', '" + channel + "');\" src=\"" + conf.radio.channel[channel].logo  + "\">";
+    }
+    radioPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
+
+    const weatherPlayerEl = document.getElementById("weather");
+    for (var room in conf.rooms) { // Fill Room panels
+      HTMLCode = "<div id=\"" + conf.rooms[room].Name + "\" class=\"panel\" style=\"display:none;\">";
+      HTMLCode += "  <h1><img class=\"menubutton\" src=\"" + conf.rooms[room].Icon + "\"> " + conf.rooms[room].Name + " <span id=\"temp_" + conf.rooms[room].Name + "\">--.- °C</span></h1>";
+      HTMLCode += "<br>";
+      if (typeof conf.rooms[room].thermostat.heater !== 'undefined') {
+        for (var heater in conf.rooms[room].thermostat.heater) { // Fill Room Heater panel
+          HTMLCode += "<img id=\"heater_" + room + "_" + conf.rooms[room].thermostat.heater[heater].Hostname + "_" + conf.rooms[room].thermostat.heater[heater].Channel + "_" + conf.rooms[room].thermostat.heater[heater].name + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\"emoji/infrared-off.svg\">";
+        }
+        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_Incr\" onclick=\"elclick(event);\">+</button>";
+        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\"><span id=\"" + room + "_manual\">20.0</span> °C</button>";
+        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_Decr\" onclick=\"elclick(event);\">&ndash;</button>";
+        HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_AM\" onclick=\"elclick(event);\">A</button>";
+        HTMLCode += "<br>";
+      }
+      if (typeof conf.rooms[room].lights !== 'undefined') {
+        for (var light in conf.rooms[room].lights) { // Fill Room Lights panel
+          if (typeof conf.rooms[room].lights[light].disabled === 'undefined') {
+            disabled = false;
+          } else {
+            disabled = conf.rooms[room].lights[light].disabled;
+          }
+          if (disabled == false) {
+            HTMLCode += "<img id=\"light_" + room + "_" + conf.rooms[room].lights[light].Hostname + "_" + conf.rooms[room].lights[light].Channel + "_" + conf.rooms[room].lights[light].BackgroundColorOn + "_" + light;
+            HTMLCode += "\" class=\"menubutton boxed\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].lights[light].Icon + "\">";
+          }
+        }
+        HTMLCode += "<br>";
+      }
+      if (typeof conf.rooms[room].switches !== 'undefined') {
+        for (var powerswitch in conf.rooms[room].switches) { // Fill Room switches panel
+          if (typeof conf.rooms[room].switches[powerswitch].disabled === 'undefined') {
+            disabled = false;
+          } else {
+            disabled = conf.rooms[room].switches[powerswitch].disabled;
+          }
+          if (disabled == false) {
+            HTMLCode += "<img id=\"switch_" + conf.rooms[room].switches[powerswitch].Hostname;
+            if (typeof conf.rooms[room].switches[powerswitch].Channel !== 'undefined') {
+              HTMLCode += "_" + conf.rooms[room].switchew[powerswitch].Channel;
+            }
+            HTMLCode += "\" class=\"menubutton boxed\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].switches[powerswitch].Icon + "\">";
+// Test  initialize icons
+          }
+        }
+        HTMLCode += "<br>";
+      }
+      HTMLCode += "</div>";
+      weatherPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
+    }
+
+  } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
+    location.reload(true);
+  }
+
   var today = new Date();
   var h = today.getHours();
   var m = today.getMinutes();
   m = checkTime(m);
   if ( m != document.getElementById('clockminutes').innerHTML) { // every minute
-
-    let response = await fetch(confName);
-    var disabled = false;
-    if (typeof conf === 'undefined') { // Get configuration
-      conf = await response.json();
-      conf.lastModified = response.headers.get('Last-Modified');
-
-      var HTMLCode = "";
-      const weatherMenuEl = document.getElementById("menuweather");
-      for (var room in conf.rooms) { // search Controller Room Name
-        if (typeof conf.rooms[room].thermostat == 'undefined') { // Create dummy thermostat
-          conf.rooms[room].thermostat = {};
-        }
-        if (conf.rooms[room].Hostname == conf.Controller) {
-          conf.ControllerRoom = conf.rooms[room].Name;
-        }
-        HTMLCode += "<img id=\"menu" + conf.rooms[room].Name  + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\""+ conf.rooms[room].Icon + "\">";
-      }
-      weatherMenuEl.insertAdjacentHTML("afterend", HTMLCode);
-
-      // Fill Radio panel with channels
-      const radioPlayerEl = document.getElementById("radioPlayer");
-      HTMLCode = "";
-      for (var channel in conf.radio.channel) {
-        HTMLCode += "<img class=\"menubutton\" onclick=\"radioPlay('play', '" + channel + "');\" src=\"" + conf.radio.channel[channel].logo  + "\">";
-      }
-      radioPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
-
-      const weatherPlayerEl = document.getElementById("weather");
-      for (var room in conf.rooms) { // Fill Room panels
-        HTMLCode = "<div id=\"" + conf.rooms[room].Name + "\" class=\"panel\" style=\"display:none;\">";
-        HTMLCode += "  <h1><img class=\"menubutton\" src=\"" + conf.rooms[room].Icon + "\"> " + conf.rooms[room].Name + " <span id=\"temp_" + conf.rooms[room].Name + "\">--.- °C</span></h1>";
-        HTMLCode += "<br>";
-        if (typeof conf.rooms[room].thermostat.heater !== 'undefined') {
-          for (var heater in conf.rooms[room].thermostat.heater) { // Fill Room Heater panel
-            HTMLCode += "<img id=\"heater_" + room + "_" + conf.rooms[room].thermostat.heater[heater].Hostname + "_" + conf.rooms[room].thermostat.heater[heater].Channel + "_" + conf.rooms[room].thermostat.heater[heater].name + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\"emoji/infrared-off.svg\">";
-          }
-          HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_Incr\" onclick=\"elclick(event);\">+</button>";
-          HTMLCode += "<button style=\"position: relative; bottom: 5vh;\"><span id=\"" + room + "_manual\">20.0</span> °C</button>";
-          HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_Decr\" onclick=\"elclick(event);\">&ndash;</button>";
-          HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_AM\" onclick=\"elclick(event);\">A</button>";
-          HTMLCode += "<br>";
-        }
-        if (typeof conf.rooms[room].lights !== 'undefined') {
-          for (var light in conf.rooms[room].lights) { // Fill Room Lights panel
-            if (typeof conf.rooms[room].lights[light].disabled === 'undefined') {
-              disabled = false;
-            } else {
-              disabled = conf.rooms[room].lights[light].disabled;
-            }
-            if (disabled == false) {
-              HTMLCode += "<img id=\"light_" + room + "_" + conf.rooms[room].lights[light].Hostname + "_" + conf.rooms[room].lights[light].Channel + "_" + conf.rooms[room].lights[light].BackgroundColorOn + "_" + light;
-              HTMLCode += "\" class=\"menubutton boxed\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].lights[light].Icon + "\">";
-            }
-          }
-          HTMLCode += "<br>";
-        }
-        if (typeof conf.rooms[room].switches !== 'undefined') {
-          for (var powerswitch in conf.rooms[room].switches) { // Fill Room switches panel
-            if (typeof conf.rooms[room].switches[powerswitch].disabled === 'undefined') {
-              disabled = false;
-            } else {
-              disabled = conf.rooms[room].switches[powerswitch].disabled;
-            }
-            if (disabled == false) {
-              HTMLCode += "<img id=\"switch_" + conf.rooms[room].switches[powerswitch].Hostname;
-              if (typeof conf.rooms[room].switches[powerswitch].Channel !== 'undefined') {
-                HTMLCode += "_" + conf.rooms[room].switchew[powerswitch].Channel;
-              }
-              HTMLCode += "\" class=\"menubutton boxed\" onclick=\"elclick(event);\" src=\"" + conf.rooms[room].switches[powerswitch].Icon + "\">";
-// Test  initialize icons
-            }
-          }
-          HTMLCode += "<br>";
-        }
-        HTMLCode += "</div>";
-        weatherPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
-      }
-
-    } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
-      location.reload(true);
-    }
-
     document.getElementById("clockmonthday").innerHTML = today.getDate();
     document.getElementById("clockmonth").innerHTML = monthNames[today.getMonth()];
 
