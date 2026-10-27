@@ -104,6 +104,15 @@ function activatePanel(panel) {
     miniPanel("none");
   }
 }
+function echoFile(room, file, text) {
+  console.log(room, file, text);
+}
+function rmFile(room, file) {
+  console.log(room, file);
+}
+function touchFile(room, file) {
+  console.log(room, file);
+}
 function elclick(event) {
   var id = event.target.id;
   switch(id) {
@@ -133,11 +142,6 @@ function elclick(event) {
     case "gotosleep":
       gotoSleep();
       break;
-//    case "Kitchen_Auto":
-//      const idSplit = id.split("_");
-//      var room = idSplit[0];
-//console.log(room); //, id.slice(room.length));
-//      break;
     default:
       if (id.startsWith("menu")) {
         activatePanel(id.slice(4));
@@ -197,6 +201,17 @@ function elclick(event) {
               temp -= conf.thermostat.tempIncrDecr;
               temp = temp.toFixed(1);
               document.getElementById(idSplit[0] + "_manual").innerHTML = temp;
+              break;
+            case "AM":
+              if (event.target.innerHTML == "A") {
+                event.target.innerHTML = "M";
+                event.target.style.color = "orange";
+                echoFile(idSplit[0], "tempWanted", document.getElementById(idSplit[0] + "_manual").innerHTML);
+              } else {
+                event.target.innerHTML = "A";
+                event.target.style.color = "";
+                rmFile(idSplit[0], "tempWanted");
+              }
               break;
           }
         }
