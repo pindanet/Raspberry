@@ -142,6 +142,14 @@ function elclick(event) {
     case "gotosleep":
       gotoSleep();
       break;
+    case "clockyear":
+      if (event.target.innerHTML == conf.l10n.absent) {
+        var today = new Date();
+        event.target.innerHTML = today.getFullYear();
+      } else {
+        event.target.innerHTML = conf.l10n.absent;
+      }
+      break;
     default:
       if (id.startsWith("menu")) {
         activatePanel(id.slice(4));
@@ -217,6 +225,7 @@ function elclick(event) {
         }
       }
   }
+  event.stopPropagation();
 console.log(id, event);
 }
 function radioPlay(cmd, channel = "none") {
@@ -389,6 +398,9 @@ async function startTime() {
   if ( m != document.getElementById('clockminutes').innerHTML) { // every minute
     document.getElementById("clockmonthday").innerHTML = today.getDate();
     document.getElementById("clockmonth").innerHTML = monthNames[today.getMonth()];
+    if (!isNaN(document.getElementById("clockyear").innerHTML)) {
+      document.getElementById("clockyear").innerHTML = today.getFullYear();
+    }
 
     document.getElementById('clockday').innerHTML = dayNames[today.getDay()];
     document.getElementById('clockhours').innerHTML = h;
