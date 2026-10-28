@@ -1,6 +1,10 @@
 {
   "Controller": "pindadomo",
   "Timezone": "Europe/Brussels",
+  "l10n": {
+    "sleep": "Slapen",
+    "absent": "Afwezig"
+  },
   "thermostat": {
     "tempIncrDecr": 0.5,
     "tempComfort": 20,
@@ -18,6 +22,7 @@
   "Alarmtime": "07:30",
   "wakeupTime": 11,
   "awakeTime": 70,
+  "sleepTime": "22:24",
   "rooms": {
     "Living": {
       "Name": "Living",
