@@ -13,17 +13,10 @@ var monthNames = new Array("januari","februari","maart","april","mei","juni","ju
 function gotoSleep() {
   if (typeof conf.awake != 'undefined') {
     if (conf.awake == true) {
-console.log("gotoSleep touchFile");
       delete conf.awake;
       // Set sleep flag in all the rooms
       for (var room in conf.rooms) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', "cli.php", true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        subCmd = stringToHex("'/dev/shm/sleep'");
-        // subCmd=$(echo -n '/dev/shm/sleep' | xxd -p -c 256)
-        // wget -qO- http://pindadomo/cli.php --post-data 'cmd=touch&params='${subCmd}
-        xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=touch&params=" + subCmd + "'"));
+        touchFile(room, "sleep");
       }
     }
   }
@@ -34,14 +27,9 @@ function wakeup() {
   } else if (conf.awake == true) {
     return;
   }
-console.log("wakeUp rmFile");
   // Remove sleep flag in all the rooms
   for (var room in conf.rooms) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', "cli.php", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    subCmd = stringToHex("'/dev/shm/sleep'");
-    xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=rm&params=" + subCmd + "'"));
+    rmFile(room, "sleep");
   }
 }
 function miniPanel(display) {
@@ -110,7 +98,6 @@ function echoFile(room, file, text) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   subCmd = stringToHex("'" + text + "' > '/dev/shm/" + file + "'");
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=echo&params=" + subCmd + "'"));
-  console.log(room, file, text);
 }
 function rmFile(room, file) {
   var xhr = new XMLHttpRequest();
@@ -118,10 +105,13 @@ function rmFile(room, file) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   subCmd = stringToHex("'/dev/shm/" + file + "'");
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=rm&params=" + subCmd + "'"));
-  console.log(room, file);
 }
 function touchFile(room, file) {
-  console.log(room, file);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  subCmd = stringToHex("'/dev/shm/" + file + "'");
+  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=touch&params=" + subCmd + "'"));
 }
 function elclick(event) {
   var id = event.target.id;
@@ -427,7 +417,7 @@ async function startTime() {
       }
     }
     document.getElementById("clockdaytemp").style.color = tempColor;
-  } else if (today.getSeconds() % 2 == 0) { // every 2 seconds
+  // } else if (today.getSeconds() % 2 == 0) { // every 2 seconds
     for (var room in conf.rooms) { // Update Room panels
       if (typeof conf.rooms[room].thermostat.heater !== 'undefined') {
         // Count active heaters
