@@ -346,8 +346,8 @@ console.log("Power%20On");
   xhr.send("cmd=pinctrl&params="+stringToHex("get " + pir1 + "," + pir2));
 }
 */
-var prevHour = new Date().getHours();
-var prevMin = new Date().getMinutes();
+var prevHour = 23;
+var prevMin = 59;
 function startTime() {
   var today = new Date();
   var h = today.getHours();
@@ -361,13 +361,13 @@ function startTime() {
     getTemp(room);
   }
   if(prevHour != h) { // every hour
-    prevHour = h;
     // get Touchscreen brightness
     var xhr = new XMLHttpRequest();
     xhr.open('POST', "cli.php", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.onload = function(e) {
       if (this.responseText !== '["0"]') { // Visible screen
+        prevHour = h;
         weather();  // refresh weather
       }
     };
@@ -474,9 +474,9 @@ function wtypeServer() {
     eqPos = wtypeText.indexOf("=");
     if (eqPos == -1) { // simple message
       switch (wtypeText) {
-         case "weather":
-           weather();
-           break;
+         // case "weather":
+         //   weather();
+         //   break;
          case "heaterOn":
            document.getElementById("infraredoff").style.display = "none";
            document.getElementById("infraredon").style.display = "";
