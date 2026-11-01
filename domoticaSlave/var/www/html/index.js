@@ -207,8 +207,7 @@ function checkTime(i) {
   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
   return i;
 }
-/*
-function wgetTemp(host, room) {
+function getTemp(room) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -216,16 +215,12 @@ function wgetTemp(host, room) {
     if (this.status == 200 && this.readyState === 4) {
       const output = JSON.parse(this.responseText);
       if (!isNaN(output[0])) {
-        room.tempPrev = room.temp;
-        room.temp = parseFloat(output[0]) / 1000 + room.tempCorrection;
-//        fireAlarm(room);
+         document.getElementById("kitchenRoomTemp").innerHTML = (parseFloat(output[0]) / 1000 + conf[room].tempCorrection).toFixed(1);
       }
-      document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1);
     }
   };
-  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + "/data/temp"));
+  xhr.send("cmd=cat&params="+stringToHex("/dev/shm/temp"));
 }
-*/
 
 //function startTemp() {
 //  var xhr = new XMLHttpRequest();
@@ -352,6 +347,7 @@ console.log("Power%20On");
 }
 */
 var prevHour = new Date().getHours();
+var prevMin = new Date().getMinutes();
 function startTime() {
   var today = new Date();
   var h = today.getHours();
@@ -360,8 +356,10 @@ function startTime() {
   var s = today.getSeconds();
   s = checkTime(s);
 
-  document.getElementById('day').innerHTML = dayNames[today.getDay()];
-  document.getElementById('clock').innerHTML = h + ":" + m;
+  if ( today.getMinutes() != prevMin) { // every minute
+    prevMin = today.getMinutes();
+    getTemp(room);
+  }
   if(prevHour != h) { // every hour
     prevHour = h;
     // get Touchscreen brightness
@@ -375,6 +373,9 @@ function startTime() {
     };
     xhr.send("cmd=cat&params="+stringToHex("/sys/class/backlight/10-0045/brightness"));
   }
+
+  document.getElementById('clock').innerHTML = h + ":" + m;
+  document.getElementById('day').innerHTML = dayNames[today.getDay()];
   elem = document.getElementById("clockdate");
   if (elem.innerHTML !== conf.available[0].sleep && elem.innerHTML !== conf.available[0].absent) {
     document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
@@ -490,11 +491,11 @@ function wtypeServer() {
     } else { // message with variable
       const varValue = wtypeText.split("=");
       switch (varValue[0]) {
-         case "t":
-           if (!isNaN(varValue[1])) {
-             document.getElementById("kitchenRoomTemp").innerHTML = varValue[1];
-           }
-           break;
+         // case "t":
+         //   if (!isNaN(varValue[1])) {
+         //     document.getElementById("kitchenRoomTemp").innerHTML = varValue[1];
+         //   }
+         //   break;
          case "available":
            if (varValue[1] == conf.available[0].sleep || varValue[1] == conf.available[0].absent) {
              document.getElementById("clockdate").innerHTML = varValue[1];
@@ -511,8 +512,8 @@ function wtypeServer() {
   } else {
     wtypeText += event.key;
   }
-//  console.log(`Key pressed: ${event.key}`);
-//  console.log(`Key code: ${event.keyCode}`);
+ // console.log(`Key pressed: ${event.key}`);
+ // console.log(`Key code: ${event.keyCode}`);
 }
 
 const stringToHex = (str) => {
