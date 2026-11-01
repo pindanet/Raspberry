@@ -380,6 +380,22 @@ function startTime() {
   if (elem.innerHTML !== conf.available[0].sleep && elem.innerHTML !== conf.available[0].absent) {
     document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
   }
+  // Check heater status
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "var.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      if (this.responseText == "exist") {
+        document.getElementById("infraredon").style.display = "";
+        document.getElementById("infraredoff").style.display = "none";
+      } else {
+        document.getElementById("infraredon").style.display = "none";
+        document.getElementById("infraredoff").style.display = "";
+      }
+    }
+  };
+  xhr.send("var=heaterOn");
 
   setTimeout(startTime, 1000); // elke seconde
 }
@@ -473,21 +489,21 @@ function wtypeServer() {
   if (event.key == "Enter") {
     eqPos = wtypeText.indexOf("=");
     if (eqPos == -1) { // simple message
-      switch (wtypeText) {
-         // case "weather":
-         //   weather();
-         //   break;
-         case "heaterOn":
-           document.getElementById("infraredoff").style.display = "none";
-           document.getElementById("infraredon").style.display = "";
-           break;
-         case "heaterOff":
-           document.getElementById("infraredon").style.display = "none";
-           document.getElementById("infraredoff").style.display = "";
-           break;
-         default:
-           console.log("Received wtype text: " + wtypeText);
-       }
+      // switch (wtypeText) {
+      //    // case "weather":
+      //    //   weather();
+      //    //   break;
+      //    case "heaterOn":
+      //      document.getElementById("infraredoff").style.display = "none";
+      //      document.getElementById("infraredon").style.display = "";
+      //      break;
+      //    case "heaterOff":
+      //      document.getElementById("infraredon").style.display = "none";
+      //      document.getElementById("infraredoff").style.display = "";
+      //      break;
+      //    default:
+      console.log("Received wtype text: " + wtypeText);
+       // }
     } else { // message with variable
       const varValue = wtypeText.split("=");
       switch (varValue[0]) {
