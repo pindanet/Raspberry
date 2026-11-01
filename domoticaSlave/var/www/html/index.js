@@ -360,42 +360,82 @@ function startTime() {
     prevMin = today.getMinutes();
     getTemp(room);
   }
-  if(prevHour != h) { // every hour
-    // get Touchscreen brightness
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', "cli.php", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.onload = function(e) {
-      if (this.responseText !== '["0"]') { // Visible screen
+  // get Touchscreen brightness
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.responseText !== '["0"]') { // Visible screen
+      if(prevHour != h) { // every hour
         prevHour = h;
         weather();  // refresh weather
       }
-    };
-    xhr.send("cmd=cat&params="+stringToHex("/sys/class/backlight/10-0045/brightness"));
-  }
 
-  document.getElementById('clock').innerHTML = h + ":" + m;
-  document.getElementById('day').innerHTML = dayNames[today.getDay()];
-  elem = document.getElementById("clockdate");
-  if (elem.innerHTML !== conf.available[0].sleep && elem.innerHTML !== conf.available[0].absent) {
-    document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
-  }
-  // Check heater status
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', "var.php", true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.onload = function(e) {
-    if (this.status == 200 && this.readyState === 4) {
-      if (this.responseText == "exist") {
-        document.getElementById("infraredon").style.display = "";
-        document.getElementById("infraredoff").style.display = "none";
-      } else {
-        document.getElementById("infraredon").style.display = "none";
-        document.getElementById("infraredoff").style.display = "";
+      // Set clock
+      document.getElementById('clock').innerHTML = h + ":" + m;
+      document.getElementById('day').innerHTML = dayNames[today.getDay()];
+      elem = document.getElementById("clockdate");
+      // Check available
+      if (elem.innerHTML !== conf.available[0].sleep && elem.innerHTML !== conf.available[0].absent) {
+        document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
       }
+      // Check heater status
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "var.php", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = function(e) {
+        if (this.status == 200 && this.readyState === 4) {
+          if (this.responseText == "exist") {
+            document.getElementById("infraredon").style.display = "";
+            document.getElementById("infraredoff").style.display = "none";
+          } else {
+            document.getElementById("infraredon").style.display = "none";
+            document.getElementById("infraredoff").style.display = "";
+          }
+        }
+      };
+      xhr.send("var=heaterOn");
     }
   };
-  xhr.send("var=heaterOn");
+  xhr.send("cmd=cat&params="+stringToHex("/sys/class/backlight/10-0045/brightness"));
+
+  
+  // if(prevHour != h) { // every hour
+  //   // get Touchscreen brightness
+  //   var xhr = new XMLHttpRequest();
+  //   xhr.open('POST', "cli.php", true);
+  //   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  //   xhr.onload = function(e) {
+  //     if (this.responseText !== '["0"]') { // Visible screen
+  //       prevHour = h;
+  //       weather();  // refresh weather
+  //     }
+  //   };
+  //   xhr.send("cmd=cat&params="+stringToHex("/sys/class/backlight/10-0045/brightness"));
+  // }
+// 
+//   document.getElementById('clock').innerHTML = h + ":" + m;
+//   document.getElementById('day').innerHTML = dayNames[today.getDay()];
+//   elem = document.getElementById("clockdate");
+//   if (elem.innerHTML !== conf.available[0].sleep && elem.innerHTML !== conf.available[0].absent) {
+//     document.getElementById("clockdate").innerHTML = today.getDate() + '&nbsp;' + monthNames[today.getMonth()];
+//   }
+//   // Check heater status
+//   var xhr = new XMLHttpRequest();
+//   xhr.open('POST', "var.php", true);
+//   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//   xhr.onload = function(e) {
+//     if (this.status == 200 && this.readyState === 4) {
+//       if (this.responseText == "exist") {
+//         document.getElementById("infraredon").style.display = "";
+//         document.getElementById("infraredoff").style.display = "none";
+//       } else {
+//         document.getElementById("infraredon").style.display = "none";
+//         document.getElementById("infraredoff").style.display = "";
+//       }
+//     }
+//   };
+//   xhr.send("var=heaterOn");
 
   setTimeout(startTime, 1000); // elke seconde
 }
