@@ -349,28 +349,26 @@ console.log("Power%20On");
 var prevHour = 23;
 var prevMin = 59;
 function startTime() {
-  var today = new Date();
-  var h = today.getHours();
-  var m = today.getMinutes();
-  m = checkTime(m);
-  var s = today.getSeconds();
-  s = checkTime(s);
-
-  if ( today.getMinutes() != prevMin) { // every minute
-    prevMin = today.getMinutes();
-    getTemp(room);
-  }
   // get Touchscreen brightness
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.onload = function(e) {
     if (this.responseText !== '["0"]') { // Visible screen
+      var today = new Date();
+      var h = today.getHours();
+      var m = today.getMinutes();
+      m = checkTime(m);
+      var s = today.getSeconds();
+      s = checkTime(s);
+      if ( today.getMinutes() != prevMin) { // every minute
+        prevMin = today.getMinutes();
+        getTemp(room);
+      }
       if(prevHour != h) { // every hour
         prevHour = h;
         weather();  // refresh weather
       }
-
       // Set clock
       document.getElementById('clock').innerHTML = h + ":" + m;
       document.getElementById('day').innerHTML = dayNames[today.getDay()];
