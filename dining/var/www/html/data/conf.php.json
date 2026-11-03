@@ -1,6 +1,18 @@
 {
   "Controller": "pindadomo",
   "Timezone": "Europe/Brussels",
+  "l10n": {
+    "sleep": "Slapen",
+    "absent": "Afwezig"
+  },
+  "thermostat": {
+    "tempIncrDecr": 0.5,
+    "tempComfort": 20,
+    "tempAux": 17.5,
+    "tempOff": 15,
+    "tempNight": 10,
+    "hysteresis": 0.1
+  },
   "location": {
     "Latitude": 51.1853335,
     "Longitude": 3.2401705,
@@ -8,7 +20,8 @@
   },
   "Alarmtime": "07:30",
   "wakeupTime": 11,
-  "awakeTime": 65,
+  "awakeTime": 70,
+  "sleepTime": "22:24",
   "rooms": {
     "Living": {
       "Name": "Living",
@@ -67,19 +80,6 @@
         }
       },
       "lights": {
-        "TVLamp": {
-          "disabled": false,
-          "Icon": "emoji/tv.svg",
-          "Hostname": "tvlamp-20",
-          "BackgroundColorOn": "SandyBrown",
-          "Watt": "20",
-          "events": [
-            {
-              "startTime": "eveningLightsOn",
-              "stopTime": "bedTime"
-            }
-          ]
-        },
         "LivingVoor": {
           "Icon": "emoji/ledlamp.svg",
           "Hostname": "Livinglamp-24",
@@ -131,57 +131,60 @@
       "Icon": "emoji/dining.svg",
       "Hostname": "pindadining",
       "thermostat": {
-        "tempComfort": 20,
-        "tempAux": 17.5,
-        "tempOff": 15,
-        "tempNight": 10,
-        "tempNightTime": "06:30",
-        "tempCorrection": 0,
+        "tempCorrection": 0.7,
         "sensorStatus": "clockmonth",
-        "sensorPowerGPIO": 17,
         "ds18b20": {
           "powerGPIO": 17,
-          "dataGPIO": 4
+          "pullupGPIO": 27
         },
-        "heater": [
-          {
-            "name": "Eettafel",
+        "heater": {
+          "Eettafel": {
             "color": "Yellow",
             "status": "undefined",
             "Hostname": "eettafel-300",
             "Watt": "300"
           },
-          {
-            "name": "Zonsondergang",
+          "Zonsondergang": {
             "color": "Orange",
             "status": "undefined",
             "Hostname": "zonsondergang-650",
             "Watt": "650"
           },
-          {
-            "name": "Tropen",
+          "Tropen": {
             "color": "Red",
             "status": "undefined",
             "Hostname": "tropen-650",
             "Watt": "650"
           }
-        ],
+        },
         "schedule": {
-          "00:00": 10,
-          "06:30": 15,
-          "07:40": 17.5,
-          "08:00": 15,
-          "09:15": 17.5,
-          "10:30": 15,
-          "12:15": 17.5,
-          "13:00": 15,
-          "17:15": 17.5,
-          "17:45": 15,
-          "22:20": 17.5,
-          "22:50": 15
+          "00:00": "tempNight",
+          "preHeating": "tempAux",
+          "wakeup": "tempComfort",
+          "awake": "tempAux",
+          "10:55": "tempComfort",
+          "12:20": "tempAux",
+          "12:50": "tempComfort",
+          "13:30": "tempAux",
+          "16:55": "tempComfort",
+          "17:30": "tempAux",
+          "bedtime": "tempNight"
         }
       },
       "lights": {
+        "TVLamp": {
+          "disabled": false,
+          "Icon": "emoji/tv.svg",
+          "Hostname": "tvlamp-20",
+          "BackgroundColorOn": "SandyBrown",
+          "Watt": "20",
+          "schedule": [
+            {
+              "startTime": "sunset",
+              "stopTime": "bedtime"
+            }
+          ]
+        },
         "Haardlamp": {
           "disabled": false,
           "Icon": "emoji/fireplace.svg",
@@ -320,6 +323,11 @@
   },
   "radio": {
     "channel": {
+      "test": {
+        "URL": "icecast-radio.php",
+        "logo": "emoji/radio.svg",
+        "volume": 20
+      },
       "radio1": {
         "URL": "http://icecast.vrtcdn.be/radio1-high.mp3",
         "logo": "radiologos/radio1.svg",
