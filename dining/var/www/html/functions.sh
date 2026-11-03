@@ -19,10 +19,12 @@ longitude=$(echo $jsonConf | jq -r ".location.Longitude")
 declare -A switchesStatus
 declare -A switchesHostname
 declare -A switchesChannel
+declare -A timeVar
 
 function writeLog () { # log message $1
   echo $(date): $1
 }
+
 
 function timeVariables () {
   timeZone=$(date +%-z)
@@ -35,18 +37,20 @@ function timeVariables () {
 
   sunriseSet=$(hdate --sun --latitude $latitude --longitude $longitude --timezone $timeZone --not-sunset-aware)
   sunrise=$(echo "$sunriseSet" | grep "sunrise")
-  sunrise=${sunrise#* }
+  timeVar[sunrise]=${sunrise#* }
   sunset=$(echo "$sunriseSet" | grep "sunset")
-  sunset=${sunset#* }
+  timeVar[sunset]=${sunset#* }
 
-  read -r Alarmtime < <(echo $jsonConf | jq -r '[ .Alarmtime] | join(" ")')
-  read -r wakeupTime < <(echo $jsonConf | jq -r '[ .wakeupTime] | join(" ")')
-  read -r awakeTime < <(echo $jsonConf | jq -r '[ .awakeTime] | join(" ")')
+  read -r timeVar[Alarmtime] < <(echo $jsonConf | jq -r '[ .Alarmtime] | join(" ")')
+  read -r timeVar[wakeupTime] < <(echo $jsonConf | jq -r '[ .wakeupTime] | join(" ")')
+  read -r timeVar[awakeTime] < <(echo $jsonConf | jq -r '[ .awakeTime] | join(" ")')
 
   dateToday=$(date +'%F')
-  wakeup=$(date -d "$Alarmtime $dateToday +$wakeupTime minutes" +'%H:%M')
-  awake=$(date -d "$wakeup $dateToday +$awakeTime minutes" +'%H:%M')
-  if [[ $awake < ${sunrise} ]]; then
-    awake=${sunrise}
+  timeVar[preHeating]=$(date -d "${timeVar[Alarmtime]} $dateToday -60 minutes" +'%H:%M')
+  timeVar[wakeup]=$(date -d "${timeVar[Alarmtime]} $dateToday +${timeVar[wakeupTime]} minutes" +'%H:%M')
+  timeVar[awake]=$(date -d "${timeVar[wakeup]} $dateToday +${timeVar[awakeTime]} minutes" +'%H:%M')
+  if [[ ${timeVar[awake]} < ${timeVar[sunrise]} ]]; then
+    timeVar[awake]=${timeVar[sunrise]}
   fi
+  timeVar[bedtime]="23:59"
 }
