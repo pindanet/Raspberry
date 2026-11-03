@@ -2,8 +2,10 @@
 # Functions 
 
 # ToDo
-
-readonly confFile="/var/www/html/data/conf.php.json"
+readonly binDir="/var/www/html/"
+readonly dataDir="${binDir}data/"
+readonly memDir="/dev/shm/"
+readonly confFile="${dataDir}conf.php.json"
 
 confDate=$(stat $confFile | grep Modify)
 # https://www.baeldung.com/linux/jq-command-json
