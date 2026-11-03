@@ -18,16 +18,11 @@ done < <(echo $heaters | jq -r '. | keys[]')
 
 timeVariables
 
-# echo "${LINENO}: ${!timeVar[@]}"
-# echo "${LINENO}: ${timeVar[@]}"
-# exit
-
 # Get thermostat schedule
-echo "${LINENO}: $thermostat"
+# Substitute time variables
 for key in "${!timeVar[@]}"; do
   thermostat=${thermostat//$key/${timeVar[$key]}}
 done
-echo "${LINENO}: $thermostat"
 
 times=()
 temps=()
@@ -36,9 +31,6 @@ while read -r json_record; do
   times+=(${array[0]})
   temps+=(${array[1]})
 done < <(echo $thermostat | jq -r '.schedule | keys[] as $k | "\($k) \(.[$k])"')
-
-echo "${LINENO}: ${times[@]}"
-exit
 
 # Initialise
 echo "${LINENO}: Debug"
@@ -117,13 +109,14 @@ while :; do
           fi
           ((i++))
         done
-        # if [[ $temp < $schedTemp ]]; then # To cold, heater on
+        if [[ $temp < $schedTemp ]]; then # To cold, heater on
+echo "${LINENO}: $now $temp $schedTemp ON"
         #   tasmotaSwitch 0 "ON"
-        # else
+        else
+echo "${LINENO}: $now $temp $schedTemp OFF"
         #   tasmotaSwitch 0 "OFF"
-        # fi
+        fi
 
-echo "${LINENO}: $now $temp $schedTemp"
 
       fi
     fi
