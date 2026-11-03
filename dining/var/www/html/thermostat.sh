@@ -1,5 +1,5 @@
 #!/bin/bash
-# Functions 
+# Thermostat 
 
 # ToDo
 
@@ -51,6 +51,22 @@ while :; do
     pinctrl set $powerGPIO op dh # DS18B20 temperature sensor power on
     sleep 5
     writeLog "Reset Ds18b20"
+  else
+    if [[ $output != *"YES"* ]]; then
+      writeLog "Ds18b20 CRC error"
+    else
+      temp="${output#*t=}"
+      if [ ! -f /dev/shm/temp.count ]; then
+        if [[ $temp == 0 ]]; then
+          writeLog "Ds18b20 rejected first 0"
+        else
+          writeLog "Ds18b20 rejected first measurement"
+          touch /dev/shm/temp.count
+        fi
+        
+      fi
+      echo $temp
+    fi
   fi
     
   now=$(date +"%H:%M")
