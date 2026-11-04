@@ -22,6 +22,7 @@ longitude=$(echo $jsonConf | jq -r ".location.Longitude")
 switchesStatus=()
 switchesHostname=()
 switchesChannel=()
+# switchesCmd=()
 declare -A timeVar
 
 function writeLog () { # log message $1
