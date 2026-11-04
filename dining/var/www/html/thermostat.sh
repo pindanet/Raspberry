@@ -35,10 +35,6 @@ while IFS=' ' read timeVal tempVal; do
     timeTemp["${timeVal}"]="${tempVal}"
 done < <(echo $thermostat | jq -r '.schedule | keys[] as $k | "\($k) \(.[$k])"')
 
-for key in $(printf '%s\n' "${!timeTemp[@]}" | sort); do
-  echo "$key ${timeTemp[$key]}"
-done
-
 # Initialise
 echo "${LINENO}: Debug"
 # if [ -f ${memDir}temp.count ]; then
@@ -103,17 +99,17 @@ while :; do
         fi
         temp=$(awk "BEGIN { printf(\"%.1f\", $temp / 1000 + $tempCorrection) }")
         now=$(date +"%H:%M")
+
         # Get Scheduled temp
-        i=0
-        for time in "${times[@]}"
-        do
-          if [[ ! $now < ${time} ]]; then # >=
-            schedTemp=${temps[$i]}
+        for key in $(printf '%s\n' "${!timeTemp[@]}" | sort); do
+          echo "$key ${timeTemp[$key]}"
+          if [[ ! $now < ${key} ]]; then # >=
+            schedTemp=${timeTemp[$key]}
           else
             break
           fi
-          ((i++))
         done
+
         if [[ $temp < $schedTemp ]]; then # To cold, heater on
 echo "${LINENO}: $now $temp $schedTemp ON"
         #   tasmotaSwitch 0 "ON"
