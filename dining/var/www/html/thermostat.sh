@@ -8,7 +8,6 @@ source /var/www/html/functions.sh
 thermostat=$(echo $room | jq -r '.thermostat')
 heaters=$(echo $thermostat | jq -r '.heater')
 read -r tempCorrection pullupGPIO powerGPIO < <(echo $thermostat | jq -r '[ .tempCorrection, .ds18b20.pullupGPIO, .ds18b20.powerGPIO] | join(" ")')
-read -r tempComfort tempAux tempOff tempNight hysteresis < <(echo $jsonConf | jq -r '[ .thermostat.tempComfort, .thermostat.tempAux, .thermostat.tempOff, .thermostat.tempNight, .thermostat.hysteresis] | join(" ")')
 
 while read -r json_record; do # heaters
   channel=$(echo $heaters | jq -r ".$json_record.Channel")
@@ -18,27 +17,33 @@ done < <(echo $heaters | jq -r '. | keys[]')
 
 timeVariables
 
+declare -A tempVar
+read -r tempVar[tempComfort] tempVar[tempAux] tempVar[tempOff] tempVar[tempNight] hysteresis < <(echo $jsonConf | jq -r '[ .thermostat.tempComfort, .thermostat.tempAux, .thermostat.tempOff, .thermostat.tempNight, .thermostat.hysteresis] | join(" ")')
+
 # Get thermostat schedule
 # Substitute time variables
 for key in "${!timeVar[@]}"; do
   thermostat=${thermostat//$key/${timeVar[$key]}}
 done
+# Substitute temp variables
+for key in "${!tempVar[@]}"; do
+  thermostat=${thermostat//$key/${tempVar[$key]}}
+done
 
-times=()
-temps=()
-while read -r json_record; do
-  IFS=' ' read -r -a array <<< "$json_record"
-  times+=(${array[0]})
-  temps+=(${array[1]})
+declare -A timeTemp
+while IFS=' ' read timeVal tempVal; do
+    timeTemp["${timeVal}"]="${tempVal}"
 done < <(echo $thermostat | jq -r '.schedule | keys[] as $k | "\($k) \(.[$k])"')
+
+for key in $(printf '%s\n' "${!timeTemp[@]}" | sort); do
+  echo "$key ${timeTemp[$key]}"
+done
 
 # Initialise
 echo "${LINENO}: Debug"
 # if [ -f ${memDir}temp.count ]; then
 #   rm ${memDir}temp.count
 # fi
-
-# echo "${times[@]}"
 
 while :; do
   # DS18B20
@@ -116,8 +121,6 @@ echo "${LINENO}: $now $temp $schedTemp ON"
 echo "${LINENO}: $now $temp $schedTemp OFF"
         #   tasmotaSwitch 0 "OFF"
         fi
-
-
       fi
     fi
   fi
