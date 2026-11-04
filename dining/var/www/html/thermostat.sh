@@ -7,7 +7,7 @@ source /var/www/html/functions.sh
 
 thermostat=$(echo $room | jq -r '.thermostat')
 heaters=$(echo $thermostat | jq -r '.heater')
-read -r tempCorrection pullupGPIO powerGPIO < <(echo $thermostat | jq -r '[ .tempCorrection, .ds18b20.pullupGPIO, .ds18b20.powerGPIO] | join(" ")')
+read -r tempCorrection pullupGPIO powerGPIO < <(echo $thermostat | jq -r '[ .tempCorrection * 1000, .ds18b20.pullupGPIO, .ds18b20.powerGPIO] | join(" ")')
 
 while read -r json_record; do # save the order of the heaters
   switchesHostname+=("$json_record")
@@ -25,7 +25,7 @@ done < <(echo $heaters | jq -r '.[].Channel')
 timeVariables
 
 declare -A tempVar
-read -r tempVar[tempComfort] tempVar[tempAux] tempVar[tempOff] tempVar[tempNight] hysteresis < <(echo $jsonConf | jq -r '[ .thermostat.tempComfort, .thermostat.tempAux, .thermostat.tempOff, .thermostat.tempNight, .thermostat.hysteresis] | join(" ")')
+read -r tempVar[tempComfort] tempVar[tempAux] tempVar[tempOff] tempVar[tempNight] hysteresis < <(echo $jsonConf | jq -r '[ .thermostat.tempComfort * 1000, .thermostat.tempAux * 1000, .thermostat.tempOff * 1000, .thermostat.tempNight * 1000, .thermostat.hysteresis * 1000] | join(" ")')
 
 # Get thermostat schedule
 # Substitute time variables
@@ -104,7 +104,8 @@ while :; do
         else # Initialise log file
           echo "${timestamp},${temp},${temp}" >> $logfile
         fi
-        temp=$(awk "BEGIN { printf(\"%.1f\", $temp / 1000 + $tempCorrection) }")
+        # temp=$(awk "BEGIN { printf(\"%.1f\", $temp / 1000 + $tempCorrection) }")
+        temp=$(($temp + $tempCorrection))
         now=$(date +"%H:%M")
 
         # Get Scheduled temp
@@ -118,16 +119,19 @@ while :; do
         done
 
         for (( i=0; i<${#switchesHostname[@]}; i++ )); do
-echo "${LINENO}: ${switchesHostname[$i]} ${switchesChannel[$i]} ${switchesStatus[$i]}"
+          # switchesCmd[$i]="OFF"
+# echo "${LINENO}: ${switchesHostname[$i]} ${switchesChannel[$i]} ${switchesStatus[$i]}"
+# echo "${LINENO}: $(($schedTemp - $hysteresis * $i))"
+
+          if [[ $temp < $(($schedTemp - $hysteresis * $i)) ]]; then # To cold, heater on
+  echo "${LINENO}: $now $temp $(($schedTemp - $hysteresis * $i)) ${switchesHostname[$i]} $ON"
+          #   tasmotaSwitch 0 "ON"
+          else
+  echo "${LINENO}: $now $temp $(($schedTemp - $hysteresis * $i)) ${switchesHostname[$i]} OFF"
+          #   tasmotaSwitch 0 "OFF"
+          fi
         done
         
-        if [[ $temp < $schedTemp ]]; then # To cold, heater on
-echo "${LINENO}: $now $temp $schedTemp ON"
-        #   tasmotaSwitch 0 "ON"
-        else
-echo "${LINENO}: $now $temp $schedTemp OFF"
-        #   tasmotaSwitch 0 "OFF"
-        fi
       fi
     fi
   fi
