@@ -9,11 +9,18 @@ thermostat=$(echo $room | jq -r '.thermostat')
 heaters=$(echo $thermostat | jq -r '.heater')
 read -r tempCorrection pullupGPIO powerGPIO < <(echo $thermostat | jq -r '[ .tempCorrection, .ds18b20.pullupGPIO, .ds18b20.powerGPIO] | join(" ")')
 
-while read -r json_record; do # heaters
-  channel=$(echo $heaters | jq -r ".$json_record.Channel")
-  switchesChannel["$json_record"]="$channel"
-  switchesHostname["$json_record"]=$(echo $heaters | jq -r ".$json_record.Hostname")
-done < <(echo $heaters | jq -r '. | keys[]')
+while read -r json_record; do # save the order of the heaters
+  switchesHostname+=("$json_record")
+done < <(echo $heaters | jq -r '.[].Hostname')
+while read -r json_record; do
+  switchesChannel+=("$json_record")
+done < <(echo $heaters | jq -r '.[].Channel')
+
+# while read -r json_record; do # heaters
+#   channel=$(echo $heaters | jq -r ".$json_record.Channel")
+#   switchesChannel["$json_record"]="$channel"
+#   switchesHostname["$json_record"]=$(echo $heaters | jq -r ".$json_record.Hostname")
+# done < <(echo $heaters | jq -r '. | keys[]')
 
 timeVariables
 
@@ -102,7 +109,7 @@ while :; do
 
         # Get Scheduled temp
         for key in $(printf '%s\n' "${!timeTemp[@]}" | sort); do
-          echo "$key ${timeTemp[$key]}"
+          # echo "$key ${timeTemp[$key]}"
           if [[ ! $now < ${key} ]]; then # >=
             schedTemp=${timeTemp[$key]}
           else
@@ -110,6 +117,10 @@ while :; do
           fi
         done
 
+        for (( i=0; i<${#switchesHostname[@]}; i++ )); do
+echo "${LINENO}: ${switchesHostname[$i]} ${switchesChannel[$i]} ${switchesStatus[$i]}"
+        done
+        
         if [[ $temp < $schedTemp ]]; then # To cold, heater on
 echo "${LINENO}: $now $temp $schedTemp ON"
         #   tasmotaSwitch 0 "ON"
