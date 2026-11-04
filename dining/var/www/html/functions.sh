@@ -16,15 +16,17 @@ room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | selec
 latitude=$(echo $jsonConf | jq -r ".location.Latitude")
 longitude=$(echo $jsonConf | jq -r ".location.Longitude")
 
-declare -A switchesStatus
-declare -A switchesHostname
-declare -A switchesChannel
+# declare -A switchesStatus
+# declare -A switchesHostname
+# declare -A switchesChannel
+switchesStatus=()
+switchesHostname=()
+switchesChannel=()
 declare -A timeVar
 
 function writeLog () { # log message $1
   echo $(date): $1
 }
-
 
 function timeVariables () {
   timeZone=$(date +%-z)
@@ -52,5 +54,5 @@ function timeVariables () {
   if [[ ${timeVar[awake]} < ${timeVar[sunrise]} ]]; then
     timeVar[awake]=${timeVar[sunrise]}
   fi
-  timeVar[bedtime]="23:59"
+  timeVar[bedtime]="24:00"
 }
