@@ -1,6 +1,8 @@
 #!/bin/bash
 killall vlc
+killall mpv
 killall wayout
+killall chromium
 # Optional Force resolution
 # sudo apt install wlr-randr -y
 # Only for my EIZO monitor
@@ -18,11 +20,11 @@ else
   color="white"
 fi
 
-#video="/var/www/html/haardvuur.mp4"
-#color="white"
+# video="/var/www/html/Amapola.mp4"
+# color="white"
 
 days=("maandag" "dinsdag" "woensdag" "donderdag" "vrijdag" "zaterdag" "zondag")
-months=("januari" "februari" "maart" "april" "mei" "juni" "juli" "augustus" "september" "october" "november" "december")
+months=("januari" "februari" "maart" "april" "mei" "juni" "juli" "augustus" "september" "oktober" "november" "december")
 
 while true; do
   # Wait for active HDMI
@@ -30,7 +32,13 @@ while true; do
     echo "Start VLC"
     # Start VLC met Wayland in Kiosk mode
     unset DISPLAY
-    QT_QPA_PLATFORM=wayland vlc --no-video-title-show --fullscreen --loop -Idummy ${video} &
+    # QT_QPA_PLATFORM=wayland vlc --no-video-title-show --fullscreen --loop -Idummy ${video} &
+    # QT_QPA_PLATFORM=wayland vlc --vout xcb_x11 --no-video-title-show --fullscreen --loop -Idummy ${video} &
+    # Start mpv in fullscreen en loop de video(s)
+    # mpv --vo=gpu --fullscreen --loop-playlist --no-osc --no-osd-bar ${video} &
+
+    chromium --remote-debugging-port=9222 --kiosk --disable-extensions --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar "http://localhost" &
+
     locDate=${days[$(($(date +'%-u') - 1))]}$(date "+, %-d ${months[$(($(date +'%-m') - 1))]} %Y")
 #    counter=$(((33 - ${#locDate}) / 2))
 #    while [ $counter -gt 0 ]
@@ -46,6 +54,8 @@ while true; do
     done | wayout --feed-line --width 1920 --height 80 --layer overlay --position bottom --center --font "Monospace 44"
     echo "Stop VLC"
     killall vlc
+    killall mpv
+    killall chromium
   fi
   sleep 1
 done
