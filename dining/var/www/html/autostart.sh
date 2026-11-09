@@ -1,7 +1,7 @@
 #!/bin/bash
-killall vlc
-killall mpv
-killall wayout
+# killall vlc
+# killall mpv
+# killall wayout
 killall chromium
 # Optional Force resolution
 # sudo apt install wlr-randr -y
@@ -12,13 +12,13 @@ killall chromium
 /usr/bin/pinctrl set 27 op dh
 # PullUp 1-wire Data
 /usr/bin/pinctrl set 4 ip pu
-readarray -d '' videos < <(find /var/www/html/ -name "*.mp4" -print0)
-video=${videos[$(( $RANDOM % ${#videos[@]} ))]}
-if [[ "$video" == *"aquarium"* ]]; then
-  color="black"
-else
-  color="white"
-fi
+# readarray -d '' videos < <(find /var/www/html/ -name "*.mp4" -print0)
+# video=${videos[$(( $RANDOM % ${#videos[@]} ))]}
+# if [[ "$video" == *"aquarium"* ]]; then
+#   color="black"
+# else
+#   color="white"
+# fi
 
 # video="/var/www/html/Amapola.mp4"
 # color="white"
@@ -29,8 +29,8 @@ months=("januari" "februari" "maart" "april" "mei" "juni" "juli" "augustus" "sep
 while true; do
   # Wait for active HDMI
   if [ $(cat /sys/class/drm/card?-HDMI-A-1/enabled) == "enabled" ]; then
-    echo "Start VLC"
-    # Start VLC met Wayland in Kiosk mode
+    echo "Start Chromium"
+    # Start Chromium met Wayland in Kiosk mode
     unset DISPLAY
     # QT_QPA_PLATFORM=wayland vlc --no-video-title-show --fullscreen --loop -Idummy ${video} &
     # QT_QPA_PLATFORM=wayland vlc --vout xcb_x11 --no-video-title-show --fullscreen --loop -Idummy ${video} &
@@ -39,7 +39,8 @@ while true; do
 
     chromium --remote-debugging-port=9222 --kiosk --disable-extensions --noerrdialogs --disable-infobars --enable-features=OverlayScrollbar "http://localhost" &
 
-    locDate=${days[$(($(date +'%-u') - 1))]}$(date "+, %-d ${months[$(($(date +'%-m') - 1))]} %Y")
+    # locDate=${days[$(($(date +'%-u') - 1))]}$(date "+, %-d ${months[$(($(date +'%-m') - 1))]} %Y")
+
 #    counter=$(((33 - ${#locDate}) / 2))
 #    while [ $counter -gt 0 ]
 #    do
@@ -48,13 +49,14 @@ while true; do
 #    done
     while [ $(cat /sys/class/drm/card?-HDMI-A-1/enabled) == "enabled" ]; do
 #      text="$(LANG=nl_BE.UTF-8 date '+%A, %e %B %Y %H:%M:%S')     $(printf ' %.1f   C' $((10**1 * $(($(cat /var/www/html/data/temp) + 700))/1000))e-1)"
-      text="${locDate}   $(date '+ %H:%M:%S')   $(printf ' %.1f \u00B0C' $((10**1 * $(($(cat /dev/shm/temp) + 700))/1000))e-1)"
-      echo "<b><span foreground=\"${color}\">${text}</span></b>"
+      # text="${locDate}   $(date '+ %H:%M:%S')   $(printf ' %.1f \u00B0C' $((10**1 * $(($(cat /dev/shm/temp) + 700))/1000))e-1)"
+      # echo "<b><span foreground=\"${color}\">${text}</span></b>"
       sleep 1
-    done | wayout --feed-line --width 1920 --height 80 --layer overlay --position bottom --center --font "Monospace 44"
-    echo "Stop VLC"
-    killall vlc
-    killall mpv
+    done
+    # done | wayout --feed-line --width 1920 --height 80 --layer overlay --position bottom --center --font "Monospace 44"
+    echo "Stop Chromium"
+    # killall vlc
+    # killall mpv
     killall chromium
   fi
   sleep 1
