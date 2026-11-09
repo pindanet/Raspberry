@@ -57,3 +57,28 @@ function timeVariables () {
   fi
   timeVar[bedtime]="24:00"
 }
+function tasmotaChannelSwitch () { # switch $1 cmd $2
+  if [[ ${switchesChannel[$1]} == "null" ]]; then
+    wgetCmd="wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power"
+  else
+    wgetCmd="wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power${switchesChannel[$1]}"
+  fi
+  if [[ $# == 2 ]]; then
+    wgetCmd+="%20${2}"
+  fi
+  switchesStatus[$1]=$($wgetCmd)
+}
+function tasmotaSwitch () { # switch $1 cmd $2
+  if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]] && [[ ${switchesStatus[$1]} != *":\"ON\"}"* ]]; then
+    tasmotaChannelSwitch $1
+    if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]] && [[ ${switchesStatus[$1]} != *":\"ON\"}"* ]]; then  # Persistent Connection error
+      switchesStatus[$1]='{"POWER":"OFF"}'
+      writeLog "Recreate power after persistent error for ${switchesHostname[$1]}"
+    fi
+  fi
+  if [[ ${switchesStatus[$1]} == *":\"OFF\"}"* ]] && [[ $2 == "ON" ]]; then
+    tasmotaChannelSwitch $1 $2
+  elif [[ ${switchesStatus[$1]} == *":\"ON\"}"* ]] && [[ $2 == "OFF" ]]; then
+    tasmotaChannelSwitch $1 $2
+  fi
+}
