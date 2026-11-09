@@ -110,8 +110,13 @@ while :; do
 
         # Get Scheduled temp
         for key in $(printf '%s\n' "${!timeTemp[@]}" | sort); do
-          # echo "$key ${timeTemp[$key]}"
-          if [[ ! $now < ${key} ]]; then # >=
+          schedTime=$key
+          if [[ ${key} == "24:00" ]]; then // bedtime
+            if [ -f /dev/shm/sleep ]; then
+              schedTime=$(date +"%H:%M")
+            fi
+          fi
+          if [[ ! $now < ${schedTime} ]]; then # >=
             schedTemp=${timeTemp[$key]}
           else
             break
@@ -119,19 +124,14 @@ while :; do
         done
 
         for (( i=0; i<${#switchesHostname[@]}; i++ )); do
-          # switchesCmd[$i]="OFF"
-# echo "${LINENO}: ${switchesHostname[$i]} ${switchesChannel[$i]} ${switchesStatus[$i]}"
-# echo "${LINENO}: $(($schedTemp - $hysteresis * $i))"
-
           if [[ $temp < $(($schedTemp - $hysteresis * $i)) ]]; then # To cold, heater on
-  echo "${LINENO}: $now $temp $(($schedTemp - $hysteresis * $i)) ${switchesHostname[$i]} $ON"
+  echo "${LINENO}: $now $temp $(($schedTemp - $hysteresis * $i)) ${switchesHostname[$i]} ON"
           #   tasmotaSwitch 0 "ON"
           else
   echo "${LINENO}: $now $temp $(($schedTemp - $hysteresis * $i)) ${switchesHostname[$i]} OFF"
           #   tasmotaSwitch 0 "OFF"
           fi
         done
-        
       fi
     fi
   fi
