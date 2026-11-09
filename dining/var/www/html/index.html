@@ -6,9 +6,10 @@
 body, html {
   height: 100%;
   margin: 0;
+  background-color: black;
 }
 
-.bg {
+#bg {
   /* The image used */
   background-image: url("house_winter_snow.jpg");
 
@@ -20,13 +21,117 @@ body, html {
   background-repeat: no-repeat;
   background-size: cover;
 }
+.content {
+  position: fixed;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  width: 100%;
+  text-align: center;
+  font-size: 44pt;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.content span {
+  display: inline-block;
+}
+#date {
+  width: 50%;
+}
+#time {
+  width: 20%;
+}
+#temp {
+  width: 20%;
+}
 </style>
 </head>
 <body>
+<div id="bg"></div>
+<div class="content">
+  <span id="date"></span><span id="time"></span><span id="temp">20.0 &#176;C</span>
+</div>
+<script>
+  const stringToHex = (str) => {
+    let hex = '';
+    for (let i = 0; i < str.length; i++) {
+      const charCode = str.charCodeAt(i);
+      const hexValue = charCode.toString(16);
 
-<div class="bg"></div>
-
-<p>This example creates a full page background image. Try to resize the browser window to see how it always will cover the full screen (when scrolled to top), and that it scales nicely on all screen sizes.</p>
-
+      // Pad with zeros to ensure two-digit representation
+      hex += hexValue.padStart(2, '0');
+    }
+    return hex;
+  };
+  function writeTemp() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', "cli.php", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.onload = function(e) {
+      if (this.status == 200 && this.readyState === 4) {
+        const output = JSON.parse(this.responseText);
+        if (!isNaN(output[0])) {
+          document.getElementById("temp").innerHTML = (parseFloat(output[0]) / 1000 + conf.rooms[room].thermostat.tempCorrection).toFixed(1) + " &#176;C"
+        }
+      }
+    };
+    xhr.send("cmd=cat&params="+stringToHex("/dev/shm/temp"));
+  }
+  function getConf() { // Get configuration
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function(e) {
+      if (this.status == 200) {
+        if (typeof conf === 'undefined') {
+          conf = JSON.parse(this.responseText);
+          conf.lastModified = this.getResponseHeader('Last-Modified');
+          // Get room
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', "cli.php", true);
+          xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhr.onload = function(e) {
+            if (this.status == 200 && this.readyState === 4) {
+              const output = JSON.parse(this.responseText);
+              for (room in conf.rooms) { // search Controller Room Name
+                if (conf.rooms[room].Hostname == output[0]) {
+                  break;
+                }
+              }
+              document.getElementById("date").innerHTML = new Intl.DateTimeFormat(conf.l10n.language, { weekday: "long" }).format(new Date());
+              document.getElementById("date").innerHTML += ", ";
+              document.getElementById("date").innerHTML += new Intl.DateTimeFormat(conf.l10n.language, { day: 'numeric', month: 'long', year: "numeric" }).format(new Date());
+              setInterval(writeTime, 1000);
+              writeTemp();
+            }
+          };
+          xhr.send("cmd=cat&params="+stringToHex("/proc/sys/kernel/hostname"));
+        } else if (conf.lastModified !== this.getResponseHeader('Last-Modified')) { // new configuration
+          location.reload(true);
+        } else {
+          writeTemp();
+        }
+        setTimeout(getConf, 60000); // Every minute
+      }
+    }
+    xhttp.open("POST", "data/conf.php.json");
+    xhttp.send();
+  }
+  function writeTime() {
+    document.getElementById("time").innerHTML = new Intl.DateTimeFormat(conf.l10n.language, { hour: 'numeric', minute: 'numeric', second: "numeric" }).format(new Date());
+  }
+  getConf();
+// Get background image
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "cli.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onload = function(e) {
+    if (this.status == 200 && this.readyState === 4) {
+      if (this.responseText != "[]") {
+        const output = JSON.parse(this.responseText);
+        document.getElementById("bg").style.backgroundImage = "url('" + output[0] + "')";
+      }
+    }
+  };
+  xhr.send("cmd=bash&params="+stringToHex("/var/www/html/background.sh"));
+</script>
 </body>
 </html>
