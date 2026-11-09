@@ -2,6 +2,7 @@
   "Controller": "pindadomo",
   "Timezone": "Europe/Brussels",
   "l10n": {
+    "language": "nl",
     "sleep": "Slapen",
     "absent": "Afwezig"
   },
@@ -159,8 +160,8 @@
         },
         "schedule": {
           "00:00": "tempNight",
-          "preHeating": "tempAux",
-          "wakeup": "tempComfort",
+          "preHeating": "tempOff",
+          "Alarmtime": "tempComfort",
           "awake": "tempAux",
           "10:55": "tempComfort",
           "12:20": "tempAux",
