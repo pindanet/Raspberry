@@ -92,6 +92,7 @@ echo "Autostart fullscreen video"
 echo "=========================="
 # sudo apt install vlc -y
 sudo apt install chromium -y
+sudo chmod +x /var/www/html/background.sh
 echo "/usr/bin/bash /var/www/html/autostart.sh &" >> .config/labwc/autostart
 
 echo "Activate daily update"
