@@ -39,7 +39,7 @@ function tasmotaSwitch () { # switch $1 cmd $2
 function timeVar() {
   if [[ "$1" == "bedtime" ]]; then
     if [ -f /dev/shm/sleep ]; then
-      data +"%H:%M"
+      date +"%H:%M"
     else
       echo "23:59"
     fi
