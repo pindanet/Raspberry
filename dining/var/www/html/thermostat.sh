@@ -112,9 +112,10 @@ while :; do
         for key in $(printf '%s\n' "${!timeTemp[@]}" | sort); do
           schedTime=$key
           if [[ ${key} == "24:00" ]]; then # bedtime
-            if [ -f /dev/shm/sleep ]; then
+            if [ -f ${memDir}sleep ]; then
               schedTime=$(date +"%H:%M")
             fi
+echo "${LINENO}: bedtime = ${schedTime}"
           fi
           if [[ ! $now < ${schedTime} ]]; then # >=
             schedTemp=${timeTemp[$key]}
