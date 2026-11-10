@@ -108,28 +108,30 @@ while :; do
         temp=$(($temp + $tempCorrection))
         now=$(date +"%H:%M")
 
-        # Get Scheduled temp
-        for key in $(printf '%s\n' "${!timeTemp[@]}" | sort); do
-          schedTime=$key
-          if [[ ${key} == "24:00" ]]; then # bedtime
-            if [ -f ${memDir}sleep ]; then
-              schedTime=$(date +"%H:%M")
+        if [ -f ${memDir}absent ]; then # Absent temp
+          wantedTemp=$(cat ${memDir}absent)
+        else # Get Scheduled temp
+          for key in $(printf '%s\n' "${!timeTemp[@]}" | sort); do
+            schedTime=$key
+            if [[ ${key} == "24:00" ]]; then # bedtime
+              if [ -f ${memDir}sleep ]; then
+                schedTime=$(date +"%H:%M")
+              fi
             fi
-echo "${LINENO}: bedtime = ${schedTime}"
-          fi
-          if [[ ! $now < ${schedTime} ]]; then # >=
-            schedTemp=${timeTemp[$key]}
-          else
-            break
-          fi
-        done
+            if [[ ! $now < ${schedTime} ]]; then # >=
+              wantedTemp=${timeTemp[$key]}
+            else
+              break
+            fi
+          done
+        fi
 
         for (( i=0; i<${#switchesHostname[@]}; i++ )); do
-          if [[ $temp < $(($schedTemp - $hysteresis * $i)) ]]; then # To cold, heater on
-echo "${LINENO}: $now $temp $(($schedTemp - $hysteresis * $i)) ${switchesHostname[$i]} ON"
+          if [[ $temp < $(($wantedTemp - $hysteresis * $i)) ]]; then # To cold, heater on
+echo "${LINENO}: $now $temp $(($wantedTemp - $hysteresis * $i)) ${switchesHostname[$i]} ON"
             tasmotaSwitch $i "ON"
           else
-echo "${LINENO}: $now $temp $(($schedTemp - $hysteresis * $i)) ${switchesHostname[$i]} OFF"
+echo "${LINENO}: $now $temp $(($wantedTemp - $hysteresis * $i)) ${switchesHostname[$i]} OFF"
             tasmotaSwitch $i "OFF"
           fi
         done
