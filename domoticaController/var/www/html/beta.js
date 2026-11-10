@@ -47,10 +47,7 @@ function checkStatus(el) {
   const idSplit = el.id.split("_");
   switch(idSplit[0]) {
     case "heater": // Update heater statussen
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', "var.php", true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.onload = function(e) {
+      memVar("pindatasmotastatus-" + idSplit[4], function(e) {
         if (this.status == 200 && this.readyState === 4) {
           if (this.responseText == "exist") {
             document.getElementById(el.id).src = "emoji/infrared-on.svg";
@@ -58,14 +55,10 @@ function checkStatus(el) {
             document.getElementById(el.id).src = "emoji/infrared-off.svg";
           }
         }
-      };
-      xhr.send("var=pindatasmotastatus-" + idSplit[4]);
+      });
       break;
     case "light": // update light statusssen
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', "var.php", true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.onload = function(e) {
+      memVar("pindatasmotastatus-" + idSplit[5], function(e) {
         if (this.status == 200 && this.readyState === 4) {
           if (this.responseText == "exist") {
             document.getElementById(el.id).style.backgroundColor = idSplit[4];
@@ -73,8 +66,7 @@ function checkStatus(el) {
             document.getElementById(el.id).style.backgroundColor = "black";
           }
         }
-      };
-      xhr.send("var=pindatasmotastatus-" + idSplit[5]);
+      });
       break;
   }
 }
@@ -119,6 +111,16 @@ function touchFile(room, file) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   subCmd = stringToHex("'" + memDir + file + "'");
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=touch&params=" + subCmd + "'"));
+}
+function memVar(varName, func) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', "var.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.func = func;
+  xhr.onload = function(e) {
+    this.func(e);
+  };
+  xhr.send("var=" + varName);
 }
 function elclick(event) {
   var id = event.target.id;
