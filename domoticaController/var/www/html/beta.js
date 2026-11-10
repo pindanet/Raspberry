@@ -1,4 +1,5 @@
 // ToDo
+//
 // Radio Metadata
 //   streaming radio grabber metadata
 //   https://github.com/cryptiksouls/icecast-shoutcast-metadata-grabber
@@ -9,6 +10,7 @@
 // See line starting with Test  initialize icons
 
 const confName = "data/conf.php.json";
+const memDir = "/dev/shm/";
 
 var activePanel = "dashboard";
 
@@ -101,21 +103,21 @@ function echoFile(room, file, text) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  subCmd = stringToHex("'" + text + "' > '/dev/shm/" + file + "'");
+  subCmd = stringToHex("'" + text + "' > '" + memDir + file + "'");
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=echo&params=" + subCmd + "'"));
 }
 function rmFile(room, file) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  subCmd = stringToHex("'/dev/shm/" + file + "'");
+  subCmd = stringToHex("'" + memDir + file + "'");
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=rm&params=" + subCmd + "'"));
 }
 function touchFile(room, file) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', "cli.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  subCmd = stringToHex("'/dev/shm/" + file + "'");
+  subCmd = stringToHex("'" + memDir + file + "'");
   xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + conf.rooms[room].Hostname + "/cli.php --post-data 'cmd=touch&params=" + subCmd + "'"));
 }
 function elclick(event) {
@@ -148,10 +150,19 @@ function elclick(event) {
       gotoSleep();
       break;
     case "clockyear":
+      var today = new Date();      
       if (event.target.innerHTML == conf.l10n.absent) {
-        var today = new Date();
+        // Remove absent var in all the rooms
+        for (var room in conf.rooms) {
+          rmFile(room, "absent");
+        }
         event.target.innerHTML = today.getFullYear();
       } else {
+        // Set absent var in all the rooms
+        for (var room in conf.rooms) {
+console.log(room, conf.thermostat[conf.rooms[room].thermostat.tempAbsent] * 1000);
+          echoFile(room, "absent", conf.thermostat[conf.rooms[room].thermostat.tempAbsent] * 1000);
+        }
         event.target.innerHTML = conf.l10n.absent;
       }
       break;
