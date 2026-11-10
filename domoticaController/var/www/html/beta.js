@@ -348,7 +348,7 @@ async function startTime() {
       HTMLCode += "<br>";
       if (typeof conf.rooms[room].thermostat.heater !== 'undefined') {
         for (var heater in conf.rooms[room].thermostat.heater) { // Fill Room Heater panel
-          HTMLCode += "<img id=\"heater_" + room + "_" + conf.rooms[room].thermostat.heater[heater].Hostname + "_" + conf.rooms[room].thermostat.heater[heater].Channel + "_" + conf.rooms[room].thermostat.heater[heater].name + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\"emoji/infrared-off.svg\">";
+          HTMLCode += "<img id=\"heater_" + room + "_" + conf.rooms[room].thermostat.heater[heater].Hostname + "_" + conf.rooms[room].thermostat.heater[heater].Channel + "_" + heater + "\" class=\"menubutton\" onclick=\"elclick(event);\" src=\"emoji/infrared-off.svg\">";
         }
         HTMLCode += "<button style=\"position: relative; bottom: 5vh;\" id=\"" + room + "_Incr\" onclick=\"elclick(event);\">+</button>";
         HTMLCode += "<button style=\"position: relative; bottom: 5vh;\"><span id=\"" + room + "_manual\">20.0</span> °C</button>";
