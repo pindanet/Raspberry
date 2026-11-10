@@ -400,7 +400,14 @@ async function startTime() {
       }
       HTMLCode += "</div>";
       weatherPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
-console.log("init Absent");
+      // Check absent
+      memVar("absent", function(e) {
+console.log(this.responseText);
+        if (this.responseText != "false") {
+          document.getElementById("clockyear").innerHTML = conf.l10n.absent;
+        }
+      });
+
     }
 
   } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
