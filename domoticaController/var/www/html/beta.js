@@ -402,12 +402,10 @@ async function startTime() {
       weatherPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
       // Check absent
       memVar("absent", function(e) {
-console.log(this.responseText);
         if (this.responseText != "false") {
           document.getElementById("clockyear").innerHTML = conf.l10n.absent;
         }
       });
-
     }
 
   } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
@@ -453,30 +451,31 @@ console.log(this.responseText);
     }
     document.getElementById("clockdaytemp").style.color = tempColor;
   // } else if (today.getSeconds() % 2 == 0) { // every 2 seconds
-    for (var room in conf.rooms) { // Update Room panels
-      if (typeof conf.rooms[room].thermostat.heater !== 'undefined') {
-        // Count active heaters
-        var heaters = [];
-        for (var i in conf.rooms[room].thermostat.heater) {
-          heaters.push(i);
-          // heaters[i] = conf.rooms[room].thermostat.heater[i].name;
-        }
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', "countstatus.php", true);
-        xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
-        xhr.xhrroom = room;
-        xhr.xhrheaters = heaters;
-        xhr.onload = function(e) {
-          if (this.status == 200 && this.readyState === 4) {
-            if (this.responseText > 0) {
-              document.getElementById(conf.rooms[this.xhrroom].thermostat.sensorStatus).style.color = conf.rooms[this.xhrroom].thermostat.heater[this.xhrheaters[this.responseText - 1]].color;
-            } else {
-              document.getElementById(conf.rooms[this.xhrroom].thermostat.sensorStatus).style.color = "";
-            }
-          }
-        };
-        xhr.send(JSON.stringify(heaters));
+  }
+  // every second
+  for (var room in conf.rooms) { // Update Room panels
+    if (typeof conf.rooms[room].thermostat.heater !== 'undefined') {
+      // Count active heaters
+      var heaters = [];
+      for (var i in conf.rooms[room].thermostat.heater) {
+        heaters.push(i);
+        // heaters[i] = conf.rooms[room].thermostat.heater[i].name;
       }
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', "countstatus.php", true);
+      xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+      xhr.xhrroom = room;
+      xhr.xhrheaters = heaters;
+      xhr.onload = function(e) {
+        if (this.status == 200 && this.readyState === 4) {
+          if (this.responseText > 0) {
+            document.getElementById(conf.rooms[this.xhrroom].thermostat.sensorStatus).style.color = conf.rooms[this.xhrroom].thermostat.heater[this.xhrheaters[this.responseText - 1]].color;
+          } else {
+            document.getElementById(conf.rooms[this.xhrroom].thermostat.sensorStatus).style.color = "";
+          }
+        }
+      };
+      xhr.send(JSON.stringify(heaters));
     }
   }
 // const ms = performance.now() - start;
