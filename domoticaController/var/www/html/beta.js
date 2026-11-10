@@ -160,7 +160,6 @@ function elclick(event) {
       } else {
         // Set absent var in all the rooms
         for (var room in conf.rooms) {
-console.log(room, conf.thermostat[conf.rooms[room].thermostat.tempAbsent] * 1000);
           echoFile(room, "absent", conf.thermostat[conf.rooms[room].thermostat.tempAbsent] * 1000);
         }
         event.target.innerHTML = conf.l10n.absent;
