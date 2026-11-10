@@ -1,5 +1,10 @@
 // ToDo
-// Fill Initialise Room panels
+// Radio Metadata
+//   streaming radio grabber metadata
+//   https://github.com/cryptiksouls/icecast-shoutcast-metadata-grabber
+//   <?php
+//     passthru('curl -H "Icy-MetaData:1" --silent -L "http://icecast.vrtcdn.be/stubru-high.mp3" 2>&1',$err);
+//   ?>
 // lights, switches with icon-colors, background-color of tranparanty level
 // See line starting with Test  initialize icons
 
@@ -435,16 +440,18 @@ async function startTime() {
         // Count active heaters
         var heaters = [];
         for (var i in conf.rooms[room].thermostat.heater) {
-          heaters[i] = conf.rooms[room].thermostat.heater[i].name;
+          heaters.push(i);
+          // heaters[i] = conf.rooms[room].thermostat.heater[i].name;
         }
         var xhr = new XMLHttpRequest();
         xhr.open('POST', "countstatus.php", true);
         xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8");
         xhr.xhrroom = room;
+        xhr.xhrheaters = heaters;
         xhr.onload = function(e) {
           if (this.status == 200 && this.readyState === 4) {
             if (this.responseText > 0) {
-              document.getElementById(conf.rooms[this.xhrroom].thermostat.sensorStatus).style.color = conf.rooms[this.xhrroom].thermostat.heater[this.responseText - 1].color;
+              document.getElementById(conf.rooms[this.xhrroom].thermostat.sensorStatus).style.color = conf.rooms[this.xhrroom].thermostat.heater[this.xhrheaters[this.responseText - 1]].color;
             } else {
               document.getElementById(conf.rooms[this.xhrroom].thermostat.sensorStatus).style.color = "";
             }
