@@ -48,23 +48,19 @@ function checkStatus(el) {
   switch(idSplit[0]) {
     case "heater": // Update heater statussen
       memVar("pindatasmotastatus-" + idSplit[4], function(e) {
-        if (this.status == 200 && this.readyState === 4) {
-          if (this.responseText == "exist") {
-            document.getElementById(el.id).src = "emoji/infrared-on.svg";
-          } else {
-            document.getElementById(el.id).src = "emoji/infrared-off.svg";
-          }
+        if (this.responseText == "exist") {
+          document.getElementById(el.id).src = "emoji/infrared-on.svg";
+        } else {
+          document.getElementById(el.id).src = "emoji/infrared-off.svg";
         }
       });
       break;
     case "light": // update light statusssen
       memVar("pindatasmotastatus-" + idSplit[5], function(e) {
-        if (this.status == 200 && this.readyState === 4) {
-          if (this.responseText == "exist") {
-            document.getElementById(el.id).style.backgroundColor = idSplit[4];
-          } else {
-            document.getElementById(el.id).style.backgroundColor = "black";
-          }
+        if (this.responseText == "exist") {
+          document.getElementById(el.id).style.backgroundColor = idSplit[4];
+        } else {
+          document.getElementById(el.id).style.backgroundColor = "black";
         }
       });
       break;
@@ -118,7 +114,9 @@ function memVar(varName, func) {
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.func = func;
   xhr.onload = function(e) {
-    this.func(e);
+    if (this.status == 200 && this.readyState === 4) {
+      this.func(e);
+    }
   };
   xhr.send("var=" + varName);
 }
@@ -402,6 +400,7 @@ async function startTime() {
       }
       HTMLCode += "</div>";
       weatherPlayerEl.insertAdjacentHTML("afterend", HTMLCode);
+console.log("init Absent");
     }
 
   } else if (conf.lastModified !== response.headers.get('Last-Modified')) { // New configuration
