@@ -47,6 +47,9 @@ echo "${LINENO}: Debug"
 # if [ -f ${memDir}temp.count ]; then
 #   rm ${memDir}temp.count
 # fi
+if [ -f ${memDir}heaterManual ]; then
+  rm ${memDir}heaterManual
+fi
 
 while :; do
   # DS18B20
@@ -104,37 +107,40 @@ while :; do
         else # Initialise log file
           echo "${timestamp},${temp},${temp}" >> $logfile
         fi
-        # temp=$(awk "BEGIN { printf(\"%.1f\", $temp / 1000 + $tempCorrection) }")
-        temp=$(($temp + $tempCorrection))
-        now=$(date +"%H:%M")
 
-        if [ -f ${memDir}absent ]; then # Absent temp
-          wantedTemp=$(cat ${memDir}absent)
-        else # Get Scheduled temp
-          for key in $(printf '%s\n' "${!timeTemp[@]}" | sort); do
-            schedTime=$key
-            if [[ ${key} == "24:00" ]]; then # bedtime
-              if [ -f ${memDir}sleep ]; then
-                schedTime=$(date +"%H:%M")
+        if [ ! -f ${memDir}heaterManual ]; then # Manually Controlled Heaters
+          temp=$(($temp + $tempCorrection))
+          now=$(date +"%H:%M")
+
+          if [ -f ${memDir}absent ]; then # Absent temp
+            wantedTemp=$(cat ${memDir}absent)
+          else # Get Scheduled temp
+            for key in $(printf '%s\n' "${!timeTemp[@]}" | sort); do
+              schedTime=$key
+              if [[ ${key} == "24:00" ]]; then # bedtime
+                if [ -f ${memDir}sleep ]; then
+                  schedTime=$(date +"%H:%M")
+                fi
               fi
-            fi
-            if [[ ! $now < ${schedTime} ]]; then # >=
-              wantedTemp=${timeTemp[$key]}
+              if [[ ! $now < ${schedTime} ]]; then # >=
+                wantedTemp=${timeTemp[$key]}
+              else
+                break
+              fi
+            done
+          fi
+
+          for (( i=0; i<${#switchesHostname[@]}; i++ )); do
+            if [[ $temp < $(($wantedTemp - $hysteresis * $i)) ]]; then # To cold, heater on
+  echo "${LINENO}: $now $temp $(($wantedTemp - $hysteresis * $i)) ${switchesHostname[$i]} ON"
+              tasmotaSwitch $i "ON"
             else
-              break
+  echo "${LINENO}: $now $temp $(($wantedTemp - $hysteresis * $i)) ${switchesHostname[$i]} OFF"
+              tasmotaSwitch $i "OFF"
             fi
           done
         fi
-
-        for (( i=0; i<${#switchesHostname[@]}; i++ )); do
-          if [[ $temp < $(($wantedTemp - $hysteresis * $i)) ]]; then # To cold, heater on
-echo "${LINENO}: $now $temp $(($wantedTemp - $hysteresis * $i)) ${switchesHostname[$i]} ON"
-            tasmotaSwitch $i "ON"
-          else
-echo "${LINENO}: $now $temp $(($wantedTemp - $hysteresis * $i)) ${switchesHostname[$i]} OFF"
-            tasmotaSwitch $i "OFF"
-          fi
-        done
+        
       fi
     fi
   fi
