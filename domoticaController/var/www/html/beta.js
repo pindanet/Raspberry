@@ -120,6 +120,28 @@ function memVar(varName, func) {
   };
   xhr.send("var=" + varName);
 }
+function heaterManual(idSplit, status) {
+  if (typeof conf.rooms[idSplit[1]].thermostat.heaterManual == 'undefined') {
+    conf.rooms[idSplit[1]].thermostat.heaterManual = {};
+    conf.rooms[idSplit[1]].thermostat.heaterManual[idSplit[4]] = status;
+    touchFile(idSplit[1], "heaterManual");
+    document.getElementById(idSplit[1] + '_AM').innerHTML = "M";
+    document.getElementById(idSplit[1] + '_AM').style.color = "orange";
+  } else {
+    if (typeof conf.rooms[idSplit[1]].thermostat.heaterManual[idSplit[4]] == 'undefined') {
+      conf.rooms[idSplit[1]].thermostat.heaterManual[idSplit[4]] = status;
+    } else {
+      delete conf.rooms[idSplit[1]].thermostat.heaterManual[idSplit[4]];
+      if (Object.keys(conf.rooms[idSplit[1]].thermostat.heaterManual).length == 0) {
+        delete conf.rooms[idSplit[1]].thermostat.heaterManual;
+        rmFile(idSplit[1], "heaterManual");
+        document.getElementById(idSplit[1] + '_AM').innerHTML = "A";
+        document.getElementById(idSplit[1] + '_AM').style.color = "";
+      }
+    }
+  }
+}
+
 function elclick(event) {
   var id = event.target.id;
   switch(id) {
@@ -199,9 +221,13 @@ function elclick(event) {
               if (this.status == 200) {
                 const output = JSON.parse(this.responseText);
                 if (output[0].includes(':"OFF"}')) {
+console.log("IR Heater Off");
                   document.getElementById(id).src = "emoji/infrared-off.svg";
+                  heaterManual(idSplit, "OFF");
                 } else if (output[0].includes(':"ON"}')) {
+console.log("IR Heater ON");
                   document.getElementById(id).src = "emoji/infrared-on.svg";
+                  heaterManual(idSplit, "ON");
                 }
               }
             };
@@ -234,6 +260,8 @@ function elclick(event) {
                 event.target.innerHTML = "A";
                 event.target.style.color = "";
                 rmFile(idSplit[0], "tempWanted");
+                delete conf.rooms[idSplit[0]].thermostat.heaterManual;
+                rmFile(idSplit[0], "heaterManual");
               }
               break;
           }
