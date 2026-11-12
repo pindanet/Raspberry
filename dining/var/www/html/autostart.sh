@@ -23,6 +23,9 @@ killall chromium
 # video="/var/www/html/Amapola.mp4"
 # color="white"
 
+# Hide cursor on startup (simulate Win+H hotkey)
+sleep 1 && wtype -M alt -M logo -P h &
+
 days=("maandag" "dinsdag" "woensdag" "donderdag" "vrijdag" "zaterdag" "zondag")
 months=("januari" "februari" "maart" "april" "mei" "juni" "juli" "augustus" "september" "oktober" "november" "december")
 
