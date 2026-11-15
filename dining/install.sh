@@ -143,6 +143,10 @@ sudo mv /var/www/html/checkWiFi.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now checkWiFi.timer
 
+# sudo chmod +x /var/www/html/ds18b20.sh
+# sudo mv /var/www/html/ds18b20.timer /etc/systemd/system/
+# sudo mv /var/www/html/ds18b20.service /etc/systemd/system/
+
 sudo chmod +x /var/www/html/ds18b20.sh
 sudo mv /var/www/html/ds18b20.timer /etc/systemd/system/
 sudo mv /var/www/html/ds18b20.service /etc/systemd/system/
