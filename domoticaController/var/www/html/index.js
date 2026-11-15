@@ -981,7 +981,6 @@ function wgetTemp(host, room) {
       document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
     }
   };
-console.log(host);
   xhr.send("cmd=wget&params="+stringToHex("-qO- --post-data 'message=temp' http://" + host + "/wread.php"));
   // xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + "/data/temp"));
 }
