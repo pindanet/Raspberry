@@ -981,7 +981,9 @@ function wgetTemp(host, room) {
       document.getElementById(room.id + "RoomTemp").innerHTML = room.temp.toFixed(1) + " °C";
     }
   };
-  xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + "/data/temp"));
+console.log(host);
+  xhr.send("cmd=wget&params="+stringToHex("-qO- --post-data 'message=temp' http://" + host + "/wread.php"));
+  // xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + host + "/data/temp"));
 }
 function toggleThermostat(event) {
   if (document.getElementById("clockday").style.color != "deepskyblue") {
@@ -1033,10 +1035,10 @@ function thermostat() {
   tempAdjustment(conf.Living);
   wgetTemp("pindadomo", conf.Living);
 
-//  tempAdjustment(conf.Dining);
-//  wgetTemp("pindadining", conf.Dining);
+// tempAdjustment(conf.Dining);
+  wgetTemp("pindadining", conf.Dining);
 //  tempAdjustment(conf.Kitchen);
-//  wgetTemp("pindakeuken", conf.Kitchen);
+  wgetTemp("pindakeuken", conf.Kitchen);
   if (!conf.hasOwnProperty('thermostatDisabled')) {
     if ((conf.Living.temp > conf.tempComfort) && (conf.Dining.temp > conf.tempComfort) && (conf.Kitchen.temp > conf.tempComfort) && (document.getElementById("clockday").style.color !== "lime")) {
       document.getElementById("clockday").style.color="lime";
