@@ -1,5 +1,12 @@
 [Unit]
-Description=Thermostat
+Description=PindaDomo Thermostat Service
+After=network.target
+
 [Service]
 Type=simple
 ExecStart=/var/www/html/thermostat.sh
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target
