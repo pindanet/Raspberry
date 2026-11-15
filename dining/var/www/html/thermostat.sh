@@ -51,6 +51,8 @@ if [ -f ${memDir}heaterManual ]; then
   rm ${memDir}heaterManual
 fi
 
+dayOffTheMonth=$(date +%d)
+
 while :; do
   # DS18B20
   # GPIO 17 (11) (switchable 3,3 V) naar Vdd (Rood)
@@ -145,8 +147,12 @@ while :; do
     fi
   fi
     
-  sleep 60 # every minute
-  if [[ "$(stat $confFile | grep Modify)" != "$confDate" ]]; then
+  if [[ "$(stat $confFile | grep Modify)" != "$confDate" ]]; then # New configuration
     exit
   fi
+  if [ "$dayOffTheMonth" != "$(date +%d)" ]; then # Reload configuration on day change
+   exit
+  fi
+
+  sleep 60 # every minute
 done
