@@ -1033,8 +1033,8 @@ function thermostat() {
   tempAdjustment(conf.Living);
   wgetTemp("pindadomo", conf.Living);
 
-  tempAdjustment(conf.Dining);
-  wgetTemp("pindadining", conf.Dining);
+//  tempAdjustment(conf.Dining);
+//  wgetTemp("pindadining", conf.Dining);
 //  tempAdjustment(conf.Kitchen);
 //  wgetTemp("pindakeuken", conf.Kitchen);
   if (!conf.hasOwnProperty('thermostatDisabled')) {
