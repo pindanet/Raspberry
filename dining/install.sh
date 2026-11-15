@@ -143,16 +143,18 @@ sudo mv /var/www/html/checkWiFi.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now checkWiFi.timer
 
+echo "Activate thermostat service"
+echo "==========================="
+sudo chmod +x /var/www/html/thermostat.sh
+sudo mv /var/www/html/PindaNetThermostat.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now PindaNetThermostat.service
+
 # sudo chmod +x /var/www/html/ds18b20.sh
 # sudo mv /var/www/html/ds18b20.timer /etc/systemd/system/
 # sudo mv /var/www/html/ds18b20.service /etc/systemd/system/
-
-sudo chmod +x /var/www/html/ds18b20.sh
-sudo mv /var/www/html/ds18b20.timer /etc/systemd/system/
-sudo mv /var/www/html/ds18b20.service /etc/systemd/system/
-
-sudo systemctl daemon-reload
-sudo systemctl enable --now ds18b20.timer
+# sudo systemctl daemon-reload
+# sudo systemctl enable --now ds18b20.timer
 
 # systemctl list-timers
 # journalctl -u ds18b20.service
