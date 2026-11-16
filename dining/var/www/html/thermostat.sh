@@ -121,7 +121,7 @@ while :; do
               schedTime=$key
               if [[ ${key} == "24:00" ]]; then # bedtime
                 if [ -f ${memDir}sleep ]; then
-                  schedTime=$(date -d "-1 min" +"%H:%M")
+                  schedTime=$(date +"%H:%M")
                 fi
               fi
               if [[ ! $now < ${schedTime} ]]; then # >=
