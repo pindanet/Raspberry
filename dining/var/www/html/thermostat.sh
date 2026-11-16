@@ -121,7 +121,7 @@ while :; do
               schedTime=$key
               if [[ ${key} == "24:00" ]]; then # bedtime
                 if [ -f ${memDir}sleep ]; then
-                  schedTime=$(date +"%H:%M")
+                  schedTime=$(date -d "-1 min" +"%H:%M")
                 fi
               fi
               if [[ ! $now < ${schedTime} ]]; then # >=
@@ -133,11 +133,11 @@ while :; do
           fi
 
           for (( i=0; i<${#switchesHostname[@]}; i++ )); do
-            if [[ $temp < $(($wantedTemp - $hysteresis * $i)) ]]; then # To cold, heater on
-  echo "${LINENO}: $now $temp $(($wantedTemp - $hysteresis * $i)) ${switchesHostname[$i]} ON"
+            if (( $temp < $(($wantedTemp - $hysteresis * $i)) )); then # To cold, heater on
+  # echo "${LINENO}: $now $temp $(($wantedTemp - $hysteresis * $i)) ${switchesHostname[$i]} ON"
               tasmotaSwitch $i "ON"
             else
-  echo "${LINENO}: $now $temp $(($wantedTemp - $hysteresis * $i)) ${switchesHostname[$i]} OFF"
+  # echo "${LINENO}: $now $temp $(($wantedTemp - $hysteresis * $i)) ${switchesHostname[$i]} OFF"
               tasmotaSwitch $i "OFF"
             fi
           done
