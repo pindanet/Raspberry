@@ -3,53 +3,75 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body, html {
+html {
   height: 100%;
   margin: 0;
-  background-color: black;
 }
-#bg {
-  /* The image used */
+body {
+  height: 100%;
+  margin: 0;
   background-image: url("house_winter_snow.jpg");
-
-  /* Full height */
-  height: 100%; 
-
-  /* Center and scale the image nicely */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
-.content {
-  position: fixed;
-  top: 0;
-  background: rgba(255, 255, 255, 0.5);
-  color: black;
-  width: 100%;
-  text-align: center;
-  font-size: 44pt;
+#hour, #second {
+  border-radius: 50px;
+  z-index: 2;
+  font-size: 50pt;
   font-weight: bold;
-  font-family: Arial, Helvetica, sans-serif;
-}
-.content span {
+  background-color: rgba(255, 255, 255, 0.5);
+  position: fixed;
   display: inline-block;
 }
-#date {
-  width: 50%;
+#hour {
+  color: darkblue;
+  padding: 0px 10px;
 }
-#time {
-  width: 20%;
+#second {
+  color: SaddleBrown;
+  text-align: center;
+}
+#date {
+  border-radius: 0px 0px 12px 0px;
+  padding-right: 4px;
+  z-index: 2;
+  font-size: 50pt;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  text-align: center;
+}
+#day {
+  font-size: 150pt;
 }
 #temp {
-  width: 20%;
+  border-radius: 0px 0px 0px 12px;
+  padding-left: 4px;
+  z-index: 2;
+  font-size: 50pt;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.5);
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: inline-block;
 }
 </style>
 </head>
 <body>
-<div id="bg"></div>
-<div class="content">
-  <span id="temp">20.0 &#176;C</span><span id="date"></span><span id="time"></span>
-</div>
+<span id="temp">20.0 &#176;C</span>
+<span id="date">
+  <span id="weekday"></span><br>
+  <span id="day"></span><br>
+  <span id="month"></span>
+</span>
+
+<span id="hour"></span>
+<span id="second"></span>
 <script>
   const stringToHex = (str) => {
     let hex = '';
@@ -95,9 +117,9 @@ body, html {
                   break;
                 }
               }
-              document.getElementById("date").innerHTML = new Intl.DateTimeFormat(conf.l10n.language, { weekday: "long" }).format(new Date());
-              document.getElementById("date").innerHTML += ", ";
-              document.getElementById("date").innerHTML += new Intl.DateTimeFormat(conf.l10n.language, { day: 'numeric', month: 'long', year: "numeric" }).format(new Date());
+              document.getElementById("weekday").innerHTML = new Intl.DateTimeFormat(conf.l10n.language, { weekday: "long" }).format(new Date());
+              document.getElementById("day").innerHTML = new Intl.DateTimeFormat(conf.l10n.language, { day: 'numeric'}).format(new Date());
+              document.getElementById("month").innerHTML += new Intl.DateTimeFormat(conf.l10n.language, { month: 'long'}).format(new Date());
               setInterval(writeTime, 1000);
               writeTemp();
             }
@@ -114,8 +136,44 @@ body, html {
     xhttp.open("POST", "data/conf.php.json");
     xhttp.send();
   }
+
+  function getCoordinatesFromDegrees(degrees, radius = 1, centerX = 0, centerY = 0) {
+    // 1. Convert degrees to radians
+    const radians = degrees * (Math.PI / 180);
+
+    // 2. Calculate x and y coordinates
+    const x = centerX + radius * Math.cos(radians);
+    const y = centerY + radius * Math.sin(radians);
+
+    return { x, y };
+  }
+
   function writeTime() {
-    document.getElementById("time").innerHTML = new Intl.DateTimeFormat(conf.l10n.language, { hour: 'numeric', minute: 'numeric', second: "numeric" }).format(new Date());
+    const nu = new Date();
+    const uren = nu.getHours();
+    const minuten = nu.getMinutes();
+    const seconden = nu.getSeconds();
+    // Bereken de hoeken in graden
+    const uurGraden = ((uren % 12) + minuten / 60) * 30;
+    const secondeGraden = seconden * 6;
+
+    var point = getCoordinatesFromDegrees(uurGraden, 50);
+    document.getElementById("hour").innerHTML = new Intl.DateTimeFormat(conf.l10n.language, { hour: 'numeric', minute: 'numeric'}).format(new Date());
+    var centerx = (window.innerWidth - document.getElementById("hour").offsetWidth) / 2;
+    var centery = (window.innerHeight - document.getElementById("hour").offsetHeight) / 2;
+
+    document.getElementById("hour").style.left = centerx + (centerx * point.y/50) + "px";
+    document.getElementById("hour").style.bottom = centery + (centery * point.x/50) + "px";
+
+    point = getCoordinatesFromDegrees(secondeGraden, 50);
+    document.getElementById("second").innerHTML = new Intl.DateTimeFormat(conf.l10n.language, { second: 'numeric'}).format(new Date());
+    document.getElementById("second").style.width = document.getElementById("second").offsetHeight + "px";
+    centerx = (window.innerWidth - document.getElementById("second").offsetWidth) / 2;
+    centery = (window.innerHeight - document.getElementById("second").offsetHeight) / 2;
+
+    document.getElementById("second").style.left = centerx + (centerx * point.y/50) + "px";
+    document.getElementById("second").style.bottom = centery + (centery * point.x/50) + "px";
+
   }
   getConf();
 // Get background image
@@ -126,7 +184,7 @@ body, html {
     if (this.status == 200 && this.readyState === 4) {
       if (this.responseText != "[]") {
         const output = JSON.parse(this.responseText);
-        document.getElementById("bg").style.backgroundImage = "url('" + output[0] + "')";
+        document.body.style.backgroundImage = "url('" + output[0] + "')";
       }
     }
   };
