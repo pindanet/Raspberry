@@ -94,6 +94,8 @@ do
   wait_for_motion
   # Temporary backlight
   echo $backlight > /sys/class/backlight/10-0045/brightness
+  # Check thermostat
+  kill $(</dev/shm/thermostat.sleep.pid)
   # Update weather
   XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-0 wtype weather -k return
   # Stop de bewegingsdetectie om de camera te gebruiken om een foto te maken
