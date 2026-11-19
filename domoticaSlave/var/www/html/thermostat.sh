@@ -181,5 +181,8 @@ do
       fi
     fi
   fi
-  sleep 60 # every minute
+  sleep 60 & # every minute
+  PID=$! # make sleep interuptable
+  echo $PID > /dev/shm/thermostat.sleep.pid
+  wait $PID
 done
