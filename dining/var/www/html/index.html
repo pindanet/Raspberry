@@ -25,11 +25,9 @@ body {
   display: inline-block;
 }
 #hour {
-  color: darkblue;
   padding: 0px 10px;
 }
 #second {
-  color: SaddleBrown;
   text-align: center;
 }
 #date {
@@ -47,6 +45,12 @@ body {
 }
 #day {
   font-size: 150pt;
+  margin-top: -20pt;
+  margin-bottom: -20pt;
+}
+#nameday {
+/*  color: red; */
+  font-size: 35pt;
 }
 #temp {
   border-radius: 0px 0px 0px 12px;
@@ -61,13 +65,14 @@ body {
   display: inline-block;
 }
 </style>
+<script src="holidays+.js"></script>
 </head>
 <body>
 <span id="temp">20.0 &#176;C</span>
 <span id="date">
-  <span id="weekday"></span><br>
-  <span id="day"></span><br>
-  <span id="month"></span>
+  <div id="weekday"></div>
+  <div id="day"></div>
+  <div id="month"></div>
 </span>
 
 <span id="hour"></span>
@@ -98,6 +103,7 @@ body {
     };
     xhr.send("cmd=cat&params="+stringToHex("/dev/shm/temp"));
   }
+
   function getConf() { // Get configuration
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function(e) {
@@ -120,6 +126,21 @@ body {
               document.getElementById("weekday").innerHTML = new Intl.DateTimeFormat(conf.l10n.language, { weekday: "long" }).format(new Date());
               document.getElementById("day").innerHTML = new Intl.DateTimeFormat(conf.l10n.language, { day: 'numeric'}).format(new Date());
               document.getElementById("month").innerHTML += new Intl.DateTimeFormat(conf.l10n.language, { month: 'long'}).format(new Date());
+
+              // Special days
+              const today = new Date();
+              if (today.getDay() == 0) { // sunday
+                document.getElementById("day").style.color = "red";
+              }
+              const overzicht = haalAlleFeestdagenOp(2026);
+              for (const dag of Object.values(overzicht)) {
+                if (today.getDate() == dag.datum.getDate() && today.getMonth() == dag.datum.getMonth()) { // holiday found
+                  document.getElementById("day").style.color = "red";
+                  document.getElementById("day").insertAdjacentHTML("afterend", "<div id='nameday'>" + dag.naam + "</div>");
+                  break;
+                }
+              }
+
               setInterval(writeTime, 1000);
               writeTemp();
             }
