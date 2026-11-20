@@ -19,6 +19,12 @@
     "Longitude": 3.2401705,
     "Altitude": 5
   },
+  "times": {
+    "alarmTime": "07:30",
+    "wakeupTime": 11,
+    "awakeTime": 70,
+    "sleepTime": "22:24"
+  },
   "Alarmtime": "07:30",
   "wakeupTime": 11,
   "awakeTime": 70,
