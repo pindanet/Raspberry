@@ -55,13 +55,13 @@ function haalAlleFeestdagenOp(jaar) {
     { naam: 'Tweede Kerstdag', datum: new Date(jaar, 11, 26), type: 'niet-wettelijk' },
 
     // Verjaardagen
-    { naam: '&#127874; Luc &ast;1966', datum: new Date(jaar, 0, 23), type: 'verjaardag' },
-    { naam: 'Ma &ast;1933&ndash;&dagger;2014', datum: new Date(jaar, 2, 4), type: 'verjaardag' },
-    { naam: '&#127874; Dany &ast;1960', datum: new Date(jaar, 2, 28), type: 'verjaardag' },
-    { naam: 'Pa &ast; 1931 &ndash; &dagger; 2020', datum: new Date(jaar, 7, 1), type: 'verjaardag' },
-    { naam: '&#127874; Roos &ast;1996', datum: new Date(jaar, 7, 8), type: 'verjaardag' },
-    { naam: '&#127874; Elke &ast;1998', datum: new Date(jaar, 8, 22), type: 'verjaardag' },
-    { naam: '&#127874; Peter &ast;1961', datum: new Date(jaar, 10, 29), type: 'verjaardag' }
+    { naam: '1966 Luc &#127874;', datum: new Date(jaar, 0, 23), type: 'verjaardag' },
+    { naam: '1933 Ma 2014', datum: new Date(jaar, 2, 4), type: 'verjaardag' },
+    { naam: '1960 Dany &#127874;', datum: new Date(jaar, 2, 28), type: 'verjaardag' },
+    { naam: '1931 Pa 2020', datum: new Date(jaar, 7, 1), type: 'verjaardag' },
+    { naam: '1996 Roos &#127874;', datum: new Date(jaar, 7, 8), type: 'verjaardag' },
+    { naam: '1998 Elke &#127874;', datum: new Date(jaar, 8, 22), type: 'verjaardag' },
+    { naam: '1961 Peter &#127874;', datum: new Date(jaar, 10, 29), type: 'verjaardag' }
 
   ];
 
