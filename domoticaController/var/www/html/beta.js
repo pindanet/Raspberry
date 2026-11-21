@@ -221,11 +221,9 @@ function elclick(event) {
               if (this.status == 200) {
                 const output = JSON.parse(this.responseText);
                 if (output[0].includes(':"OFF"}')) {
-console.log("IR Heater Off");
                   document.getElementById(id).src = "emoji/infrared-off.svg";
                   heaterManual(idSplit, "OFF");
                 } else if (output[0].includes(':"ON"}')) {
-console.log("IR Heater ON");
                   document.getElementById(id).src = "emoji/infrared-on.svg";
                   heaterManual(idSplit, "ON");
                 }
