@@ -65,12 +65,12 @@ function timeVariables () {
   sunset=$(echo "$sunriseSet" | grep "sunset")
   sunset=${sunset#* }
 
-  read -r Alarmtime < <(echo $jsonConf | jq -r '[ .Alarmtime] | join(" ")')
-  read -r wakeupTime < <(echo $jsonConf | jq -r '[ .wakeupTime] | join(" ")')
-  read -r awakeTime < <(echo $jsonConf | jq -r '[ .awakeTime] | join(" ")')
+  read -r alarmTime < <(echo $jsonConf | jq -r '[ .times.alarmTime] | join(" ")')
+  read -r wakeupTime < <(echo $jsonConf | jq -r '[ .times.wakeupTime] | join(" ")')
+  read -r awakeTime < <(echo $jsonConf | jq -r '[ .times.awakeTime] | join(" ")')
 
   dateToday=$(date +'%F')
-  wakeup=$(date -d "$Alarmtime $dateToday +$wakeupTime minutes" +'%H:%M')
+  wakeup=$(date -d "$alarmTime $dateToday +$wakeupTime minutes" +'%H:%M')
   awake=$(date -d "$wakeup $dateToday +$awakeTime minutes" +'%H:%M')
   if [[ $awake < ${sunrise} ]]; then
     awake=${sunrise}
