@@ -44,13 +44,13 @@ function timeVariables () {
   sunset=$(echo "$sunriseSet" | grep "sunset")
   timeVar[sunset]=${sunset#* }
 
-  read -r timeVar[Alarmtime] < <(echo $jsonConf | jq -r '[ .Alarmtime] | join(" ")')
-  read -r timeVar[wakeupTime] < <(echo $jsonConf | jq -r '[ .wakeupTime] | join(" ")')
-  read -r timeVar[awakeTime] < <(echo $jsonConf | jq -r '[ .awakeTime] | join(" ")')
+  read -r timeVar[alarmTime] < <(echo $jsonConf | jq -r '[ .times.alarmTime] | join(" ")')
+  read -r timeVar[wakeupTime] < <(echo $jsonConf | jq -r '[ .times.wakeupTime] | join(" ")')
+  read -r timeVar[awakeTime] < <(echo $jsonConf | jq -r '[ .times.awakeTime] | join(" ")')
 
   dateToday=$(date +'%F')
-  timeVar[preHeating]=$(date -d "${timeVar[Alarmtime]} $dateToday -60 minutes" +'%H:%M')
-  timeVar[wakeup]=$(date -d "${timeVar[Alarmtime]} $dateToday +${timeVar[wakeupTime]} minutes" +'%H:%M')
+  timeVar[preHeating]=$(date -d "${timeVar[alarmTime]} $dateToday -60 minutes" +'%H:%M')
+  timeVar[wakeup]=$(date -d "${timeVar[alarmTime]} $dateToday +${timeVar[wakeupTime]} minutes" +'%H:%M')
   timeVar[awake]=$(date -d "${timeVar[wakeup]} $dateToday +${timeVar[awakeTime]} minutes" +'%H:%M')
   if [[ ${timeVar[awake]} < ${timeVar[sunrise]} ]]; then
     timeVar[awake]=${timeVar[sunrise]}
