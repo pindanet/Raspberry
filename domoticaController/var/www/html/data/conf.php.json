@@ -25,10 +25,6 @@
     "awakeTime": 70,
     "sleepTime": "22:24"
   },
-  "Alarmtime": "07:30",
-  "wakeupTime": 11,
-  "awakeTime": 70,
-  "sleepTime": "22:24",
   "rooms": {
     "Living": {
       "Name": "Living",
@@ -161,7 +157,7 @@
         "schedule": {
           "00:00": "tempNight",
           "preHeating": "tempOff",
-          "Alarmtime": "tempComfort",
+          "alarmTime": "tempComfort",
           "awake": "tempAux",
           "10:55": "tempComfort",
           "12:20": "tempAux",
