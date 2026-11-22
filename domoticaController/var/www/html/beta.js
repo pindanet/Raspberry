@@ -23,7 +23,7 @@ function gotoSleep() {
       delete conf.awake;
       // Set sleep flag in all the rooms
       for (var room in conf.rooms) {
-        touchFile(room, "sleep");
+        touchFile(room, "gotoSleep");
       }
     }
   }
@@ -36,7 +36,7 @@ function wakeup() {
   }
   // Remove sleep flag in all the rooms
   for (var room in conf.rooms) {
-    rmFile(room, "sleep");
+    rmFile(room, "gotoSleep");
   }
 }
 function miniPanel(display) {
