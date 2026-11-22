@@ -129,12 +129,12 @@ body {
               // Special days
               const today = new Date();
               if (today.getDay() == 0) { // sunday
-                document.getElementById("day").style.color = "red";
+                document.getElementById("day").style.color = "darkred";
               }
               const overzicht = haalAlleFeestdagenOp(2026);
               for (const dag of Object.values(overzicht)) {
                 if (today.getDate() == dag.datum.getDate() && today.getMonth() == dag.datum.getMonth()) { // holiday found
-                  document.getElementById("day").style.color = "red";
+                  document.getElementById("day").style.color = "darkred";
                   document.getElementById("day").insertAdjacentHTML("afterend", "<div id='nameday'>" + dag.naam + "</div>");
                   break;
                 }
