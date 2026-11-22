@@ -389,7 +389,7 @@ function gotoSleepNew() {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', "cli.php", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    subCmd = stringToHex("'/dev/shm/sleep'");
+    subCmd = stringToHex("'/dev/shm/gotoSleep'");
     // subCmd=$(echo -n '/dev/shm/sleep' | xxd -p -c 256)
     // wget -qO- http://pindadomo/cli.php --post-data 'cmd=touch&params='${subCmd}
     xhr.send("cmd=wget&params="+stringToHex("-qO- http://" + hostnames[hostname] + "/cli.php --post-data 'cmd=touch&params=" + subCmd + "'"));
