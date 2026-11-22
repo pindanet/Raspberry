@@ -47,7 +47,9 @@ function timeVariables () {
   read -r timeVar[alarmTime] < <(echo $jsonConf | jq -r '[ .times.alarmTime] | join(" ")')
   read -r timeVar[wakeupTime] < <(echo $jsonConf | jq -r '[ .times.wakeupTime] | join(" ")')
   read -r timeVar[awakeTime] < <(echo $jsonConf | jq -r '[ .times.awakeTime] | join(" ")')
+  read -r timeVar[sleepTime] < <(echo $jsonConf | jq -r '[ .times.sleepTime] | join(" ")')
 
+  timeVar[sleepTimeActivator]=$(date -d "${timeVar[sleepTime]} 2 minute" +'%H:%M')
   dateToday=$(date +'%F')
   timeVar[preHeating]=$(date -d "${timeVar[alarmTime]} $dateToday -60 minutes" +'%H:%M')
   timeVar[wakeup]=$(date -d "${timeVar[alarmTime]} $dateToday +${timeVar[wakeupTime]} minutes" +'%H:%M')
