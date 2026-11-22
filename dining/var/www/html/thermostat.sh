@@ -110,17 +110,32 @@ while :; do
           echo "${timestamp},${temp},${temp}" >> $logfile
         fi
 
+        now=$(date +"%H:%M")
+# now="22:24"
+        if [ -f ${memDir}gotoSleep ]; then # Goto bed
+          rm ${memDir}heaterManual
+          rm ${memDir}sleep
+        elif [[ $now > ${timeVar[sleepTime]} || $now == ${timeVar[sleepTime]} ]]; then
+          if [[ $now < ${timeVar[sleepTimeActivator]} ]]; then # Domo want's to gotoSleep
+            touch ${memDir}sleep
+# echo "${LINENO}: Activate sleepTimeActivator"
+          fi
+        fi
+
+# echo "${LINENO}: ${timeVar[sleepTime]} ${timeVar[sleepTimeActivator]}"
+# now=$(date +"%H:%M")
+
         if [ ! -f ${memDir}heaterManual ]; then # Manually Controlled Heaters
           temp=$(($temp + $tempCorrection))
-          now=$(date +"%H:%M")
-
-          if [ -f ${memDir}absent ]; then # Absent temp
+          if [ -f ${memDir}sleep ]; then # Temp just before going to bed
+            wantedTemp=$(cat ${memDir}sleepTemp)
+          elif [ -f ${memDir}absent ]; then # Absent temp
             wantedTemp=$(cat ${memDir}absent)
           else # Get Scheduled temp
             for key in $(printf '%s\n' "${!timeTemp[@]}" | sort); do
               schedTime=$key
               if [[ ${key} == "24:00" ]]; then # bedtime
-                if [ -f ${memDir}sleep ]; then
+                if [ -f ${memDir}gotoSleep ]; then
                   schedTime=$(date +"%H:%M")
                 fi
               fi
@@ -131,7 +146,8 @@ while :; do
               fi
             done
           fi
-
+          echo $wantedTemp > ${memDir}sleepTemp # Store temp for temp just before going to bed
+# cat ${memDir}sleepTemp
           for (( i=0; i<${#switchesHostname[@]}; i++ )); do
             if (( $temp < $(($wantedTemp - $hysteresis * $i)) )); then # To cold, heater on
   # echo "${LINENO}: $now $temp $(($wantedTemp - $hysteresis * $i)) ${switchesHostname[$i]} ON"
