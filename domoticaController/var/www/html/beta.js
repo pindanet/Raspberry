@@ -253,7 +253,7 @@ function elclick(event) {
               if (event.target.innerHTML == "A") {
                 event.target.innerHTML = "M";
                 event.target.style.color = "orange";
-                echoFile(idSplit[0], "tempWanted", document.getElementById(idSplit[0] + "_manual").innerHTML);
+                echoFile(idSplit[0], "tempWanted", document.getElementById(idSplit[0] + "_manual").innerHTML * 1000);
               } else {
                 event.target.innerHTML = "A";
                 event.target.style.color = "";
