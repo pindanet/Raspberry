@@ -1,0 +1,86 @@
+#!/bin/bash
+# Functions 
+
+# ToDo
+readonly binDir="/var/www/html/"
+readonly dataDir="${binDir}data/"
+readonly memDir="/dev/shm/"
+readonly confFile="${dataDir}conf.php.json"
+
+confDate=$(stat $confFile | grep Modify)
+# https://www.baeldung.com/linux/jq-command-json
+# https://www.baeldung.com/linux/jq-passing-bash-variables
+jsonConf=$(cat $confFile)
+room=$(echo $jsonConf | jq --arg jq_hostname_var $HOSTNAME -r '.rooms.[] | select(.Hostname==$jq_hostname_var)')
+
+latitude=$(echo $jsonConf | jq -r ".location.Latitude")
+longitude=$(echo $jsonConf | jq -r ".location.Longitude")
+
+# declare -A switchesStatus
+# declare -A switchesHostname
+# declare -A switchesChannel
+switchesStatus=()
+switchesHostname=()
+switchesChannel=()
+# switchesCmd=()
+declare -A timeVar
+
+function writeLog () { # log message $1
+  echo $(date): $1
+}
+
+function timeVariables () {
+  timeZone=$(date +%-z)
+  trim=${timeZone%0}
+  while [[ ${timeZone} != ${trim} ]]
+  do
+    timeZone=${trim}
+    trim=${timeZone%0}
+  done
+
+  sunriseSet=$(hdate --sun --latitude $latitude --longitude $longitude --timezone $timeZone --not-sunset-aware)
+  sunrise=$(echo "$sunriseSet" | grep "sunrise")
+  timeVar[sunrise]=${sunrise#* }
+  sunset=$(echo "$sunriseSet" | grep "sunset")
+  timeVar[sunset]=${sunset#* }
+
+  read -r timeVar[alarmTime] < <(echo $jsonConf | jq -r '[ .times.alarmTime] | join(" ")')
+  read -r timeVar[wakeupTime] < <(echo $jsonConf | jq -r '[ .times.wakeupTime] | join(" ")')
+  read -r timeVar[awakeTime] < <(echo $jsonConf | jq -r '[ .times.awakeTime] | join(" ")')
+  read -r timeVar[sleepTime] < <(echo $jsonConf | jq -r '[ .times.sleepTime] | join(" ")')
+
+  timeVar[sleepTimeActivator]=$(date -d "${timeVar[sleepTime]} 2 minute" +'%H:%M')
+  dateToday=$(date +'%F')
+  timeVar[preHeating]=$(date -d "${timeVar[alarmTime]} $dateToday -60 minutes" +'%H:%M')
+  timeVar[wakeup]=$(date -d "${timeVar[alarmTime]} $dateToday +${timeVar[wakeupTime]} minutes" +'%H:%M')
+  timeVar[awake]=$(date -d "${timeVar[wakeup]} $dateToday +${timeVar[awakeTime]} minutes" +'%H:%M')
+  if [[ ${timeVar[awake]} < ${timeVar[sunrise]} ]]; then
+    timeVar[awake]=${timeVar[sunrise]}
+  fi
+  timeVar[bedtime]="24:00"
+}
+function tasmotaChannelSwitch () { # switch $1 cmd $2
+  if [[ ${switchesChannel[$1]} == "null" ]]; then
+    wgetCmd="wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power"
+  else
+    wgetCmd="wget -qO- http://${switchesHostname[$1]}/cm?cmnd=Power${switchesChannel[$1]}"
+  fi
+  if [[ $# == 2 ]]; then
+    wgetCmd+="%20${2}"
+  fi
+  switchesStatus[$1]=$($wgetCmd)
+}
+function tasmotaSwitch () { # switch $1 cmd $2
+  if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]] && [[ ${switchesStatus[$1]} != *":\"ON\"}"* ]]; then
+    tasmotaChannelSwitch $1
+    if [[ ${switchesStatus[$1]} != *":\"OFF\"}"* ]] && [[ ${switchesStatus[$1]} != *":\"ON\"}"* ]]; then  # Persistent Connection error
+      switchesStatus[$1]='{"POWER":"OFF"}'
+      writeLog "Recreate power after persistent error for ${switchesHostname[$1]}"
+    fi
+  fi
+  if [[ ${switchesStatus[$1]} == *":\"OFF\"}"* ]] && [[ $2 == "ON" ]]; then
+    tasmotaChannelSwitch $1 $2
+  elif [[ ${switchesStatus[$1]} == *":\"ON\"}"* ]] && [[ $2 == "OFF" ]]; then
+    tasmotaChannelSwitch $1 $2
+  fi
+}
