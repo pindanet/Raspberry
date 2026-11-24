@@ -52,6 +52,7 @@ function haalAlleFeestdagenOp(jaar) {
     { naam: 'Pinksteren', datum: voegDagenToe(pasen, 49), type: 'niet-wettelijk' },
     { naam: 'Allerzielen', datum: new Date(jaar, 10, 2), type: 'niet-wettelijk' },
     { naam: 'Koningsdag', datum: new Date(jaar, 10, 15), type: 'niet-wettelijk' },
+    { naam: 'Sinterklaas', datum: new Date(jaar, 11, 6), type: 'niet-wettelijk' },
     { naam: 'Tweede Kerstdag', datum: new Date(jaar, 11, 26), type: 'niet-wettelijk' },
 
     // Verjaardagen
