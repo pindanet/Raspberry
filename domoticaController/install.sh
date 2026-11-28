@@ -41,7 +41,7 @@ cat /sys/firmware/devicetree/base/model
 
 echo -e "\nFull Upgrade"
 echo "============"
-sudo apt update && sudo apt -y full-upgrade
+sudo apt update && sudo apt -y upgrade
 sudo rpi-eeprom-update
 
 echo "Install micro (nano alternative)"
